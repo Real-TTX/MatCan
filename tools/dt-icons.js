@@ -15,7 +15,7 @@ const NAMES = [
   'square-round-corner', 'scaling', 'text-wrap', 'radius', 'gallery-horizontal-end', 'a-large-small', 'type', 'image', 'layers', 'eye', 'eye-off',
   'lock', 'trash', 'copy', 'clipboard-paste', 'plus', 'x', 'chevron-left', 'chevron-right', 'chevron-down', 'chevron-up', 'arrow-left', 'arrow-up', 'arrow-down',
   'save', 'printer', 'check', 'pencil', 'grip-vertical', 'rectangle-horizontal', 'space', 'shrink', 'expand', 'move-vertical', 'move-horizontal', 'list', 'database',
-  'search', 'baseline', 'minimize-2', 'monitor', 'smartphone', 'info', 'triangle-alert', 'pipette', 'paintbrush', 'circle-dashed', 'square-dashed',
+  'search', 'baseline', 'minimize-2', 'monitor', 'smartphone', 'info', 'triangle-alert', 'pipette', 'paintbrush', 'circle-dashed', 'square-dashed', 'tags',
 ];
 
 const source = process.argv[2] || path.join(__dirname, '..', '..', 'MatDesign', 'src', 'MatUi', 'wwwroot', 'iconlib', 'matui-iconlib.svg');

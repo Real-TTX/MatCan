@@ -1,6 +1,5 @@
 /* DesignThix: the behaviour of the app itself. MatUi (wwwroot/ui/matui.js) does menus, dialogs, tabs, validation, pickers and the upload control; this file adds
-   what is specific to DesignThix: the bars of the charts, the installed
-   app (service worker, colour of the status bar) and the behaviour without a connection. Everything is wired by data attributes; no inline styles
+   what is specific to DesignThix: the installed app (service worker, colour of the status bar) and the behaviour without a connection. Everything is wired by data attributes; no inline styles
    anywhere (a value that is data is set here as a custom property, which the content security policy allows). */
 (function () {
   'use strict';
@@ -133,14 +132,6 @@
   doc.addEventListener('change', function (event) {
     var t = event.target;
     if (t && t.hasAttribute && t.hasAttribute('data-submit-on-change') && t.form) { t.form.requestSubmit ? t.form.requestSubmit() : t.form.submit(); }
-  });
-
-  // ================================================================================================ charts
-
-  // A bar of a chart carries its share as data-bar="0..100"; it becomes a custom property (the content security policy allows no inline style).
-  $$('[data-bar]').forEach(function (el) {
-    var v = parseFloat(el.getAttribute('data-bar'));
-    if (!isNaN(v)) { el.style.setProperty('--dt-bar', Math.max(0, Math.min(100, v)) + '%'); }
   });
 
   // ================================================================================================ requests of the pages

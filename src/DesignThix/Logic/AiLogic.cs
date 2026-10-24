@@ -252,7 +252,7 @@ public static class AiLogic
             else if (await secrets.LoadAsync(profile.SecretToken, AiSecretStore.ApiKey, ct) is { Length: > 0 } key)
             {
                 return new Transport("profile", profile.Name, profile.Model, (r, c) =>
-                    ChatCompletionsClient.CompleteAsync(http.CreateClient("ai"), profile.BaseUrl, key, profile.Model, r, settings.MaxTokens, m => logger.LogWarning("{Message}", m), c, settings.TimeoutSeconds));
+                    ChatCompletionsClient.CompleteAsync(http.CreateClient("ai"), profile.BaseUrl, key, profile.Model, r, settings.MaxTokens, m => logger.LogWarning("{Message}", m.Replace(key, "***")), c, settings.TimeoutSeconds));
             }
         }
 
@@ -260,7 +260,7 @@ public static class AiLogic
         if (!string.IsNullOrWhiteSpace(op.RelayUrl))
         {
             return new Transport("relay", "Relay des Betreibers", op.RelayModel, (r, c) =>
-                ChatCompletionsClient.CompleteAsync(http.CreateClient("ai"), op.RelayUrl, op.RelayKey, op.RelayModel, r, settings.MaxTokens, m => logger.LogWarning("{Message}", m), c, settings.TimeoutSeconds));
+                ChatCompletionsClient.CompleteAsync(http.CreateClient("ai"), op.RelayUrl, op.RelayKey, op.RelayModel, r, settings.MaxTokens, m => logger.LogWarning("{Message}", string.IsNullOrEmpty(op.RelayKey) ? m : m.Replace(op.RelayKey, "***")), c, settings.TimeoutSeconds));
         }
 
         return null;

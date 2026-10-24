@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DesignThix.Data.Migrations
 {
     [DbContext(typeof(DtDbContext))]
-    [Migration("20261024151102_Output")]
-    partial class Output
+    [Migration("20261024163455_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -228,6 +228,10 @@ namespace DesignThix.Data.Migrations
 
                     b.Property<int>("PromptTokens")
                         .HasColumnType("integer");
+
+                    b.Property<string>("RequestJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
 
                     b.Property<string>("ResultJson")
                         .IsRequired()

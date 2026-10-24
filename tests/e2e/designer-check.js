@@ -1,9 +1,9 @@
 // Checks the designer in a real browser (installed Edge, headless): creates a design, draws with the pointer and the keyboard, saves, reloads, previews with a data
 // list, provokes an edit conflict, works offline, opens the design as a viewer (read-only), builds the demo label of docs/PLAN.md section 1.2 and takes screenshots
-// at 1280x800, 1024x768 (touch) and 390x844 into docs/images/ (designer-*.png). Zero console errors and zero CSP violations are part of the result.
+// at 1280x800, 1024x768 (touch) and 390x844 into the temp folder (designer-*.png; the screenshots of the README come from screens.js). Zero console errors and zero CSP violations are part of the result.
 //
 //   cd tests/e2e && npm install
-//   node designer-check.js [base url, default http://localhost:3043] [--out ../../docs/images]
+//   node designer-check.js [base url, default http://localhost:3043] [--out <folder for the screenshots, default: the temp folder>]
 //
 // Accounts: tests/e2e/test-account.json ({ "designer": {email,password}, "viewer": {...}, "admin": {...} }) is used when it exists. On an empty database the setup
 // assistant creates the administrator (admin@example.com), who creates a designer and a viewer through the admin pages; the file is written. An existing
@@ -16,7 +16,7 @@ const { demoDocument, demoRows } = require('./demo-label.js');
 const args = process.argv.slice(2);
 const { base, problems, dialogs, watch, launch, newContext, login, ensureAccounts } = lib(args);
 const outIndex = args.indexOf('--out');
-const outDir = path.resolve(__dirname, outIndex >= 0 ? args[outIndex + 1] : '../../docs/images');
+const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(require('os').tmpdir(), 'designthix-designer-check'));
 
 const results = [];
 let current = '';

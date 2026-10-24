@@ -50,7 +50,7 @@ function create(args, options) {
   }
 
   async function ensureAccounts(browser) {
-    const accounts = fs.existsSync(accountFile) ? JSON.parse(fs.readFileSync(accountFile, 'utf8')) : {};
+    let accounts = fs.existsSync(accountFile) ? JSON.parse(fs.readFileSync(accountFile, 'utf8')) : {};
     const context = await newContext(browser);
     const page = await context.newPage();
     watch(page, 'accounts');
@@ -58,6 +58,7 @@ function create(args, options) {
 
     await page.goto(base + '/Account/Setup');
     if (/Setup/.test(page.url())) {
+      accounts = {};   // an empty database: whatever the file says does not exist any more
       accounts.admin = { email: 'admin@example.com', password: PASSWORD };
       await page.fill('#Input_DisplayName', 'Test Admin');
       await page.fill('#Input_Email', accounts.admin.email);

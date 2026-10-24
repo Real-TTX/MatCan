@@ -141,6 +141,7 @@ await DatabaseInitializer.InitializeAsync(app.Services, config, logger);
 var settings = app.Services.GetRequiredService<SettingStore>();
 await settings.LoadAsync();
 await LibrarySeeder.SeedAsync(app.Services, app.Environment.WebRootPath, logger);
+await DemoSeeder.SeedAsync(app.Services, logger);
 
 app.UseForwardedHeaders();
 app.UseRequestLocalization();
@@ -227,9 +228,8 @@ app.MapGet("/health", async (DtDbContext db) =>
     return Results.Text("ok");
 }).AllowAnonymous();
 
-app.MapPost("/api/theme", async (HttpContext http, IAntiforgery antiforgery, Biz biz, SignInService signIn) =>
+app.MapPost("/api/theme", (HttpContext http, IAntiforgery antiforgery, Biz biz, SignInService signIn) => LibraryEndpoints.Guard(http, antiforgery, async () =>
 {
-    await antiforgery.ValidateRequestAsync(http);
     var theme = http.Request.Form["theme"].ToString();
     if (theme is not ("system" or "light" or "dark"))
     {
@@ -239,7 +239,7 @@ app.MapPost("/api/theme", async (HttpContext http, IAntiforgery antiforgery, Biz
     await UserLogic.SetThemeAsync(biz, theme);
     await signIn.RefreshAsync(http, await UserLogic.MeAsync(biz));
     return Results.NoContent();
-}).RequireAuthorization("SignedIn");
+})).RequireAuthorization("SignedIn");
 
 // ------------------------------------------------------------------------------------------------ crawlers and language models
 

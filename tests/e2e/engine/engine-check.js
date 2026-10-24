@@ -1,6 +1,6 @@
 // Checks the render engine (src/DesignThix/wwwroot/js/dt-engine.js) in a real browser (Edge via Playwright).
 //   node tests/e2e/engine/engine-check.js
-// Playwright is loaded from NODE_PATH, or from ../MatTicket/tests/e2e/node_modules when that is not set.
+// Playwright comes from tests/e2e/node_modules (npm install there). The test fonts are the bundled ones (src/DesignThix/wwwroot/fonts), so the check runs on any machine.
 // Env: DT_BROWSER = firefox | webkit to run in another engine (default Edge); DT_SCREENSHOT_DIR = where the screenshots and the PNG go (default: the system temp directory).
 'use strict';
 
@@ -10,12 +10,7 @@ const os = require('os');
 const path = require('path');
 const zlib = require('zlib');
 
-function loadPlaywright() {
-  try { return require('playwright'); } catch (e) { /* try the sibling repo */ }
-  const sibling = path.resolve(__dirname, '../../../../MatTicket/tests/e2e/node_modules/playwright');
-  return require(sibling);
-}
-const playwright = loadPlaywright();
+const playwright = require('playwright');
 // DT_BROWSER=firefox|webkit runs the same checks in another engine (default: Edge).
 const browserName = process.env.DT_BROWSER || 'chromium';
 
@@ -27,8 +22,8 @@ fs.mkdirSync(outDir, { recursive: true });
 // Test assets served by the test server
 // ---------------------------------------------------------------------------------------------------------------
 
-const FONT_DIR = 'C:/Windows/Fonts';
-const FONT_FILES = { 'script.ttf': 'segoesc.ttf', 'script-bold.ttf': 'segoescb.ttf', 'sans.ttf': 'arial.ttf', 'sans-bold.ttf': 'arialbd.ttf', 'impact.ttf': 'impact.ttf' };
+const FONT_DIR = path.resolve(__dirname, '../../../src/DesignThix/wwwroot/fonts');
+const FONT_FILES = { 'script.ttf': 'KaushanScript-Regular.ttf', 'script-bold.ttf': 'KaushanScript-Regular.ttf', 'sans.ttf': 'Montserrat-Variable.ttf', 'sans-bold.ttf': 'Montserrat-Variable.ttf', 'impact.ttf': 'BebasNeue-Regular.ttf' };
 
 const crcTable = (() => {
   const t = new Uint32Array(256);

@@ -8,6 +8,38 @@ This file is the contract between the phases. Every phase reads it first, follow
 
 ---
 
+## Status: done (2026-10-24)
+
+Phases A to I are finished: foundation, logo and icons, built-in content, render engine, library and records, designer, output, AI actions, demo and quality. The text
+below is the plan as it was written; the sections after this one are **where the result differs from it** (decided during the phases, kept in `CLAUDE.md` and the code).
+
+Deviations and additions
+
+- **Designer.** The zoom control is a floating bar at the bottom of the canvas (fit, zoom in/out, snapping switch), not part of the top bar; the top bar has back, name, undo/redo,
+  the choice of the data for the preview, the save state, *Speichern* and *Ausgabe*. Below 768 px the designer is a read-only preview; below 1024 px the panels are drawers.
+  The editor needs `/api/designs/{id}/rename`, `/copy` (the answer to an edit conflict: *Als Kopie speichern*), `/designs/{id}/thumbnail.png` and `/api/datalists` (names + columns).
+- **Output.** At most **2000 labels** per job (`OutputPlan.MaxLabels`). `OutputJob` has three more columns than planned: `Scale` (fit | none), `StartPosition` (first cell of the first sheet,
+  for a half-used sheet of stickers) and `FileNamePattern` (names of the PNG files). A design larger than its cell is shrunk (`fit`) and the run page says so (the demo shrinks to 99 %).
+  There is **no server-side PDF**: print/PDF is the browser's print dialog on the run page (`@page` set through the CSSOM), PNG-ZIP is made in the browser.
+- **Einzeldruck is open to viewers** (as is running a saved output): `OutputLogic.PayloadAsync/AdhocPayloadAsync/MarkRanAsync` need only a signed-in person, saving and deleting jobs need a designer.
+- **Data.** `DataRow` is **hard deleted** (the grid saves all rows of a list as one set; no soft delete). `DataList` and `Design` carry a `Revision` (concurrency token, HTTP 409 on a stale save);
+  `Design` also keeps `Width`, `Height` and `Unit` for the lists. The CSV export has the extra columns `_Kopien` and `_Aktiv`.
+- **Media and fonts.** Asset keys are lower case (`^[a-z0-9][a-z0-9_-]{0,63}$`). A built-in medium, font or sheet layout is remembered by `BuiltInKey` (also when renamed or deleted), so a deleted
+  one stays deleted. Two of the twelve bundled font families are **Apache 2.0** (Roboto Slab, Permanent Marker), the others SIL OFL 1.1. Icons: Lucide (ISC); flags and seals are our own drawings.
+- **Design files.** Export/import use `.dtx.json` (`format: "designthix-design"`, document + the media and own fonts it needs, up to 50 MB; a key with other content is renamed on import).
+- **AI.** Designers see and undo their own runs on the data list, administrators all of them; the full instruction is shown before it is sent (*Vollständige Anweisung anzeigen*); the **Test** action is for
+  administrators only. Everything the model returns is checked by `Core/Ai/AiOutputs.cs` first; a proposal waits until a person applies it.
+- **Demo (phase I).** The template, the data list (six cheeses) and the output job (A4 landscape, 2 x 2 A6, fit) come from one embedded file, `src/DesignThix/Demo/kaesetheke.json`
+  (`Services/DemoSeeder`). They are added **at start-up to a database that has no designs, data lists or output jobs**, once: the setting `Demo.Seeded` remembers it, so a deleted demo stays deleted.
+  No thumbnail is stored; the gallery draws the design with the engine. The browser checks read the same file. Layout rules that came out of looking at six labels: the name is bottom aligned in a box
+  that is 4 mm inside the border and at most 74 pt, the region sits below the deepest descender of the script font, the price box ends before the euro sign and the unit, the two words of the logo are
+  two text elements that meet in one place.
+- **Migrations** were squashed into one `Initial` (nothing was deployed).
+- **PWA.** iOS status bar style is `default` (the bar follows the system light/dark; `theme-color` follows the app background for light and dark on Android and desktop); pinch zoom stays allowed.
+- **Menu.** *Druckbögen* has its own icon (`dt:tags`); `Ui.Icon` takes `dt:name` for the icons of the app's own sprite. The start page also lists the outputs that ran last.
+
+---
+
 ## 0. Ground rules (all phases)
 
 - **Template repository: `../MatTicket`.** It is the newest app of the family with the same stack (ASP.NET Core 10 Razor Pages, EF Core 10, PostgreSQL 17,

@@ -1,0 +1,32 @@
+# Browser checks (tests/e2e)
+
+Real-browser checks with [Playwright](https://playwright.dev) and the installed **Microsoft Edge** (headless; falls back to Playwright's Chromium).
+They are not part of `dotnet test`. A stack must be running (`./scripts/redeploy.ps1 -Clean` gives a clean one on <http://localhost:3043>).
+
+```bash
+cd tests/e2e
+npm install            # once
+node run-all.js [base url]          # all checks one after the other, one summary line each; exit code 0 = all green
+```
+
+`run-all.js http://localhost:3043 --only pwa,designer` runs a selection (`engine`, `pwa`, `demo`, `designer`, `output`, `ai`), `--quiet` prints only failures.
+
+| Check | Run with | What it checks |
+|---|---|---|
+| `engine/engine-check.js` | `node engine/engine-check.js` | The render engine (`dt-engine.js`) on its own test page, no app needed: placeholders, price format, shrink to fit, image strip, standalone SVG, PNG size at 300 dpi, ZIP writer. Uses the bundled fonts. |
+| `pwa-check.js` | `node pwa-check.js [base]` | Manifest and icons, service worker, iOS meta tags, theme colour light/dark = background of the app, `viewport-fit=cover` and safe areas, 16 px fields on touch screens (no zoom on focus, pinch zoom stays), offline (copy of a page, banner, offline page), clean return without stale content, signing out empties the kept pages. |
+| `designer-check.js` | `node designer-check.js [base] [--out folder]` | The designer: drawing with mouse, touch and keyboard, snapping, undo, saving, edit conflict, preview with data, offline draft, viewer (read-only), phone view. |
+| `output-check.js` | `node output-check.js [base] [--out folder]` | Output jobs: print pages and sheets (PDF page sizes), crop marks, start position, PNG-ZIP, single print, design export/import, 200 labels. |
+| `ai-check.js` | `node ai-check.js [base] [--fake-host h] [--fake-port 3066]` | The AI actions against a fake OpenAI-compatible server (`fake-ai.js`) that the script starts: import, fill, text suggestions, undo, limits, errors. With the app in Docker the fake server is reached at `host.docker.internal`; with `dotnet run` pass `--fake-host 127.0.0.1`. |
+| `demo-check.js` | `node demo-check.js [base]` | The demo of a new installation: the six labels drawn by the engine, ink of every element measured (nothing touches, the name keeps its margin, the price keeps clear of the euro sign, the logo words sit next to each other) and the seeded records (template, list, output job runs). |
+| `screens.js` | `node screens.js [base] [--out ../../docs/images] [--no-ai]` | Takes the screenshots of the README. **Run it on a clean stack, before the other checks**: they leave test data behind, and the screenshots show the demo only. |
+
+Notes
+
+- **Accounts.** The checks need an administrator, a designer and a viewer. On an empty database the setup assistant makes `admin@example.com`, who makes
+  `designer@example.com` and `viewer@example.com`; the three are written to `test-account.json` (git-ignored). With an existing database put the accounts into that file
+  (an administrator with two-factor sign-in cannot be used).
+- **One source for the demo.** `demo-label.js` reads `src/DesignThix/Demo/kaesetheke.json`, the same file the app embeds and seeds into an empty database.
+- **Console errors and CSP violations** (a `securitypolicyviolation` listener is installed in every page) are part of each result.
+- **Screenshots** of the checks go to the temp folder, never to `docs/images` (only `screens.js` writes there).
+- `lib.js` has the helpers all checks share (browser, sign-in, accounts, console watcher).

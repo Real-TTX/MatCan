@@ -97,4 +97,76 @@ public sealed class AppTests
         Assert.Contains("form-action 'self'", policy);
         Assert.DoesNotContain("google", policy);
     }
+
+    [Theory]
+    [InlineData("/health")]
+    [InlineData("/robots.txt")]
+    [InlineData("/llms.txt")]
+    [InlineData("/Account/Setup")]
+    [InlineData("/Account/Login")]
+    [InlineData("/Offline")]
+    [InlineData("/sw.js")]
+    [InlineData("/manifest.webmanifest")]
+    [InlineData("/css/app.css")]
+    [InlineData("/logo.svg")]
+    [InlineData("/does-not-exist")]
+    [InlineData("/media/flag-de")]
+    [InlineData("/Outputs/1/Run")]
+    public async Task Every_kind_of_answer_carries_the_security_headers(string path)
+    {
+        if (AppFactory.Connection is null)
+        {
+            return;
+        }
+
+        // Signed out, the pages answer with a redirect to the setup or the sign-in: the headers belong to those answers too.
+        var response = await Client().GetAsync(path);
+        var policy = response.Headers.GetValues("Content-Security-Policy").Single();
+        Assert.Contains("script-src 'self'", policy);
+        Assert.Contains("object-src 'none'", policy);
+        Assert.DoesNotContain("unsafe-inline", policy.Split(';').Single(p => p.Trim().StartsWith("script-src", StringComparison.Ordinal)));
+        Assert.Equal("nosniff", response.Headers.GetValues("X-Content-Type-Options").Single());
+        Assert.Equal("SAMEORIGIN", response.Headers.GetValues("X-Frame-Options").Single());
+    }
+
+    [Theory]
+    [InlineData("/api/designs/1")]
+    [InlineData("/api/datalists")]
+    [InlineData("/api/fonts")]
+    [InlineData("/api/outputs/1/payload")]
+    [InlineData("/media/flag-de")]
+    [InlineData("/fonts.css")]
+    [InlineData("/Designs")]
+    [InlineData("/Admin/Users")]
+    public async Task Nothing_of_the_library_is_served_to_a_visitor_who_is_not_signed_in(string path)
+    {
+        if (AppFactory.Connection is null)
+        {
+            return;
+        }
+
+        // Before the setup everything leads to the setup assistant; the library itself is closed either way.
+        var response = await Client().GetAsync(path);
+        Assert.True(response.StatusCode is HttpStatusCode.Redirect or HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden, $"{path} answered {(int)response.StatusCode}");
+    }
+
+    [Theory]
+    [InlineData("/api/theme")]
+    [InlineData("/api/designs/1")]
+    [InlineData("/api/designs/1/thumbnail")]
+    [InlineData("/api/datalists/1/rows")]
+    [InlineData("/api/outputs/adhoc")]
+    [InlineData("/api/outputs/1/ran")]
+    [InlineData("/api/ai/datalists/1/import")]
+    [InlineData("/api/ai/runs/1/apply")]
+    public async Task A_post_without_a_signed_in_person_is_not_accepted(string path)
+    {
+        if (AppFactory.Connection is null)
+        {
+            return;
+        }
+
+        var response = await Client().PostAsync(path, new StringContent("{}", System.Text.Encoding.UTF8, "application/json"));
+        Assert.True(response.StatusCode is HttpStatusCode.Redirect or HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden, $"{path} answered {(int)response.StatusCode}");
+    }
 }

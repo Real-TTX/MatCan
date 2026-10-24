@@ -23,9 +23,14 @@ public static partial class Ui
     [GeneratedRegex("^[a-z0-9-]+$")]
     private static partial Regex NameRegex();
 
-    /// <summary>An icon from the page's inline sprite. The name must exist in <c>matui-icons.svg</c> or in the app's own sprite.</summary>
+    /// <summary>An icon from the page's inline sprite: a name of <c>matui-icons.svg</c>, or <c>dt:name</c> for one of the app's own icons (<see cref="ToolIcon"/>).</summary>
     public static IHtmlContent Icon(string name, string? extraClass = null)
     {
+        if (name.StartsWith("dt:", StringComparison.Ordinal))
+        {
+            return ToolIcon(name[3..], extraClass);
+        }
+
         if (!NameRegex().IsMatch(name))
         {
             throw new ArgumentException($"'{name}' is not an icon name.", nameof(name));
@@ -47,9 +52,6 @@ public static partial class Ui
         return new HtmlString($"<svg class=\"{cls}\" aria-hidden=\"true\" focusable=\"false\"><use href=\"#dt-i-{name}\"></use></svg>");
     }
 
-    /// <summary>The icon of a menu item: a name from the toolkit's sprite, or <c>dt:name</c> for one of the app's own icons (<c>img/dt-icons.svg</c>).</summary>
-    public static IHtmlContent NavIcon(string name)
-        => name.StartsWith("dt:", StringComparison.Ordinal) ? ToolIcon(name[3..]) : Icon(name);
 
     /// <summary>
     /// The logo tile of DesignThix, by size: the mark (wwwroot/logo-mark.svg) in its own colours on a plain tile. The gradient of the

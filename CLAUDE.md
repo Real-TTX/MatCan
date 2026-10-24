@@ -5,8 +5,8 @@ An **offline Canva**: designs (labels, cards, signs, posters) are drawn in a WYS
 plus a database. User-facing text is **German** ("du"); code, comments and docs (except the README) are English. The infrastructure (setup, sign-in, TOTP,
 sessions, list controls, shell, AI layer, PWA, Docker, CI) was ported from `../MatTicket`; the look is MatDesign (`../MatDesign`, MatUi copied into
 `src/DesignThix/wwwroot/ui`, version in `scripts/matui-synced.txt`, never edited there). Before changing UI read MatDesign's `CLAUDE.md` and
-`docs/ADOPTING.md`. **`docs/PLAN.md` is the build plan and the contract between the phases** (product, document format, architecture, phases A..I); read it
-first and change it only when the owner says so.
+`docs/ADOPTING.md`. **`docs/PLAN.md` is the build plan (product, document format, architecture); its "Status" section at the top lists where the result differs from it.** All phases (A to I) are done; read the plan
+for the product and the document format, and change it only when the owner says so.
 
 ## Commands
 
@@ -17,7 +17,13 @@ dotnet test DesignThix.slnx                   # + DESIGNTHIX_TEST_DB="Host=local
 dotnet tool restore                           # once (dotnet-ef)
 dotnet ef migrations add <Name> -p src/DesignThix -s src/DesignThix -o Data/Migrations
 ./scripts/sync-matui.ps1 ; ./scripts/check-matui.ps1   # MatUi from MatDesign (the container of MatDesign on port 8060 serves /ui/matui.zip)
-NODE_PATH=tests/e2e/node_modules node tools/icons.js    # PNG icons from the SVGs (phase B)
+NODE_PATH=tests/e2e/node_modules node tools/icons.js    # PNG icons from the SVGs
+node tools/dt-icons.js                          # img/dt-icons.svg (designer and app icons, Lucide) from MatDesign's icon library; add a name to NAMES first
+
+# browser checks (Playwright + installed Edge; see tests/e2e/README.md): a stack must run; from an empty database they make their own accounts
+cd tests/e2e && npm install
+node run-all.js http://localhost:3043           # engine, pwa, demo, designer, output, ai in sequence; --only pwa,demo for a selection
+node screens.js http://localhost:3043           # the screenshots of the README (docs/images): ONLY on a clean stack (redeploy -Clean), before the other checks
 ```
 
 Local stack: `docker-compose.local.yml` (project `designthix-local`, fixed subnet `10.253.43.0/24` because Docker on a PC with many stacks runs out of address
@@ -27,15 +33,15 @@ No `${...}` variables and no `.env` in any compose file. Environment variables o
 
 ## Layout
 
-- `src/DesignThix.Core` (no web types, unit tested): `Ai/` (`ChatCompletionsClient`, `ChatGptAccount` (device code), `LenientJson`, `AiPresets`), `Security/`
+- `src/DesignThix.Core` (no web types, unit tested): `Ai/` (`ChatCompletionsClient`, `ChatGptAccount` (device code), `LenientJson`, `AiPresets`, `AiOutputs`), `Security/`
   (`PasswordHasher`, `Totp`), `Text/` (`Slug`, `Pii`), `Media/` (`FileSniffer` by magic bytes, `SvgSafe` allowlist sanitiser, `FontInfo` name table of TTF/OTF/WOFF),
   `Data/` (`Csv` read/write, `ValueFormat` = the number rules of the engine, `ColumnDefs`), `Documents/` (`DesignDocument` records, `DocumentValidator` parse + normalise,
-  `Placeholders`, `FormatPresets`).
+  `Placeholders`, `FormatPresets`, `DesignPackage`), `Output/` (`OutputPlan`: rows to labels, sheets, cells, fit scale).
 - `src/DesignThix/Logic`: **the business layer, static classes** taking `Biz` (db, current user, clock, services) as first argument and checking permissions
   themselves (`RequireAdmin` / `RequireDesigner` / `RequireSignedIn`). `ForbiddenException` becomes 403 (middleware), `BizException` is a message at the field.
   Pages never query the database; list pages pass the `IQueryable` the logic returns to `UiKit/ListBuilder`.
 - `src/DesignThix/Services`: infrastructure (auth, sessions, 2FA, AI secret store + rate limiter, activity log, database initializer, formatting, `LibrarySeeder` (built-in
-  media, fonts and sheet layouts at start-up), `TextDecoder` (UTF-8 or cp1252 CSV files)).
+  media, fonts and sheet layouts at start-up), `DemoSeeder` (the demo, once per database, see "The demo"), `TextDecoder` (UTF-8 or cp1252 CSV files)).
 - `src/DesignThix/Endpoints/LibraryEndpoints.cs`: `/media/{key}`, `/fonts/{id}-{hash}.{ext}`, `/fonts.css`, `/api/fonts`, `/api/assets`, `/api/designs/{id}` (GET/POST),
   `/api/designs/{id}/thumbnail`, `/api/designs/{id}/rename`, `/api/designs/{id}/copy` (the document of the designer as a new design: the answer to an edit conflict), `/designs/{id}/thumbnail.png`,
   `/api/datalists` (name + columns, for the designer's data selector), `/api/datalists/{id}/rows` (GET/POST). Everything needs a signed-in person; every POST checks the antiforgery header.
@@ -54,7 +60,7 @@ No `${...}` variables and no `.env` in any compose file. Environment variables o
   `js/designs.js` (thumbnails drawn with the engine), `js/output.js` + `css/output.css` (the run page: print/PDF and PNG-ZIP, see "Output"), `js/outputs.js` (the forms of outputs and of the single print), `js/designer*.js` + `css/designer.css` (the designer, see below), `js/dt-engine.js` (the renderer, `DtEngine`), `sw.js` (the `dt-library` cache: hashed font/media/thumbnail addresses cache first,
   `/fonts.css`, `/api/fonts`, unhashed media and the payload of an output network first), `manifest.webmanifest`, `builtin/` (flags and seals + `builtin.json`), `fonts/` (OFL fonts + `fonts.json` + `LICENSES/`),
   `ui/` (MatUi), logos and `img/` (`img/dt-icons.svg`: the tool icons of the designer, symbols `dt-i-*`, generated by `node tools/dt-icons.js` from MatDesign's Lucide library; the licence note stays in the file).
-- `tests/DesignThix.Tests` (xunit): Core tests, logic tests, integration tests against PostgreSQL (`DESIGNTHIX_TEST_DB`; without it they return at once).
+- `tests/DesignThix.Tests` (xunit): `Core/` unit tests for everything in Core, `Web/` logic tests, `Integration/` against PostgreSQL (`DESIGNTHIX_TEST_DB`; without it they return at once; every run gets a database of its own): app, library, output, AI, **permissions per role** and the demo.
   `tests/e2e`: browser checks with Playwright and the installed Edge (not run by `dotnet test`).
 
 ## Rules of the domain
@@ -70,7 +76,7 @@ No `${...}` variables and no `.env` in any compose file. Environment variables o
   Data values go to the DOM through the CSSOM (`el.style.setProperty`) or SVG attributes. **Never `innerHTML` with user data.** CSS classes of the app start with `dt-`.
 - AI: one JSON object per answer (`LenientJson`), required field per action, at most two nudges then `Stuck`; limits before the call; tokens estimated (chars/4) when
   missing; changes go into `AiJournalEntry` and can be undone newest first. Secrets only in `{data}/secrets/ai` (`AiSecretStore`), never in the database or a page.
-  Actions: **Test**, **DataImport**, **DataFill**, **TextSuggest** (phase G, see "AI actions" below).
+  Actions: **Test**, **DataImport**, **DataFill**, **TextSuggest** (see "AI actions" below).
 - Library: an **asset key** is lower case (`^[a-z0-9][a-z0-9_-]{0,63}$`), unique among the records that are not deleted, and is what designs (`{ "asset": "flag-de" }`) and image cells of
   data lists hold; matching is case-insensitive. Uploads are sniffed by their bytes (never the name); an SVG goes through `SvgSafe` (cleaned: script, foreignObject, `on*`, external or
   `javascript:` references, unsafe `style`; refused: DTD/entities, > 2 MB, nesting > 100) and is stored in its cleaned form; `/media` adds a CSP (`default-src 'none'`) and `nosniff`.
@@ -83,7 +89,7 @@ No `${...}` variables and no `.env` in any compose file. Environment variables o
   CSV export writes `;`, UTF-8 BOM, the column keys as header plus `_Kopien` and `_Aktiv` (no key can start with an underscore); the import maps each CSV column to a column, `@new`, `@copies`, `@active` or nothing.
 - Accent (light blue, slightly green) `#1fb3d6`, dark text on it (`--mat-app-on-accent`), links `#0a7590`; the turquoise-to-blue gradient is only for logos.
 
-## The designer (phase F)
+## The designer
 
 `/Designs/{id}/Designer` (`Pages/Designs/Designer.cshtml`, layout `_Designer`: no menu, no page scroll) is only a frame; the scripts do the rest. Files in `wwwroot/js`, loaded in this order after `dt-engine.js`:
 - `designer.core.js`: helpers (`D.el/svg` DOM builders, `D.icon`, geometry with rotation, API requests), font index, and **`D.createApp`: the state and every command** (`app.doc` = the normalised document, selection,
@@ -107,14 +113,13 @@ How it behaves (keep these when changing it):
   below 1024 px the panels are drawers (`#dt-toggle-left/right`); from 1024 px all three columns.
 - **Icons**: `D.icon(name)` takes `mat-i-*` from the toolkit sprite when it has the name, else `dt-i-*`; in Razor `Ui.Icon(...)` (toolkit) and `Ui.ToolIcon(...)` (app sprite).
 - **Fonts**: the family select lists the `/api/fonts` families, each `<option>` in its own font through a class (`D.fontClass`, a rule inserted into an adopted style sheet: no inline style); the weights offered are the ones of the family (variable: steps of 100).
-- Browser check: `node tests/e2e/designer-check.js [base url]` (about 150 checks incl. screenshots to `docs/images/designer-*.png`; accounts in `tests/e2e/test-account.json`, git-ignored, created on an empty database by the setup assistant).
-  `tests/e2e/demo-label.js` is the demo label of PLAN 1.2 as a document (and its data rows).
+- Browser check: `node tests/e2e/designer-check.js [base url]` (about 150 checks, screenshots to the temp folder; accounts in `tests/e2e/test-account.json`, git-ignored, created on an empty database by the setup assistant). `tests/e2e/demo-label.js` hands the demo document and rows of `Demo/kaesetheke.json` to the checks.
 
-## Output (phase H)
+## Output
 
 The browser is the only renderer, so the server never draws a label: it hands the browser a **payload** and the browser renders it with `DtEngine` (the same code as the designer).
-- **Entity / logic**: `OutputJob` (columns added by migration `Output`: `Scale` fit|none, `StartPosition` 1-based first cell of the first sheet, `FileNamePattern`; `CropMarks`, `Dpi`, `RowSelection`,
-  `SelectedRowIdsJson`, `Copies`, `Mode`, `Format`, `LastRunDate/UserId` existed). `OutputLogic` (static): `Query` (left joins: a deleted design/list/user is null, not a vanished row), `SaveAsync` (checks everything and
+- **Entity / logic**: `OutputJob` (`Scale` fit|none, `StartPosition` 1-based first cell of the first sheet, `FileNamePattern`, `CropMarks`, `Dpi`, `RowSelection`,
+  `SelectedRowIdsJson`, `Copies`, `Mode`, `Format`, `LastRunDate/UserId`). `OutputLogic` (static): `Query` (left joins: a deleted design/list/user is null, not a vanished row), `SaveAsync` (checks everything and
   drops what does not apply: no list = samples and selection All, PNG = single and no sheet fields, label count <= `OutputPlan.MaxLabels` 2000), `PayloadAsync`, `AdhocPayloadAsync`, `MarkRanAsync` (`ExecuteUpdate`, so a run is no
   change of the job), `LabelCountsAsync`. Designers write; every signed-in person reads, runs and uses the single print. The sums (rows to labels, sheets, cell of a label, fit scale) are `Core/Output/OutputPlan`; `output.js`
   and `outputs.js` repeat them for the live count and the placement (the tests keep both honest).
@@ -135,9 +140,9 @@ The browser is the only renderer, so the server never draws a label: it hands th
   raw bytes) is reused, a key with other content comes in as `key-2`, `key-3` ... and the document is rewritten; a font is reused when the file is there, a face that exists with other content is not added (warning).
 - Browser check: `node tests/e2e/output-check.js [base url] [--out folder]` (about 110 checks, screenshots to the temp folder, never into `docs/images`); shared helpers in `tests/e2e/lib.js` (also used by `designer-check.js`).
 
-## AI actions (phase G)
+## AI actions
 
-The AI layer of phase A (`AiLogic.RunAsync`, one JSON object per answer, limits before the call, nudges, steps, journal) now has the DesignThix actions. **The boundary is in code**: the model proposes, `Core/Ai/AiOutputs.cs`
+The AI layer (`AiLogic.RunAsync`, one JSON object per answer, limits before the call, nudges, steps, journal) has the DesignThix actions. **The boundary is in code**: the model proposes, `Core/Ai/AiOutputs.cs`
 checks (pure functions, unit tested with hostile answers), the run stores the CHECKED proposal, the person applies it, the journal takes it back.
 - **Files**: `Core/Ai/AiOutputs.cs` (`AiText.Clean/ForColumn`, `ImageAllowlist`, `DataImportCheck`, `DataFillCheck`, `TextSuggestCheck`), `Logic/AiLogic.cs` (run, limits, transport, undo, runs of a subject, "Weitermachen"),
   `Logic/AiDataLogic.cs` (import + fill: prepare, propose, proposal, apply, discard, revert), `Logic/AiTextLogic.cs` (text suggestions), `Logic/AiInstructions.cs` (the layers and the fixed part per action),
@@ -167,6 +172,26 @@ checks (pure functions, unit tested with hostile answers), the run stores the CH
   fixed part of the instruction) and configures it as a profile through the admin UI; the Docker app reaches it at `http://host.docker.internal:3066/v1` (verified); with `dotnet run` on 3053 pass `--fake-host 127.0.0.1`.
   It raises the address limits in the settings first (the check makes many calls) and restores them, and deletes its profile at the end.
 
+## The demo
+
+`Services/DemoSeeder` adds the template **"Käsetheke – Preisschild"** (150 x 100 mm, `IsTemplate`, category Etiketten), the data list **"Käsetheke (Beispiel)"** (six cheeses, columns from the document) and the output job
+**"Käsetheke – A4 mit 4 Etiketten"** (sheet `a4-2x2-a6`, fit) at start-up, after `LibrarySeeder`, **to a database that has no designs, data lists and output jobs** (deleted ones count). It runs once per database: the setting
+`Demo.Seeded` is written whether or not it seeded, so a deleted demo does not come back. The single source is the embedded file `src/DesignThix/Demo/kaesetheke.json` (design, list, output, the document and the rows);
+`tests/e2e/demo-label.js` reads the same file (`demoRows()` = the first four rows, the checks count on four labels). No thumbnail is stored: the gallery and the start page draw the design with the engine (`designs.js`).
+- **Layout rules** (they came out of looking at all six rows; `demo-check.js` measures the ink of every element and fails when two touch): the name is **bottom aligned** (the baseline stays put when the size shrinks), at most 74 pt, in a box 6 mm
+  inside the label; Kaushan Script descends about 0.22 em below the box, so the region line sits 1.5 mm below that; a text box must be at least as high as the font size (the engine shrinks to fit the height too); the price box ends about 5 mm
+  before the euro sign and the unit, which are placed from the right edge (a price like 12,99 shrinks to its box and keeps clear); "KÄSE" (right aligned) and "SCHNEIDER" (left aligned) are two text elements that meet at one x. Look at `demo-six-labels.png` of the check after every change.
+- The demo is the only content of the README screenshots (`screens.js`): keep it complete and calm.
+
+## Review notes (what was checked, keep it so)
+
+- **No `innerHTML`, `insertAdjacentHTML`, `outerHTML`** in any script of the app (MatUi uses them for its own markup with escaped text); model text only through `textContent`.
+- **CSP and headers** (`Program.cs` middleware) are on every answer, also static files, redirects, errors and the run/print pages; `/media` replaces the CSP of an SVG by `default-src 'none'`; `nosniff` everywhere.
+- **Antiforgery**: Razor Pages check it themselves; every `MapPost` goes through `LibraryEndpoints.Guard` (token in the header `RequestVerificationToken`, from `<meta name="dt-csrf">`).
+- **Permissions**: `Integration/PermissionTests` is a table of every logic method that writes (designer level, administrator level) and runs it as viewer, designer and administrator. A new write method goes into that table.
+- **Secrets** never in a page, a log or the database: API keys in `{data}/secrets/ai`, messages of the AI client are logged with the key replaced.
+- `robots.txt`: `Disallow: /` but `Allow: /llms.txt` (the app is private); `llms.txt` follows llmstxt.org.
+
 ## Gotchas
 
 - AI: a model answer is read leniently (`LenientJson`: fences, chatter, trailing commas), so `GetRawText()` of the element is NOT valid JSON: store `JsonSerializer.Serialize(element)` (jsonb refuses trailing commas). The prompt text uses
@@ -190,8 +215,9 @@ checks (pure functions, unit tested with hostile answers), the run stores the CH
 - Razor: a variable named `section` clashes with the directive; collection initialisers inside tag-helper attributes do not compile (use a variable).
 - `@page` route templates: braces are doubled (`{{0,59}}`) but brackets are not. A literal `{{Name}}` in Razor text is fine.
 - Forms with an explicit `action` need `asp-antiforgery="true"`; edit forms that post to other handlers need `asp-page-handler=""` on the form.
-- MatUi caps `svg` at `max-width: 100%`. The icon names for `Ui.Icon(...)` must exist in `ui/matui-icons.svg` (a name that is not there draws nothing; `printer` is NOT one of them: it is `Ui.ToolIcon("printer")`, and a menu item takes `dt:printer`, see `Ui.NavIcon`); the app's own
+- MatUi caps `svg` at `max-width: 100%`. The icon names for `Ui.Icon(...)` must exist in `ui/matui-icons.svg` (a name that is not there draws nothing; `printer` is NOT one of them: write `dt:printer`; `Ui.Icon("dt:name")`, `icon="dt:name"` of the controls and the menu items take the icons of the app's own sprite); the app's own
   icons are `dt-i-*` in `img/dt-icons.svg` (`Ui.ToolIcon(...)`; `IconSprite` merges the file into the inline sprite, so its first `>` must be the one of the `<svg>` tag: the licence comment goes after it).
+- PWA: `pwa-check.js` is the reference for what an installable app needs here (manifest + maskable icons, theme colours = `--mat-bg` for light and dark, `viewport-fit=cover` with the safe-area paddings of MatUi, 16 px fields on touch screens, offline copy + banner + clean reload). iOS standalone ignores `theme-color`; the status bar style stays `default`. A synthetic `submit` event on a Logout form clears the kept pages (a check must not do that by accident).
 - The service worker precaches the logo files one by one, so a missing file does not stop the installation.
 - The embedded browser of the Claude app cannot register service workers; test the PWA with Playwright and Edge.
 - The MatDesign dev container on port 8060 may serve an older MatUi than the copy here; compare `wwwroot/ui/matui.manifest.json` before syncing.

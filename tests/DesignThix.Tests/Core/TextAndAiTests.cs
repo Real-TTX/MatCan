@@ -11,6 +11,18 @@ public sealed class TextToolsTests
     [InlineData("  ", "")]
     public void Slugs_are_made_from_names(string name, string slug) => Assert.Equal(slug, Slug.From(name));
 
+    [Theory]
+    [InlineData("Fett i. Tr.", "fett_i_tr")]
+    [InlineData("Käse-Preis", "kaese_preis")]
+    public void Keys_are_made_from_labels(string label, string key) => Assert.Equal(key, Slug.Key(label));
+
+    [Theory]
+    [InlineData("it-support", true)]
+    [InlineData("It Support", false)]
+    [InlineData("", false)]
+    [InlineData(null, false)]
+    public void A_slug_is_lower_case_with_dashes(string? slug, bool valid) => Assert.Equal(valid, Slug.IsValid(slug));
+
     [Fact]
     public void Personal_data_is_masked()
     {

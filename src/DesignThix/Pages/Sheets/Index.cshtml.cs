@@ -50,7 +50,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
             (new TableColumn("Schnittmarken", HideOnPhone: true), s => s.CropMarks ? Ui.Pill("ja", "ok") : Ui.Pill("nein", "plain")),
             (new TableColumn("Herkunft"), s => s.IsBuiltIn ? Ui.Pill("mitgeliefert", "plain") : Ui.Pill("eigener", "accent")),
         ],
-        s => [new RowAction("edit", CanEdit ? "Bearbeiten" : "Ansehen", $"/Sheets/Edit/{s.Id}")]) with { EmptyIcon = "grid", EmptyTitle = "Keine Druckbögen gefunden" };
+        s => [new RowAction("edit", CanEdit ? "Bearbeiten" : "Ansehen", $"/Sheets/Edit/{s.Id}")]) with { EmptyIcon = "dt:tags", EmptyTitle = "Keine Druckbögen gefunden" };
     }
 
     public static string Mm(double value) => Math.Round(value, 2).ToString("0.##", Fmt.Culture);

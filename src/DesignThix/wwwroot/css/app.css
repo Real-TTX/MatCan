@@ -18,7 +18,6 @@
 /* ---- Small helpers ---- */
 .dt-sub { display: block; }
 .dt-name, .mat-table__name.dt-name { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
-.dt-prewrap { white-space: pre-wrap; overflow-wrap: anywhere; }
 .dt-person { display: inline-flex; align-items: center; gap: var(--mat-space-2); }
 .dt-break { overflow-wrap: anywhere; word-break: break-word; }
 .mat-page > * + * { margin-top: var(--mat-space-4); }
@@ -47,7 +46,6 @@ a.dt-stat--link:hover { border-color: var(--mat-border-strong); text-decoration:
 /* ---- No connection ---- */
 .dt-offline { margin: 0; border-radius: 0; border-inline: 0; border-top: 0; padding-left: calc(var(--mat-content-pad) + var(--mat-safe-left)); padding-right: calc(var(--mat-content-pad) + var(--mat-safe-right)); }
 .dt-offline[hidden] { display: none; }
-html.is-offline .dt-needs-online { opacity: .55; }
 
 /* ---- Lists of events and notes ---- */
 .dt-notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
@@ -62,23 +60,7 @@ html.is-offline .dt-needs-online { opacity: .55; }
 .dt-note__title { font-weight: 600; color: var(--mat-text); text-decoration: none; overflow-wrap: anywhere; }
 a.dt-note__title:hover { color: var(--mat-accent-text); }
 .dt-note__meta { font-size: var(--mat-fs-sm); color: var(--mat-text-muted); overflow-wrap: anywhere; }
-.dt-note__end { flex: none; font-size: var(--mat-fs-sm); color: var(--mat-text-muted); font-variant-numeric: tabular-nums; }
 
-/* ---- Charts of the overview: one hue (the accent), thin bars with a rounded end on the data side, a value on hover (data-tip) ---- */
-.dt-bars { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; align-items: end; height: 11rem; padding-top: var(--mat-space-4); border-bottom: 1px solid var(--mat-border); }
-.dt-bars__col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 0; }
-.dt-bars__bar { width: min(100%, 1.75rem); height: var(--dt-bar, 0%); min-height: 2px; background: var(--mat-accent); border-radius: 4px 4px 0 0; }
-.dt-bars__bar.is-zero { background: var(--mat-border); }
-.dt-bars__value { font-size: var(--mat-fs-xs); color: var(--mat-text-muted); font-variant-numeric: tabular-nums; margin-bottom: 2px; }
-.dt-bars__axis { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; margin-top: var(--mat-space-1); }
-.dt-bars__axis span { font-size: var(--mat-fs-xs); color: var(--mat-text-muted); text-align: center; white-space: nowrap; overflow: hidden; }
-@media (max-width: 599px) { .dt-bars__axis span:nth-child(even) { visibility: hidden; } }
-.dt-hbars { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--mat-space-3); }
-.dt-hbars__row { display: grid; grid-template-columns: minmax(6rem, 9rem) minmax(0, 1fr) 2.5rem; gap: var(--mat-space-3); align-items: center; }
-.dt-hbars__label { font-size: var(--mat-fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dt-hbars__track { height: 10px; }
-.dt-hbars__bar { display: block; height: 100%; width: var(--dt-bar, 0%); min-width: 2px; background: var(--mat-accent); border-radius: 0 4px 4px 0; }
-.dt-hbars__value { text-align: right; font-variant-numeric: tabular-nums; font-size: var(--mat-fs-sm); color: var(--mat-text-muted); }
 
 /* ---- Scrollbars: hidden until something scrolls, then thin and in the colours of the app ---- */
 * { scrollbar-width: thin; scrollbar-color: transparent transparent; }
@@ -101,7 +83,6 @@ a.dt-note__title:hover { color: var(--mat-accent-text); }
 .dt-details { margin-top: var(--mat-space-3); }
 .dt-details > summary { cursor: pointer; color: var(--mat-accent-text); font-weight: 500; padding: var(--mat-space-2) 0; }
 .dt-details > summary:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); border-radius: var(--mat-radius-xs); }
-.dt-col-actions { width: 1%; white-space: nowrap; text-align: end; }
 
 /* ==========================================================================
    The library (phase E): media, fonts, sheets, the column editor
@@ -116,7 +97,7 @@ a.dt-note__title:hover { color: var(--mat-accent-text); }
 .dt-assetcell__text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
 /* Pictures of media are never cropped: the picture fills the frame (absolute, so its height does not depend on the aspect ratio of the frame), is contained with a
    margin, and sits on a quiet checkerboard so that transparent flags and seals read well (the gallery, the table cells, the preview, the designer's media tab). */
-.dt-checker, .dt-tile--contain .mat-tile__media, .dt-thumb, .dt-preview.dt-preview--asset { background-color: var(--mat-surface-2); background-image: conic-gradient(var(--mat-surface-3) 25%, transparent 0 50%, var(--mat-surface-3) 0 75%, transparent 0); background-size: 12px 12px; }
+.dt-tile--contain .mat-tile__media, .dt-thumb, .dt-preview.dt-preview--asset { background-color: var(--mat-surface-2); background-image: conic-gradient(var(--mat-surface-3) 25%, transparent 0 50%, var(--mat-surface-3) 0 75%, transparent 0); background-size: 12px 12px; }
 .dt-tile--contain .mat-tile__media { position: relative; overflow: hidden; }
 .dt-tile--contain .mat-tile__media img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; padding: var(--mat-space-3); box-sizing: border-box; object-fit: contain; }
 .mat-tile__meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

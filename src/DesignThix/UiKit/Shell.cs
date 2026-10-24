@@ -106,7 +106,7 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
             new("Ausgabe",
             [
                 new("Ausgaben", "/Outputs", "dt:printer"),
-                new("Druckbögen", "/Sheets", "grid"),
+                new("Druckbögen", "/Sheets", "dt:tags"),
             ]),
         ]);
     }
