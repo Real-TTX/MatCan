@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<title>Vegan</title>
+<circle cx="100" cy="100" r="92" fill="#FFFFFF" stroke="#2E8B47" stroke-width="8"/>
+<path d="M100,128 V92" fill="none" stroke="#2E8B47" stroke-width="9" stroke-linecap="round"/>
+<path d="M100,98 C70,100 52,82 52,56 C80,54 100,70 100,98 Z" fill="#2E8B47"/>
+<path d="M100,92 C100,66 118,46 148,46 C148,76 130,94 100,92 Z" fill="#2E8B47"/>
+<path d="M92,92 C80,84 70,74 62,64" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+<path d="M108,86 C118,76 128,66 138,56" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+<path d="M46.86,140L55.43,164L64,140M86.29,140L69.14,140L69.14,164L86.29,164M69.14,152L82.86,152M108.57,145.14L105.14,140L94.86,140L91.43,145.14L91.43,158.86L94.86,164L105.14,164L108.57,158.86L108.57,152L100,152M113.71,164L122.29,140L130.86,164M117.14,155.43L127.43,155.43M136,164L136,140L153.14,164L153.14,140" fill="none" stroke="#2E8B47" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

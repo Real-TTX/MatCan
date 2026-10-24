@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<title>Regional</title>
+<circle cx="100" cy="100" r="92" fill="#FFFFFF" stroke="#2E8B47" stroke-width="8"/>
+<defs><clipPath id="i-regional-face"><circle cx="100" cy="100" r="88"/></clipPath></defs>
+<path d="M0,168 C50,110 150,110 200,168 V200 H0 Z" fill="#2E8B47" clip-path="url(#i-regional-face)"/>
+<path d="M100,36 C78,36 62,52 62,72 C62,98 100,128 100,128 C100,128 138,98 138,72 C138,52 122,36 100,36 Z" fill="#D6342B" stroke="#FFFFFF" stroke-width="5"/>
+<circle cx="100" cy="72" r="14" fill="#FFFFFF"/>
+</svg>

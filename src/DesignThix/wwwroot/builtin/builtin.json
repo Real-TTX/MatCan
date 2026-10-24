@@ -1,0 +1,422 @@
+[
+  {
+    "key": "flag-de",
+    "name": "Deutschland",
+    "category": "Flaggen",
+    "file": "flags/de.svg",
+    "tags": [
+      "Deutschland",
+      "Germany",
+      "DE"
+    ]
+  },
+  {
+    "key": "flag-at",
+    "name": "Österreich",
+    "category": "Flaggen",
+    "file": "flags/at.svg",
+    "tags": [
+      "Österreich",
+      "Austria",
+      "AT"
+    ]
+  },
+  {
+    "key": "flag-fr",
+    "name": "Frankreich",
+    "category": "Flaggen",
+    "file": "flags/fr.svg",
+    "tags": [
+      "Frankreich",
+      "France",
+      "FR"
+    ]
+  },
+  {
+    "key": "flag-it",
+    "name": "Italien",
+    "category": "Flaggen",
+    "file": "flags/it.svg",
+    "tags": [
+      "Italien",
+      "Italy",
+      "IT"
+    ]
+  },
+  {
+    "key": "flag-nl",
+    "name": "Niederlande",
+    "category": "Flaggen",
+    "file": "flags/nl.svg",
+    "tags": [
+      "Niederlande",
+      "Holland",
+      "Netherlands",
+      "NL"
+    ]
+  },
+  {
+    "key": "flag-be",
+    "name": "Belgien",
+    "category": "Flaggen",
+    "file": "flags/be.svg",
+    "tags": [
+      "Belgien",
+      "Belgium",
+      "BE"
+    ]
+  },
+  {
+    "key": "flag-lu",
+    "name": "Luxemburg",
+    "category": "Flaggen",
+    "file": "flags/lu.svg",
+    "tags": [
+      "Luxemburg",
+      "Luxembourg",
+      "LU"
+    ]
+  },
+  {
+    "key": "flag-ie",
+    "name": "Irland",
+    "category": "Flaggen",
+    "file": "flags/ie.svg",
+    "tags": [
+      "Irland",
+      "Ireland",
+      "IE"
+    ]
+  },
+  {
+    "key": "flag-pl",
+    "name": "Polen",
+    "category": "Flaggen",
+    "file": "flags/pl.svg",
+    "tags": [
+      "Polen",
+      "Poland",
+      "PL"
+    ]
+  },
+  {
+    "key": "flag-hu",
+    "name": "Ungarn",
+    "category": "Flaggen",
+    "file": "flags/hu.svg",
+    "tags": [
+      "Ungarn",
+      "Hungary",
+      "HU"
+    ]
+  },
+  {
+    "key": "flag-cz",
+    "name": "Tschechien",
+    "category": "Flaggen",
+    "file": "flags/cz.svg",
+    "tags": [
+      "Tschechien",
+      "Czechia",
+      "CZ"
+    ]
+  },
+  {
+    "key": "flag-ch",
+    "name": "Schweiz",
+    "category": "Flaggen",
+    "file": "flags/ch.svg",
+    "tags": [
+      "Schweiz",
+      "Switzerland",
+      "CH"
+    ]
+  },
+  {
+    "key": "flag-es",
+    "name": "Spanien",
+    "category": "Flaggen",
+    "file": "flags/es.svg",
+    "tags": [
+      "Spanien",
+      "Spain",
+      "ES"
+    ]
+  },
+  {
+    "key": "flag-dk",
+    "name": "Dänemark",
+    "category": "Flaggen",
+    "file": "flags/dk.svg",
+    "tags": [
+      "Dänemark",
+      "Denmark",
+      "DK"
+    ]
+  },
+  {
+    "key": "flag-se",
+    "name": "Schweden",
+    "category": "Flaggen",
+    "file": "flags/se.svg",
+    "tags": [
+      "Schweden",
+      "Sweden",
+      "SE"
+    ]
+  },
+  {
+    "key": "flag-fi",
+    "name": "Finnland",
+    "category": "Flaggen",
+    "file": "flags/fi.svg",
+    "tags": [
+      "Finnland",
+      "Finland",
+      "FI"
+    ]
+  },
+  {
+    "key": "flag-no",
+    "name": "Norwegen",
+    "category": "Flaggen",
+    "file": "flags/no.svg",
+    "tags": [
+      "Norwegen",
+      "Norway",
+      "NO"
+    ]
+  },
+  {
+    "key": "flag-gr",
+    "name": "Griechenland",
+    "category": "Flaggen",
+    "file": "flags/gr.svg",
+    "tags": [
+      "Griechenland",
+      "Greece",
+      "GR"
+    ]
+  },
+  {
+    "key": "flag-pt",
+    "name": "Portugal",
+    "category": "Flaggen",
+    "file": "flags/pt.svg",
+    "tags": [
+      "Portugal",
+      "PT"
+    ]
+  },
+  {
+    "key": "flag-gb",
+    "name": "Vereinigtes Königreich",
+    "category": "Flaggen",
+    "file": "flags/gb.svg",
+    "tags": [
+      "Vereinigtes Königreich",
+      "Großbritannien",
+      "England",
+      "United Kingdom",
+      "Union Jack",
+      "UK",
+      "GB"
+    ]
+  },
+  {
+    "key": "flag-eu",
+    "name": "Europäische Union",
+    "category": "Flaggen",
+    "file": "flags/eu.svg",
+    "tags": [
+      "Europäische Union",
+      "Europa",
+      "EU",
+      "Europe"
+    ]
+  },
+  {
+    "key": "flag-us",
+    "name": "Vereinigte Staaten",
+    "category": "Flaggen",
+    "file": "flags/us.svg",
+    "tags": [
+      "Vereinigte Staaten",
+      "USA",
+      "Amerika",
+      "United States",
+      "US"
+    ]
+  },
+  {
+    "key": "icon-vegetarisch",
+    "name": "Vegetarisch",
+    "category": "Siegel",
+    "file": "icons/vegetarisch.svg",
+    "tags": [
+      "vegetarisch",
+      "veggie",
+      "ohne Fleisch",
+      "Ernährung"
+    ]
+  },
+  {
+    "key": "icon-vegan",
+    "name": "Vegan",
+    "category": "Siegel",
+    "file": "icons/vegan.svg",
+    "tags": [
+      "vegan",
+      "pflanzlich",
+      "Ernährung"
+    ]
+  },
+  {
+    "key": "icon-bio",
+    "name": "Bio",
+    "category": "Siegel",
+    "file": "icons/bio.svg",
+    "tags": [
+      "bio",
+      "öko",
+      "organic",
+      "Blatt",
+      "Ernährung"
+    ]
+  },
+  {
+    "key": "icon-laktosefrei",
+    "name": "Laktosefrei",
+    "category": "Siegel",
+    "file": "icons/laktosefrei.svg",
+    "tags": [
+      "laktosefrei",
+      "ohne Laktose",
+      "Milch",
+      "Unverträglichkeit"
+    ]
+  },
+  {
+    "key": "icon-glutenfrei",
+    "name": "Glutenfrei",
+    "category": "Siegel",
+    "file": "icons/glutenfrei.svg",
+    "tags": [
+      "glutenfrei",
+      "ohne Gluten",
+      "Weizen",
+      "Getreide",
+      "Unverträglichkeit"
+    ]
+  },
+  {
+    "key": "icon-regional",
+    "name": "Regional",
+    "category": "Siegel",
+    "file": "icons/regional.svg",
+    "tags": [
+      "regional",
+      "Heimat",
+      "aus der Region",
+      "Herkunft"
+    ]
+  },
+  {
+    "key": "icon-rohmilch",
+    "name": "Rohmilch",
+    "category": "Siegel",
+    "file": "icons/rohmilch.svg",
+    "tags": [
+      "rohmilch",
+      "Milch",
+      "Käse"
+    ]
+  },
+  {
+    "key": "icon-heumilch",
+    "name": "Heumilch",
+    "category": "Siegel",
+    "file": "icons/heumilch.svg",
+    "tags": [
+      "heumilch",
+      "Heu",
+      "Milch",
+      "Wiese",
+      "Käse"
+    ]
+  },
+  {
+    "key": "icon-schwangerschaft",
+    "name": "Für Schwangere geeignet",
+    "category": "Siegel",
+    "file": "icons/schwangerschaft.svg",
+    "tags": [
+      "schwangerschaft",
+      "schwanger",
+      "Schwangere",
+      "geeignet",
+      "Käse"
+    ]
+  },
+  {
+    "key": "icon-neu",
+    "name": "Neu",
+    "category": "Siegel",
+    "file": "icons/neu.svg",
+    "tags": [
+      "neu",
+      "Neuheit",
+      "new"
+    ]
+  },
+  {
+    "key": "icon-angebot",
+    "name": "Angebot",
+    "category": "Siegel",
+    "file": "icons/angebot.svg",
+    "tags": [
+      "angebot",
+      "Aktion",
+      "Rabatt",
+      "Prozent",
+      "sale"
+    ]
+  },
+  {
+    "key": "icon-handgemacht",
+    "name": "Handgemacht",
+    "category": "Siegel",
+    "file": "icons/handgemacht.svg",
+    "tags": [
+      "handgemacht",
+      "Handarbeit",
+      "Manufaktur",
+      "selbstgemacht"
+    ]
+  },
+  {
+    "key": "icon-gereift",
+    "name": "Gereift",
+    "category": "Siegel",
+    "file": "icons/gereift.svg",
+    "tags": [
+      "gereift",
+      "Reifung",
+      "Käse",
+      "lange gereift",
+      "Reifezeit"
+    ]
+  },
+  {
+    "key": "icon-gentechnikfrei",
+    "name": "Gentechnikfrei",
+    "category": "Siegel",
+    "file": "icons/gentechnikfrei.svg",
+    "tags": [
+      "gentechnikfrei",
+      "ohne Gentechnik",
+      "GVO",
+      "DNA"
+    ]
+  }
+]

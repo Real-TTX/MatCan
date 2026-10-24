@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<title>Heumilch</title>
+<circle cx="100" cy="100" r="92" fill="#FFFFFF" stroke="#2E8B47" stroke-width="8"/>
+<path d="M100,118 C100,90 96,66 86,44 M100,118 C104,86 112,62 128,42 M100,118 C84,100 68,86 52,76 M100,118 C116,100 134,90 150,84 M100,118 C98,92 100,66 104,40" fill="none" stroke="#2E8B47" stroke-width="7" stroke-linecap="round"/>
+<path d="M66.57,130L66.57,156M85.14,130L85.14,156M66.57,143L85.14,143M109.29,130L90.71,130L90.71,156L109.29,156M90.71,143L105.57,143M114.86,130L114.86,152.29L118.57,156L129.71,156L133.43,152.29L133.43,130" fill="none" stroke="#1F6FB8" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

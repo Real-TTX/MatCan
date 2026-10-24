@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<title>Vegetarisch</title>
+<circle cx="100" cy="100" r="92" fill="#FFFFFF" stroke="#2E8B47" stroke-width="8"/>
+<path d="M58,70 L92,140 L126,70" fill="none" stroke="#2E8B47" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M116,64 C118,44 134,34 154,38 C156,58 142,74 116,64 Z" fill="#2E8B47"/>
+<path d="M122,62 C132,54 142,48 150,43" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+</svg>

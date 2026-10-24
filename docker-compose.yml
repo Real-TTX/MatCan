@@ -1,0 +1,37 @@
+# DesignThix – Release (Branch main, Image :latest)
+#   docker compose up -d        →  http://localhost:3043
+# Der erste Aufruf legt den Administrator an (es gibt kein Standardpasswort).
+# Update: docker compose pull && docker compose up -d (die Datenbank migriert sich beim Start selbst).
+# Für mehr als das lokale Netz einen Reverse-Proxy mit TLS davorsetzen.
+name: designthix
+
+services:
+  web:
+    image: ghcr.io/real-ttx/designthix:latest
+    restart: unless-stopped
+    ports:
+      - "3043:3043"
+    volumes:
+      - web-data:/data
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: designthix
+      POSTGRES_USER: designthix
+      POSTGRES_PASSWORD: designthix
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U designthix -d designthix"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  web-data:
+  db-data:

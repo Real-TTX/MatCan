@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<title>Gereift</title>
+<circle cx="100" cy="100" r="92" fill="#FFFFFF" stroke="#8A5A12" stroke-width="8"/>
+<path d="M34,134 L150,60 C166,58 170,68 168,84 L168,134 Z" fill="#E7A21B" stroke="#8A5A12" stroke-width="6" stroke-linejoin="round"/>
+<path d="M34,134 L168,134 L168,148 L34,148 Z" fill="#8A5A12"/>
+<circle cx="130" cy="96" r="9" fill="#FFFFFF" stroke="#8A5A12" stroke-width="3"/>
+<circle cx="102" cy="116" r="7" fill="#FFFFFF" stroke="#8A5A12" stroke-width="3"/>
+<circle cx="150" cy="118" r="6" fill="#FFFFFF" stroke="#8A5A12" stroke-width="3"/>
+<circle cx="74" cy="124" r="4.5" fill="#FFFFFF" stroke="#8A5A12" stroke-width="3"/>
+</svg>

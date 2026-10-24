@@ -1,0 +1,86 @@
+@page
+@model DesignThix.Pages.Admin.Ai.Runs.DetailsModel
+@{
+    var r = Model.Details.Run;
+    var canContinue = r.Status is AiRunStatus.Stuck or AiRunStatus.Error or AiRunStatus.LimitReached or AiRunStatus.Waiting && r.Action is AiAction.Test;
+}
+
+<div class="dt-split">
+    <dt-card title="Schritte" icon="activity">
+        <ol class="mat-timeline">
+            @foreach (var s in r.Steps)
+            {
+                var tone = s.Kind switch { AiStepKind.Warning => "mat-timeline__warn", AiStepKind.Result when r.Status == AiRunStatus.Error && s == r.Steps.Last() => "mat-timeline__error", AiStepKind.Result => "mat-timeline__ok", _ => "" };
+                <li class="@tone">
+                    <strong>@Labels.Of(s.Kind)</strong> <span class="mat-muted">@Fmt.Time(s.OccurredDate)</span>
+                    @if (s.Kind == AiStepKind.Message && s.Text.Length > 300)
+                    {
+                        <details class="dt-details"><summary>Vollständige Nachricht anzeigen (@Fmt.Integer(s.Text.Length) Zeichen)</summary><pre class="dt-code dt-code--wrap">@s.Text</pre></details>
+                    }
+                    else
+                    {
+                        <pre class="dt-code dt-code--wrap">@s.Text</pre>
+                    }
+                </li>
+            }
+        </ol>
+    </dt-card>
+
+    <aside class="mat-stack">
+        <dt-card title="Lauf" icon="sparkles">
+            <dl class="mat-kv">
+                <dt>Ende</dt><dd>@Labels.Pill(r.Status)</dd>
+                <dt>Aktion</dt><dd>@Labels.Of(r.Action)</dd>
+                <dt>Profil</dt><dd>@(string.IsNullOrEmpty(r.ProfileName) ? "–" : r.ProfileName) @(r.Transport == "relay" ? "(Relay)" : "")</dd>
+                <dt>Modell</dt><dd class="mat-mono">@(string.IsNullOrEmpty(r.Model) ? "–" : r.Model)</dd>
+                <dt>Tokens</dt><dd>@Fmt.Integer(r.PromptTokens) + @Fmt.Integer(r.CompletionTokens)@(r.TokensEstimated ? " (geschätzt)" : "")</dd>
+                <dt>Anstöße</dt><dd>@r.Nudges</dd>
+                <dt>Gestartet</dt><dd>@Fmt.Moment(r.StartDate)</dd>
+                <dt>Dauer</dt><dd>@(r.EndDate is { } end ? $"{(end - r.StartDate).TotalSeconds:0.0} s" : "–")</dd>
+                @if (r.SubjectType is { } kind) { <dt>Betrifft</dt><dd>@kind@(r.SubjectId is { } sid ? $" #{sid}" : "")</dd> }
+                @if (r.AddressHash is not null) { <dt>Adresse (Hash)</dt><dd class="mat-mono">@r.AddressHash</dd> }
+                @if (r.Error is not null) { <dt>Grund</dt><dd>@r.Error</dd> }
+            </dl>
+        </dt-card>
+
+        <dt-card title="Änderungen (Journal)" icon="clock">
+            @if (Model.Details.Journal.Count == 0)
+            {
+                <p class="mat-muted">Dieser Lauf hat nichts geändert.</p>
+            }
+            else
+            {
+                <ul class="dt-notes">
+                    @foreach (var j in Model.Details.Journal)
+                    {
+                        <li class="dt-note">
+                            <span class="dt-note__icon">@Ui.Icon(j.RevertedDate is null ? "edit" : "restore")</span>
+                            <div class="dt-note__body">
+                                <span class="dt-note__title">@j.EntityType #@j.EntityId · @j.Field</span>
+                                <span class="dt-note__meta">@(j.OldValue ?? "–") → @(j.NewValue ?? "–")@(j.RevertedDate is null ? "" : $" · rückgängig {Fmt.Moment(j.RevertedDate)}")</span>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                @if (Model.Details.UndoBlockedBy is { } blocked)
+                {
+                    <p class="mat-hint">@blocked</p>
+                }
+            }
+            <div class="mat-actions">
+                @if (Model.Details.CanUndo)
+                {
+                    <form method="post" asp-page-handler="Undo" asp-route-id="@r.Id">
+                        <button type="submit" class="mat-btn mat-btn--secondary" data-confirm="Die Änderungen dieses Laufs rückgängig machen?" data-confirm-ok="Rückgängig">@Ui.Icon("restore")<span>Rückgängig</span></button>
+                    </form>
+                }
+                @if (canContinue)
+                {
+                    <form method="post" asp-page-handler="Continue" asp-route-id="@r.Id">
+                        <button type="submit" class="mat-btn mat-btn--primary">@Ui.Icon("play")<span>Weitermachen</span></button>
+                    </form>
+                }
+            </div>
+        </dt-card>
+    </aside>
+</div>

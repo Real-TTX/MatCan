@@ -1,0 +1,40 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model DesignThix.Pages.Account.ProfileModel
+@{
+    ViewData["Width"] = "narrow";
+    var themes = new List<SelectListItem> { new("System", "system"), new("Hell", "light"), new("Dunkel", "dark") };
+}
+
+<form class="mat-form" method="post" asp-page-handler="Profile" novalidate>
+    <dt-card title="Profil" icon="user">
+        <dt-summary />
+        <div class="mat-form__grid">
+            <dt-input for="Profile.DisplayName" label="Name" autocomplete="name" />
+            <dt-input for="Profile.Phone" label="Telefon" type="tel" autocomplete="tel" />
+            <div class="mat-field">
+                <span class="mat-label">E-Mail-Adresse</span>
+                <input class="mat-input" value="@Model.Email" disabled />
+                <span class="mat-hint">Die Adresse ändert die Administration.</span>
+            </div>
+            <dt-select for="Profile.Theme" label="Darstellung" items="themes" hint="Der Knopf unten im Menü stellt das Gleiche ein." />
+            <div class="mat-field">
+                <span class="mat-label">Rolle</span>
+                <input class="mat-input" value="@Labels.Of(Model.Role)" disabled />
+                <span class="mat-hint">@Labels.Describe(Model.Role)</span>
+            </div>
+        </div>
+    </dt-card>
+    <dt-buttons back-href="/" />
+</form>
+
+<form class="mat-form" method="post" asp-page-handler="Password" novalidate>
+    <dt-card title="Passwort ändern" icon="lock">
+        <div class="mat-form__grid">
+            <dt-input for="Password.Current" label="Aktuelles Passwort" type="password" autocomplete="current-password" full="true" required="true" />
+            <dt-input for="Password.New" label="Neues Passwort" type="password" autocomplete="new-password" hint="Mindestens 10 Zeichen." />
+            <dt-input for="Password.Repeat" label="Neues Passwort wiederholen" type="password" autocomplete="new-password" />
+        </div>
+    </dt-card>
+    <dt-buttons save-text="Passwort speichern" save-icon="key" back-href="/" />
+</form>

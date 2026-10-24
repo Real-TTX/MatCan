@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DesignThix.Core/DesignThix.Core.csproj" />
+    <Project Path="src/DesignThix/DesignThix.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DesignThix.Tests/DesignThix.Tests.csproj" />
+  </Folder>
+</Solution>

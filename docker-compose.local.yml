@@ -1,0 +1,73 @@
+# DesignThix – Local (baut das Image aus diesem Ordner) mit pgAdmin
+#   ./scripts/redeploy.ps1              (baut neu und startet den Stack: so wird jede Änderung getestet)
+#   docker compose -f docker-compose.local.yml up -d --build
+#   App:      http://localhost:3043
+#   pgAdmin:  http://localhost:3044   (ohne Anmeldung; Datenbank-Passwort: designthix)
+#   Postgres: localhost:3045          (für Tests und Werkzeuge)
+name: designthix-local
+
+services:
+  web:
+    build: .
+    image: designthix:local
+    restart: unless-stopped
+    ports:
+      - "3043:3043"
+    volumes:
+      - web-data:/data
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    ports:
+      - "3045:5432"
+    environment:
+      POSTGRES_DB: designthix
+      POSTGRES_USER: designthix
+      POSTGRES_PASSWORD: designthix
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U designthix -d designthix"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    ports:
+      - "3044:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@designthix.example.com
+      PGADMIN_DEFAULT_PASSWORD: designthix
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    configs:
+      - source: servers
+        target: /pgadmin4/servers.json
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - db
+
+configs:
+  servers:
+    content: |
+      {"Servers": {"1": {"Name": "DesignThix (local)", "Group": "Servers", "Host": "db", "Port": 5432, "MaintenanceDB": "designthix", "Username": "designthix", "SSLMode": "prefer"}}}
+
+volumes:
+  web-data:
+  db-data:
+  pgadmin-data:
+
+# Ein festes Subnetz: auf einem Rechner mit vielen Stacks gehen Docker sonst die Adressbereiche aus
+# ("all predefined address pools have been fully subnetted").
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 10.253.43.0/24

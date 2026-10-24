@@ -1,0 +1,138 @@
+[
+  {
+    "family": "Montserrat",
+    "file": "Montserrat-Variable.ttf",
+    "weight": "100 900",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/montserrat/Montserrat[wght].ttf"
+  },
+  {
+    "family": "Montserrat",
+    "file": "Montserrat-Italic-Variable.ttf",
+    "weight": "100 900",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/montserrat/Montserrat-Italic[wght].ttf"
+  },
+  {
+    "family": "Bebas Neue",
+    "file": "BebasNeue-Regular.ttf",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/bebasneue/BebasNeue-Regular.ttf"
+  },
+  {
+    "family": "Oswald",
+    "file": "Oswald-Variable.ttf",
+    "weight": "200 700",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/oswald/Oswald[wght].ttf"
+  },
+  {
+    "family": "Kaushan Script",
+    "file": "KaushanScript-Regular.ttf",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/kaushanscript/KaushanScript-Regular.ttf"
+  },
+  {
+    "family": "Caveat",
+    "file": "Caveat-Variable.ttf",
+    "weight": "400 700",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/caveat/Caveat[wght].ttf"
+  },
+  {
+    "family": "Playfair Display",
+    "file": "PlayfairDisplay-Variable.ttf",
+    "weight": "400 900",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/playfairdisplay/PlayfairDisplay[wght].ttf"
+  },
+  {
+    "family": "Playfair Display",
+    "file": "PlayfairDisplay-Italic-Variable.ttf",
+    "weight": "400 900",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/playfairdisplay/PlayfairDisplay-Italic[wght].ttf"
+  },
+  {
+    "family": "Lora",
+    "file": "Lora-Variable.ttf",
+    "weight": "400 700",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/lora/Lora[wght].ttf"
+  },
+  {
+    "family": "Lora",
+    "file": "Lora-Italic-Variable.ttf",
+    "weight": "400 700",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/lora/Lora-Italic[wght].ttf"
+  },
+  {
+    "family": "Open Sans",
+    "file": "OpenSans-Variable.ttf",
+    "weight": "300 800",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/opensans/OpenSans[wdth,wght].ttf"
+  },
+  {
+    "family": "Open Sans",
+    "file": "OpenSans-Italic-Variable.ttf",
+    "weight": "300 800",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/opensans/OpenSans-Italic[wdth,wght].ttf"
+  },
+  {
+    "family": "Roboto Slab",
+    "file": "RobotoSlab-Variable.ttf",
+    "weight": "100 900",
+    "style": "normal",
+    "license": "Apache-2.0",
+    "source": "https://github.com/google/fonts/blob/main/apache/robotoslab/RobotoSlab[wght].ttf"
+  },
+  {
+    "family": "Pacifico",
+    "file": "Pacifico-Regular.ttf",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/pacifico/Pacifico-Regular.ttf"
+  },
+  {
+    "family": "Permanent Marker",
+    "file": "PermanentMarker-Regular.ttf",
+    "weight": "400",
+    "style": "normal",
+    "license": "Apache-2.0",
+    "source": "https://github.com/google/fonts/blob/main/apache/permanentmarker/PermanentMarker-Regular.ttf"
+  },
+  {
+    "family": "Source Sans 3",
+    "file": "SourceSans3-Variable.ttf",
+    "weight": "200 900",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/sourcesans3/SourceSans3[wght].ttf"
+  },
+  {
+    "family": "Source Sans 3",
+    "file": "SourceSans3-Italic-Variable.ttf",
+    "weight": "200 900",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/sourcesans3/SourceSans3-Italic[wght].ttf"
+  }
+]

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600">
+<title>Portugal</title>
+<rect x="0" y="0" width="360" height="600" fill="#006600"/>
+<rect x="360" y="0" width="540" height="600" fill="#FF0000"/>
+<circle cx="360" cy="300" r="118" fill="#FFE000"/>
+<circle cx="360" cy="300" r="102" fill="#FF0000"/>
+<ellipse cx="360" cy="300" rx="52" ry="102" fill="none" stroke="#FFE000" stroke-width="12"/>
+<rect x="258" y="294" width="204" height="12" fill="#FFE000"/>
+<path d="M303.9,232.8 H416.1 V299.1 C416.1,339.9 380.4,357.24 360,367.44 C339.6,357.24 303.9,339.9 303.9,299.1 Z" fill="#FF0000" stroke="#FFE000" stroke-width="10" stroke-linejoin="round"/>
+<path d="M317.1,247.2 H402.9 V297.9 C402.9,329.1 375.6,342.36 360,350.16 C344.4,342.36 317.1,329.1 317.1,297.9 Z" fill="#FFFFFF"/>
+<path d="M331.4,262.8 H388.6 V296.6 C388.6,317.4 370.4,326.24 360,331.44 C349.6,326.24 331.4,317.4 331.4,296.6 Z" fill="#003399"/>
+<path d="M341.3,273.6 H378.7 V295.7 C378.7,309.3 366.8,315.08 360,318.48 C353.2,315.08 341.3,309.3 341.3,295.7 Z" fill="#FFFFFF"/>
+<circle cx="360" cy="285.4" r="3.6" fill="#003399"/>
+<circle cx="349.2" cy="298" r="3.6" fill="#003399"/>
+<circle cx="370.8" cy="298" r="3.6" fill="#003399"/>
+<circle cx="360" cy="310.6" r="3.6" fill="#003399"/>
+<circle cx="360" cy="298" r="3.6" fill="#003399"/>
+</svg>

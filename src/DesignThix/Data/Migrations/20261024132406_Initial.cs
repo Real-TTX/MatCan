@@ -1,0 +1,379 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
+
+namespace DesignThix.Data.Migrations
+{
+    /// <inheritdoc />
+    public partial class Initial : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "ActivityLog",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OccurredDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: true),
+                    UserName = table.Column<string>(type: "text", nullable: true),
+                    Action = table.Column<string>(type: "text", nullable: false),
+                    EntityType = table.Column<string>(type: "text", nullable: true),
+                    EntityId = table.Column<long>(type: "bigint", nullable: true),
+                    Summary = table.Column<string>(type: "text", nullable: true),
+                    IpAddress = table.Column<string>(type: "text", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateUserId = table.Column<long>(type: "bigint", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdateUserId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActivityLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AiProfile",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Provider = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    Preset = table.Column<string>(type: "text", nullable: true),
+                    BaseUrl = table.Column<string>(type: "text", nullable: false),
+                    Model = table.Column<string>(type: "text", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    SecretToken = table.Column<Guid>(type: "uuid", nullable: false),
+                    Note = table.Column<string>(type: "text", nullable: true),
+                    UpdateState = table.Column<short>(type: "smallint", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateUserId = table.Column<long>(type: "bigint", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdateUserId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AiProfile", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AiRun",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Action = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    Status = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    SubjectType = table.Column<string>(type: "text", nullable: true),
+                    SubjectId = table.Column<long>(type: "bigint", nullable: true),
+                    UserId = table.Column<long>(type: "bigint", nullable: true),
+                    AddressHash = table.Column<string>(type: "text", nullable: true),
+                    ProfileName = table.Column<string>(type: "text", nullable: false),
+                    Model = table.Column<string>(type: "text", nullable: false),
+                    Transport = table.Column<string>(type: "text", nullable: false),
+                    PromptTokens = table.Column<int>(type: "integer", nullable: false),
+                    CompletionTokens = table.Column<int>(type: "integer", nullable: false),
+                    TokensEstimated = table.Column<bool>(type: "boolean", nullable: false),
+                    Nudges = table.Column<int>(type: "integer", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Error = table.Column<string>(type: "text", nullable: true),
+                    ResultJson = table.Column<string>(type: "jsonb", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateUserId = table.Column<long>(type: "bigint", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdateUserId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AiRun", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Setting",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Key = table.Column<string>(type: "text", nullable: false),
+                    Value = table.Column<string>(type: "text", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateUserId = table.Column<long>(type: "bigint", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdateUserId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Setting", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    DisplayName = table.Column<string>(type: "text", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: true),
+                    Role = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    Phone = table.Column<string>(type: "text", nullable: true),
+                    Theme = table.Column<string>(type: "text", nullable: false),
+                    LastLoginDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    FailedLogins = table.Column<int>(type: "integer", nullable: false),
+                    LockoutEndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    PasswordChangedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdateState = table.Column<short>(type: "smallint", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateUserId = table.Column<long>(type: "bigint", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdateUserId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AiJournalEntry",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AiRunId = table.Column<long>(type: "bigint", nullable: false),
+                    EntityType = table.Column<string>(type: "text", nullable: false),
+                    EntityId = table.Column<long>(type: "bigint", nullable: false),
+                    Field = table.Column<string>(type: "text", nullable: false),
+                    OldValue = table.Column<string>(type: "text", nullable: true),
+                    NewValue = table.Column<string>(type: "text", nullable: true),
+                    RevertedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateUserId = table.Column<long>(type: "bigint", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdateUserId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AiJournalEntry", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AiJournalEntry_AiRun_AiRunId",
+                        column: x => x.AiRunId,
+                        principalTable: "AiRun",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AiRunStep",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AiRunId = table.Column<long>(type: "bigint", nullable: false),
+                    Number = table.Column<int>(type: "integer", nullable: false),
+                    Kind = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: false),
+                    OccurredDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateUserId = table.Column<long>(type: "bigint", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdateUserId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AiRunStep", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AiRunStep_AiRun_AiRunId",
+                        column: x => x.AiRunId,
+                        principalTable: "AiRun",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserSession",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Token = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    ExpiresDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastSeenDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IpAddress = table.Column<string>(type: "text", nullable: true),
+                    UserAgent = table.Column<string>(type: "text", nullable: true),
+                    RevokedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateUserId = table.Column<long>(type: "bigint", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdateUserId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserSession", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserSession_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserTotp",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    Secret = table.Column<string>(type: "text", nullable: false),
+                    IsConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    LastUsedStep = table.Column<long>(type: "bigint", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateUserId = table.Column<long>(type: "bigint", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdateUserId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTotp", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserTotp_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRecoveryCode",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserTotpId = table.Column<long>(type: "bigint", nullable: false),
+                    CodeHash = table.Column<string>(type: "text", nullable: false),
+                    UsedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateUserId = table.Column<long>(type: "bigint", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdateUserId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRecoveryCode", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserRecoveryCode_UserTotp_UserTotpId",
+                        column: x => x.UserTotpId,
+                        principalTable: "UserTotp",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ActivityLog_OccurredDate",
+                table: "ActivityLog",
+                column: "OccurredDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AiJournalEntry_AiRunId",
+                table: "AiJournalEntry",
+                column: "AiRunId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AiRun_AddressHash_StartDate",
+                table: "AiRun",
+                columns: new[] { "AddressHash", "StartDate" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AiRun_StartDate",
+                table: "AiRun",
+                column: "StartDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AiRun_UserId_StartDate",
+                table: "AiRun",
+                columns: new[] { "UserId", "StartDate" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AiRunStep_AiRunId",
+                table: "AiRunStep",
+                column: "AiRunId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Setting_Key",
+                table: "Setting",
+                column: "Key",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_Email",
+                table: "User",
+                column: "Email",
+                unique: true,
+                filter: "\"UpdateState\" <> 0");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRecoveryCode_UserTotpId",
+                table: "UserRecoveryCode",
+                column: "UserTotpId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSession_Token",
+                table: "UserSession",
+                column: "Token",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSession_UserId",
+                table: "UserSession",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserTotp_UserId",
+                table: "UserTotp",
+                column: "UserId",
+                unique: true);
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "ActivityLog");
+
+            migrationBuilder.DropTable(
+                name: "AiJournalEntry");
+
+            migrationBuilder.DropTable(
+                name: "AiProfile");
+
+            migrationBuilder.DropTable(
+                name: "AiRunStep");
+
+            migrationBuilder.DropTable(
+                name: "Setting");
+
+            migrationBuilder.DropTable(
+                name: "UserRecoveryCode");
+
+            migrationBuilder.DropTable(
+                name: "UserSession");
+
+            migrationBuilder.DropTable(
+                name: "AiRun");
+
+            migrationBuilder.DropTable(
+                name: "UserTotp");
+
+            migrationBuilder.DropTable(
+                name: "User");
+        }
+    }
+}

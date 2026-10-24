@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<title>Laktosefrei</title>
+<circle cx="100" cy="100" r="92" fill="#FFFFFF" stroke="#1F6FB8" stroke-width="8"/>
+<path d="M100,38 C112.6,71.04 142,97 142,122.96 C142,144.2 125.2,156 100,156 C74.8,156 58,144.2 58,122.96 C58,97 87.4,71.04 100,38 Z" fill="#1F6FB8"/>
+<path d="M78,102 C78,114 86,122 96,124" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+<path d="M52,52 L148,148" stroke="#FFFFFF" stroke-width="22" stroke-linecap="round" fill="none"/>
+<path d="M52,52 L148,148" stroke="#D6342B" stroke-width="10" stroke-linecap="round" fill="none"/>
+</svg>

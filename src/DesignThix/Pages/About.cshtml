@@ -1,0 +1,33 @@
+@page
+@inject IconSprite Sprite
+@{
+    // Reached through the version number at the bottom of the menu.
+    ViewData["Title"] = "Über DesignThix";
+    ViewData["PageSub"] = "Version, Bausteine und Lizenzen.";
+    ViewData["Crumbs"] = Crumbs.Of(("Über DesignThix", null));
+    ViewData["Width"] = "narrow";
+    var version = AppVersion.Current;
+    var channel = version.StartsWith("nightly", StringComparison.Ordinal) ? "Entwicklung (Branch dev)" : version.StartsWith("local", StringComparison.Ordinal) ? "Lokaler Build" : "Release (Branch main)";
+}
+
+<dt-card title="DesignThix" icon="palette">
+    <div class="mat-auth__brand">@Ui.Logo("lg")</div>
+    <p>Gestalte Etiketten, Karten, Schilder und Plakate im Designer und befülle sie über Platzhalter aus Datenlisten: ein Design, viele Etiketten. Läuft offline-fähig als installierbare App für Desktop und Handy.</p>
+    <dl class="mat-kv">
+        <dt>Version</dt><dd class="mat-mono">@version</dd>
+        <dt>Kanal</dt><dd>@channel</dd>
+        <dt>Laufzeit</dt><dd>@System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription</dd>
+        <dt>Design</dt><dd>MatUi @Sprite.MatUiVersion aus MatDesign</dd>
+        <dt>Autor</dt><dd>Matthias Schmoldt</dd>
+    </dl>
+</dt-card>
+
+<dt-card title="Bausteine und Lizenzen" icon="book">
+    <ul class="dt-steps">
+        <li>ASP.NET Core, Entity Framework Core (MIT) mit Npgsql und PostgreSQL</li>
+        <li>MatUi aus MatDesign; Symbole von Lucide (ISC)</li>
+        <li>QRCoder (MIT)</li>
+        <li>Mitgelieferte Schriften unter der SIL Open Font License (die Lizenztexte liegen bei den Schriften)</li>
+    </ul>
+    <p class="mat-muted"><a href="/llms.txt">llms.txt</a> · <a href="/robots.txt">robots.txt</a></p>
+</dt-card>

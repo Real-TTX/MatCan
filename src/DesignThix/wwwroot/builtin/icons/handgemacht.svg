@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<title>Handgemacht</title>
+<circle cx="100" cy="100" r="92" fill="#FFFFFF" stroke="#C4561B" stroke-width="8"/>
+<path d="M76,112 V76 M93,112 V62 M110,112 V66 M127,112 V80" fill="none" stroke="#C4561B" stroke-width="15" stroke-linecap="round"/>
+<path d="M68,100 H135 V124 C135,146 120,158 100,158 C80,158 68,144 68,124 Z" fill="#C4561B"/>
+<path d="M70,128 L50,100" fill="none" stroke="#C4561B" stroke-width="15" stroke-linecap="round"/>
+<path d="M101,142 C88,134 82,126 82,119 C82,113 87,110 92,110 C96,110 99,112 101,115 C103,112 106,110 110,110 C115,110 120,113 120,119 C120,126 114,134 101,142 Z" fill="#FFFFFF"/>
+</svg>

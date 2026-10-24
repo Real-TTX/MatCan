@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<title>Rohmilch</title>
+<circle cx="100" cy="100" r="92" fill="#FFFFFF" stroke="#1F6FB8" stroke-width="8"/>
+<path d="M100,30 C115,67.52 150,97 150,126.48 C150,150.6 130,164 100,164 C70,164 50,150.6 50,126.48 C50,97 85,67.52 100,30 Z" fill="#1F6FB8"/>
+<path d="M66.57,130L66.57,104L79.57,104L84.21,107.71L84.21,113.29L79.57,117.93L66.57,117.93M75.86,117.93L85.14,130M94.43,104L105.57,104L109.29,107.71L109.29,126.29L105.57,130L94.43,130L90.71,126.29L90.71,107.71ZM114.86,104L114.86,130M133.43,104L133.43,130M114.86,117L133.43,117" fill="none" stroke="#FFFFFF" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

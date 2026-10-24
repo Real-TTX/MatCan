@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img">
+  <title>DesignThix</title>
+  <defs><linearGradient id="dtlogo-fav-g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="96" y2="120"><stop offset="0" stop-color="#18d4c0"/><stop offset="0.5" stop-color="#22b8e0"/><stop offset="1" stop-color="#2f86f6"/></linearGradient></defs>
+  <g transform="translate(6.40 0) scale(0.5333)"><path fill="url(#dtlogo-fav-g)" fill-rule="evenodd" d="M35 0H61Q66 0 69.5 3.5L92.5 26.5Q96 30 96 35V108Q96 120 84 120H12Q0 120 0 108V35Q0 30 3.5 26.5L26.5 3.5Q30 0 35 0ZM38 24a10 10 0 1 0 20 0a10 10 0 1 0-20 0Z"/><path fill="none" stroke="#0f1b2d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" d="M36 56C30 56 29 59 29 64V74C29 78 26 80 22 80C26 80 29 82 29 86V96C29 101 30 104 36 104M60 56C66 56 67 59 67 64V74C67 78 70 80 74 80C70 80 67 82 67 86V96C67 101 66 104 60 104"/></g>
+</svg>

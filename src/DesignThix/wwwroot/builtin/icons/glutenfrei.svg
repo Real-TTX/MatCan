@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<title>Glutenfrei</title>
+<circle cx="100" cy="100" r="92" fill="#FFFFFF" stroke="#8A5A12" stroke-width="8"/>
+<path d="M100,166 V70" fill="none" stroke="#8A5A12" stroke-width="6" stroke-linecap="round"/>
+<path d="M100,84 C111,75.2 112.1,53.2 100,40 C87.9,53.2 89,75.2 100,84 Z" fill="#8A5A12"/>
+<path d="M100,106 C103.79,93.36 92.89,76.56 76.49,73.64 C74.2,90.14 86.8,105.7 100,106 Z" fill="#8A5A12"/>
+<path d="M100,106 C113.2,105.7 125.8,90.14 123.51,73.64 C107.11,76.56 96.21,93.36 100,106 Z" fill="#8A5A12"/>
+<path d="M100,126 C103.79,113.36 92.89,96.56 76.49,93.64 C74.2,110.14 86.8,125.7 100,126 Z" fill="#8A5A12"/>
+<path d="M100,126 C113.2,125.7 125.8,110.14 123.51,93.64 C107.11,96.56 96.21,113.36 100,126 Z" fill="#8A5A12"/>
+<path d="M100,146 C103.79,133.36 92.89,116.56 76.49,113.64 C74.2,130.14 86.8,145.7 100,146 Z" fill="#8A5A12"/>
+<path d="M100,146 C113.2,145.7 125.8,130.14 123.51,113.64 C107.11,116.56 96.21,133.36 100,146 Z" fill="#8A5A12"/>
+<path d="M52,52 L148,148" stroke="#FFFFFF" stroke-width="22" stroke-linecap="round" fill="none"/>
+<path d="M52,52 L148,148" stroke="#D6342B" stroke-width="10" stroke-linecap="round" fill="none"/>
+</svg>

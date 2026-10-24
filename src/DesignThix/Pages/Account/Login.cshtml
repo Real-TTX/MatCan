@@ -1,0 +1,15 @@
+@page
+@model DesignThix.Pages.Account.LoginModel
+@{
+    Layout = "_Bare";
+}
+
+<div class="mat-auth__card">
+    <div class="mat-auth__brand">
+        @Ui.Logo("lg")
+        <h1>DesignThix</h1>
+        <p class="mat-muted">Anmelden</p>
+    </div>
+
+    <partial name="_LoginForm" model="Model" />
+</div>

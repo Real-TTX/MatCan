@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<title>Bio</title>
+<circle cx="100" cy="100" r="92" fill="#FFFFFF" stroke="#2E8B47" stroke-width="8"/>
+<path d="M52,112 C44,62 84,30 148,34 C152,92 118,126 52,112 Z" fill="#2E8B47"/>
+<path d="M52,112 L112,62" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+<path d="M64,162L64,134L78,134L82,138L82,144L78,148L64,148M78,148L83,152L83,158L79,162L64,162M100,134L100,162M120,134L132,134L136,138L136,158L132,162L120,162L116,158L116,138Z" fill="none" stroke="#2E8B47" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

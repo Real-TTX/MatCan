@@ -1,0 +1,25 @@
+@page
+@model DesignThix.Pages.IndexModel
+@{
+    ViewData["Robots"] = "noindex, nofollow";
+}
+
+@if (Model.Facts is { } f)
+{
+    <div class="mat-grid dt-stats">
+        @Ui.Kpi("Benutzer", Fmt.Integer(f.Users), null, "users", href: "/Admin/Users")
+        @Ui.Kpi("KI-Läufe", Fmt.Integer(f.AiRuns), null, "sparkles", href: "/Admin/Ai/Runs")
+    </div>
+}
+
+<dt-card title="Willkommen bei DesignThix" icon="palette">
+    <p>DesignThix gestaltet Etiketten, Karten, Schilder und Plakate und füllt sie aus Datenlisten: ein Design, viele Etiketten. Du zeichnest ein Design einmal, setzt Platzhalter wie <span class="mat-mono">{{Name}}</span> ein und druckst die ganze Liste in einem Zug.</p>
+    <p class="mat-muted">Die Gestaltungsflächen (Designs, Datenlisten, Medien, Schriften, Ausgaben) kommen Schritt für Schritt dazu und erscheinen dann hier und im Menü. Deine Rolle: @Labels.Of(Model.Role).</p>
+    @if (Model.IsAdmin)
+    {
+        <div class="mat-btn-row">
+            <a class="mat-btn mat-btn--secondary" href="/Admin/Users">@Ui.Icon("users")<span>Benutzer verwalten</span></a>
+            <a class="mat-btn mat-btn--secondary" href="/Admin/Ai">@Ui.Icon("sparkles")<span>KI einrichten</span></a>
+        </div>
+    }
+</dt-card>
