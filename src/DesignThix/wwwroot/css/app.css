@@ -106,12 +106,16 @@ a.dt-note__title:hover { color: var(--mat-accent-text); }
 .dt-stack { display: grid; gap: var(--mat-space-4); align-content: start; min-width: 0; }
 
 /* A picture of an asset: contained on a quiet tile, so transparent flags and seals read well. */
-.dt-thumb { display: inline-grid; place-items: center; flex: none; background: var(--mat-surface-3); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-sm); overflow: hidden; }
+.dt-thumb { display: inline-grid; place-items: center; flex: none; border: 1px solid var(--mat-border); border-radius: var(--mat-radius-sm); overflow: hidden; }
 .dt-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .dt-thumb--sm { width: 44px; height: 44px; padding: 3px; }
 .dt-assetcell { display: inline-flex; align-items: center; gap: var(--mat-space-3); min-width: 0; }
 .dt-assetcell__text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
-.dt-tile--contain .mat-tile__media img { object-fit: contain; padding: var(--mat-space-3); box-sizing: border-box; }
+/* Pictures of media are never cropped: the picture fills the frame (absolute, so its height does not depend on the aspect ratio of the frame), is contained with a
+   margin, and sits on a quiet checkerboard so that transparent flags and seals read well (the gallery, the table cells, the preview, the designer's media tab). */
+.dt-checker, .dt-tile--contain .mat-tile__media, .dt-thumb, .dt-preview.dt-preview--asset { background-color: var(--mat-surface-2); background-image: conic-gradient(var(--mat-surface-3) 25%, transparent 0 50%, var(--mat-surface-3) 0 75%, transparent 0); background-size: 12px 12px; }
+.dt-tile--contain .mat-tile__media { position: relative; overflow: hidden; }
+.dt-tile--contain .mat-tile__media img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; padding: var(--mat-space-3); box-sizing: border-box; object-fit: contain; }
 .mat-tile__meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .dt-preview { display: grid; place-items: center; background: var(--mat-surface-3); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-lg); padding: var(--mat-space-4); min-height: 12rem; }

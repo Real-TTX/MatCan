@@ -35,6 +35,18 @@ public static partial class Ui
         return new HtmlString($"<svg class=\"{cls}\" aria-hidden=\"true\" focusable=\"false\"><use href=\"#mat-i-{name}\"></use></svg>");
     }
 
+    /// <summary>An icon of the app's own sprite (<c>img/dt-icons.svg</c>: the tools of the designer, symbols <c>dt-i-*</c>).</summary>
+    public static IHtmlContent ToolIcon(string name, string? extraClass = null)
+    {
+        if (!NameRegex().IsMatch(name))
+        {
+            throw new ArgumentException($"'{name}' is not an icon name.", nameof(name));
+        }
+
+        var cls = string.IsNullOrEmpty(extraClass) ? "mat-icon" : $"mat-icon {extraClass}";
+        return new HtmlString($"<svg class=\"{cls}\" aria-hidden=\"true\" focusable=\"false\"><use href=\"#dt-i-{name}\"></use></svg>");
+    }
+
     /// <summary>
     /// The logo tile of DesignThix, by size: the mark (wwwroot/logo-mark.svg) in its own colours on a plain tile. The gradient of the
     /// logo is identity and appears nowhere else in the interface.

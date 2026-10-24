@@ -220,6 +220,61 @@ public static class DesignLogic
         return copy;
     }
 
+    /// <summary>Changes only the name (the designer's title field); the revision of the document stays.</summary>
+    public static async Task<string> RenameAsync(Biz biz, long id, string? name)
+    {
+        biz.RequireDesigner();
+        var clean = Clip((name ?? "").Trim(), 200);
+        if (clean.Length == 0)
+        {
+            throw new BizException("Bitte gib den Namen ein.", "Input.Name");
+        }
+
+        var design = await biz.Db.Design.FirstOrDefaultAsync(d => d.Id == id) ?? throw new BizException("Das Design gibt es nicht mehr.");
+        if (design.Name == clean)
+        {
+            return clean;
+        }
+
+        design.Name = clean;
+        await biz.Db.SaveChangesAsync();
+        await biz.Log.LogAsync("Design umbenannt", nameof(Design), id, clean);
+        return clean;
+    }
+
+    /// <summary>
+    /// Saves the document the designer holds as a new design (the answer to an edit conflict: "Als Kopie speichern"). Name, category and description come from the
+    /// original; the document is validated and normalised like any save.
+    /// </summary>
+    public static async Task<Design> CopyWithDocumentAsync(Biz biz, long id, string? documentJson)
+    {
+        biz.RequireDesigner();
+        var result = DocumentValidator.Validate(documentJson);
+        if (!result.Ok || result.Document is null || result.Json is null)
+        {
+            throw new BizException(result.Error ?? "Das Dokument ist ungültig.");
+        }
+
+        var source = await biz.Db.Design.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id) ?? throw new BizException("Das Design gibt es nicht mehr.");
+        var copy = new Design
+        {
+            Name = Clip(source.Name + " (Kopie)", 200),
+            Category = source.Category,
+            Description = source.Description,
+            IsTemplate = false,
+            DocumentJson = result.Json,
+            Revision = 1,
+            Width = result.Document.Width,
+            Height = result.Document.Height,
+            Unit = result.Document.Unit,
+        };
+        copy.Revisions.Add(new DesignRevision { Revision = 1, DocumentJson = copy.DocumentJson });
+        biz.Db.Design.Add(copy);
+        await biz.Db.SaveChangesAsync();
+        await biz.Log.LogAsync("Design als Kopie gespeichert", nameof(Design), copy.Id, $"{copy.Name} (aus {id})");
+        return copy;
+    }
+
     public static async Task DeleteAsync(Biz biz, long id)
     {
         biz.RequireDesigner();

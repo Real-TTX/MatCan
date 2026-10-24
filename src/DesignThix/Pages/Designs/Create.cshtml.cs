@@ -85,8 +85,7 @@ public sealed class CreateModel(Biz biz) : PageModelBase
             var preset = Input.PresetKey == CustomPreset ? null : Input.PresetKey;
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Input.Name, Input.Category, fromTemplate ? null : preset, Input.Width, Input.Height, Input.Unit, fromTemplate ? Input.TemplateId : null));
             Flash("Das Design ist angelegt.");
-            // phase F: redirect to /Designs/{id}/Designer
-            return RedirectToPage("/Designs/Edit", new { id = design.Id });
+            return Redirect($"/Designs/{design.Id}/Designer");
         }
         catch (BizException ex)
         {

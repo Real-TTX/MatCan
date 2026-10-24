@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using DesignThix.Core.Data;
 using DesignThix.Logic;
 using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.EntityFrameworkCore;
 
 namespace DesignThix.Endpoints;
 
@@ -142,6 +143,31 @@ public static partial class LibraryEndpoints
             return Results.Json(new { revision = saved.Revision, document = document.RootElement.Clone(), warnings = saved.Warnings }, Web);
         })).RequireAuthorization("SignedIn");
 
+        app.MapPost("/api/designs/{id:long}/rename", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => Guard(http, antiforgery, async () =>
+        {
+            var body = await http.Request.ReadFromJsonAsync<RenameBody>(Web, http.RequestAborted);
+            var name = await DesignLogic.RenameAsync(biz, id, body?.Name);
+            return Results.Json(new { name }, Web);
+        })).RequireAuthorization("SignedIn");
+
+        // "Als Kopie speichern" after an edit conflict: the document the designer holds becomes a new design.
+        app.MapPost("/api/designs/{id:long}/copy", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => Guard(http, antiforgery, async () =>
+        {
+            if (http.Request.ContentLength > MaxDesignBody)
+            {
+                return Results.Json(new { error = "Das Dokument ist zu groß (höchstens 2 MB)." }, statusCode: StatusCodes.Status413PayloadTooLarge);
+            }
+
+            var body = await http.Request.ReadFromJsonAsync<CopyBody>(Web, http.RequestAborted);
+            if (body is null || body.Document.ValueKind != JsonValueKind.Object)
+            {
+                return Results.Json(new { error = "Die Anfrage braucht document." }, statusCode: StatusCodes.Status400BadRequest);
+            }
+
+            var copy = await DesignLogic.CopyWithDocumentAsync(biz, id, body.Document.GetRawText());
+            return Results.Json(new { id = copy.Id, name = copy.Name, revision = copy.Revision }, Web);
+        })).RequireAuthorization("SignedIn");
+
         app.MapPost("/api/designs/{id:long}/thumbnail", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => Guard(http, antiforgery, async () =>
         {
             if (http.Request.ContentLength > DesignLogic.MaxThumbnailBytes)
@@ -156,6 +182,17 @@ public static partial class LibraryEndpoints
         })).RequireAuthorization("SignedIn");
 
         // ---------------------------------------------------------------------------------------- data lists (the grid)
+
+        // The lists a design can be previewed with (the designer's data selector): name and columns only, no rows.
+        app.MapGet("/api/datalists", async (Biz biz) =>
+            Results.Json((await DataListLogic.Query(biz).OrderBy(l => l.Name).ToListAsync()).Select(l => new
+            {
+                id = l.Id,
+                name = l.Name,
+                rowCount = l.RowCount,
+                columns = ColumnDefs.Parse(l.ColumnsJson).Select(c => new { key = c.Key, label = c.Label, type = c.Type, decimals = c.Decimals, category = c.Category }),
+            }), Web))
+            .RequireAuthorization("SignedIn");
 
         app.MapGet("/api/datalists/{id:long}/rows", async (long id, Biz biz) =>
         {
@@ -198,6 +235,10 @@ public static partial class LibraryEndpoints
     }
 
     private sealed record DesignBody(int Revision, JsonElement Document);
+
+    private sealed record CopyBody(JsonElement Document);
+
+    private sealed record RenameBody(string? Name);
 
     private sealed record RowBody(long? Id, Dictionary<string, JsonElement>? Values, int Copies = 1, bool IsActive = true);
 

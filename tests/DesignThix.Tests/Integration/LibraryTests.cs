@@ -99,6 +99,8 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign("x", null, "a4-portrait", null, null, null, null)));
             await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.SaveDocumentAsync(biz, 1, 1, "{}"));
             await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.SaveThumbnailAsync(biz, 1, Png()));
+            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.RenameAsync(biz, 1, "x"));
+            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.CopyWithDocumentAsync(biz, 1, "{}"));
         });
     }
 
@@ -316,6 +318,40 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             var restored = await DesignLogic.RestoreAsync(biz, design.Id, oldest);
             Assert.Equal(revision + 1, restored.Revision);
             await Assert.ThrowsAsync<BizException>(() => DesignLogic.RestoreAsync(biz, design.Id, 1));
+        });
+    }
+
+    [Fact]
+    public async Task The_designer_renames_a_design_and_saves_its_own_version_as_a_copy_after_a_conflict()
+    {
+        if (!Enabled)
+        {
+            return;
+        }
+
+        await As(UserRole.Designer, async biz =>
+        {
+            var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Umbenennen "), "Käse", "label-150x100", null, null, null, null));
+            Assert.Equal("Neuer Name", await DesignLogic.RenameAsync(biz, design.Id, "  Neuer Name  "));
+            Assert.Equal("Neuer Name", (await DesignLogic.GetAsync(biz, design.Id))!.Name);
+            Assert.Equal(1, (await DesignLogic.GetAsync(biz, design.Id))!.Revision);
+            await Assert.ThrowsAsync<BizException>(() => DesignLogic.RenameAsync(biz, design.Id, "   "));
+            await Assert.ThrowsAsync<BizException>(() => DesignLogic.RenameAsync(biz, long.MaxValue, "x"));
+
+            // somebody saved meanwhile: the document of this person becomes a new design (own history, revision 1), the original stays as it is
+            await DesignLogic.SaveDocumentAsync(biz, design.Id, 1, """{"schema":1,"width":150,"height":100,"elements":[]}""");
+            var mine = """{"schema":1,"width":150,"height":100,"fields":[{"key":"Name","type":"text","sample":"Mein"}],"elements":[{"id":"a","type":"text","text":"{{Name}}","bogus":1}]}""";
+            var copy = await DesignLogic.CopyWithDocumentAsync(biz, design.Id, mine);
+            Assert.NotEqual(design.Id, copy.Id);
+            Assert.Equal("Neuer Name (Kopie)", copy.Name);
+            Assert.Equal(1, copy.Revision);
+            Assert.False(copy.IsTemplate);
+            var copied = (await DesignLogic.DocumentAsync(biz, copy.Id));
+            Assert.Equal("Name", copied.Fields.Single().Key);
+            Assert.Single(copied.Elements);
+            Assert.Empty((await DesignLogic.DocumentAsync(biz, design.Id)).Elements);
+            await Assert.ThrowsAsync<BizException>(() => DesignLogic.CopyWithDocumentAsync(biz, design.Id, "not json"));
+            await Assert.ThrowsAsync<BizException>(() => DesignLogic.CopyWithDocumentAsync(biz, long.MaxValue, mine));
         });
     }
 
