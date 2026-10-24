@@ -30,4 +30,9 @@
     <script src="~/ui/matui.boot.js?v=@Sprite.Hash"></script>
     <link rel="stylesheet" href="~/ui/matui.css?v=@Sprite.Hash" />
     <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+    @* The fonts of the library (one @font-face per font, served by the app): previews, specimens and the designer need the families. Not for the sign-in pages. *@
+    @if (Context.User.Identity?.IsAuthenticated == true)
+    {
+        <link rel="stylesheet" href="/fonts.css" />
+    }
 </head>

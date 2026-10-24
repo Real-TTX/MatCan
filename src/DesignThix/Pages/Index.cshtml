@@ -4,22 +4,75 @@
     ViewData["Robots"] = "noindex, nofollow";
 }
 
-@if (Model.Facts is { } f)
-{
-    <div class="mat-grid dt-stats">
+<link rel="stylesheet" href="~/css/designs.css" asp-append-version="true" />
+
+<div class="mat-grid dt-stats">
+    @Ui.Kpi("Designs", Fmt.Integer(Model.Counts.Designs), Model.Counts.Templates == 0 ? null : Ui.Plural(Model.Counts.Templates, "Vorlage", "Vorlagen"), "layers", href: "/Designs")
+    @Ui.Kpi("Datenlisten", Fmt.Integer(Model.Counts.DataLists), null, "table", href: "/DataLists")
+    @Ui.Kpi("Medien", Fmt.Integer(Model.Counts.Assets), null, "image", href: "/Assets")
+    @Ui.Kpi("Schriften", Fmt.Integer(Model.Counts.Fonts), null, "type", href: "/Fonts")
+    @if (Model.Facts is { } f)
+    {
         @Ui.Kpi("Benutzer", Fmt.Integer(f.Users), null, "users", href: "/Admin/Users")
         @Ui.Kpi("KI-Läufe", Fmt.Integer(f.AiRuns), null, "sparkles", href: "/Admin/Ai/Runs")
-    </div>
-}
+    }
+</div>
 
-<dt-card title="Willkommen bei DesignThix" icon="palette">
-    <p>DesignThix gestaltet Etiketten, Karten, Schilder und Plakate und füllt sie aus Datenlisten: ein Design, viele Etiketten. Du zeichnest ein Design einmal, setzt Platzhalter wie <span class="mat-mono">{{Name}}</span> ein und druckst die ganze Liste in einem Zug.</p>
-    <p class="mat-muted">Die Gestaltungsflächen (Designs, Datenlisten, Medien, Schriften, Ausgaben) kommen Schritt für Schritt dazu und erscheinen dann hier und im Menü. Deine Rolle: @Labels.Of(Model.Role).</p>
-    @if (Model.IsAdmin)
+<dt-card title="Zuletzt bearbeitet" icon="clock">
+    @if (Model.Recent.Count == 0)
     {
-        <div class="mat-btn-row">
-            <a class="mat-btn mat-btn--secondary" href="/Admin/Users">@Ui.Icon("users")<span>Benutzer verwalten</span></a>
-            <a class="mat-btn mat-btn--secondary" href="/Admin/Ai">@Ui.Icon("sparkles")<span>KI einrichten</span></a>
+        <div class="mat-empty" id="recent-empty">
+            <span class="mat-empty__icon">@Ui.Icon("layers")</span>
+            <div class="mat-empty__title">Noch kein Design</div>
+            <p>@(Model.CanEdit ? "Lege dein erstes Design an: ein Etikett, eine Karte oder ein Schild." : "Sobald jemand ein Design anlegt, siehst du es hier.")</p>
+            @if (Model.CanEdit)
+            {
+                <a class="mat-btn mat-btn--primary" href="/Designs/Create">@Ui.Icon("plus")<span>Neues Design</span></a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="mat-gallery dt-gallery" data-recent-designs>
+            @foreach (var d in Model.Recent)
+            {
+                <a class="mat-tile dt-designtile" href="/Designs/Edit/@d.Id">
+                    <span class="mat-tile__media dt-designtile__media">@LibraryUi.DesignThumb(d)</span>
+                    <span class="mat-tile__body">
+                        <span class="mat-tile__title">@d.Name</span>
+                        <span class="mat-tile__meta">@d.Size · @Fmt.Ago(d.UpdateDate, DateTime.UtcNow)</span>
+                    </span>
+                </a>
+            }
+        </div>
+        <div class="mat-actions mat-mt-4">
+            <a class="mat-btn mat-btn--secondary" href="/Designs">@Ui.Icon("layers")<span>Alle Designs</span></a>
         </div>
     }
 </dt-card>
+
+<dt-card title="Schnell zur Sache" icon="rocket">
+    <div class="mat-btn-row mat-btn-row--plain">
+        @if (Model.CanEdit)
+        {
+            <a class="mat-btn mat-btn--primary" href="/Designs/Create">@Ui.Icon("plus")<span>Neues Design</span></a>
+            <a class="mat-btn mat-btn--secondary" href="/DataLists/Edit">@Ui.Icon("table")<span>Datenliste anlegen</span></a>
+            <a class="mat-btn mat-btn--secondary" href="/Assets/Upload">@Ui.Icon("upload")<span>Medien hochladen</span></a>
+            <a class="mat-btn mat-btn--secondary" href="/Sheets">@Ui.Icon("grid")<span>Druckbögen</span></a>
+        }
+        else
+        {
+            <a class="mat-btn mat-btn--secondary" href="/Designs">@Ui.Icon("layers")<span>Designs ansehen</span></a>
+            <a class="mat-btn mat-btn--secondary" href="/DataLists">@Ui.Icon("table")<span>Datenlisten ansehen</span></a>
+        }
+        @if (Model.IsAdmin)
+        {
+            <a class="mat-btn mat-btn--ghost" href="/Admin/Users">@Ui.Icon("users")<span>Benutzer verwalten</span></a>
+            <a class="mat-btn mat-btn--ghost" href="/Admin/Ai">@Ui.Icon("sparkles")<span>KI einrichten</span></a>
+        }
+    </div>
+    <p class="mat-muted mat-mt-4">DesignThix gestaltet Etiketten, Karten, Schilder und Plakate und füllt sie aus Datenlisten: ein Design, viele Etiketten. Du zeichnest ein Design einmal, setzt Platzhalter wie <span class="mat-mono">{{Name}}</span> ein und druckst die ganze Liste in einem Zug. Die Ausgabe (Drucken, PDF, PNG) kommt als Nächstes dazu. Deine Rolle: @Labels.Of(Model.Role).</p>
+</dt-card>
+
+<script src="~/js/dt-engine.js" asp-append-version="true"></script>
+<script src="~/js/designs.js" asp-append-version="true"></script>

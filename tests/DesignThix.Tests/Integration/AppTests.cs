@@ -4,11 +4,16 @@ using Npgsql;
 
 namespace DesignThix.Tests.Integration;
 
+/// <summary>One host and one database for all integration tests: the factory sets process-wide environment variables, so two of them must not start side by side.</summary>
+[CollectionDefinition("app")]
+public sealed class AppCollection : ICollectionFixture<AppTests.AppFactory>;
+
 /// <summary>
 /// The real app against a real PostgreSQL. Runs when DESIGNTHIX_TEST_DB names a server ("Host=localhost;Port=3045;Username=designthix;Password=designthix"),
 /// as the CI does; skipped otherwise. Every run uses a database of its own.
 /// </summary>
-public sealed class AppTests : IClassFixture<AppTests.AppFactory>
+[Collection("app")]
+public sealed class AppTests
 {
     private readonly AppFactory _factory;
 

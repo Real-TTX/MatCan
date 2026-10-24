@@ -4,6 +4,7 @@ using DesignThix.Configuration;
 using DesignThix.Core.Ai;
 using DesignThix.Data;
 using DesignThix.Data.Entities;
+using DesignThix.Endpoints;
 using DesignThix.Logic;
 using DesignThix.Services;
 using DesignThix.Services.Ai;
@@ -109,6 +110,10 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AllowAnonymousToPage("/Account/Setup");
     options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
     options.Conventions.AllowAnonymousToPage("/Offline");
+    // Looking is for everybody who is signed in; the pages that make something new are for administrators and designers.
+    options.Conventions.AuthorizePage("/Assets/Upload", "Designer");
+    options.Conventions.AuthorizePage("/Fonts/Upload", "Designer");
+    options.Conventions.AuthorizePage("/Designs/Create", "Designer");
 })
 .AddMvcOptions(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
@@ -133,6 +138,7 @@ var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Sta
 await DatabaseInitializer.InitializeAsync(app.Services, config, logger);
 var settings = app.Services.GetRequiredService<SettingStore>();
 await settings.LoadAsync();
+await LibrarySeeder.SeedAsync(app.Services, app.Environment.WebRootPath, logger);
 
 app.UseForwardedHeaders();
 app.UseRequestLocalization();
@@ -304,6 +310,8 @@ app.MapGet("/api/admin/ai/profiles/{id:long}/chatgpt", async (long id, Biz biz) 
     var status = await AiProfileLogic.ChatGptStatusAsync(biz, id);
     return Results.Ok(ChatGptAccount.StatusJson(status));
 }).RequireAuthorization("Admin");
+
+app.MapLibraryEndpoints();
 
 app.MapRazorPages();
 

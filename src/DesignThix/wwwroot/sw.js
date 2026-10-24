@@ -10,8 +10,10 @@
 var VERSION = new URL(self.location.href).searchParams.get('v') || 'dev';
 var STATIC = 'dt-static-' + VERSION;
 var PAGES = 'dt-pages';
+var LIBRARY = 'dt-library';
 var OFFLINE = '/Offline';
 var MAX_PAGES = 60;
+var MAX_LIBRARY = 800;
 var NETWORK_TIMEOUT = 6000;
 
 self.addEventListener('install', function (event) {
@@ -38,7 +40,7 @@ self.addEventListener('activate', function (event) {
 self.addEventListener('message', function (event) {
   var data = event.data || {};
   if (data.type === 'clear-pages') {
-    event.waitUntil(caches.delete(PAGES));
+    event.waitUntil(Promise.all([caches.delete(PAGES), caches.delete(LIBRARY)]));
   }
 });
 
@@ -56,6 +58,10 @@ self.addEventListener('fetch', function (event) {
   if (request.method !== 'GET') { return; }
   var url = new URL(request.url);
   if (url.origin !== self.location.origin) { return; }
+
+  var library = libraryKind(url);
+  if (library === 'immutable') { event.respondWith(cacheFirstLibrary(request)); return; }
+  if (library === 'live') { event.respondWith(networkFirstLibrary(request)); return; }
 
   if (isStatic(url)) {
     event.respondWith(caches.open(STATIC).then(function (cache) {
@@ -106,5 +112,47 @@ function trim(cache) {
   return cache.keys().then(function (keys) {
     if (keys.length <= MAX_PAGES) { return; }
     return Promise.all(keys.slice(0, keys.length - MAX_PAGES).map(function (k) { return cache.delete(k); }));
+  });
+}
+
+/* The library (media, fonts, thumbnails): what a design needs to be drawn, kept so that designs render offline after they were seen once.
+   - Addresses that carry a hash (/fonts/12-ab34....ttf, /media/flag-de?v=..., /designs/5/thumbnail.png?v=...) never change: cache first.
+   - The style sheet of the fonts, the list of fonts and a medium asked for without a hash can change: network first, the kept copy when offline.
+   The cache outlives a new version of the app (the addresses are versioned by their content) and goes with signing out. */
+function libraryKind(url) {
+  var p = url.pathname;
+  if (/^\/fonts\/\d+-[0-9a-f]+\.(ttf|otf|woff2?)$/i.test(p)) { return 'immutable'; }
+  if ((/^\/media\//.test(p) || /^\/designs\/\d+\/thumbnail\.png$/.test(p)) && /[?&]v=/.test(url.search)) { return 'immutable'; }
+  if (p === '/fonts.css' || p === '/api/fonts' || /^\/media\//.test(p) || /^\/designs\/\d+\/thumbnail\.png$/.test(p)) { return 'live'; }
+  return null;
+}
+
+function cacheFirstLibrary(request) {
+  return caches.open(LIBRARY).then(function (cache) {
+    return cache.match(request).then(function (hit) {
+      return hit || fetch(request).then(function (response) {
+        if (response.ok) { cache.put(request, response.clone()).then(function () { return trimLibrary(cache); }); }
+        return response;
+      });
+    });
+  });
+}
+
+function networkFirstLibrary(request) {
+  return fetch(request).then(function (response) {
+    if (response.ok) {
+      var copy = response.clone();
+      caches.open(LIBRARY).then(function (cache) { return cache.put(request, copy); });
+    }
+    return response;
+  }).catch(function () {
+    return caches.open(LIBRARY).then(function (cache) { return cache.match(request); }).then(function (hit) { return hit || Response.error(); });
+  });
+}
+
+function trimLibrary(cache) {
+  return cache.keys().then(function (keys) {
+    if (keys.length <= MAX_LIBRARY) { return; }
+    return Promise.all(keys.slice(0, keys.length - MAX_LIBRARY).map(function (k) { return cache.delete(k); }));
   });
 }

@@ -1,0 +1,47 @@
+@page
+@model DesignThix.Pages.Assets.UploadModel
+
+<form class="mat-form" method="post" enctype="multipart/form-data" novalidate>
+    <dt-summary />
+    @if (Model.Results.Count > 0)
+    {
+        <dt-card title="Ergebnis" icon="check-circle">
+            <ul class="dt-notes">
+                @foreach (var r in Model.Results)
+                {
+                    <li class="dt-note">
+                        <span class="dt-note__icon dt-note__icon--@(r.Error is null ? (r.Cleaned.Count > 0 ? "warn" : "ok") : "error")">@Ui.Icon(r.Error is null ? (r.Cleaned.Count > 0 ? "alert" : "check-circle") : "x-circle")</span>
+                        <div class="dt-note__body">
+                            @if (r.Asset is { } a)
+                            {
+                                <a class="dt-note__title" href="/Assets/Edit/@a.Id">@r.FileName</a>
+                                <span class="dt-note__meta">Hochgeladen als <span class="mat-mono">@a.Key</span>@(r.Cleaned.Count > 0 ? ". Die Datei wurde bereinigt: " + string.Join(", ", r.Cleaned.Take(6)) + (r.Cleaned.Count > 6 ? " ..." : "") : "")</span>
+                            }
+                            else
+                            {
+                                <span class="dt-note__title">@r.FileName</span>
+                                <span class="dt-note__meta">Abgelehnt: @r.Error</span>
+                            }
+                        </div>
+                    </li>
+                }
+            </ul>
+        </dt-card>
+    }
+
+    <dt-card title="Bilder auswählen" icon="upload">
+        <div class="mat-form__grid">
+            <div class="mat-field mat-field--full">
+                <label class="mat-label" for="Files">Dateien</label>
+                <div class="mat-upload" data-upload data-max-size="12MB" data-max-files="40" data-paste>
+                    <input class="mat-upload__input" type="file" id="Files" name="Files" multiple accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.png,.jpg,.jpeg,.webp,.gif,.svg" />
+                </div>
+                <span class="mat-hint">Mehrere Dateien auf einmal sind möglich. SVG-Dateien werden geprüft und von Skripten und Verweisen nach außen befreit.</span>
+                <span class="mat-error" aria-live="polite">@Html.ValidationMessage("Files")</span>
+            </div>
+            <dt-select name="Category" label="Kategorie für alle" items="Model.CategoryItems" value="@Model.Category" hint="Die Kategorie hilft beim Suchen und in den Auswahllisten." />
+        </div>
+    </dt-card>
+
+    <dt-buttons save-text="Hochladen" save-icon="upload" back-href="/Assets" />
+</form>

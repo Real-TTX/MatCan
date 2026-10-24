@@ -1,0 +1,47 @@
+@page
+@model DesignThix.Pages.Fonts.UploadModel
+
+<form class="mat-form" method="post" enctype="multipart/form-data" novalidate>
+    <dt-summary />
+    @if (Model.Results.Count > 0)
+    {
+        <dt-card title="Ergebnis" icon="check-circle">
+            <ul class="dt-notes">
+                @foreach (var r in Model.Results)
+                {
+                    <li class="dt-note">
+                        <span class="dt-note__icon dt-note__icon--@(r.Error is null ? "ok" : "error")">@Ui.Icon(r.Error is null ? "check-circle" : "x-circle")</span>
+                        <div class="dt-note__body">
+                            @if (r.Font is { } f)
+                            {
+                                <a class="dt-note__title" href="/Fonts/Edit/@f.Id">@r.FileName</a>
+                                <span class="dt-note__meta">Hochgeladen als @f.Family (@f.Weight, @(f.Style == "italic" ? "kursiv" : "normal"))</span>
+                            }
+                            else
+                            {
+                                <span class="dt-note__title">@r.FileName</span>
+                                <span class="dt-note__meta">Abgelehnt: @r.Error</span>
+                            }
+                        </div>
+                    </li>
+                }
+            </ul>
+        </dt-card>
+    }
+
+    <dt-card title="Schriftdateien auswählen" icon="upload">
+        <div class="mat-form__grid">
+            <div class="mat-field mat-field--full">
+                <label class="mat-label" for="Files">Dateien</label>
+                <div class="mat-upload" data-upload data-max-size="8MB" data-max-files="20">
+                    <input class="mat-upload__input" type="file" id="Files" name="Files" multiple accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" />
+                </div>
+                <span class="mat-hint">Eine Familie besteht oft aus mehreren Dateien (normal, fett, kursiv): wähle sie zusammen aus.</span>
+                <span class="mat-error" aria-live="polite">@Html.ValidationMessage("Files")</span>
+            </div>
+            <dt-input name="License" label="Lizenz" value="@Model.License" hint="Zum Beispiel OFL-1.1, Apache-2.0 oder „eigene Lizenz“. Sie wird in der Liste angezeigt." />
+        </div>
+    </dt-card>
+
+    <dt-buttons save-text="Hochladen" save-icon="upload" back-href="/Fonts" />
+</form>

@@ -33,6 +33,9 @@ public sealed class ListSpec<T>
 
     public int PageSize { get; init; } = 20;
 
+    /// <summary>The views of the list (table, gallery); empty means a plain list.</summary>
+    public IReadOnlyList<ViewOption> Views { get; init; } = [];
+
     public IReadOnlyDictionary<string, string?> Keep { get; init; } = new Dictionary<string, string?>();
 }
 
@@ -93,6 +96,8 @@ public static class ListBuilder
             Sort = sort,
             Descending = descending,
             DefaultSort = spec.DefaultSort,
+            DefaultDescending = spec.DefaultDescending,
+            Views = spec.Views,
             Total = total,
             Matching = matching,
             Keep = spec.Keep,

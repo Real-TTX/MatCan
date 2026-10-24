@@ -10,6 +10,9 @@ public sealed record FilterField(string Name, string Label, IReadOnlyList<Filter
 
 public sealed record SortOption(string Value, string Label);
 
+/// <summary>One of the views of a list (table, gallery): a button of the view switch at the end of the toolbar.</summary>
+public sealed record ViewOption(string Value, string Label, string Icon);
+
 /// <summary>
 /// Everything the toolbar partial needs. The toolbar sits above every list (search, filter, sort); filter and sort are buttons that open dialogs,
 /// the search is a field in the bar. All their fields belong to ONE GET form, so every dialog sends the complete state.
@@ -38,6 +41,12 @@ public sealed class ToolbarModel
 
     public string DefaultSort { get; init; } = string.Empty;
 
+    /// <summary>The default sort of the list runs from large to small (newest first): then "descending" is no tool in effect.</summary>
+    public bool DefaultDescending { get; init; }
+
+    /// <summary>The views the list offers (the first is the default; MatUi remembers the choice per toolbar id). Empty: no switch.</summary>
+    public IReadOnlyList<ViewOption> Views { get; init; } = [];
+
     public int Total { get; init; }
 
     public int Matching { get; init; }
@@ -51,7 +60,7 @@ public sealed class ToolbarModel
 
     public int ActiveFilters => Filters.Count(f => !string.IsNullOrEmpty(f.Selected));
 
-    public bool SortActive => !string.IsNullOrEmpty(Sort) && (Sort != DefaultSort || Descending);
+    public bool SortActive => !string.IsNullOrEmpty(Sort) && (Sort != DefaultSort || Descending != DefaultDescending);
 
     public string SortLabel => SortOptions.FirstOrDefault(o => o.Value == (Sort ?? DefaultSort))?.Label ?? string.Empty;
 
@@ -84,9 +93,9 @@ public sealed class ToolbarModel
         if (remove != "sort" && SortActive)
         {
             pairs.Add(("sort", Sort));
-            if (Descending)
+            if (Descending || DefaultDescending)
             {
-                pairs.Add(("dir", "desc"));
+                pairs.Add(("dir", Descending ? "desc" : "asc"));
             }
         }
 
@@ -174,6 +183,9 @@ public sealed record TableModel
     public string EmptyText { get; init; } = "Ändere die Suche oder den Filter.";
 
     public string EmptyIcon { get; init; } = "search";
+
+    /// <summary>The table is one view of a list that also has a gallery (<c>data-view</c>): shown or hidden by the view switch of the toolbar.</summary>
+    public string? View { get; init; }
 
     public bool HasActions => Rows.Any(r => r.Actions.Count > 0);
 

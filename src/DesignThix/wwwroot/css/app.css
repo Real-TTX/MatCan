@@ -99,3 +99,63 @@ a.dt-note__title:hover { color: var(--mat-accent-text); }
 .dt-details > summary { cursor: pointer; color: var(--mat-accent-text); font-weight: 500; padding: var(--mat-space-2) 0; }
 .dt-details > summary:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); border-radius: var(--mat-radius-xs); }
 .dt-col-actions { width: 1%; white-space: nowrap; text-align: end; }
+
+/* ==========================================================================
+   The library (phase E): media, fonts, sheets, the column editor
+   ========================================================================== */
+.dt-stack { display: grid; gap: var(--mat-space-4); align-content: start; min-width: 0; }
+
+/* A picture of an asset: contained on a quiet tile, so transparent flags and seals read well. */
+.dt-thumb { display: inline-grid; place-items: center; flex: none; background: var(--mat-surface-3); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-sm); overflow: hidden; }
+.dt-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.dt-thumb--sm { width: 44px; height: 44px; padding: 3px; }
+.dt-assetcell { display: inline-flex; align-items: center; gap: var(--mat-space-3); min-width: 0; }
+.dt-assetcell__text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+.dt-tile--contain .mat-tile__media img { object-fit: contain; padding: var(--mat-space-3); box-sizing: border-box; }
+.mat-tile__meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.dt-preview { display: grid; place-items: center; background: var(--mat-surface-3); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-lg); padding: var(--mat-space-4); min-height: 12rem; }
+.dt-preview--asset img { max-width: 100%; max-height: 18rem; object-fit: contain; display: block; }
+
+/* A specimen: the family, weight and style come from data attributes (library.js sets them through the CSSOM). */
+.dt-specimen { display: block; font-size: var(--mat-fs-lg); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.dt-specimens { display: grid; gap: var(--mat-space-3); }
+.dt-specimen--xl { font-size: 2.25rem; }
+.dt-specimen--md { font-size: var(--mat-fs-xl); white-space: normal; overflow-wrap: anywhere; }
+
+/* The sheet preview: the paper with its label cells. */
+.dt-sheetpreview { display: grid; place-items: center; background: var(--mat-surface-3); border-radius: var(--mat-radius); padding: var(--mat-space-4); }
+.dt-sheetsvg { display: block; width: 100%; max-height: 32rem; }
+.dt-sheetsvg__paper { fill: var(--mat-surface); stroke: var(--mat-border-strong); stroke-width: 0.4; }
+.dt-sheetsvg__cell { fill: var(--mat-accent-soft); stroke: var(--mat-accent-text); }
+.dt-sheetsvg__cell.is-outside { fill: var(--mat-danger-bg); stroke: var(--mat-danger-text); }
+.dt-sheetsvg__label { fill: var(--mat-accent-text); font-family: var(--mat-font); }
+.dt-sheetsvg__mark { fill: none; stroke: var(--mat-text); }
+
+/* The column editor of a data list: one row per column, wrapping on a narrow screen. */
+.dt-colrows { display: grid; gap: var(--mat-space-3); }
+.dt-colrow { display: grid; gap: var(--mat-space-2) var(--mat-space-3); grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--mat-space-3); border: 1px solid var(--mat-border); border-radius: var(--mat-radius); background: var(--mat-surface-2); }
+.dt-colrow .mat-field { min-width: 0; }
+.dt-colrow [hidden] { display: none; }
+.dt-colrow__tools { display: flex; gap: var(--mat-space-1); align-items: end; justify-content: flex-end; grid-column: 1 / -1; }
+@media (min-width: 900px) {
+  .dt-colrow { grid-template-columns: minmax(8rem, 1fr) minmax(8rem, 1.2fr) minmax(9rem, 1fr) minmax(7rem, .7fr) auto; align-items: end; }
+  .dt-colrow__category { grid-column: 4 / 5; }
+  .dt-colrow__tools { grid-column: 5; grid-row: 1; }
+}
+
+/* The mapping of an import: the select above each column of the preview. */
+.dt-maptable th { vertical-align: top; min-width: 11rem; }
+.dt-maptable td { max-width: 16rem; overflow: hidden; text-overflow: ellipsis; }
+.dt-maptable .mat-label { margin-bottom: var(--mat-space-1); }
+
+/* Two tiles per row on a phone: a single column of big pictures is a long scroll. */
+@media (max-width: 599px) {
+  .dt-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--mat-space-3); }
+  .dt-gallery .mat-tile__body { padding: var(--mat-space-2) var(--mat-space-3); }
+}
+.dt-colrows { margin-bottom: var(--mat-space-3); }
+.dt-maptable th .mat-label { display: block; }
+.dt-maptable th .mat-select { width: 100%; }
+.dt-maptable { min-width: 40rem; }
+.mat-table-wrap + .mat-form__grid { margin-top: var(--mat-space-4); }

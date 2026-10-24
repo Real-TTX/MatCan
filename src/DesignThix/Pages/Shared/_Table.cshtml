@@ -13,7 +13,7 @@
 }
 else
 {
-    <div class="mat-table-wrap">
+    <div class="mat-table-wrap" data-view="@Model.View" hidden="@(Model.View is not null)">
         <table class="mat-table" id="@Model.Id">
             <caption class="mat-sr-only">@Model.Caption</caption>
             <thead>

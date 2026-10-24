@@ -1,0 +1,33 @@
+@page
+@model DesignThix.Pages.Assets.IndexModel
+
+<div class="mat-list" data-view-scope>
+    <partial name="_Toolbar" model="Model.Toolbar" />
+    @if (Model.Items.Count > 0)
+    {
+        <div class="mat-gallery dt-gallery" data-view="gallery">
+            @foreach (var a in Model.Items)
+            {
+                <a class="mat-tile dt-tile--contain" href="/Assets/Edit/@a.Id">
+                    <span class="mat-tile__media"><img src="@a.Url" alt="" loading="lazy" decoding="async" /></span>
+                    <span class="mat-tile__body">
+                        <span class="mat-tile__title">@a.Name</span>
+                        <span class="mat-tile__meta">@a.Category · <span class="mat-mono">@a.Key</span></span>
+                    </span>
+                </a>
+            }
+        </div>
+    }
+    <partial name="_Table" model="Model.Table" />
+    <partial name="_Pager" model="Model.Pager" />
+    <div class="mat-actions">
+        @if (Model.CanEdit)
+        {
+            <a class="mat-btn mat-btn--primary" href="/Assets/Upload">@Ui.Icon("upload")<span>Hochladen</span></a>
+        }
+        else
+        {
+            <span class="mat-hint">Hochladen dürfen Gestalter und Administratoren.</span>
+        }
+    </div>
+</div>

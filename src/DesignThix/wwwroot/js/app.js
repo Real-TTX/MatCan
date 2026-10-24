@@ -39,7 +39,7 @@
   // The kept pages hold the data of the person who was signed in: they go with signing out, and on the sign-in page.
   function clearKeptPages() {
     if (sw && sw.controller) { sw.controller.postMessage({ type: 'clear-pages' }); }
-    if (window.caches) { caches.delete('dt-pages').catch(function () { }); }
+    if (window.caches) { caches.delete('dt-pages').catch(function () { }); caches.delete('dt-library').catch(function () { }); }
     try { Object.keys(localStorage).filter(function (k) { return k.indexOf('dt-draft:') === 0; }).forEach(function (k) { localStorage.removeItem(k); }); } catch (e) { /* ignore */ }
   }
   if (root.hasAttribute('data-clear-kept')) { clearKeptPages(); }

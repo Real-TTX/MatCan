@@ -1,4 +1,5 @@
 using System.Net;
+using DesignThix.Data.Entities;
 using DesignThix.Logic;
 using DesignThix.Services;
 using Microsoft.Extensions.Caching.Memory;
@@ -73,16 +74,41 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
     };
 
     /// <summary>
-    /// The main menu. It lists only the pages that exist: "Neues Design" (primary action) and the groups Gestalten, Daten, Bibliothek and Ausgabe join
-    /// as their pages are built (docs/PLAN.md section 1.4).
+    /// The main menu of docs/PLAN.md section 1.4 as far as its pages exist: "Neues Design" (primary action, only for people who may change things),
+    /// Start, and the groups Gestalten, Daten, Bibliothek and Ausgabe (Ausgaben joins with its phase).
     /// </summary>
-    private static NavSet WorkMenu() => new("main", "Gestalten", "palette",
-    [
-        new(null,
+    private NavSet WorkMenu()
+    {
+        var start = new List<NavItem>();
+        if (user.Role is UserRole.Admin or UserRole.Designer)
+        {
+            start.Add(new("Neues Design", "/Designs/Create", "plus", Primary: true));
+        }
+
+        start.Add(new("Start", "/", "dashboard"));
+        return new NavSet("main", "Gestalten", "palette",
         [
-            new("Start", "/", "dashboard"),
-        ]),
-    ]);
+            new(null, start),
+            new("Gestalten",
+            [
+                new("Designs", "/Designs", "layers"),
+                new("Vorlagen", "/Designs?filter=templates", "template"),
+            ]),
+            new("Daten",
+            [
+                new("Datenlisten", "/DataLists", "table"),
+            ]),
+            new("Bibliothek",
+            [
+                new("Medien", "/Assets", "image"),
+                new("Schriften", "/Fonts", "type"),
+            ]),
+            new("Ausgabe",
+            [
+                new("Druckbögen", "/Sheets", "grid"),
+            ]),
+        ]);
+    }
 
     private static NavSet AdminMenu() => new("admin", "Verwaltung", "settings",
     [

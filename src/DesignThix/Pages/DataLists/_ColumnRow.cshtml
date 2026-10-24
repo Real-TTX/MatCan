@@ -1,0 +1,48 @@
+@using DesignThix.Pages.DataLists
+@model (string Index, ColumnInput Column, bool ReadOnly)
+@*
+    One column of a data list in the column editor. The same markup is the row of the server and the template that the script clones for a new column
+    (the index of the template is "__i__"; the script numbers all rows again when the form is sent).
+*@
+@{
+    var i = Model.Index;
+    var c = Model.Column;
+    var ro = Model.ReadOnly;
+    var type = c.Type ?? "text";
+}
+<div class="dt-colrow" data-dt-colrow>
+    <div class="mat-field dt-colrow__key">
+        <label class="mat-label" for="Columns_@(i)__Key">Schlüssel</label>
+        <input class="mat-input mat-mono" id="Columns_@(i)__Key" name="Columns[@i].Key" value="@c.Key" maxlength="40" autocomplete="off" spellcheck="false" readonly="@ro" aria-describedby="col-key-hint" />
+    </div>
+    <div class="mat-field dt-colrow__label">
+        <label class="mat-label" for="Columns_@(i)__Label">Anzeigename</label>
+        <input class="mat-input" id="Columns_@(i)__Label" name="Columns[@i].Label" value="@c.Label" maxlength="80" autocomplete="off" readonly="@ro" />
+    </div>
+    <div class="mat-field dt-colrow__type">
+        <label class="mat-label" for="Columns_@(i)__Type">Art</label>
+        <select class="mat-select" id="Columns_@(i)__Type" name="Columns[@i].Type" data-dt-col-type disabled="@ro">
+            <option value="text" selected="@(type == "text")">Text</option>
+            <option value="multiline" selected="@(type == "multiline")">Mehrzeiliger Text</option>
+            <option value="number" selected="@(type == "number")">Zahl</option>
+            <option value="price" selected="@(type == "price")">Preis</option>
+            <option value="image" selected="@(type == "image")">Bild (Medium)</option>
+        </select>
+    </div>
+    <div class="mat-field dt-colrow__decimals" data-dt-col-decimals hidden="@(type is not ("number" or "price"))">
+        <label class="mat-label" for="Columns_@(i)__Decimals">Nachkommastellen</label>
+        <input class="mat-input" type="number" min="0" max="4" step="1" inputmode="numeric" id="Columns_@(i)__Decimals" name="Columns[@i].Decimals" value="@c.Decimals" readonly="@ro" />
+    </div>
+    <div class="mat-field dt-colrow__category" data-dt-col-category hidden="@(type != "image")">
+        <label class="mat-label" for="Columns_@(i)__Category">Medien-Kategorie</label>
+        <input class="mat-input" id="Columns_@(i)__Category" name="Columns[@i].Category" value="@c.Category" list="dt-asset-categories" maxlength="80" autocomplete="off" readonly="@ro" />
+    </div>
+    @if (!ro)
+    {
+        <div class="dt-colrow__tools">
+            <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" data-dt-col-up aria-label="Spalte nach oben" data-tip="Nach oben">@Ui.Icon("arrow-up")</button>
+            <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" data-dt-col-down aria-label="Spalte nach unten" data-tip="Nach unten">@Ui.Icon("arrow-down")</button>
+            <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" data-dt-col-remove aria-label="Spalte entfernen" data-tip="Entfernen">@Ui.Icon("trash")</button>
+        </div>
+    }
+</div>

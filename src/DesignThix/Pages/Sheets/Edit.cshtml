@@ -1,0 +1,54 @@
+@page "{id:long?}"
+@model DesignThix.Pages.Sheets.EditModel
+@{
+    var ro = !Model.CanEdit;
+}
+
+@if (ro)
+{
+    <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst Druckbögen nur ansehen. Ändern können Gestalter und Administratoren.</div></div>
+}
+
+<form class="mat-form" method="post" novalidate data-dt-sheet-form>
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <dt-summary />
+    <div class="dt-split dt-split--half">
+        <div class="dt-stack">
+            <dt-card title="Papier" icon="file">
+                <div class="mat-form__grid">
+                    <dt-input for="Input.Name" label="Name" required="true" readonly="@ro" autocomplete="off" full="true" />
+                    <dt-input for="Input.PaperWidth" label="Papierbreite (mm)" type="number" readonly="@ro" min="20" max="2000" inputmode="decimal" />
+                    <dt-input for="Input.PaperHeight" label="Papierhöhe (mm)" type="number" readonly="@ro" min="20" max="2000" inputmode="decimal" />
+                    <dt-input for="Input.MarginTop" label="Rand oben (mm)" type="number" readonly="@ro" min="0" inputmode="decimal" />
+                    <dt-input for="Input.MarginLeft" label="Rand links (mm)" type="number" readonly="@ro" min="0" inputmode="decimal" />
+                </div>
+            </dt-card>
+            <dt-card title="Etiketten" icon="grid">
+                <div class="mat-form__grid">
+                    <dt-input for="Input.Columns" label="Spalten" type="number" readonly="@ro" min="1" max="50" inputmode="numeric" />
+                    <dt-input for="Input.Rows" label="Zeilen" type="number" readonly="@ro" min="1" max="50" inputmode="numeric" />
+                    <dt-input for="Input.CellWidth" label="Etikettbreite (mm)" type="number" readonly="@ro" min="1" inputmode="decimal" />
+                    <dt-input for="Input.CellHeight" label="Etiketthöhe (mm)" type="number" readonly="@ro" min="1" inputmode="decimal" />
+                    <dt-input for="Input.GapX" label="Abstand zwischen den Spalten (mm)" type="number" readonly="@ro" min="0" inputmode="decimal" />
+                    <dt-input for="Input.GapY" label="Abstand zwischen den Zeilen (mm)" type="number" readonly="@ro" min="0" inputmode="decimal" />
+                    <dt-switch for="Input.CropMarks" label="Schnittmarken drucken" full="true" disabled="@ro" hint="Kleine Linien an den Ecken jedes Etiketts zeigen, wo geschnitten wird." />
+                </div>
+            </dt-card>
+        </div>
+        <dt-card title="Vorschau" icon="eye">
+            <div class="dt-sheetpreview" data-dt-sheet-preview aria-label="Vorschau des Druckbogens"></div>
+            <p class="mat-hint" data-dt-sheet-info aria-live="polite"></p>
+        </dt-card>
+    </div>
+
+    @if (!ro)
+    {
+        <dt-buttons back-href="/Sheets" delete-url="@(Model.Sheet is null ? null : Url.Page("/Sheets/Edit", "Delete", new { id = Model.Id }))" delete-confirm="Diesen Druckbogen löschen?" />
+    }
+    else
+    {
+        <dt-buttons no-save="true" back-href="/Sheets" />
+    }
+</form>
+
+<script src="~/js/library.js" asp-append-version="true"></script>

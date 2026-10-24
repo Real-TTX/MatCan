@@ -33,6 +33,16 @@
                 @Ui.Icon("sort")<span>Sortierung</span>@if (Model.SortActive) { <small>@Model.SortLabel @(Model.Descending ? "↓" : "↑")</small> }
             </button>
         }
+
+        @if (Model.Views.Count > 0)
+        {
+            <div class="mat-seg" role="group" aria-label="Ansicht">
+                @foreach (var v in Model.Views)
+                {
+                    <button type="button" class="mat-seg__btn" data-view-switch="@v.Value" data-view-key="@id" aria-pressed="@((v == Model.Views[0]) ? "true" : "false")" aria-label="@v.Label" data-tip="@v.Label">@Ui.Icon(v.Icon)</button>
+                }
+            </div>
+        }
     </div>
 </div>
 

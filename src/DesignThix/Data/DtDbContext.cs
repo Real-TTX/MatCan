@@ -27,6 +27,22 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
 
     public DbSet<Setting> Setting => Set<Setting>();
 
+    public DbSet<Asset> Asset => Set<Asset>();
+
+    public DbSet<Font> Font => Set<Font>();
+
+    public DbSet<DataList> DataList => Set<DataList>();
+
+    public DbSet<DataRow> DataRow => Set<DataRow>();
+
+    public DbSet<Design> Design => Set<Design>();
+
+    public DbSet<DesignRevision> DesignRevision => Set<DesignRevision>();
+
+    public DbSet<SheetLayout> SheetLayout => Set<SheetLayout>();
+
+    public DbSet<OutputJob> OutputJob => Set<OutputJob>();
+
     protected override void OnModelCreating(ModelBuilder b)
     {
         // Tables are PascalCase and named like the entity; enums are stored as text; JSON documents are jsonb.
@@ -91,6 +107,56 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
 
         b.Entity<ActivityLog>().HasIndex(x => x.OccurredDate);
         b.Entity<Setting>().HasIndex(x => x.Key).IsUnique();
+
+        // The library: the key of an image is unique among the images that are not deleted (the key is kept lower case by the logic).
+        b.Entity<Asset>(e =>
+        {
+            e.HasIndex(x => x.Key).IsUnique().HasFilter("\"UpdateState\" <> 0");
+            e.HasIndex(x => x.Category);
+            e.Property(x => x.Key).HasMaxLength(80);
+            e.Property(x => x.Name).HasMaxLength(200);
+            e.Property(x => x.Category).HasMaxLength(60);
+            e.Property(x => x.ContentHash).HasMaxLength(64);
+        });
+        b.Entity<Font>(e =>
+        {
+            e.HasIndex(x => x.Family);
+            e.Property(x => x.Family).HasMaxLength(100);
+            e.Property(x => x.ContentHash).HasMaxLength(64);
+        });
+        b.Entity<DataList>(e =>
+        {
+            e.Property(x => x.Revision).IsConcurrencyToken();
+            e.Property(x => x.Name).HasMaxLength(200);
+        });
+        b.Entity<DataRow>(e =>
+        {
+            e.HasIndex(x => new { x.DataListId, x.Position });
+            e.HasOne(x => x.DataList).WithMany(x => x.Rows).HasForeignKey(x => x.DataListId).OnDelete(DeleteBehavior.Cascade);
+        });
+        b.Entity<Design>(e =>
+        {
+            e.Property(x => x.Revision).IsConcurrencyToken();
+            e.HasIndex(x => x.UpdateDate);
+            e.HasIndex(x => x.IsTemplate);
+            e.Property(x => x.Name).HasMaxLength(200);
+            e.Property(x => x.Category).HasMaxLength(80);
+            e.Property(x => x.Unit).HasMaxLength(8);
+            e.Property(x => x.ThumbnailHash).HasMaxLength(64);
+        });
+        b.Entity<DesignRevision>(e =>
+        {
+            e.HasIndex(x => new { x.DesignId, x.Revision }).IsUnique();
+            e.HasOne(x => x.Design).WithMany(x => x.Revisions).HasForeignKey(x => x.DesignId).OnDelete(DeleteBehavior.Cascade);
+        });
+        b.Entity<SheetLayout>().Property(x => x.Name).HasMaxLength(200);
+        b.Entity<OutputJob>(e =>
+        {
+            e.Property(x => x.Name).HasMaxLength(200);
+            e.HasOne(x => x.Design).WithMany().HasForeignKey(x => x.DesignId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(x => x.DataList).WithMany().HasForeignKey(x => x.DataListId).OnDelete(DeleteBehavior.SetNull);
+            e.HasOne(x => x.SheetLayout).WithMany().HasForeignKey(x => x.SheetLayoutId).OnDelete(DeleteBehavior.SetNull);
+        });
     }
 
     private static LambdaExpression NotDeleted(Type clrType)
