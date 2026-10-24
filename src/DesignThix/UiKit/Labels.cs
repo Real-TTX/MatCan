@@ -25,6 +25,9 @@ public static class Labels
 
     public static string Of(AiAction a) => a switch
     {
+        AiAction.DataImport => "Daten übernehmen",
+        AiAction.DataFill => "Spalte füllen",
+        AiAction.TextSuggest => "Text vorschlagen",
         _ => "Verbindungstest",
     };
 

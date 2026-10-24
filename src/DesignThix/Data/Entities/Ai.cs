@@ -39,8 +39,17 @@ public class AiProfile : AuditedEntity, ISoftDeletable
 
 public enum AiAction
 {
-    /// <summary>A test of the active profile from the settings. The DesignThix actions (data import, data fill, text suggestions) follow in a later phase.</summary>
+    /// <summary>A test of the active profile from the settings.</summary>
     Test,
+
+    /// <summary>Free text or a pasted table becomes new rows of a data list (a preview first, then "Übernehmen"; the journal can take the rows back).</summary>
+    DataImport,
+
+    /// <summary>One column is filled for the selected rows from an instruction (a preview first; the journal keeps the old values).</summary>
+    DataFill,
+
+    /// <summary>Up to five alternatives for the text of a design element; nothing is saved on the server.</summary>
+    TextSuggest,
 }
 
 /// <summary>How a run ended. Running only while it runs.</summary>
@@ -94,8 +103,11 @@ public class AiRun : AuditedEntity
 
     public string? Error { get; set; }
 
-    /// <summary>The checked result (jsonb), what the page shows.</summary>
+    /// <summary>The checked result (jsonb), what the page shows: for the data actions the proposal that "Übernehmen" applies (the code checked it, never the model).</summary>
     public string ResultJson { get; set; } = "{}";
+
+    /// <summary>What the person asked (jsonb): list, text, hint / rows, column, instruction. "Weitermachen" starts the same request again.</summary>
+    public string RequestJson { get; set; } = "{}";
 
     public List<AiRunStep> Steps { get; set; } = [];
 

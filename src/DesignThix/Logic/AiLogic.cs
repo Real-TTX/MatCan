@@ -1,4 +1,3 @@
-using System.Text;
 using System.Text.Json;
 using DesignThix.Configuration;
 using DesignThix.Core.Ai;
@@ -14,19 +13,47 @@ namespace DesignThix.Logic;
 /// sent), then the transport (the active profile, else the operator's relay), the layered instructions, one JSON object as the answer, read
 /// leniently and then checked in code (allowlists for choices and keys). Every step is written to the run; changes go into the
 /// journal and can be taken back, the newest run first. Which data the AI sees is decided here, never by the model.
+/// The actions themselves live in <see cref="AiDataLogic"/> (data import, data fill) and <see cref="AiTextLogic"/> (text suggestions).
 /// </summary>
 public static class AiLogic
 {
-    private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
-
-    /// <summary>The outcome of a run for its caller: the run (with its status), the checked JSON object, or what went wrong.</summary>
-    public sealed record Outcome(AiRun Run, JsonElement? Result, string? Error)
+    /// <summary>The outcome of a run for its caller: the run (with its status), the checked JSON object, or what went wrong (with a code the pages use).</summary>
+    public sealed record Outcome(AiRun Run, JsonElement? Result, string? Error, string? Code = null)
     {
         public bool Ok => Error is null && Result is not null;
     }
 
-    /// <summary>What a run is asked to do: the action, the situation text the model sees, and what it works on (for the run list).</summary>
-    internal sealed record Call(AiAction Action, string Situation, string? StepInstruction, string? SubjectType, long? SubjectId, long? UserId, string? Address);
+    /// <summary>The reason codes of <see cref="Outcome.Code"/>.</summary>
+    public static class Codes
+    {
+        public const string Disabled = "disabled";
+        public const string NotConfigured = "not-configured";
+        public const string Limit = "limit";
+        public const string Refused = "refused";
+        public const string Failed = "failed";
+    }
+
+    /// <summary>
+    /// What a run is asked to do: the action, the situation text the model sees, the instruction of the person for this step, what it works on (for the run list),
+    /// a <paramref name="Refusal"/> (the run is cancelled with this reason before anything is sent, e.g. a list with personal data) and the request as JSON (for "Weitermachen").
+    /// </summary>
+    internal sealed record Call(AiAction Action, string Situation, string? StepInstruction, string? SubjectType, long? SubjectId, long? UserId, string? Address,
+        string? Refusal = null, string? RequestJson = null);
+
+    /// <summary>The exact text of a call: the system message and the situation. This is what the run sends and what "Vollständige Anweisung anzeigen" shows.</summary>
+    internal static (string System, string Situation) Compose(IServiceProvider services, Call call)
+    {
+        var store = services.GetRequiredService<SettingStore>();
+        var system = AiInstructions.SystemText(services.GetRequiredService<ConfigStore>().Current.Ai, store.Get<AiSettings>(SettingStore.Ai), store.Get<SiteSettings>(SettingStore.Site), call.Action, call.StepInstruction);
+        return (system, call.Situation);
+    }
+
+    /// <summary>The text of <see cref="Compose"/> as the person reads it.</summary>
+    internal static string Show(IServiceProvider services, Call call)
+    {
+        var (system, situation) = Compose(services, call);
+        return $"[system]\n{system}\n\n[user]\n{situation}";
+    }
 
     // ================================================================================================ the run
 
@@ -34,8 +61,6 @@ public static class AiLogic
     {
         var store = services.GetRequiredService<SettingStore>();
         var settings = store.Get<AiSettings>(SettingStore.Ai);
-        var site = store.Get<SiteSettings>(SettingStore.Site);
-        var config = services.GetRequiredService<ConfigStore>();
         var clock = services.GetRequiredService<TimeProvider>();
         var now = clock.GetUtcNow().UtcDateTime;
         var run = new AiRun
@@ -47,65 +72,83 @@ public static class AiLogic
             AddressHash = call.Address is null ? null : services.GetRequiredService<AiRateLimiter>().Hash(call.Address),
             StartDate = now,
             CreateUserId = call.UserId,
+            RequestJson = call.RequestJson ?? "{}",
         };
         db.AiRun.Add(run);
         var stepNo = 0;
         void Step(AiStepKind kind, string text) => run.Steps.Add(new AiRunStep { Kind = kind, Text = Limit(text, 40_000), Number = ++stepNo, OccurredDate = clock.GetUtcNow().UtcDateTime, CreateUserId = call.UserId });
 
-        async Task<Outcome> End(AiRunStatus status, string? error, JsonElement? result = null)
+        async Task<Outcome> End(AiRunStatus status, string? error, string? code = null, JsonElement? result = null)
         {
             run.Status = status;
             run.Error = error;
             run.EndDate = clock.GetUtcNow().UtcDateTime;
             if (error is not null)
             {
-                Step(status == AiRunStatus.LimitReached ? AiStepKind.Warning : AiStepKind.Result, error);
+                Step(status is AiRunStatus.LimitReached or AiRunStatus.Cancelled ? AiStepKind.Warning : AiStepKind.Result, error);
             }
 
-            await db.SaveChangesAsync(ct);
-            return new Outcome(run, result, error);
+            await db.SaveChangesAsync(CancellationToken.None);
+            return new Outcome(run, result, error, code);
         }
 
         Step(AiStepKind.Action, $"Aktion: {UiKit.Labels.Of(call.Action)}");
 
-        // ---- limits, before anything is sent ----
+        // ---- refusals and limits, before anything is sent ----
+        if (call.Refusal is not null)
+        {
+            return await End(AiRunStatus.Cancelled, call.Refusal, Codes.Refused);
+        }
+
         if (!settings.Enabled)
         {
-            return await End(AiRunStatus.Cancelled, "Die KI ist in den Einstellungen ausgeschaltet.");
+            return await End(AiRunStatus.Cancelled, "Die KI ist in den Einstellungen ausgeschaltet.", Codes.Disabled);
         }
 
         if (!services.GetRequiredService<AiRateLimiter>().TryTake(call.Address, settings.PerMinutePerAddress))
         {
-            return await End(AiRunStatus.LimitReached, "Zu viele Anfragen in kurzer Zeit. Bitte in einer Minute erneut versuchen.");
+            return await End(AiRunStatus.LimitReached, "Zu viele Anfragen in kurzer Zeit. Bitte in einer Minute erneut versuchen.", Codes.Limit);
         }
 
         var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         var monthTokens = await db.AiRun.Where(r => r.StartDate >= monthStart).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
         if (settings.MonthlyTokens > 0 && monthTokens >= settings.MonthlyTokens)
         {
-            return await End(AiRunStatus.LimitReached, "Das Monatsbudget der KI ist aufgebraucht.");
+            return await End(AiRunStatus.LimitReached, "Das Monatsbudget der KI ist aufgebraucht.", Codes.Limit);
         }
 
-        if (call.UserId is { } userId && settings.UserDailyTokens > 0)
+        if (call.UserId is { } userId)
         {
-            var dayTokens = await db.AiRun.Where(r => r.UserId == userId && r.StartDate >= now.Date).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
-            if (dayTokens >= settings.UserDailyTokens)
+            if (settings.UserDailyTokens > 0)
             {
-                return await End(AiRunStatus.LimitReached, "Dein Tagesbudget der KI ist aufgebraucht. Morgen geht es weiter.");
+                var dayTokens = await db.AiRun.Where(r => r.UserId == userId && r.StartDate >= now.Date).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
+                if (dayTokens >= settings.UserDailyTokens)
+                {
+                    return await End(AiRunStatus.LimitReached, "Dein Tagesbudget der KI ist aufgebraucht. Morgen geht es weiter.", Codes.Limit);
+                }
+            }
+
+            if (settings.UserMonthlyTokens > 0)
+            {
+                var userMonth = await db.AiRun.Where(r => r.UserId == userId && r.StartDate >= monthStart).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
+                if (userMonth >= settings.UserMonthlyTokens)
+                {
+                    return await End(AiRunStatus.LimitReached, "Dein Monatsbudget der KI ist aufgebraucht.", Codes.Limit);
+                }
             }
         }
 
         if (run.AddressHash is { } address && settings.AddressDailyRuns > 0
             && await db.AiRun.CountAsync(r => r.AddressHash == address && r.StartDate >= now.Date, ct) >= settings.AddressDailyRuns)
         {
-            return await End(AiRunStatus.LimitReached, "Von diesem Anschluss aus sind für heute keine weiteren KI-Aufrufe möglich.");
+            return await End(AiRunStatus.LimitReached, "Von diesem Anschluss aus sind für heute keine weiteren KI-Aufrufe möglich.", Codes.Limit);
         }
 
         // ---- transport ----
-        var transport = await TransportAsync(db, services, config, ct);
+        var transport = await TransportAsync(db, services, ct);
         if (transport is null)
         {
-            return await End(AiRunStatus.Error, "Es ist keine KI eingerichtet (Verwaltung → KI → Profile).");
+            return await End(AiRunStatus.Error, "Es ist keine KI eingerichtet.", Codes.NotConfigured);
         }
 
         run.ProfileName = transport.Name;
@@ -113,46 +156,58 @@ public static class AiLogic
         run.Transport = transport.Kind;
 
         // ---- instructions ----
-        var system = AiInstructions.SystemText(config.Current.Ai, settings, site, call.Action, call.StepInstruction);
-        var messages = new List<AiMessage> { AiMessage.System(system), AiMessage.User(call.Situation) };
-        Step(AiStepKind.Message, $"An {transport.Name} ({transport.Model}):\n\n{system}\n\n---\n\n{call.Situation}");
+        var (system, situation) = Compose(services, call);
+        var messages = new List<AiMessage> { AiMessage.System(system), AiMessage.User(situation) };
+        Step(AiStepKind.Message, $"An {transport.Name} ({transport.Model}):\n\n{system}\n\n---\n\n{situation}");
 
         var required = AiInstructions.RequiredField(call.Action);
-        for (var attempt = 0; ; attempt++)
+        try
         {
-            var response = await transport.CompleteAsync(new AiRequest { Messages = messages, Json = true, MaxTokens = settings.MaxTokens }, ct);
-            var estimated = response.PromptTokens == 0 && response.CompletionTokens == 0;
-            run.PromptTokens += estimated ? TokenEstimate.Of(messages) : response.PromptTokens;
-            run.CompletionTokens += estimated ? TokenEstimate.Of(response.Text) : response.CompletionTokens;
-            run.TokensEstimated |= estimated;
-            if (!response.Ok)
+            for (var attempt = 0; ; attempt++)
             {
-                return await End(AiRunStatus.Error, response.Error ?? "Die KI hat nicht geantwortet.");
-            }
+                var response = await transport.CompleteAsync(new AiRequest { Messages = messages, Json = true, MaxTokens = settings.MaxTokens }, ct);
+                var estimated = response.PromptTokens == 0 && response.CompletionTokens == 0;
+                run.PromptTokens += estimated ? TokenEstimate.Of(messages) : response.PromptTokens;
+                run.CompletionTokens += estimated ? TokenEstimate.Of(response.Text) : response.CompletionTokens;
+                run.TokensEstimated |= estimated;
+                if (!response.Ok)
+                {
+                    return await End(AiRunStatus.Error, response.Error ?? "Die KI hat nicht geantwortet.", Codes.Failed);
+                }
 
-            Step(AiStepKind.Result, response.Text ?? "");
-            if (response.Note is { Length: > 0 } note)
-            {
-                Step(AiStepKind.Warning, note);
-            }
+                Step(AiStepKind.Result, response.Text ?? "");
+                if (response.Note is { Length: > 0 } note)
+                {
+                    Step(AiStepKind.Warning, note);
+                }
 
-            var obj = LenientJson.FirstObject(response.Text);
-            if (obj is { } o && o.TryGetProperty(required, out _))
-            {
-                run.ResultJson = o.GetRawText();
-                return await End(AiRunStatus.Done, null, o);
-            }
+                var obj = LenientJson.FirstObject(response.Text);
+                if (obj is { } o && o.TryGetProperty(required, out _))
+                {
+                    run.ResultJson = System.Text.Json.JsonSerializer.Serialize(o);
+                    return await End(AiRunStatus.Done, null, null, o);
+                }
 
-            // Only an announcement ("Ich schaue mir das an ...") or another shape: at most two nudges, then the run hangs.
-            if (attempt >= 2)
-            {
-                return await End(AiRunStatus.Stuck, "Die KI hat nicht im verlangten Format geantwortet (zweimal angestoßen).");
-            }
+                // Only an announcement ("Ich schaue mir das an ...") or another shape: at most two nudges, then the run hangs.
+                if (attempt >= 2)
+                {
+                    return await End(AiRunStatus.Stuck, "Die KI hat nicht im verlangten Format geantwortet (zweimal angestoßen).", Codes.Failed);
+                }
 
-            run.Nudges++;
-            messages.Add(AiMessage.Assistant(response.Text ?? ""));
-            messages.Add(AiMessage.User(AiInstructions.Nudge(call.Action)));
-            Step(AiStepKind.Warning, "Antwort ohne das verlangte JSON-Objekt: Anstoß zum Weitermachen.");
+                run.Nudges++;
+                messages.Add(AiMessage.Assistant(response.Text ?? ""));
+                messages.Add(AiMessage.User(AiInstructions.Nudge(call.Action)));
+                Step(AiStepKind.Warning, "Antwort ohne das verlangte JSON-Objekt: Anstoß zum Weitermachen.");
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            return await End(AiRunStatus.Cancelled, "Abgebrochen.", Codes.Failed);
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            services.GetRequiredService<ILoggerFactory>().CreateLogger("Ai").LogWarning(ex, "AI run failed");
+            return await End(AiRunStatus.Error, "Beim Aufruf der KI ist etwas schiefgegangen: " + ex.Message, Codes.Failed);
         }
     }
 
@@ -163,8 +218,22 @@ public static class AiLogic
         public Task<AiResponse> CompleteAsync(AiRequest request, CancellationToken ct) => Complete(request, ct);
     }
 
-    private static async Task<Transport?> TransportAsync(DtDbContext db, IServiceProvider services, ConfigStore config, CancellationToken ct)
+    private static async Task<Transport?> TransportAsync(DtDbContext db, IServiceProvider services, CancellationToken ct)
     {
+        if (services.GetService<AiTestSeam>() is { Handler: { } handler } seam)
+        {
+            return new Transport("profile", "Testprofil", "test-model", (r, c) =>
+            {
+                lock (seam.Requests)
+                {
+                    seam.Requests.Add(r);
+                }
+
+                return handler(r, c);
+            });
+        }
+
+        var config = services.GetRequiredService<ConfigStore>();
         var secrets = services.GetRequiredService<AiSecretStore>();
         var http = services.GetRequiredService<IHttpClientFactory>();
         var settings = services.GetRequiredService<SettingStore>().Get<AiSettings>(SettingStore.Ai);
@@ -183,7 +252,7 @@ public static class AiLogic
             else if (await secrets.LoadAsync(profile.SecretToken, AiSecretStore.ApiKey, ct) is { Length: > 0 } key)
             {
                 return new Transport("profile", profile.Name, profile.Model, (r, c) =>
-                    ChatCompletionsClient.CompleteAsync(http.CreateClient("ai"), profile.BaseUrl, key, profile.Model, r, settings.MaxTokens, m => logger.LogWarning("{Message}", m), c));
+                    ChatCompletionsClient.CompleteAsync(http.CreateClient("ai"), profile.BaseUrl, key, profile.Model, r, settings.MaxTokens, m => logger.LogWarning("{Message}", m), c, settings.TimeoutSeconds));
             }
         }
 
@@ -191,19 +260,27 @@ public static class AiLogic
         if (!string.IsNullOrWhiteSpace(op.RelayUrl))
         {
             return new Transport("relay", "Relay des Betreibers", op.RelayModel, (r, c) =>
-                ChatCompletionsClient.CompleteAsync(http.CreateClient("ai"), op.RelayUrl, op.RelayKey, op.RelayModel, r, settings.MaxTokens, m => logger.LogWarning("{Message}", m), c));
+                ChatCompletionsClient.CompleteAsync(http.CreateClient("ai"), op.RelayUrl, op.RelayKey, op.RelayModel, r, settings.MaxTokens, m => logger.LogWarning("{Message}", m), c, settings.TimeoutSeconds));
         }
 
         return null;
     }
 
-    /// <summary>Whether a call could go out at all (a usable profile or a relay): pages hide the AI buttons otherwise.</summary>
+    /// <summary>Whether the AI is switched on in the settings: the pages show the AI buttons only then.</summary>
+    public static bool IsEnabled(Biz biz) => SettingLogic.Get<AiSettings>(biz, SettingStore.Ai).Enabled;
+
+    /// <summary>Whether a call could go out at all (switched on and a usable profile or a relay).</summary>
     public static async Task<bool> IsAvailableAsync(Biz biz)
     {
         var settings = SettingLogic.Get<AiSettings>(biz, SettingStore.Ai);
         if (!settings.Enabled)
         {
             return false;
+        }
+
+        if (biz.Services.GetService<AiTestSeam>() is { Handler: not null })
+        {
+            return true;
         }
 
         if (!string.IsNullOrWhiteSpace(biz.Config.Current.Ai.RelayUrl))
@@ -215,6 +292,25 @@ public static class AiLogic
         return profile is not null && biz.Service<AiSecretStore>().Has(profile.SecretToken, profile.Provider == AiProvider.ChatGpt ? AiSecretStore.ChatGpt : AiSecretStore.ApiKey);
     }
 
+    /// <summary>The message for a run that did not deliver, for the person who asked: an administrator gets the way to the settings, others a neutral hint.</summary>
+    public static string ReasonFor(Biz biz, Outcome outcome) => outcome.Code switch
+    {
+        Codes.NotConfigured => biz.IsAdmin
+            ? "Es ist noch keine KI eingerichtet. Lege unter Verwaltung → KI → Profile eine Verbindung an und mach sie aktiv."
+            : "Die KI ist noch nicht eingerichtet. Bitte wende dich an einen Administrator.",
+        Codes.Disabled => biz.IsAdmin ? "Die KI ist ausgeschaltet (Verwaltung → KI → Allgemein)." : "Die KI ist ausgeschaltet.",
+        _ => outcome.Error ?? "Die KI hat nicht geantwortet.",
+    };
+
+    /// <summary>Where an administrator can fix a missing or switched-off AI; null for everybody else.</summary>
+    public static string? SettingsLinkFor(Biz biz, Outcome outcome)
+        => !biz.IsAdmin ? null : outcome.Code switch
+        {
+            Codes.NotConfigured => "/Admin/Ai/Profiles",
+            Codes.Disabled => "/Admin/Ai",
+            _ => null,
+        };
+
     // ================================================================================================ settings page: test and the full instruction
 
     public static async Task<string> TestAsync(Biz biz, string? address)
@@ -223,17 +319,21 @@ public static class AiLogic
         var outcome = await RunAsync(biz.Db, biz.Services, new Call(AiAction.Test, "Bitte bestätige kurz, dass du erreichbar bist.", null, null, null, biz.UserId, address));
         return outcome.Ok
             ? $"Verbindung steht ({outcome.Run.ProfileName}, {outcome.Run.Model}): {outcome.Result!.Value.Text("message")}"
-            : $"Fehlgeschlagen: {outcome.Error}";
+            : $"Fehlgeschlagen: {ReasonFor(biz, outcome)}";
     }
 
-    /// <summary>"Vollständige Anweisung anzeigen": exactly the text that would go to the model for this action.</summary>
+    /// <summary>"Vollständige Anweisung anzeigen" on the settings page: the text of an action with a sketch of the situation (the real one depends on the data).</summary>
     public static string FullInstruction(Biz biz, AiAction action)
     {
         biz.RequireAdmin();
-        var store = biz.Service<SettingStore>();
-        var system = AiInstructions.SystemText(biz.Config.Current.Ai, store.Get<AiSettings>(SettingStore.Ai), store.Get<SiteSettings>(SettingStore.Site), action, null);
-        var situation = action == AiAction.Test ? "Bitte bestätige kurz, dass du erreichbar bist." : "(die Lage: das Design, die Datenliste, die Eingaben)";
-        return $"[system]\n{system}\n\n[user]\n{situation}";
+        var situation = action switch
+        {
+            AiAction.Test => "Bitte bestätige kurz, dass du erreichbar bist.",
+            AiAction.DataImport => "(die Lage: die Spalten der Datenliste mit Art und Beschriftung, die erlaubten Medien, der Text der Person)",
+            AiAction.DataFill => "(die Lage: die Zielspalte, die ausgewählten Zeilen mit den gewählten Spalten)",
+            _ => "(die Lage: der Text des Elements, die Felder des Designs mit Beispielwerten)",
+        };
+        return Show(biz.Services, new Call(action, situation, action == AiAction.Test ? null : "(was die Person im Dialog schreibt)", null, null, null, null));
     }
 
     // ================================================================================================ runs, journal, undo
@@ -244,7 +344,10 @@ public static class AiLogic
         return biz.Db.AiRun.AsNoTracking();
     }
 
-    public sealed record RunDetails(AiRun Run, List<AiJournalEntry> Journal, bool CanUndo, string? UndoBlockedBy);
+    /// <summary>What a run worked on, for the run list and the details: the name and a link (null when the record is gone).</summary>
+    public sealed record Subject(string Kind, string Name, string? Href);
+
+    public sealed record RunDetails(AiRun Run, List<AiJournalEntry> Journal, bool CanUndo, string? UndoBlockedBy, Subject? Subject, string? OpenHref);
 
     public static async Task<RunDetails?> RunDetailsAsync(Biz biz, long id)
     {
@@ -257,7 +360,41 @@ public static class AiLogic
 
         var journal = await biz.Db.AiJournalEntry.AsNoTracking().Where(j => j.AiRunId == id).OrderBy(j => j.Id).ToListAsync();
         var blocker = await NewerRunAsync(biz.Db, journal);
-        return new RunDetails(run, journal, journal.Any(j => j.RevertedDate is null) && blocker is null, blocker is null ? null : $"Erst Lauf #{blocker} rückgängig machen (neuester zuerst).");
+        var subject = (await SubjectsAsync(biz, [run])).GetValueOrDefault(run.Id);
+        var open = run.Status == AiRunStatus.Waiting && run.Action is AiAction.DataImport or AiAction.DataFill && run.SubjectType == nameof(DataList) && subject?.Href is { } href
+            ? href + (href.Contains('?') ? "&" : "?") + "aiRun=" + run.Id
+            : null;
+        return new RunDetails(run, journal, journal.Any(j => j.RevertedDate is null) && blocker is null, blocker is null ? null : $"Erst Lauf #{blocker} rückgängig machen (neuester zuerst).", subject, open);
+    }
+
+    /// <summary>The subjects (data list, design) of some runs, by run id. A record that is gone has no entry.</summary>
+    public static async Task<Dictionary<long, Subject>> SubjectsAsync(Biz biz, IEnumerable<AiRun> runs)
+    {
+        biz.RequireAdmin();
+        var list = runs.ToList();
+        var result = new Dictionary<long, Subject>();
+        var listIds = list.Where(r => r.SubjectType == nameof(DataList) && r.SubjectId is not null).Select(r => r.SubjectId!.Value).Distinct().ToList();
+        var designIds = list.Where(r => r.SubjectType == nameof(Design) && r.SubjectId is not null).Select(r => r.SubjectId!.Value).Distinct().ToList();
+        var lists = listIds.Count == 0 ? [] : await biz.Db.DataList.AsNoTracking().Where(l => listIds.Contains(l.Id)).ToDictionaryAsync(l => l.Id, l => l.Name);
+        var designs = designIds.Count == 0 ? [] : await biz.Db.Design.AsNoTracking().Where(d => designIds.Contains(d.Id)).ToDictionaryAsync(d => d.Id, d => d.Name);
+        foreach (var run in list)
+        {
+            if (run.SubjectId is not { } subjectId)
+            {
+                continue;
+            }
+
+            if (run.SubjectType == nameof(DataList) && lists.TryGetValue(subjectId, out var listName))
+            {
+                result[run.Id] = new Subject("Datenliste", listName, $"/DataLists/Edit/{subjectId}?tab=rows");
+            }
+            else if (run.SubjectType == nameof(Design) && designs.TryGetValue(subjectId, out var designName))
+            {
+                result[run.Id] = new Subject("Design", designName, $"/Designs/{subjectId}");
+            }
+        }
+
+        return result;
     }
 
     /// <summary>A newer run that changed the same records and is not undone: it has to be undone first.</summary>
@@ -270,18 +407,55 @@ public static class AiLogic
         }
 
         var runId = open[0].AiRunId;
-        var keys = open.Select(j => j.EntityType + ":" + j.EntityId).Distinct().ToList();
+        var types = open.Select(j => j.EntityType).Distinct().ToList();
+        var ids = open.Select(j => j.EntityId).Distinct().ToList();
+        var keys = open.Select(j => j.EntityType + ":" + j.EntityId).ToHashSet();
         var newer = await db.AiJournalEntry.AsNoTracking()
-            .Where(j => j.AiRunId > runId && j.RevertedDate == null)
-            .Select(j => new { j.AiRunId, Key = j.EntityType + ":" + j.EntityId })
+            .Where(j => j.AiRunId > runId && j.RevertedDate == null && types.Contains(j.EntityType) && ids.Contains(j.EntityId))
+            .Select(j => new { j.AiRunId, j.EntityType, j.EntityId })
             .ToListAsync();
-        return newer.Where(n => keys.Contains(n.Key)).OrderByDescending(n => n.AiRunId).Select(n => (long?)n.AiRunId).FirstOrDefault();
+        return newer.Where(n => keys.Contains(n.EntityType + ":" + n.EntityId)).OrderByDescending(n => n.AiRunId).Select(n => (long?)n.AiRunId).FirstOrDefault();
     }
 
-    /// <summary>Takes back what a run changed. A value somebody changed since is left alone (and said so).</summary>
+    /// <summary>One run in the short list on a page of its subject.</summary>
+    public sealed record RunLine(long Id, AiAction Action, AiRunStatus Status, DateTime StartDate, string? Who, int Tokens, bool Estimated, int Changes, int Open, string? Error);
+
+    /// <summary>
+    /// The newest runs on one record (a data list, a design), for the panel on its page: a designer sees their own, an administrator everybody's. Everybody who may use the AI
+    /// there can take back what they changed ("Rückgängig"), an administrator also that of others.
+    /// </summary>
+    public static async Task<List<RunLine>> RunsOfAsync(Biz biz, string subjectType, long subjectId, int take = 8)
+    {
+        biz.RequireDesigner();
+        var query = biz.Db.AiRun.AsNoTracking().Where(r => r.SubjectType == subjectType && r.SubjectId == subjectId && r.Action != AiAction.Test);
+        if (!biz.IsAdmin)
+        {
+            var me = biz.UserId;
+            query = query.Where(r => r.UserId == me);
+        }
+
+        var runs = await query.OrderByDescending(r => r.Id).Take(take).ToListAsync();
+        var ids = runs.Select(r => r.Id).ToList();
+        var journal = await biz.Db.AiJournalEntry.AsNoTracking().Where(j => ids.Contains(j.AiRunId)).Select(j => new { j.AiRunId, j.RevertedDate }).ToListAsync();
+        var userIds = runs.Where(r => r.UserId is not null).Select(r => r.UserId!.Value).Distinct().ToList();
+        var names = await biz.Db.User.AsNoTracking().Where(u => userIds.Contains(u.Id)).ToDictionaryAsync(u => u.Id, u => u.DisplayName);
+        return [.. runs.Select(r => new RunLine(r.Id, r.Action, r.Status, r.StartDate, r.UserId is { } uid && names.TryGetValue(uid, out var n) ? n : null, r.TotalTokens, r.TokensEstimated,
+            journal.Count(j => j.AiRunId == r.Id), journal.Count(j => j.AiRunId == r.Id && j.RevertedDate is null), r.Error))];
+    }
+
+    /// <summary>
+    /// Takes back what a run changed, newest run first. A designer may take back their own runs, an administrator any. A value somebody changed since is left alone
+    /// (and said so).
+    /// </summary>
     public static async Task<string> UndoAsync(Biz biz, long runId)
     {
-        biz.RequireAdmin();
+        biz.RequireDesigner();
+        var run = await biz.Db.AiRun.AsNoTracking().FirstOrDefaultAsync(r => r.Id == runId) ?? throw new BizException("Den Lauf gibt es nicht.");
+        if (!biz.IsAdmin && run.UserId != biz.UserId)
+        {
+            throw new ForbiddenException("Du kannst nur deine eigenen KI-Läufe rückgängig machen.");
+        }
+
         var journal = await biz.Db.AiJournalEntry.Where(j => j.AiRunId == runId && j.RevertedDate == null).OrderByDescending(j => j.Id).ToListAsync();
         if (journal.Count == 0)
         {
@@ -294,9 +468,10 @@ public static class AiLogic
         }
 
         var skipped = 0;
+        var touched = new HashSet<long>();
         foreach (var entry in journal)
         {
-            if (!await RevertEntryAsync(biz.Db, entry))
+            if (!await RevertEntryAsync(biz.Db, entry, touched))
             {
                 skipped++;
             }
@@ -304,31 +479,46 @@ public static class AiLogic
             entry.RevertedDate = biz.Now;
         }
 
-        await biz.Db.SaveChangesAsync();
-        await biz.Log.LogAsync("KI-Lauf rückgängig gemacht", nameof(AiRun), runId);
-        return skipped == 0 ? "Rückgängig gemacht." : $"Rückgängig gemacht. {skipped} Wert(e) waren inzwischen von Hand geändert und blieben, wie sie sind.";
+        if (touched.Count > 0)
+        {
+            foreach (var list in await biz.Db.DataList.Where(l => touched.Contains(l.Id)).ToListAsync())
+            {
+                list.Revision++;
+            }
+        }
+
+        try
+        {
+            await biz.Db.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            throw new BizException("Jemand hat die Datenliste gerade geändert. Bitte versuche es gleich noch einmal.");
+        }
+
+        await biz.Log.LogAsync("KI-Lauf rückgängig gemacht", nameof(AiRun), runId, UiKit.Labels.Of(run.Action));
+        return skipped == 0 ? "Rückgängig gemacht." : $"Rückgängig gemacht. {skipped} Eintrag/Einträge waren inzwischen von Hand geändert und blieben, wie sie sind.";
     }
 
-    /// <summary>
-    /// Takes back one journal entry; false when the record is gone or somebody changed the value since. The actions that change data (data import, data
-    /// fill) add their entity types here.
-    /// </summary>
-    private static Task<bool> RevertEntryAsync(DtDbContext db, AiJournalEntry entry) => Task.FromResult(false);
+    /// <summary>Takes back one journal entry; false when the record is gone or somebody changed the value since.</summary>
+    private static Task<bool> RevertEntryAsync(DtDbContext db, AiJournalEntry entry, HashSet<long> touchedLists)
+        => entry.EntityType == nameof(DataRow) ? AiDataLogic.RevertAsync(db, entry, touchedLists) : Task.FromResult(false);
 
-    /// <summary>"Weitermachen": a run that hung or failed is started again with the same action.</summary>
-    public static async Task<string> ContinueAsync(Biz biz, long runId, string? address)
+    /// <summary>"Weitermachen": a run that hung or failed is started again with the same request.</summary>
+    public static async Task<(string Message, long? RunId)> ContinueAsync(Biz biz, long runId, string? address)
     {
         biz.RequireAdmin();
         var run = await biz.Db.AiRun.AsNoTracking().FirstOrDefaultAsync(r => r.Id == runId) ?? throw new BizException("Den Lauf gibt es nicht.");
-        if (run.Status is not (AiRunStatus.Stuck or AiRunStatus.Error or AiRunStatus.LimitReached or AiRunStatus.Waiting))
+        if (run.Status is not (AiRunStatus.Stuck or AiRunStatus.Error or AiRunStatus.LimitReached or AiRunStatus.Cancelled))
         {
-            throw new BizException("Nur ein Lauf, der hängt, wartet oder fehlgeschlagen ist, kann weitermachen.");
+            throw new BizException("Nur ein Lauf, der hängt oder fehlgeschlagen ist, kann weitermachen.");
         }
 
         return run.Action switch
         {
-            AiAction.Test => await TestAsync(biz, address),
-            _ => throw new BizException("Diesen Lauf startet man an seiner Stelle neu."),
+            AiAction.Test => (await TestAsync(biz, address), null),
+            AiAction.DataImport or AiAction.DataFill => await AiDataLogic.ContinueAsync(biz, run, address),
+            _ => throw new BizException("Diesen Lauf startet man an seiner Stelle neu (im Designer)."),
         };
     }
 
@@ -349,15 +539,11 @@ public static class AiLogic
 
     // ================================================================================================ helpers
 
-    internal static async Task RejectAsync(DtDbContext db, AiRun run, string reason)
-    {
-        run.Status = AiRunStatus.Error;
-        run.Error = reason;
-        Warn(run, reason);
-        await db.SaveChangesAsync();
-    }
+    internal static void Warn(AiRun run, string text, TimeProvider clock)
+        => run.Steps.Add(new AiRunStep { Kind = AiStepKind.Warning, Text = Limit(text, 40_000), Number = run.Steps.Count + 1, OccurredDate = clock.GetUtcNow().UtcDateTime });
 
-    internal static void Warn(AiRun run, string text) => run.Steps.Add(new AiRunStep { Kind = AiStepKind.Warning, Text = text, Number = run.Steps.Count + 1, OccurredDate = DateTime.UtcNow });
+    internal static void Note(AiRun run, AiStepKind kind, string text, TimeProvider clock)
+        => run.Steps.Add(new AiRunStep { Kind = kind, Text = Limit(text, 40_000), Number = run.Steps.Count + 1, OccurredDate = clock.GetUtcNow().UtcDateTime });
 
     internal static string Limit(string? text, int max)
     {

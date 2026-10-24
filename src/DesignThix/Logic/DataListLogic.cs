@@ -215,7 +215,7 @@ public static class DataListLogic
 
     // ------------------------------------------------------------------------------------------------ rows (the grid)
 
-    private static Dictionary<string, string> ParseValues(string json)
+    internal static Dictionary<string, string> ParseValues(string json)
     {
         var values = new Dictionary<string, string>(StringComparer.Ordinal);
         try
@@ -265,7 +265,7 @@ public static class DataListLogic
         return clean;
     }
 
-    private static string ToJson(Dictionary<string, string> values) => JsonSerializer.Serialize(values);
+    internal static string ToJson(Dictionary<string, string> values) => JsonSerializer.Serialize(values);
 
     public static async Task<GridData> GridAsync(Biz biz, long id)
     {

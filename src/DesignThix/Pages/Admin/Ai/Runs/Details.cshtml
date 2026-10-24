@@ -2,7 +2,8 @@
 @model DesignThix.Pages.Admin.Ai.Runs.DetailsModel
 @{
     var r = Model.Details.Run;
-    var canContinue = r.Status is AiRunStatus.Stuck or AiRunStatus.Error or AiRunStatus.LimitReached or AiRunStatus.Waiting && r.Action is AiAction.Test;
+    var canContinue = r.Status is AiRunStatus.Stuck or AiRunStatus.Error or AiRunStatus.LimitReached or AiRunStatus.Cancelled && r.Action is AiAction.Test or AiAction.DataImport or AiAction.DataFill && r.Error != "Der Vorschlag wurde verworfen.";
+    var subject = Model.Details.Subject;
 }
 
 <div class="dt-split">
@@ -15,7 +16,7 @@
                     <strong>@Labels.Of(s.Kind)</strong> <span class="mat-muted">@Fmt.Time(s.OccurredDate)</span>
                     @if (s.Kind == AiStepKind.Message && s.Text.Length > 300)
                     {
-                        <details class="dt-details"><summary>Vollständige Nachricht anzeigen (@Fmt.Integer(s.Text.Length) Zeichen)</summary><pre class="dt-code dt-code--wrap">@s.Text</pre></details>
+                        <details class="dt-details"><summary>Vollständige Anweisung anzeigen (genau das, was an die KI ging; @Fmt.Integer(s.Text.Length) Zeichen)</summary><pre class="dt-code dt-code--wrap">@s.Text</pre></details>
                     }
                     else
                     {
@@ -37,7 +38,14 @@
                 <dt>Anstöße</dt><dd>@r.Nudges</dd>
                 <dt>Gestartet</dt><dd>@Fmt.Moment(r.StartDate)</dd>
                 <dt>Dauer</dt><dd>@(r.EndDate is { } end ? $"{(end - r.StartDate).TotalSeconds:0.0} s" : "–")</dd>
-                @if (r.SubjectType is { } kind) { <dt>Betrifft</dt><dd>@kind@(r.SubjectId is { } sid ? $" #{sid}" : "")</dd> }
+                @if (subject is not null)
+                {
+                    <dt>Betrifft</dt><dd>@subject.Kind: @if (subject.Href is not null) { <a href="@subject.Href">@subject.Name</a> } else { @subject.Name }</dd>
+                }
+                else if (r.SubjectType is { } kind)
+                {
+                    <dt>Betrifft</dt><dd>@kind@(r.SubjectId is { } sid ? $" #{sid}" : "") (gelöscht)</dd>
+                }
                 @if (r.AddressHash is not null) { <dt>Adresse (Hash)</dt><dd class="mat-mono">@r.AddressHash</dd> }
                 @if (r.Error is not null) { <dt>Grund</dt><dd>@r.Error</dd> }
             </dl>
@@ -56,8 +64,8 @@
                         <li class="dt-note">
                             <span class="dt-note__icon">@Ui.Icon(j.RevertedDate is null ? "edit" : "restore")</span>
                             <div class="dt-note__body">
-                                <span class="dt-note__title">@j.EntityType #@j.EntityId · @j.Field</span>
-                                <span class="dt-note__meta">@(j.OldValue ?? "–") → @(j.NewValue ?? "–")@(j.RevertedDate is null ? "" : $" · rückgängig {Fmt.Moment(j.RevertedDate)}")</span>
+                                <span class="dt-note__title">@(j.EntityType == "DataRow" ? "Datenzeile" : j.EntityType) #@j.EntityId · @(j.Field == "Zeile" ? "neue Zeile" : j.Field)</span>
+                                <span class="dt-note__meta">@(AiLogic.Limit(j.OldValue, 160) is { Length: > 0 } oldText ? oldText : "–") → @(AiLogic.Limit(j.NewValue, 160) is { Length: > 0 } newText ? newText : "–")@(j.RevertedDate is null ? "" : $" · rückgängig {Fmt.Moment(j.RevertedDate)}")</span>
                             </div>
                         </li>
                     }
@@ -73,6 +81,10 @@
                     <form method="post" asp-page-handler="Undo" asp-route-id="@r.Id">
                         <button type="submit" class="mat-btn mat-btn--secondary" data-confirm="Die Änderungen dieses Laufs rückgängig machen?" data-confirm-ok="Rückgängig">@Ui.Icon("restore")<span>Rückgängig</span></button>
                     </form>
+                }
+                @if (Model.Details.OpenHref is { } open)
+                {
+                    <a class="mat-btn mat-btn--primary" href="@open">@Ui.Icon("eye")<span>Vorschlag ansehen</span></a>
                 }
                 @if (canContinue)
                 {

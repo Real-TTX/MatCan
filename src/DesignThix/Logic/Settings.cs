@@ -17,7 +17,13 @@ public sealed class AiSettings
     /// <summary>Personal data (names, addresses and phone numbers in data lists) may go to the model. Off: lists that contain personal data are refused.</summary>
     public bool SendPersonalData { get; set; }
 
+    /// <summary>The additions of the site per action (the key is the name of <c>AiAction</c>): the layer between the base instruction and the fixed part. Empty = none.</summary>
+    public Dictionary<string, string> ActionInstructions { get; set; } = [];
+
     public int UserDailyTokens { get; set; } = 200_000;
+
+    /// <summary>How many tokens one person may use per month (0 = no limit).</summary>
+    public int UserMonthlyTokens { get; set; } = 2_000_000;
 
     public int MonthlyTokens { get; set; } = 5_000_000;
 

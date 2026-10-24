@@ -452,6 +452,14 @@
       ui.on.title = 'Gewählte Zeilen (ohne Auswahl alle angezeigten) aktiv setzen: sie werden ausgegeben.';
       ui.off.title = 'Gewählte Zeilen (ohne Auswahl alle angezeigten) inaktiv setzen: sie werden nicht ausgegeben.';
       [ui.add, ui.dup, ui.up, ui.down, ui.on, ui.off].forEach(function (b) { ui.tools.appendChild(b); });
+      if (root.getAttribute('data-ai') === 'true') {
+        ui.aiFill = button('Mit KI füllen', 'sparkles', 'mat-btn--ghost mat-btn--sm', 'ai-fill');
+        ui.aiImport = button('Mit KI übernehmen', 'sparkles', 'mat-btn--ghost mat-btn--sm', 'ai-import');
+        ui.aiFill.title = 'Eine Spalte der gewählten Zeilen von der KI füllen lassen (du siehst vorher eine Vorschau).';
+        ui.aiImport.title = 'Aus Text oder einer Tabelle neue Zeilen von der KI machen lassen (du siehst vorher eine Vorschau).';
+        ui.tools.appendChild(ui.aiFill);
+        ui.tools.appendChild(ui.aiImport);
+      }
       root.appendChild(ui.tools);
 
       // The table.
@@ -1047,6 +1055,43 @@
 
     function columnByKey(key) { return S.columns.find(function (c) { return c.key === key; }); }
 
+    // ---------------------------------------------------------------------------------------- the AI actions (js/ai.js)
+
+    function aiContext() {
+      var listId = parseInt(root.getAttribute('data-list-id') || '', 10);
+      return {
+        listId: listId,
+        blocked: root.getAttribute('data-ai-blocked') || null,
+        columns: S.columns.map(function (c) { return { key: c.key, label: c.label, type: c.type }; }),
+        onApplied: function () { load(); },
+        onUndone: function () { load(); },
+      };
+    }
+
+    function aiReady() {
+      if (!window.DtAi) { toast('Die KI-Funktionen sind nicht geladen. Lade die Seite neu.', 'warning'); return false; }
+      if (S.dirty) { toast('Speichere zuerst deine Änderungen im Raster: Die KI arbeitet mit den gespeicherten Zeilen.', 'warning'); return false; }
+      return true;
+    }
+
+    function aiFill() {
+      if (!aiReady()) { return; }
+      var ctx = aiContext();
+      var selected = selectedRows();
+      var saved = selected.filter(function (r) { return r.id !== null; });
+      if (!ctx.blocked) {
+        if (saved.length === 0) { toast('Wähle zuerst Zeilen aus (Häkchen links), die die KI füllen soll.', 'warning'); return; }
+        if (S.columns.length === 0) { toast('Die Liste hat noch keine Spalten.', 'warning'); return; }
+      }
+      ctx.rowIds = saved.map(function (r) { return r.id; });
+      window.DtAi.openFill(ctx);
+    }
+
+    function aiImport() {
+      if (!aiReady()) { return; }
+      window.DtAi.openImport(aiContext());
+    }
+
     function bind() {
       var filterTimer = 0;
       ui.filter.addEventListener('input', function () {
@@ -1073,6 +1118,8 @@
           if (targets.length === 0) { toast('Wähle zuerst Zeilen aus (Häkchen links) oder klicke in eine Zeile.', 'warning'); return; }
           if (act === 'dup') { duplicateRows(targets); } else { moveRows(act === 'up' ? -1 : 1, targets); }
         }
+        else if (act === 'ai-fill') { aiFill(); }
+        else if (act === 'ai-import') { aiImport(); }
         else if (act === 'on') { setActive(true); }
         else if (act === 'off') { setActive(false); }
         else if (act === 'save') { save(); }

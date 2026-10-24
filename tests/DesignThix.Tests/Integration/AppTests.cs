@@ -1,5 +1,8 @@
 using System.Net;
+using DesignThix.Services.Ai;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 
 namespace DesignThix.Tests.Integration;
@@ -22,6 +25,9 @@ public sealed class AppTests
     public sealed class AppFactory : WebApplicationFactory<Program>
     {
         public static string? Connection => Environment.GetEnvironmentVariable("DESIGNTHIX_TEST_DB");
+
+        /// <summary>Registers the test seam of the AI: tests set <see cref="AiTestSeam.Handler"/> to answer instead of a provider (see AiTests).</summary>
+        protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureServices(services => services.AddSingleton<AiTestSeam>());
 
         public AppFactory()
         {

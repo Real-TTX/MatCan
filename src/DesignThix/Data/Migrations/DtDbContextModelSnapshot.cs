@@ -226,6 +226,10 @@ namespace DesignThix.Data.Migrations
                     b.Property<int>("PromptTokens")
                         .HasColumnType("integer");
 
+                    b.Property<string>("RequestJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
                     b.Property<string>("ResultJson")
                         .IsRequired()
                         .HasColumnType("jsonb");

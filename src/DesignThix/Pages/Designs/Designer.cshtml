@@ -2,7 +2,7 @@
 @model DesignThix.Pages.Designs.DesignerModel
 @{
     Layout = "_Designer";
-    ViewData["Styles"] = new[] { "/css/designer.css" };
+    ViewData["Styles"] = new[] { "/css/designer.css", "/css/ai.css" };
     var d = Model.Design;
     var edit = Model.CanEdit;
     var back = $"/Designs/{d.Id}";
@@ -11,7 +11,7 @@
 @* The frame of the designer. The panels, the layers and the properties are built by designer.js (DOM APIs only); the document comes from /api/designs/{id}.
    Left: tabs Elemente / Medien / Felder / Ebenen. Middle: the canvas (engine drawing + an overlay for selection, handles and guides). Right: properties. *@
 <div class="dt-ds is-loading" id="dt-ds" data-design-id="@d.Id" data-can-edit="@(edit ? "true" : "false")" data-back-href="@back"
-     data-presets="@Model.PresetsJson" data-output-href="/Outputs/Create?designId=@d.Id" data-properties-href="@back" data-name="@d.Name">
+     data-presets="@Model.PresetsJson" data-ai="@(Model.AiVisible ? "true" : "false")" data-output-href="/Outputs/Create?designId=@d.Id" data-properties-href="@back" data-name="@d.Name">
 
     <header class="dt-ds__bar" role="toolbar" aria-label="Designer">
         <a class="mat-btn mat-btn--ghost mat-btn--icon dt-ds__back" href="@back" aria-label="Zurück zum Design" title="Zurück zum Design" data-leave>@Ui.Icon("back")</a>
@@ -144,6 +144,7 @@
 
 @section Scripts {
     <script src="~/js/dt-engine.js" asp-append-version="true"></script>
+    <script src="~/js/ai.js" asp-append-version="true"></script>
     <script src="~/js/designer.core.js" asp-append-version="true"></script>
     <script src="~/js/designer.canvas.js" asp-append-version="true"></script>
     <script src="~/js/designer.props.js" asp-append-version="true"></script>

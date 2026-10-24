@@ -36,13 +36,14 @@ public sealed class IndexModel(Biz biz) : PageModelBase
             PageSize = 30,
         };
         var result = await ListBuilder.RunAsync(AiLogic.Runs(biz), Request, spec);
+        var subjects = await AiLogic.SubjectsAsync(biz, result.Items);
         var table = TableModel.Of("run-table", "KI-Läufe", result.Items,
         [
             (new TableColumn("Lauf"), r => Ui.NameWithSub($"#{r.Id} · {Labels.Of(r.Action)}", $"/Admin/Ai/Runs/Details?id={r.Id}", Fmt.Moment(r.StartDate))),
             (new TableColumn("Ende"), r => Labels.Pill(r.Status)),
             (new TableColumn("Profil", HideOnPhone: true), r => string.IsNullOrEmpty(r.ProfileName) ? Ui.None() : Ui.NameWithSub(r.ProfileName, null, r.Model)),
             (new TableColumn("Tokens", Numeric: true, HideOnPhone: true), r => Ui.Text(Fmt.Integer(r.TotalTokens) + (r.TokensEstimated ? " ≈" : ""))),
-            (new TableColumn("Für", HideOnPhone: true), r => r.SubjectType is { } kind ? Ui.Text(r.SubjectId is { } id ? $"{kind} #{id}" : kind) : Ui.None()),
+            (new TableColumn("Für", HideOnPhone: true), r => subjects.TryGetValue(r.Id, out var subject) ? Ui.NameWithSub(subject.Name, subject.Href, subject.Kind) : r.SubjectType is { } kind ? Ui.Text(r.SubjectId is { } id ? $"{kind} #{id} (gelöscht)" : kind) : Ui.None()),
         ],
         r => [new RowAction("eye", "Ansehen", $"/Admin/Ai/Runs/Details?id={r.Id}")]) with { EmptyTitle = "Noch keine Läufe", EmptyText = "Hier erscheint jeder Aufruf der KI.", EmptyIcon = "activity" };
         List = new ListPageModel(result.Toolbar, table, result.Pager);

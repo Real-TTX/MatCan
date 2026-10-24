@@ -75,6 +75,9 @@ public sealed class EditModel(Biz biz) : PageModelBase
     [BindProperty]
     public string ImportMode { get; set; } = "append";
 
+    [BindProperty(SupportsGet = true)]
+    public long? AiRun { get; set; }
+
     public DataList? List { get; private set; }
 
     public int RowCount { get; private set; }
@@ -93,6 +96,14 @@ public sealed class EditModel(Biz biz) : PageModelBase
     public IReadOnlyList<string> Categories => AssetLogic.Categories;
 
     public bool CanEdit => biz.IsDesigner;
+
+    /// <summary>The AI buttons are offered to people who may change the list, when the AI is switched on.</summary>
+    public bool AiVisible => biz.IsDesigner && List is not null && AiLogic.IsEnabled(biz);
+
+    /// <summary>Why the AI may not read this list (personal data, switch off), or null.</summary>
+    public string? AiBlocked => List is null ? null : AiDataLogic.BlockedReason(biz, List);
+
+    public bool IsAdmin => biz.IsAdmin;
 
     public IReadOnlyList<ColumnDef> CurrentColumns => List is null ? [] : DataListLogic.ColumnsOf(List);
 

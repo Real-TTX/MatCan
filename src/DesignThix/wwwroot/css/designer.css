@@ -310,3 +310,6 @@ html.dt-designer-page, .dt-designer-body { height: 100%; margin: 0; overflow: hi
 }
 
 @media print { .dt-ds { display: none; } }
+
+/* "Mit KI formulieren" under the text of an element (js/ai.js opens the dialog) */
+.dt-aibtn { margin-top: var(--mat-space-2); align-self: flex-start; }

@@ -136,6 +136,7 @@ public static class AiProfileLogic
     {
         biz.RequireAdmin();
         var profile = await biz.Db.AiProfile.FirstOrDefaultAsync(p => p.Id == id) ?? throw new BizException("Das Profil gibt es nicht mehr.");
+        profile.IsActive = false;
         biz.Db.AiProfile.Remove(profile);
         await biz.Db.SaveChangesAsync();
         biz.Service<AiSecretStore>().DeleteAll(profile.SecretToken);

@@ -20,6 +20,9 @@ public sealed class DesignerModel(Biz biz) : PageModelBase
 
     public bool CanEdit => biz.IsDesigner;
 
+    /// <summary>The button "Mit KI formulieren" is offered to people who may change the design, when the AI is switched on.</summary>
+    public bool AiVisible => biz.IsDesigner && AiLogic.IsEnabled(biz);
+
     /// <summary>The format presets for the document panel, as JSON for the page (a data attribute, no inline script).</summary>
     public string PresetsJson { get; } = JsonSerializer.Serialize(
         FormatPresets.All.Select(p => new { key = p.Key, name = p.Name, group = p.Group, width = p.Width, height = p.Height, unit = p.Unit }), Web);

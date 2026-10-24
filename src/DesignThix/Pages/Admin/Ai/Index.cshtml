@@ -1,5 +1,6 @@
 @page
 @model DesignThix.Pages.Admin.Ai.IndexModel
+@using DesignThix.Core.Ai
 @{
     var u = Model.Usage;
 }
@@ -29,12 +30,22 @@
                                  hint="Ton, Zuständigkeiten, was die KI nie sagen soll. Das Antwortformat und die Regeln sind fest und hier nicht änderbar." />
                 </div>
             </dt-card>
+            <dt-card title="Ergänzung je Aktion" icon="sparkles" sub="Optional: etwas, das nur für diese Aktion gilt. Es steht hinter der Grundanweisung.">
+                <div class="mat-form__grid">
+                    @foreach (var action in new[] { AiAction.DataImport, AiAction.DataFill, AiAction.TextSuggest })
+                    {
+                        <dt-textarea name="Input.ActionInstructions[@action]" label="@Labels.Of(action)" rows="3" full="true" value="@Model.Input.ActionInstructions.GetValueOrDefault(action.ToString())"
+                                     hint="@AiActionHints.For(action)" />
+                    }
+                </div>
+            </dt-card>
             <dt-card title="Wie die Anweisung aufgebaut ist" icon="layers">
                 <ol class="dt-steps">
                     <li><strong>Vorgabe des Betreibers</strong> und je Aktion eine Ergänzung (aus der Konfiguration des Servers)@(string.IsNullOrWhiteSpace(Model.OperatorInstruction) ? ": zurzeit leer" : "").</li>
-                    <li><strong>Grundanweisung der Website</strong>: das Feld oben.</li>
-                    <li><strong>Fester Teil</strong>: Antwortformat (ein JSON-Objekt), Regeln. Niemand kann ihn bearbeiten.</li>
-                    <li><strong>Die Lage</strong>: das Design, die Datenliste, die Eingaben.</li>
+                    <li><strong>Grundanweisung der Website</strong> und je Aktion eine Ergänzung der Website: die Felder hier.</li>
+                    <li><strong>Anweisung der Person</strong> für diesen Schritt: was sie im Dialog schreibt.</li>
+                    <li><strong>Fester Teil</strong>: Antwortformat (ein JSON-Objekt) und Regeln. Niemand kann ihn bearbeiten.</li>
+                    <li><strong>Die Lage</strong>: die Spalten und Zeilen der Datenliste, der Text des Elements, die Eingaben. Welche Daten das sind, bestimmt der Code.</li>
                 </ol>
                 @foreach (var (action, text) in Model.Preview)
                 {
@@ -52,13 +63,51 @@
                 </div>
                 <p class="mat-hint">Aus: Datenlisten, die als „enthält personenbezogene Daten“ markiert sind, lehnt die KI ab. Welche Daten die KI überhaupt sieht, entscheidet der Code, nie das Modell:
                     sie bekommt nur, was für die gewählte Aktion nötig ist.</p>
-                <p class="mat-hint">Empfohlen ist ein Anbieter in der EU, zum Beispiel Mistral. Anbieter in den USA oder China bedeuten eine Übermittlung in ein Drittland, die in die Datenschutzerklärung gehört (für China gibt es keinen Angemessenheitsbeschluss).</p>
+            </dt-card>
+            <dt-card title="Hinweis zum Datenschutz" icon="info" sub="Bitte vor dem Einschalten lesen">
+                <div class="mat-alert mat-alert--info" role="note">
+                    @Ui.Icon("info")
+                    <div class="mat-alert__body">
+                        <strong>Empfohlen ist ein Anbieter in der EU, zum Beispiel Mistral (Paris).</strong>
+                        Bei einem Anbieter in den USA oder in China werden die Daten in ein Drittland übermittelt. Das muss in der Datenschutzerklärung stehen.
+                        Für China gibt es keinen Angemessenheitsbeschluss der EU; für die USA nur für zertifizierte Unternehmen.
+                    </div>
+                </div>
+                <p class="dt-subhead">Was an die KI geht</p>
+                <ul class="dt-bullets">
+                    <li><strong>Daten übernehmen:</strong> der Text, den die Person einfügt, die Spalten der Datenliste (Schlüssel, Beschriftung, Art) und die Schlüssel und Namen der erlaubten Medien.</li>
+                    <li><strong>Spalte füllen:</strong> nur die ausgewählten Zeilen und nur die Spalten, die die Person als Zusammenhang gewählt hat.</li>
+                    <li><strong>Text vorschlagen:</strong> der Text des Elements sowie Beschriftungen und Beispielwerte der Felder des Designs.</li>
+                    <li>Nie gesendet werden: Kennwörter, Schlüssel der KI-Profile, Benutzerdaten, andere Datenlisten, Bilddateien.</li>
+                </ul>
+                <p class="dt-subhead">Anbieter und Region</p>
+                <div class="mat-table-wrap" data-table-scroll>
+                    <table class="mat-table">
+                        <caption class="mat-sr-only">Anbieter und ihr Standort</caption>
+                        <thead><tr><th scope="col">Anbieter</th><th scope="col">Standort</th><th scope="col">Datenschutz</th></tr></thead>
+                        <tbody>
+                            @foreach (var preset in AiPresets.All.Where(p => p.Id != "custom"))
+                            {
+                                var eu = preset.Region == "EU";
+                                <tr>
+                                    <td data-label="Anbieter">@preset.Label</td>
+                                    <td data-label="Standort">@preset.Region</td>
+                                    <td data-label="Datenschutz">@(eu ? "Innerhalb der EU: empfohlen." : preset.Region == "China" ? "Drittland ohne Angemessenheitsbeschluss: in der Datenschutzerklärung nennen, nur ohne personenbezogene Daten verwenden." : "Drittland: in der Datenschutzerklärung nennen.")</td>
+                                </tr>
+                            }
+                            <tr><td data-label="Anbieter">ChatGPT-Konto</td><td data-label="Standort">USA</td><td data-label="Datenschutz">Drittland: in der Datenschutzerklärung nennen.</td></tr>
+                            <tr><td data-label="Anbieter">Eigener Server</td><td data-label="Standort">je nach Server</td><td data-label="Datenschutz">Ein Server im eigenen Haus oder in der EU ist unkritisch.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mat-hint">Besucher und Adressen werden nur als täglich wechselnder Hash gezählt, nie im Klartext. Jeder Lauf ist mit allen Schritten unter <a href="/Admin/Ai/Runs">KI-Läufe</a> nachlesbar, auch die genaue Anweisung, die an die KI ging.</p>
             </dt-card>
         </dt-tab>
         <dt-tab id="limits" title="Grenzen" icon="sliders">
             <dt-card title="Kosten und Missbrauch begrenzen" icon="sliders" sub="Geprüft, bevor gerufen wird. 0 heißt: keine Grenze.">
                 <div class="mat-form__grid">
                     <dt-input for="Input.UserDailyTokens" label="Tokens pro Benutzer und Tag" type="number" min="0" step="1000" />
+                    <dt-input for="Input.UserMonthlyTokens" label="Tokens pro Benutzer und Monat" type="number" min="0" step="10000" />
                     <dt-input for="Input.MonthlyTokens" label="Tokens pro Monat (alle zusammen)" type="number" min="0" step="10000" />
                     <dt-input for="Input.AddressDailyRuns" label="Aufrufe pro Adresse und Tag" type="number" min="0" step="1" hint="Die Adresse zählt als täglich wechselnder Hash, nie im Klartext." />
                     <dt-input for="Input.PerMinutePerAddress" label="Anfragen pro Adresse und Minute" type="number" min="0" step="1" />

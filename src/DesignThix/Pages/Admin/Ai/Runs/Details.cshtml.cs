@@ -43,13 +43,15 @@ public sealed class DetailsModel(Biz biz) : PageModelBase
     {
         try
         {
-            Flash(await AiLogic.ContinueAsync(biz, Id, HttpContext.Connection.RemoteIpAddress?.ToString()));
+            var (message, newRun) = await AiLogic.ContinueAsync(biz, Id, HttpContext.Connection.RemoteIpAddress?.ToString());
+            Flash(message);
+            return newRun is { } next ? RedirectToPage(new { id = next }) : RedirectToPage("/Admin/Ai/Runs/Index");
         }
         catch (BizException ex)
         {
             FlashError(ex.Message);
         }
 
-        return RedirectToPage("/Admin/Ai/Runs/Index");
+        return RedirectToPage(new { id = Id });
     }
 }

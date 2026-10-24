@@ -29,7 +29,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (Input.UserDailyTokens < 0 || Input.MonthlyTokens < 0 || Input.AddressDailyRuns < 0 || Input.PerMinutePerAddress < 0)
+        if (Input.UserDailyTokens < 0 || Input.UserMonthlyTokens < 0 || Input.MonthlyTokens < 0 || Input.AddressDailyRuns < 0 || Input.PerMinutePerAddress < 0)
         {
             ModelState.AddModelError(string.Empty, "Grenzen können nicht negativ sein (0 heißt: keine Grenze).");
         }
@@ -37,6 +37,9 @@ public sealed class IndexModel(Biz biz) : PageModelBase
         Input.MaxTokens = Math.Clamp(Input.MaxTokens, 1000, 64_000);
         Input.TimeoutSeconds = Math.Clamp(Input.TimeoutSeconds, 30, 600);
         Input.BaseInstruction = (Input.BaseInstruction ?? "").Trim();
+        Input.ActionInstructions = (Input.ActionInstructions ?? [])
+            .Where(p => Enum.TryParse<AiAction>(p.Key, out _) && !string.IsNullOrWhiteSpace(p.Value))
+            .ToDictionary(p => p.Key, p => p.Value.Trim().Length > 2000 ? p.Value.Trim()[..2000] : p.Value.Trim());
         if (!ModelState.IsValid)
         {
             await LoadAsync();

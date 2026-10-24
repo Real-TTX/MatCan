@@ -315,6 +315,7 @@ app.MapGet("/api/admin/ai/profiles/{id:long}/chatgpt", async (long id, Biz biz) 
 
 app.MapLibraryEndpoints();
 app.MapOutputEndpoints();
+app.MapAiEndpoints();
 
 app.MapRazorPages();
 

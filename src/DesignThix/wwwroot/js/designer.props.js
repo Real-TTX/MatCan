@@ -260,6 +260,32 @@
     return section('Darstellung', [numberField('Deckkraft', { get: function (e) { return Math.round((e.opacity === undefined ? 1 : e.opacity) * 100); }, set: function (v) { apply({ opacity: D.round(v / 100, 2) }, 'opacity'); }, step: 5, digits: 0, suffix: '%', min: 0, max: 100 })]);
   }
 
+  /**
+   * "Mit KI formulieren": opens the dialog of js/ai.js for the selected text. The server keeps only suggestions with the same placeholders; picking one is an ordinary change
+   * of the document (one undo step), nothing is saved until the design is. Not offered to a viewer, when the AI is switched off, or for a locked element.
+   */
+  function aiSuggestButton() {
+    var host = document.getElementById('dt-ds');
+    if (!host || host.getAttribute('data-ai') !== 'true' || !window.DtAi || !app.editable()) { return null; }
+    var b = D.el('button', { type: 'button', class: 'mat-btn mat-btn--secondary mat-btn--sm dt-aibtn', disabled: ctx.disabled, title: 'Die KI schlägt andere Formulierungen vor. Du wählst eine aus.' }, [D.icon('sparkles'), D.el('span', { text: 'Mit KI formulieren' })]);
+    b.addEventListener('click', function () {
+      var e = ctx.first();
+      if (!e) { return; }
+      var ids = ctx.ids.slice();
+      window.DtAi.suggestText({
+        designId: Number(host.getAttribute('data-design-id')),
+        text: e.text || '',
+        elementName: e.name || '',
+        width: e.w,
+        height: e.h,
+        unit: app.unit(),
+        fields: (app.doc.fields || []).map(function (f) { return { key: f.key, label: f.label, type: f.type, sample: f.sample }; }),
+        onPick: function (text) { app.setProps(ids, { text: String(text).slice(0, 5000) }, { merge: false }); },
+      });
+    });
+    return b;
+  }
+
   /** A text area whose changes are applied after a short pause (the engine lays the text out again) and at once when it loses the focus. */
   function textContent() {
     var id = D.uid('dt-text');
@@ -271,7 +297,7 @@
     ta.addEventListener('blur', function () { pendingApply.flush(); });
     refreshers.push(function () { if (document.activeElement !== ta && ta.value !== read()) { ta.value = read(); } });
     var hint = D.el('span', { class: 'dt-hint', text: 'Platzhalter wie {{Name}} werden mit dem Wert des Feldes ersetzt. Tipp: Doppelklick auf den Text auf der Fläche bearbeitet ihn direkt.' });
-    return section('Text', [field(null, ta, null, id), hint]);
+    return section('Text', [field(null, ta, null, id), aiSuggestButton(), hint]);
   }
 
   function fontSection() {

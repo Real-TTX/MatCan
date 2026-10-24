@@ -17,6 +17,7 @@
 @if (!isNew)
 {
     <link rel="stylesheet" href="~/css/datalist.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ai.css" asp-append-version="true" />
 }
 
 <dt-tabs id="datalist-tabs" label="Bereiche der Datenliste" selected="@Model.Tab">
@@ -102,13 +103,25 @@
         </dt-tab>
 
         <dt-tab id="rows" title="Zeilen" icon="table" count="@Model.RowCount">
-            <div class="dt-grid" data-dt-grid data-url="/api/datalists/@Model.Id/rows" data-assets-url="/api/assets" data-media-url="/media/"></div>
+            <div class="dt-grid" data-dt-grid data-url="/api/datalists/@Model.Id/rows" data-assets-url="/api/assets" data-media-url="/media/" data-list-id="@Model.Id"
+                 data-ai="@(Model.AiVisible ? "true" : "false")" data-ai-blocked="@Model.AiBlocked"></div>
             <div class="mat-btn-row">
                 <a class="mat-btn mat-btn--secondary" href="/DataLists">@Ui.Icon("back")<span>Zurück</span></a>
             </div>
         </dt-tab>
 
         <dt-tab id="import" title="Import/Export" icon="download">
+            @if (Model.AiVisible)
+            {
+                <div data-ai-import data-list-id="@Model.Id" data-ai-blocked="@Model.AiBlocked" data-open-run="@Model.AiRun" data-run-href="@(Model.IsAdmin ? "/Admin/Ai/Runs/Details?id={id}" : null)">
+                    <dt-card title="Mit KI übernehmen" icon="sparkles" sub="Aus freiem Text oder einer Tabelle neue Zeilen machen">
+                        <div data-ai-form></div>
+                    </dt-card>
+                    <dt-card title="Letzte KI-Läufe an dieser Liste" icon="clock" sub="@(Model.IsAdmin ? "Alle Läufe" : "Deine Läufe")">
+                        <div data-ai-runs></div>
+                    </dt-card>
+                </div>
+            }
             <dt-card title="Export" icon="download">
                 <p>Alle Zeilen als CSV-Datei: Trennzeichen Semikolon, Zeichensatz UTF-8 mit BOM. So öffnet Excel die Datei richtig, und du kannst sie hier wieder einlesen. Die Kopfzeile enthält die Schlüssel der Spalten.</p>
                 <div class="mat-btn-row mat-btn-row--plain">
@@ -201,4 +214,5 @@
 @if (!isNew)
 {
     <script src="~/js/datalist.js" asp-append-version="true"></script>
+    <script src="~/js/ai.js" asp-append-version="true"></script>
 }

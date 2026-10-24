@@ -18,7 +18,7 @@ public static class ChatCompletionsClient
     public const string DefaultBaseUrl = "https://api.openai.com/v1";
 
     public static async Task<AiResponse> CompleteAsync(HttpClient client, string baseUrl, string apiKey, string model, AiRequest req,
-        int maxCompletionTokens, Action<string>? warn = null, CancellationToken ct = default)
+        int maxCompletionTokens, Action<string>? warn = null, CancellationToken ct = default, int timeoutSeconds = 280)
     {
         if (req.Messages is null || req.Messages.Count == 0) return new AiResponse { Ok = false, Error = "Leere KI-Anfrage." };
         baseUrl = (string.IsNullOrWhiteSpace(baseUrl) ? DefaultBaseUrl : baseUrl).Trim().TrimEnd('/');
@@ -33,7 +33,7 @@ public static class ChatCompletionsClient
         try
         {
             // AI completions routinely exceed a short timeout, and a reasoning model writing a whole page thinks first.
-            client.Timeout = TimeSpan.FromSeconds(280);
+            client.Timeout = TimeSpan.FromSeconds(Math.Clamp(timeoutSeconds, 10, 900));
             for (var attempt = 0; attempt < 9; attempt++)
             {
                 var payload = new JsonObject
