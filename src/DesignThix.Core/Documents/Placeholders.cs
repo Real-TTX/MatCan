@@ -135,6 +135,44 @@ public static partial class Placeholders
         return [.. order.Select(key => new FieldUsage(keys[key], byKey.ContainsKey(key), byKey.GetValueOrDefault(key), uses[key]))];
     }
 
+    private static readonly HashSet<string> GenericFamilies = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "serif", "sans-serif", "monospace", "cursive", "fantasy", "system-ui", "ui-sans-serif", "ui-serif", "ui-monospace",
+    };
+
+    /// <summary>
+    /// The font families the text elements use, each once (case-insensitive), as the engine reads them: the name without quotes, semicolons or commas.
+    /// The generic families (sans-serif ...) are not listed: they need no file.
+    /// </summary>
+    public static IReadOnlyList<string> FontFamilies(DesignDocument document)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var families = new List<string>();
+        foreach (var text in document.Elements.OfType<TextElement>())
+        {
+            var family = CleanFamily(text.FontFamily);
+            if (family.Length > 0 && !GenericFamilies.Contains(family) && seen.Add(family))
+            {
+                families.Add(family);
+            }
+        }
+
+        return families;
+    }
+
+    /// <summary>The family name the way the engine cleans it (<c>cleanFamily</c>): control characters, quotes, backslashes, semicolons, braces, angle brackets and commas become spaces.</summary>
+    public static string CleanFamily(string? family)
+    {
+        var sb = new System.Text.StringBuilder();
+        foreach (var c in family ?? "")
+        {
+            sb.Append(c < ' ' || c is '"' or '\'' or '\\' or ';' or '{' or '}' or '<' or '>' or ',' ? ' ' : c);
+        }
+
+        var cleaned = Regex.Replace(sb.ToString(), @"\s+", " ").Trim();
+        return cleaned.Length > 100 ? cleaned[..100] : cleaned;
+    }
+
     /// <summary>The asset keys a document refers to: the background, image sources, strip slots and the sample values of image fields. Distinct without regard to case.</summary>
     public static IReadOnlyList<string> AssetKeys(DesignDocument document)
     {

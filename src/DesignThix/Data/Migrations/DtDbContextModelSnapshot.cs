@@ -703,6 +703,11 @@ namespace DesignThix.Data.Migrations
                     b.Property<int>("Dpi")
                         .HasColumnType("integer");
 
+                    b.Property<string>("FileNamePattern")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<string>("Format")
                         .IsRequired()
                         .HasMaxLength(40)
@@ -729,12 +734,20 @@ namespace DesignThix.Data.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)");
 
+                    b.Property<string>("Scale")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
                     b.Property<string>("SelectedRowIdsJson")
                         .IsRequired()
                         .HasColumnType("jsonb");
 
                     b.Property<long?>("SheetLayoutId")
                         .HasColumnType("bigint");
+
+                    b.Property<int>("StartPosition")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("timestamp with time zone");

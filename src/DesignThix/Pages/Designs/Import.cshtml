@@ -1,0 +1,42 @@
+@page
+@model DesignThix.Pages.Designs.ImportModel
+
+<form class="mat-form" method="post" enctype="multipart/form-data" novalidate>
+    <dt-summary />
+    <dt-card title="Design-Datei" icon="upload">
+        <div class="mat-form__grid">
+            <div class="mat-field mat-field--full">
+                <label class="mat-label" for="DesignFile">Datei (.dtx.json)</label>
+                <div class="mat-upload mat-upload--compact" data-upload data-max-size="50MB">
+                    <input class="mat-upload__input" type="file" id="DesignFile" name="DesignFile" accept=".json,.dtx.json,application/json" />
+                </div>
+                <span class="mat-hint">Eine Datei, die du in DesignThix mit „Exportieren“ gespeichert hast. Sie enthält das Design mit den Medien und den eigenen Schriften, die es braucht (höchstens 50 MB).</span>
+                <span class="mat-error" aria-live="polite">@Html.ValidationMessage("DesignFile")</span>
+            </div>
+        </div>
+    </dt-card>
+
+    @if (Model.Result is { } result)
+    {
+        <dt-card title="Das Design ist importiert" icon="check-circle" sub="@result.Design.Name">
+            <ul class="dt-plainlist">
+                <li>Medien: @result.AssetsAdded neu, @result.AssetsReused schon vorhanden (verwendet)@(result.AssetsRenamed.Count > 0 ? $", {result.AssetsRenamed.Count} unter neuem Schlüssel" : "").</li>
+                @foreach (var (from, to) in result.AssetsRenamed)
+                {
+                    <li>Der Schlüssel <span class="mat-mono">@from</span> war schon vergeben (anderes Bild): das Medium heißt jetzt <span class="mat-mono">@to</span>, das Design zeigt darauf.</li>
+                }
+                <li>Schriften: @result.FontsAdded neu, @result.FontsReused schon vorhanden.</li>
+            </ul>
+            @if (result.Warnings.Count > 0)
+            {
+                <div class="mat-alert mat-alert--warning" role="status">@Ui.Icon("alert")<div class="mat-alert__body"><strong>Hinweise</strong><ul class="mat-alert__list">@foreach (var w in result.Warnings) { <li>@w</li> }</ul></div></div>
+            }
+            <div class="mat-btn-row mat-btn-row--plain">
+                <a class="mat-btn mat-btn--primary" id="import-open" href="/Designs/@result.Design.Id/Designer">@Ui.Icon("edit")<span>Im Designer öffnen</span></a>
+                <a class="mat-btn mat-btn--secondary" href="/Designs/Edit/@result.Design.Id">@Ui.Icon("settings")<span>Eigenschaften</span></a>
+            </div>
+        </dt-card>
+    }
+
+    <dt-buttons save-text="Importieren" save-icon="upload" back-href="/Designs" />
+</form>

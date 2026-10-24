@@ -37,7 +37,7 @@
                         var sum = item.SumOfChildren;
                         <li class="mat-nav__branch @(hasActive ? "is-open is-current" : "")">
                             <button type="button" class="mat-nav__item mat-nav__parent" aria-expanded="@(hasActive ? "true" : "false")" aria-controls="@subId" data-nav-branch="@item.Key">
-                                @if (item.Icon is not null) { @Ui.Icon(item.Icon) }<span>@item.Title</span>
+                                @if (item.Icon is not null) { @Ui.NavIcon(item.Icon) }<span>@item.Title</span>
                                 @if (item.Badge is not null) { @Badge(item.Badge) }
                                 else if (sum is not null) { @Badge(sum, sum: true) }
                                 @Ui.Icon("chevron-down", "mat-nav__chev")
@@ -63,7 +63,7 @@
                         var isActive = item.Href == active;
                         <li>
                             <a class="mat-nav__item @(item.Primary ? "mat-nav__item--primary" : "") @(isActive ? "is-active" : "")" href="@item.Href" aria-current="@(isActive ? "page" : null)">
-                                @if (item.Icon is not null) { @Ui.Icon(item.Icon) }<span>@item.Title</span>
+                                @if (item.Icon is not null) { @Ui.NavIcon(item.Icon) }<span>@item.Title</span>
                                 @if (item.Badge is not null) { @Badge(item.Badge) }
                             </a>
                         </li>

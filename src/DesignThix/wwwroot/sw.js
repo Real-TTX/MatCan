@@ -2,7 +2,7 @@
    - The files of the app (toolkit, styles, scripts, icons) come from the cache first: their addresses carry a version, so a new build loads new files.
    - Pages come from the network first; a page that loaded is kept, so the last state of a list or a design can be read offline. Such a copy is marked
      (data-offline-copy on <html>), and app.js says so and reloads it as soon as the connection is back: nothing stale stays on the screen.
-   - Nothing that changes data is ever answered from the cache (POST, /api), nor sign-in. Without a copy the offline page explains it.
+   - Nothing that changes data is ever answered from the cache (POST, /api), nor sign-in (the one /api address that is kept is the payload of an output, see the library below). Without a copy the offline page explains it.
    - Signing out (or the sign-in page) clears the kept pages: they hold the data of the person who was signed in.
    The version comes from the address the layout registers (sw.js?v=...): a new build is a new worker, which removes the caches of the old one. */
 'use strict';
@@ -117,12 +117,15 @@ function trim(cache) {
 
 /* The library (media, fonts, thumbnails): what a design needs to be drawn, kept so that designs render offline after they were seen once.
    - Addresses that carry a hash (/fonts/12-ab34....ttf, /media/flag-de?v=..., /designs/5/thumbnail.png?v=...) never change: cache first.
-   - The style sheet of the fonts, the list of fonts and a medium asked for without a hash can change: network first, the kept copy when offline.
+   - The style sheet of the fonts, the list of fonts, a medium asked for without a hash and the payload of an output (/api/outputs/{id}/payload) can change:
+     network first, the kept copy when offline (so an output that was run once can be printed again without a connection).
    The cache outlives a new version of the app (the addresses are versioned by their content) and goes with signing out. */
 function libraryKind(url) {
   var p = url.pathname;
   if (/^\/fonts\/\d+-[0-9a-f]+\.(ttf|otf|woff2?)$/i.test(p)) { return 'immutable'; }
   if ((/^\/media\//.test(p) || /^\/designs\/\d+\/thumbnail\.png$/.test(p)) && /[?&]v=/.test(url.search)) { return 'immutable'; }
+  // The payload of an output (what the run page renders): network first; the copy of the last run lets a job that was run once be printed again without a connection.
+  if (/^\/api\/outputs\/\d+\/payload$/.test(p)) { return 'live'; }
   if (p === '/fonts.css' || p === '/api/fonts' || /^\/media\//.test(p) || /^\/designs\/\d+\/thumbnail\.png$/.test(p)) { return 'live'; }
   return null;
 }

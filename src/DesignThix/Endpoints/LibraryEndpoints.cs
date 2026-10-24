@@ -252,7 +252,7 @@ public static partial class LibraryEndpoints
     };
 
     /// <summary>Checks the antiforgery token and turns the rules of the business layer into answers: 400 with a message, 409 with the current revision.</summary>
-    private static async Task<IResult> Guard(HttpContext http, IAntiforgery antiforgery, Func<Task<IResult>> action)
+    internal static async Task<IResult> Guard(HttpContext http, IAntiforgery antiforgery, Func<Task<IResult>> action)
     {
         try
         {

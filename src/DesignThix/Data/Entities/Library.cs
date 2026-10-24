@@ -209,6 +209,13 @@ public enum OutputFormat
     Png,
 }
 
+/// <summary>What happens to a design that is larger than the cell of the sheet: shrunk to fit it, or printed in its own size (and it sticks out).</summary>
+public enum OutputScale
+{
+    Fit,
+    None,
+}
+
 /// <summary>A saved batch run: design + data list (+ rows, copies) + layout + format. "Ausführen" renders it (phase H).</summary>
 public class OutputJob : AuditedEntity, ISoftDeletable
 {
@@ -239,6 +246,15 @@ public class OutputJob : AuditedEntity, ISoftDeletable
     public int Dpi { get; set; } = 300;
 
     public bool CropMarks { get; set; }
+
+    /// <summary>Sheet mode: a design larger than the cell is shrunk to fit it, or printed as it is.</summary>
+    public OutputScale Scale { get; set; } = OutputScale.Fit;
+
+    /// <summary>Sheet mode: the number of the first cell that gets a label (1-based); the cells before it stay empty, for a half-used sheet of stickers.</summary>
+    public int StartPosition { get; set; } = 1;
+
+    /// <summary>The names of the files of a PNG export: <c>{Design}-{Nr}-{Name}</c> with <c>{Design}</c>, <c>{Nr}</c>, <c>{Kopie}</c> and the keys of the fields.</summary>
+    public string FileNamePattern { get; set; } = "{Design}-{Nr}";
 
     public DateTime? LastRunDate { get; set; }
 

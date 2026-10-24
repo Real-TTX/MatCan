@@ -83,6 +83,20 @@ public sealed class EditModel(Biz biz) : PageModelBase
         }
     }
 
+    /// <summary>"Exportieren": the design as a file with the media and fonts it uses (<c>.dtx.json</c>).</summary>
+    public async Task<IActionResult> OnGetExportAsync()
+    {
+        try
+        {
+            var (bytes, name) = await DesignPackageLogic.ExportAsync(biz, Id);
+            return File(bytes, "application/json", name);
+        }
+        catch (BizException)
+        {
+            return NotFound();
+        }
+    }
+
     public async Task<IActionResult> OnPostDuplicateAsync()
     {
         try

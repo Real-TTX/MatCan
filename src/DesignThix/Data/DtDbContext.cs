@@ -153,6 +153,7 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
         b.Entity<OutputJob>(e =>
         {
             e.Property(x => x.Name).HasMaxLength(200);
+            e.Property(x => x.FileNamePattern).HasMaxLength(200);
             e.HasOne(x => x.Design).WithMany().HasForeignKey(x => x.DesignId).OnDelete(DeleteBehavior.Restrict);
             e.HasOne(x => x.DataList).WithMany().HasForeignKey(x => x.DataListId).OnDelete(DeleteBehavior.SetNull);
             e.HasOne(x => x.SheetLayout).WithMany().HasForeignKey(x => x.SheetLayoutId).OnDelete(DeleteBehavior.SetNull);

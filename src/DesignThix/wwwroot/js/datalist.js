@@ -1271,7 +1271,8 @@
     }
   });
 
-  window.DtDataListGrid = { init: init, parseTsv: parseTsv };
+  // The dialog that picks a medium is also used by the single print (outputs.js): config { assetsUrl, mediaUrl }, column { label, category }, the key now, a callback.
+  window.DtDataListGrid = { init: init, parseTsv: parseTsv, pickMedia: function (config, column, current, onPick) { openPicker(config, column, current, onPick); } };
 
   function start() {
     Array.prototype.forEach.call(doc.querySelectorAll('[data-dt-grid]'), function (node) { init(node); });

@@ -75,7 +75,7 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
 
     /// <summary>
     /// The main menu of docs/PLAN.md section 1.4 as far as its pages exist: "Neues Design" (primary action, only for people who may change things),
-    /// Start, and the groups Gestalten, Daten, Bibliothek and Ausgabe (Ausgaben joins with its phase).
+    /// Start, and the groups Gestalten, Daten, Bibliothek and Ausgabe.
     /// </summary>
     private NavSet WorkMenu()
     {
@@ -105,6 +105,7 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
             ]),
             new("Ausgabe",
             [
+                new("Ausgaben", "/Outputs", "dt:printer"),
                 new("Druckbögen", "/Sheets", "grid"),
             ]),
         ]);

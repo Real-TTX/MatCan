@@ -114,6 +114,8 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AuthorizePage("/Assets/Upload", "Designer");
     options.Conventions.AuthorizePage("/Fonts/Upload", "Designer");
     options.Conventions.AuthorizePage("/Designs/Create", "Designer");
+    options.Conventions.AuthorizePage("/Designs/Import", "Designer");
+    options.Conventions.AuthorizePage("/Outputs/Create", "Designer");
 })
 .AddMvcOptions(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
@@ -312,6 +314,7 @@ app.MapGet("/api/admin/ai/profiles/{id:long}/chatgpt", async (long id, Biz biz) 
 }).RequireAuthorization("Admin");
 
 app.MapLibraryEndpoints();
+app.MapOutputEndpoints();
 
 app.MapRazorPages();
 

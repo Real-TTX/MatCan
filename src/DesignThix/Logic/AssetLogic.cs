@@ -206,7 +206,7 @@ public static class AssetLogic
         return new Prepared(bytes, sniffed.ContentType, sniffed.Extension, sniffed.Width, sniffed.Height, Sha256Hex(bytes), []);
     }
 
-    private static string CleanCategory(string? category)
+    public static string CleanCategory(string? category)
     {
         var c = (category ?? "").Trim();
         return Categories.FirstOrDefault(x => string.Equals(x, c, StringComparison.OrdinalIgnoreCase)) ?? (c.Length is > 0 and <= 60 ? c : "Sonstiges");

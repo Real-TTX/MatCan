@@ -18,7 +18,8 @@ Gedruckt oder als PNG-ZIP ausgegeben wird jede Zeile der Liste als eigenes Etike
 > **Stand:** Das Fundament steht (Anmeldung mit Einrichtungsassistent, Zwei-Faktor-Anmeldung, Benutzer und Rollen, KI-Profile, Aktivitätsprotokoll, installierbare
 > App) und die Bibliothek ist da: **Medien** (mitgelieferte Flaggen und Siegel, eigene PNG/JPEG/WebP/GIF/SVG), **Schriften** (freie Schriften, eigene TTF/OTF/WOFF),
 > **Datenlisten** (Spalten, Tabellen-Editor, CSV-Import und -Export), **Druckbögen** und die **Designs** als Verzeichnis mit Eigenschaften und Verlauf.
-> Der Designer und die Ausgabe folgen Schritt für Schritt (siehe [docs/PLAN.md](docs/PLAN.md)).
+> Dazu kommen der **Designer** und die **Ausgabe**: gespeicherte Ausgaben (Design + Datenliste + Auswahl + Layout) drucken als PDF oder liefern PNG-Bilder in einer ZIP-Datei,
+> der **Einzeldruck** druckt ein Etikett mit eingetippten Werten, und Designs lassen sich als Datei exportieren und wieder importieren (siehe [docs/PLAN.md](docs/PLAN.md)).
 
 
 ## Was DesignThix kann (Ziel)

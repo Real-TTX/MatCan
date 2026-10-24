@@ -47,6 +47,7 @@
         {
             <button type="button" class="mat-btn mat-btn--primary mat-btn--sm dt-ds__save" id="dt-save" title="Speichern (Strg+S)">@Ui.Icon("save")<span>Speichern</span></button>
         }
+        <a class="mat-btn mat-btn--ghost mat-btn--icon dt-ds__output" href="/Designs/@d.Id/Print" id="dt-print" aria-label="Einzeldruck" title="Einzeldruck: ein Etikett mit eigenen Werten drucken" data-leave>@Ui.ToolIcon("text-cursor-input")</a>
         <a class="mat-btn mat-btn--secondary mat-btn--sm dt-ds__output" href="/Outputs/Create?designId=@d.Id" id="dt-output" title="Ausgabe aus diesem Design anlegen" data-leave>@Ui.ToolIcon("printer")<span>Ausgabe</span></a>
         <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon dt-ds__drawer dt-ds__drawer--left" id="dt-toggle-left" aria-label="Bibliothek ein- oder ausblenden" aria-expanded="false" title="Bibliothek">@Ui.ToolIcon("panel-left")</button>
         <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon dt-ds__drawer dt-ds__drawer--right" id="dt-toggle-right" aria-label="Eigenschaften ein- oder ausblenden" aria-expanded="false" title="Eigenschaften">@Ui.ToolIcon("panel-right")</button>

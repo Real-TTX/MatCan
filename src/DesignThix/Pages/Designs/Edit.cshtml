@@ -154,6 +154,7 @@
     {
         <dt-buttons no-save="true" back-href="/Designs">
             <a class="mat-btn mat-btn--secondary" href="/Designs/@Model.Id/Designer">@Ui.Icon("edit")<span>Im Designer ansehen</span></a>
+            <a class="mat-btn mat-btn--secondary" href="/Designs/@Model.Id/Print">@Ui.ToolIcon("printer")<span>Einzeldruck</span></a>
         </dt-buttons>
     }
     else
@@ -161,6 +162,8 @@
         <dt-buttons back-href="/Designs" delete-url="@Url.Page("/Designs/Edit", "Delete", new { id = Model.Id })" delete-confirm="Dieses Design löschen? Ausgaben, die es nutzen, können danach nicht mehr laufen.">
             <a class="mat-btn mat-btn--secondary" href="/Designs/@Model.Id/Designer">@Ui.Icon("edit")<span>Im Designer öffnen</span></a>
             <button type="submit" formnovalidate asp-page-handler="Duplicate" asp-route-id="@Model.Id" class="mat-btn mat-btn--secondary">@Ui.Icon("copy")<span>Duplizieren</span></button>
+            <a class="mat-btn mat-btn--secondary" href="/Designs/@Model.Id/Print">@Ui.ToolIcon("printer")<span>Einzeldruck</span></a>
+            <a class="mat-btn mat-btn--secondary" href="@Url.Page("/Designs/Edit", "Export", new { id = Model.Id })" download>@Ui.Icon("download")<span>Exportieren</span></a>
         </dt-buttons>
     }
 </form>

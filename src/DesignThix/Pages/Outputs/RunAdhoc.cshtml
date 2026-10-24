@@ -1,0 +1,12 @@
+@page "/Outputs/Run"
+@model DesignThix.Pages.Outputs.RunAdhocModel
+@{
+    Layout = "_Print";
+}
+
+<partial name="_RunBody" model="Model.View" />
+
+@section Scripts {
+    <script src="~/js/dt-engine.js" asp-append-version="true"></script>
+    <script src="~/js/output.js" asp-append-version="true"></script>
+}

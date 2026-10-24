@@ -10,83 +10,20 @@
 // administrator with two-factor sign-in cannot be used: start with `./scripts/redeploy.ps1 -Clean` or put a designer account into test-account.json.
 const fs = require('fs');
 const path = require('path');
-const { chromium } = require('playwright');
+const lib = require('./lib.js');
 const { demoDocument, demoRows } = require('./demo-label.js');
 
 const args = process.argv.slice(2);
-const base = (args.find(a => /^https?:/.test(a)) || 'http://localhost:3043').replace(/\/$/, '');
+const { base, problems, dialogs, watch, launch, newContext, login, ensureAccounts } = lib(args);
 const outIndex = args.indexOf('--out');
 const outDir = path.resolve(__dirname, outIndex >= 0 ? args[outIndex + 1] : '../../docs/images');
-const accountFile = path.join(__dirname, 'test-account.json');
-const PASSWORD = 'Passw0rd!Passw0rd';
 
 const results = [];
-const problems = [];
-const dialogs = [];
 let current = '';
 const check = (name, ok, detail) => { results.push({ name: current + name, ok: !!ok, detail }); };
 const near = (a, b, tolerance) => Math.abs(a - b) <= tolerance;
 
 // ------------------------------------------------------------------------------------------------ helpers
-
-function watch(page, label) {
-  page.on('console', m => {
-    // the check provokes a 409 (edit conflict) and a 403 (viewer) on purpose: the browser logs those failed requests as errors
-    if (m.type() === 'error' && !/status of (403|409)/.test(m.text())) { problems.push(`[${label}] console error: ${m.text()}`); }
-  });
-  page.on('pageerror', e => problems.push(`[${label}] page error: ${e.message}`));
-  page.on('dialog', d => { dialogs.push(d.type()); d.accept().catch(() => {}); });
-}
-
-async function newContext(browser, options) {
-  const context = await browser.newContext(Object.assign({ viewport: { width: 1280, height: 800 }, locale: 'de-DE' }, options || {}));
-  await context.addInitScript(() => {
-    document.addEventListener('securitypolicyviolation', e => { console.error('CSP violation: ' + e.violatedDirective + ' ' + e.blockedURI); });
-  });
-  return context;
-}
-
-async function login(page, account) {
-  await page.goto(base + '/Account/Login');
-  await page.fill('#Input_Email', account.email);
-  await page.fill('#Input_Password', account.password);
-  await Promise.all([page.waitForNavigation(), page.click('button[type=submit]')]);
-  return !/\/Account\//.test(new URL(page.url()).pathname);
-}
-
-async function ensureAccounts(browser) {
-  let accounts = fs.existsSync(accountFile) ? JSON.parse(fs.readFileSync(accountFile, 'utf8')) : {};
-  const context = await newContext(browser);
-  const page = await context.newPage();
-  watch(page, 'accounts');
-  if (accounts.designer && await login(page, accounts.designer) && accounts.viewer) { await context.close(); return accounts; }
-
-  await page.goto(base + '/Account/Setup');
-  if (/Setup/.test(page.url())) {
-    accounts.admin = { email: 'admin@example.com', password: PASSWORD };
-    await page.fill('#Input_DisplayName', 'Test Admin');
-    await page.fill('#Input_Email', accounts.admin.email);
-    await page.fill('#Input_Password', accounts.admin.password);
-    await page.fill('#Input_PasswordRepeat', accounts.admin.password);
-    await Promise.all([page.waitForNavigation(), page.click('button[type=submit]')]);
-  } else if (!accounts.admin || !(await login(page, accounts.admin))) {
-    throw new Error('Kein Konto: lege tests/e2e/test-account.json an oder starte mit ./scripts/redeploy.ps1 -Clean (leere Datenbank).');
-  }
-  const make = async (name, email, role) => {
-    await page.goto(base + '/Admin/Users/Edit');
-    await page.fill('#Input_DisplayName', name);
-    await page.fill('#Input_Email', email);
-    await page.selectOption('#Input_Role', { label: role });
-    await page.fill('#Input_Password', PASSWORD);
-    await Promise.all([page.waitForNavigation(), page.click('button[type=submit].mat-btn--primary')]);
-    return { email, password: PASSWORD };
-  };
-  accounts.designer = accounts.designer || await make('E2E Gestalter', 'designer@example.com', 'Gestalter');
-  accounts.viewer = accounts.viewer || await make('E2E Betrachter', 'viewer@example.com', 'Betrachter');
-  fs.writeFileSync(accountFile, JSON.stringify(accounts, null, 2));
-  await context.close();
-  return accounts;
-}
 
 const idle = page => page.evaluate(() => window.DtDesigner.canvas.whenIdle());
 const state = page => page.evaluate(() => {
@@ -158,8 +95,7 @@ async function shot(page, name) {
 // ------------------------------------------------------------------------------------------------ the check
 
 (async () => {
-  let browser;
-  try { browser = await chromium.launch({ channel: 'msedge' }); } catch (e) { browser = await chromium.launch(); }
+  const browser = await launch();
   const accounts = await ensureAccounts(browser);
   const context = await newContext(browser);
   const page = await context.newPage();
