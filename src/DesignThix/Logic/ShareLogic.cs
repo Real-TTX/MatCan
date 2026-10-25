@@ -14,7 +14,7 @@ public sealed record ShareTargetRow(string Type, long Id, string Name, string? E
 public sealed record AccessEntry(string Kind, long? ShareId, long? UserId, long? SpaceId, string Name, string? Email, string? Color, SpaceRole? Role, string Permission, bool Inherited, long? ViaFolderId, string? ViaFolderName, bool CanChange);
 
 /// <summary>The live link of an item (only people who manage the item see it, with its secret token).</summary>
-public sealed record LinkInfo(long Id, Guid Token, LinkAudience Audience, SharePermission Permission, bool AllowDownload, DateTime? ExpiresDate);
+public sealed record LinkInfo(long Id, Guid Token, LinkAudience Audience, SharePermission Permission, bool AllowDownload, DateTime? ExpiresDate, int GrantCount = 0, bool Expired = false);
 
 /// <summary>Everything the "Teilen" dialog shows for an item.</summary>
 public sealed record AccessInfo(ItemKind Kind, long Id, string Name, AccessLevel MyLevel, long? SpaceId, string? SpaceName, SpaceKind? SpaceKind, IReadOnlyList<AccessEntry> Entries, LinkInfo? Link,
@@ -127,7 +127,8 @@ public static class ShareLogic
         if (level >= AccessLevel.Manage)
         {
             var live = await LiveLinkAsync(db, kind, id, biz.Now);
-            link = live is null ? null : new LinkInfo(live.Id, live.Token, live.Audience, live.Permission, live.AllowDownload, live.ExpiresDate);
+            var grants = live is null ? 0 : await db.LinkGrant.CountAsync(g => g.ShareLinkId == live.Id);
+            link = live is null ? null : new LinkInfo(live.Id, live.Token, live.Audience, live.Permission, live.AllowDownload, live.ExpiresDate, grants, live.ExpiresDate is { } until && until <= biz.Now);
         }
 
         return new AccessInfo(kind, id, await NameOfAsync(db, kind, id), level, spaceId, spaceName, spaceKind, entries, link, level >= AccessLevel.Edit, level >= AccessLevel.Manage,
@@ -144,7 +145,7 @@ public static class ShareLogic
     /// Shares an item with a person (<paramref name="isTeam"/> false) or a team. Needs Edit on the item (Manage for everything the rules allow). A share that exists is changed. The person must have an active,
     /// approved account; a team must be one the sharer is a member of. Returns the share.
     /// </summary>
-    public static async Task<Share> AddAsync(Biz biz, ItemKind kind, long itemId, bool isTeam, long targetId, SharePermission permission)
+    public static async Task<Share> AddAsync(Biz biz, ItemKind kind, long itemId, bool isTeam, long targetId, SharePermission permission, string? message = null)
     {
         RequireShareable(kind);
         var level = await Access.RequireAsync(biz, kind, itemId, AccessLevel.Edit);
@@ -184,7 +185,10 @@ public static class ShareLogic
         }
 
         await db.SaveChangesAsync();
-        await biz.Log.LogAsync("Freigabe", kind.ToString(), itemId, $"{(isTeam ? "Team" : "Person")} {targetId}: {permission}");
+        // the optional message of the dialog goes to the log for now; the notification of the receiver (P4) takes it from here
+        var text = message?.Trim() ?? "";
+        var note = text.Length == 0 ? "" : " – " + (text.Length > 200 ? text[..200] : text);
+        await biz.Log.LogAsync("Freigabe", kind.ToString(), itemId, $"{(isTeam ? "Team" : "Person")} {targetId}: {permission}{note}");
         return share;
     }
 

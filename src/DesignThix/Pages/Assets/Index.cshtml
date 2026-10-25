@@ -2,6 +2,8 @@
 @model DesignThix.Pages.Assets.IndexModel
 
 <div class="mat-list" data-view-scope>
+    <link rel="stylesheet" href="~/css/browser.css" asp-append-version="true" />
+    <partial name="_Storage" model="(Model.Usage, SpaceLogic.PersonalName)" />
     <partial name="_Toolbar" model="Model.Toolbar" />
     @if (Model.Items.Count > 0)
     {

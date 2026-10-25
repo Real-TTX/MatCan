@@ -40,6 +40,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
             [
                 new FilterSpec<OutputRow>("design", "Design", designs, (q, v) => long.TryParse(v, out var id) ? q.Where(o => o.DesignId == id) : q),
                 new FilterSpec<OutputRow>("format", "Format", [new("Print", "Drucken / PDF"), new("Png", "PNG-ZIP")], (q, v) => q.Where(o => o.Format == (v == "Png" ? OutputFormat.Png : OutputFormat.Print))),
+                await AreaFilter.CreateAsync<OutputRow>(biz, o => o.SpaceId),
             ],
             Sorts = new Dictionary<string, (string, Func<IQueryable<OutputRow>, bool, IOrderedQueryable<OutputRow>>)>
             {

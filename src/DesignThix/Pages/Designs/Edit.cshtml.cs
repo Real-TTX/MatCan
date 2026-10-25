@@ -53,7 +53,7 @@ public sealed class EditModel(Biz biz) : PageModelBase
     {
         if (!await LoadAsync())
         {
-            return NotFound();
+            return RedirectToPage("/Share/NoAccess", new { kind = "design", id = Id });
         }
 
         var d = Design;

@@ -53,6 +53,8 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
         new("OutputLogic.AdhocPayloadAsync", ItemKind.Design, AccessLevel.View, (biz, id, _) => OutputLogic.AdhocPayloadAsync(biz, new AdhocRequest(id, null, 1, null, null, false, null, 1, null, null, null))),
         new("AssetRefs.ResolveAsync(design)", ItemKind.Design, AccessLevel.View, (biz, id, _) => AssetRefs.ResolveAsync(biz, ItemKind.Design, id, ["flag-de"])),
         new("ShareLogic.InfoAsync(design)", ItemKind.Design, AccessLevel.View, (biz, id, _) => ShareLogic.InfoAsync(biz, ItemKind.Design, id)),
+        new("PresenceLogic.BeatAsync", ItemKind.Design, AccessLevel.View, (biz, id, _) => PresenceLogic.BeatAsync(biz, id)),
+        new("AccessRequestLogic.ListAsync", ItemKind.Design, AccessLevel.Manage, (biz, id, _) => AccessRequestLogic.ListAsync(biz, ItemKind.Design, id)),
         new("ItemLogic.StarAsync(design)", ItemKind.Design, AccessLevel.View, (biz, id, _) => ItemLogic.StarAsync(biz, ItemKind.Design, id, true)),
         new("DesignLogic.SaveDocumentAsync", ItemKind.Design, AccessLevel.Edit, (biz, id, _) => DesignLogic.SaveDocumentAsync(biz, id, 1, EmptyDocument)),
         new("DesignLogic.RenameAsync", ItemKind.Design, AccessLevel.Edit, (biz, id, _) => DesignLogic.RenameAsync(biz, id, "x")),
@@ -113,6 +115,15 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
         new("FolderLogic.MoveAsync", ItemKind.Folder, AccessLevel.Manage, (biz, id, _) => FolderLogic.MoveAsync(biz, id, null, null)),
         new("ShareLogic.SetLinkAsync(folder)", ItemKind.Folder, AccessLevel.Manage, (biz, id, _) => ShareLogic.SetLinkAsync(biz, ItemKind.Folder, id, LinkAudience.Public, SharePermission.View, true, null)),
         new("ItemLogic.TrashAsync(folder)", ItemKind.Folder, AccessLevel.Manage, (biz, id, _) => ItemLogic.TrashAsync(biz, [new ItemRef(ItemKind.Folder, id)])),
+
+        // what the file browser adds (P2): rename of every kind, copies next to the original
+        new("ItemLogic.RenameAsync(design)", ItemKind.Design, AccessLevel.Edit, (biz, id, _) => ItemLogic.RenameAsync(biz, ItemKind.Design, id, "x")),
+        new("ItemLogic.RenameAsync(datalist)", ItemKind.DataList, AccessLevel.Edit, (biz, id, _) => ItemLogic.RenameAsync(biz, ItemKind.DataList, id, "x")),
+        new("ItemLogic.RenameAsync(outputjob)", ItemKind.OutputJob, AccessLevel.Edit, (biz, id, _) => ItemLogic.RenameAsync(biz, ItemKind.OutputJob, id, "x")),
+        new("ItemLogic.RenameAsync(asset)", ItemKind.Asset, AccessLevel.Edit, (biz, id, _) => ItemLogic.RenameAsync(biz, ItemKind.Asset, id, "x")),
+        new("ItemLogic.RenameAsync(folder)", ItemKind.Folder, AccessLevel.Manage, (biz, id, _) => ItemLogic.RenameAsync(biz, ItemKind.Folder, id, "x")),
+        new("ItemLogic.DuplicateAsync(design)", ItemKind.Design, AccessLevel.View, (biz, id, _) => ItemLogic.DuplicateAsync(biz, [new ItemRef(ItemKind.Design, id)])),
+        new("ItemLogic.DuplicateAsync(folder)", ItemKind.Folder, AccessLevel.View, (biz, id, _) => ItemLogic.DuplicateAsync(biz, [new ItemRef(ItemKind.Folder, id)])),
     ];
 
     public static TheoryData<string> ItemMethodNames
@@ -429,6 +440,8 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
             ["FolderLogic.TreeAsync"] = biz => FolderLogic.TreeAsync(biz),
             ["SpaceLogic.MySpacesAsync"] = biz => SpaceLogic.MySpacesAsync(biz),
             ["ShareLogic.SearchAsync"] = biz => ShareLogic.SearchAsync(biz, "ab"),
+            ["AccessRequestLogic.CreateAsync"] = biz => AccessRequestLogic.CreateAsync(biz, ItemKind.Design, Nobody, SharePermission.View, null),
+            ["AccessRequestLogic.MineAsync"] = biz => AccessRequestLogic.MineAsync(biz, ItemKind.Design, Nobody),
             ["DesignLogic.CreateFromFormatAsync"] = biz => DesignLogic.CreateFromFormatAsync(biz, "a4-portrait", null, null, null, "mein"),
             ["SpaceLogic.CreateTeamAsync"] = biz => SpaceLogic.CreateTeamAsync(biz, "Team " + Guid.NewGuid().ToString("N")[..6]),
         };

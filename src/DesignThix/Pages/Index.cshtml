@@ -14,7 +14,7 @@
     <form class="dt-start__search" method="get" action="/" role="search">
         <div class="mat-input-icon">
             @Ui.Icon("search")
-            <input class="mat-input" type="search" id="start-q" name="q" value="@Model.Q" placeholder="Designs und Vorlagen suchen" aria-label="Designs und Vorlagen suchen" autocomplete="off" enterkeyhint="search" maxlength="100" />
+            <input class="mat-input" type="search" id="start-q" name="q" value="@Model.Q" placeholder="Designs, Ordner, Vorlagen und mehr suchen" aria-label="Suchen" autocomplete="off" enterkeyhint="search" maxlength="100" />
         </div>
         <button type="submit" class="mat-btn mat-btn--primary">@Ui.Icon("search")<span>Suchen</span></button>
     </form>
@@ -25,28 +25,23 @@
     var found = Model.Search!;
     <section class="dt-section" aria-labelledby="start-results" data-search-results>
         <div class="dt-section__head">
-            <h2 class="dt-section__title" id="start-results">@(found.Empty ? "Nichts gefunden" : "Gefunden für „" + found.Text + "“")</h2>
+            <h2 class="dt-section__title" id="start-results">@(Model.NothingFound ? "Nichts gefunden" : "Gefunden für „" + found.Text + "“")</h2>
             <a class="dt-section__more" href="/">Suche zurücksetzen</a>
         </div>
-        @if (found.Empty)
+        @if (Model.NothingFound)
         {
             <div class="mat-empty">
                 <span class="mat-empty__icon">@Ui.Icon("search")</span>
-                <div class="mat-empty__title">Kein Design und keine Vorlage passt zu „@found.Text“</div>
-                <p>Die Suche schaut in Name, Kategorie und Beschreibung. Versuche einen kürzeren Begriff.</p>
+                <div class="mat-empty__title">Nichts passt zu „@found.Text“</div>
+                <p>Die Suche schaut in die Namen deiner Designs, Ordner, Datenlisten, Serienausgaben und Bilder und in Name, Kategorie und Beschreibung der Vorlagen. Versuche einen kürzeren Begriff.</p>
             </div>
         }
     </section>
-    @if (found.Designs.Count > 0)
+    @if (Model.FoundView is { } foundView)
     {
-        <section class="dt-section" aria-labelledby="start-found-designs">
-            <div class="dt-section__head"><h2 class="dt-section__title" id="start-found-designs">Designs <span class="dt-category__count">@found.Designs.Count</span></h2></div>
-            <div class="mat-gallery dt-gallery" data-found-designs>
-                @foreach (var d in found.Designs)
-                {
-                    <partial name="_RecentTile" model="(d, Model.Manageable.Contains(d.Id))" />
-                }
-            </div>
+        <section class="dt-section" aria-labelledby="start-found-items">
+            <div class="dt-section__head"><h2 class="dt-section__title" id="start-found-items">Deine Projekte</h2></div>
+            <partial name="_Browser" model="foundView" />
         </section>
     }
     @if (found.Templates.Count > 0)
@@ -94,29 +89,10 @@ else
 
     <section class="dt-section" aria-labelledby="start-recent">
         <div class="dt-section__head">
-            <h2 class="dt-section__title" id="start-recent">Zuletzt bearbeitet</h2>
-            @if (Model.Recent.Count > 0)
-            {
-                <a class="dt-section__more" href="/Designs">Alle Designs</a>
-            }
+            <h2 class="dt-section__title" id="start-recent">Zuletzt verwendet</h2>
+            <a class="dt-section__more" href="/Projekte">Alle Projekte</a>
         </div>
-        @if (Model.Recent.Count == 0)
-        {
-            <div class="mat-empty" id="recent-empty">
-                <span class="mat-empty__icon">@Ui.Icon("layers")</span>
-                <div class="mat-empty__title">Noch kein Design</div>
-                <p>@(Model.CanEdit ? "Wähle oben ein Format oder eine Vorlage: Dein erstes Design ist in einem Klick angelegt." : "Sobald jemand ein Design anlegt, siehst du es hier.")</p>
-            </div>
-        }
-        else
-        {
-            <div class="mat-gallery dt-gallery" data-recent-designs>
-                @foreach (var d in Model.Recent)
-                {
-                    <partial name="_RecentTile" model="(d, Model.Manageable.Contains(d.Id))" />
-                }
-            </div>
-        }
+        <partial name="_Browser" model="Model.RecentView!" />
     </section>
 
     @if (Model.RecentOutputs.Count > 0)
@@ -154,6 +130,6 @@ else
     }
 </ul>
 
-<script src="~/js/dt-engine.js" asp-append-version="true"></script>
-<script src="~/js/designs.js" asp-append-version="true"></script>
-<script src="~/js/home.js" asp-append-version="true"></script>
+@section Scripts {
+    <partial name="_BrowserScripts" />
+}

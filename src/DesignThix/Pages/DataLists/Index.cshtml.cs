@@ -34,7 +34,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
                 var like = Like.Contains(text);
                 return q.Where(l => EF.Functions.ILike(l.Name, like) || (l.Description != null && EF.Functions.ILike(l.Description, like)));
             },
-            Filters = [new FilterSpec<DataListRow>("personen", "Personenbezogene Daten", [new("ja", "Enthält Personendaten"), new("nein", "Ohne Personendaten")], (q, v) => q.Where(l => l.ContainsPersonalData == (v == "ja")))],
+            Filters = [new FilterSpec<DataListRow>("personen", "Personenbezogene Daten", [new("ja", "Enthält Personendaten"), new("nein", "Ohne Personendaten")], (q, v) => q.Where(l => l.ContainsPersonalData == (v == "ja"))), await AreaFilter.CreateAsync<DataListRow>(biz, l => l.SpaceId)],
             Sorts = new Dictionary<string, (string, Func<IQueryable<DataListRow>, bool, IOrderedQueryable<DataListRow>>)>
             {
                 ["name"] = ("Name", (q, d) => d ? q.OrderByDescending(l => l.Name) : q.OrderBy(l => l.Name)),

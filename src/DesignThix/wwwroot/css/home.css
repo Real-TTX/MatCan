@@ -96,3 +96,6 @@ a.dt-fact:hover { color: var(--mat-accent-text); text-decoration: none; }
   .dt-formattile__stage { height: 3.2rem; }
   .dt-formattile__shape { transform: scale(.72); }
 }
+
+/* ---- "Speichern in" of the dialog (a person who belongs to teams) ---- */
+.dt-create__where { max-width: 24rem; margin: 0; }

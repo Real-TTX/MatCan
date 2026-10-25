@@ -49,6 +49,9 @@ public sealed record ItemRow
 
     public DateTime? TrashedDate { get; init; }
 
+    /// <summary>The folder that was deleted together with this item (null: the item itself was deleted). The trash lists only the ones deleted on their own.</summary>
+    public long? TrashedWithFolderId { get; init; }
+
     public bool IsTemplate { get; init; }
 
     public bool Starred { get; init; }
@@ -58,6 +61,16 @@ public sealed record ItemRow
     public string? Owner { get; set; }
 
     public string? SpaceName { get; set; }
+
+    /// <summary>What the person may do with the item (filled in after the query): the browser shows only the actions that are allowed.</summary>
+    public AccessLevel Level { get; set; }
+
+    /// <summary>A folder: up to four pictures of what lies inside (addresses with the hash that lets the browser load them).</summary>
+    public IReadOnlyList<string> Previews { get; set; } = [];
+
+    public bool CanEdit => Level >= AccessLevel.Edit;
+
+    public bool CanManage => Level >= AccessLevel.Manage;
 
     public string? ThumbUrl => ThumbHash is null ? null : Kind switch
     {
@@ -118,6 +131,9 @@ public sealed record ItemQuery
 
     public bool FoldersFirst { get; init; } = true;
 
+    /// <summary>Leave designs out that are templates (the start page search lists templates in a section of their own).</summary>
+    public bool ExcludeTemplates { get; init; }
+
     public int Skip { get; init; }
 
     public int Take { get; init; } = 60;
@@ -146,7 +162,7 @@ public static class ItemLogic
                 return Source<Folder>(biz, scope).AsNoTracking().Select(x => new ItemRow
                 {
                     Kind = ItemKind.Folder, Id = x.Id, Name = x.Name, FolderId = x.ParentId, SpaceId = x.SpaceId, CreateDate = x.CreateDate, UpdateDate = x.UpdateDate, CreateUserId = x.CreateUserId,
-                    ThumbHash = null, Key = "", SizeBytes = 0, Width = 0, Height = 0, Unit = "", RowCount = 0, Color = x.Color, TrashedDate = x.TrashedDate, IsTemplate = false,
+                    ThumbHash = null, Key = "", SizeBytes = 0, Width = 0, Height = 0, Unit = "", RowCount = 0, Color = x.Color, TrashedDate = x.TrashedDate, TrashedWithFolderId = x.TrashedWithFolderId, IsTemplate = false,
                     Starred = db.Star.Any(s => s.UserId == uid && s.ItemKind == ItemKind.Folder && s.ItemId == x.Id),
                     Opened = db.ItemVisit.Where(v => v.UserId == uid && v.ItemKind == ItemKind.Folder && v.ItemId == x.Id).Select(v => (DateTime?)v.LastOpenedDate).FirstOrDefault(),
                 });
@@ -154,7 +170,7 @@ public static class ItemLogic
                 return Source<Design>(biz, scope).AsNoTracking().Select(x => new ItemRow
                 {
                     Kind = ItemKind.Design, Id = x.Id, Name = x.Name, FolderId = x.FolderId, SpaceId = x.SpaceId, CreateDate = x.CreateDate, UpdateDate = x.UpdateDate, CreateUserId = x.CreateUserId,
-                    ThumbHash = x.ThumbnailHash, Key = "", SizeBytes = 0, Width = x.Width, Height = x.Height, Unit = x.Unit, RowCount = 0, Color = null, TrashedDate = x.TrashedDate, IsTemplate = x.IsTemplate,
+                    ThumbHash = x.ThumbnailHash, Key = "", SizeBytes = 0, Width = x.Width, Height = x.Height, Unit = x.Unit, RowCount = 0, Color = null, TrashedDate = x.TrashedDate, TrashedWithFolderId = x.TrashedWithFolderId, IsTemplate = x.IsTemplate,
                     Starred = db.Star.Any(s => s.UserId == uid && s.ItemKind == ItemKind.Design && s.ItemId == x.Id),
                     Opened = db.ItemVisit.Where(v => v.UserId == uid && v.ItemKind == ItemKind.Design && v.ItemId == x.Id).Select(v => (DateTime?)v.LastOpenedDate).FirstOrDefault(),
                 });
@@ -162,7 +178,7 @@ public static class ItemLogic
                 return Source<DataList>(biz, scope).AsNoTracking().Select(x => new ItemRow
                 {
                     Kind = ItemKind.DataList, Id = x.Id, Name = x.Name, FolderId = x.FolderId, SpaceId = x.SpaceId, CreateDate = x.CreateDate, UpdateDate = x.UpdateDate, CreateUserId = x.CreateUserId,
-                    ThumbHash = null, Key = "", SizeBytes = 0, Width = 0, Height = 0, Unit = "", RowCount = x.Rows.Count, Color = null, TrashedDate = x.TrashedDate, IsTemplate = false,
+                    ThumbHash = null, Key = "", SizeBytes = 0, Width = 0, Height = 0, Unit = "", RowCount = x.Rows.Count, Color = null, TrashedDate = x.TrashedDate, TrashedWithFolderId = x.TrashedWithFolderId, IsTemplate = false,
                     Starred = db.Star.Any(s => s.UserId == uid && s.ItemKind == ItemKind.DataList && s.ItemId == x.Id),
                     Opened = db.ItemVisit.Where(v => v.UserId == uid && v.ItemKind == ItemKind.DataList && v.ItemId == x.Id).Select(v => (DateTime?)v.LastOpenedDate).FirstOrDefault(),
                 });
@@ -170,7 +186,7 @@ public static class ItemLogic
                 return Source<OutputJob>(biz, scope).AsNoTracking().Select(x => new ItemRow
                 {
                     Kind = ItemKind.OutputJob, Id = x.Id, Name = x.Name, FolderId = x.FolderId, SpaceId = x.SpaceId, CreateDate = x.CreateDate, UpdateDate = x.UpdateDate, CreateUserId = x.CreateUserId,
-                    ThumbHash = null, Key = "", SizeBytes = 0, Width = 0, Height = 0, Unit = "", RowCount = 0, Color = null, TrashedDate = x.TrashedDate, IsTemplate = false,
+                    ThumbHash = null, Key = "", SizeBytes = 0, Width = 0, Height = 0, Unit = "", RowCount = 0, Color = null, TrashedDate = x.TrashedDate, TrashedWithFolderId = x.TrashedWithFolderId, IsTemplate = false,
                     Starred = db.Star.Any(s => s.UserId == uid && s.ItemKind == ItemKind.OutputJob && s.ItemId == x.Id),
                     Opened = db.ItemVisit.Where(v => v.UserId == uid && v.ItemKind == ItemKind.OutputJob && v.ItemId == x.Id).Select(v => (DateTime?)v.LastOpenedDate).FirstOrDefault(),
                 });
@@ -178,7 +194,7 @@ public static class ItemLogic
                 return Source<Asset>(biz, scope).AsNoTracking().Select(x => new ItemRow
                 {
                     Kind = ItemKind.Asset, Id = x.Id, Name = x.Name, FolderId = x.FolderId, SpaceId = x.SpaceId, CreateDate = x.CreateDate, UpdateDate = x.UpdateDate, CreateUserId = x.CreateUserId,
-                    ThumbHash = x.ContentHash, Key = x.Key, SizeBytes = x.SizeBytes, Width = x.Width ?? 0, Height = x.Height ?? 0, Unit = "px", RowCount = 0, Color = null, TrashedDate = x.TrashedDate, IsTemplate = false,
+                    ThumbHash = x.ContentHash, Key = x.Key, SizeBytes = x.SizeBytes, Width = x.Width ?? 0, Height = x.Height ?? 0, Unit = "px", RowCount = 0, Color = null, TrashedDate = x.TrashedDate, TrashedWithFolderId = x.TrashedWithFolderId, IsTemplate = false,
                     Starred = db.Star.Any(s => s.UserId == uid && s.ItemKind == ItemKind.Asset && s.ItemId == x.Id),
                     Opened = db.ItemVisit.Where(v => v.UserId == uid && v.ItemKind == ItemKind.Asset && v.ItemId == x.Id).Select(v => (DateTime?)v.LastOpenedDate).FirstOrDefault(),
                 });
@@ -237,6 +253,17 @@ public static class ItemLogic
             rows = rows.Where(r => r.Starred);
         }
 
+        if (query.Scope == ItemScope.Trash)
+        {
+            // what went with a folder comes back with it: only what was deleted on its own is listed
+            rows = rows.Where(r => r.TrashedWithFolderId == null);
+        }
+
+        if (query.ExcludeTemplates)
+        {
+            rows = rows.Where(r => !r.IsTemplate);
+        }
+
         if (query.Scope == ItemScope.Recent)
         {
             rows = rows.Where(r => r.Opened != null);
@@ -277,7 +304,98 @@ public static class ItemLogic
 
         var page = await ordered.ThenBy(r => r.Kind).ThenBy(r => r.Id).Skip(Math.Max(0, query.Skip)).Take(Math.Clamp(query.Take, 1, MaxPage)).ToListAsync();
         await FillNamesAsync(biz, page);
+        await FillLevelsAsync(biz, page, query.Scope);
+        var folders = page.Where(r => r.Kind == ItemKind.Folder).Select(r => r.Id).ToList();
+        if (folders.Count > 0 && query.Scope != ItemScope.Trash)
+        {
+            var previews = await FolderLogic.PreviewsAsync(biz, folders);
+            foreach (var row in page.Where(r => r.Kind == ItemKind.Folder))
+            {
+                row.Previews = previews.GetValueOrDefault(row.Id) ?? [];
+            }
+        }
+
         return new ItemPage(page, total);
+    }
+
+    /// <summary>Sets <see cref="ItemRow.Level"/> of a page of rows: two queries per kind (Manage, Edit); everything else on the page is at least View. The trash only lists what the person manages.</summary>
+    private static async Task FillLevelsAsync(Biz biz, List<ItemRow> rows, ItemScope scope)
+    {
+        if (scope == ItemScope.Trash)
+        {
+            foreach (var row in rows)
+            {
+                row.Level = AccessLevel.Manage;
+            }
+
+            return;
+        }
+
+        foreach (var group in rows.GroupBy(r => r.Kind))
+        {
+            var ids = group.Select(r => r.Id).ToList();
+            var (manage, edit) = group.Key switch
+            {
+                ItemKind.Folder => await LevelSetsAsync<Folder>(biz, ids),
+                ItemKind.Design => await LevelSetsAsync<Design>(biz, ids),
+                ItemKind.DataList => await LevelSetsAsync<DataList>(biz, ids),
+                ItemKind.OutputJob => await LevelSetsAsync<OutputJob>(biz, ids),
+                _ => await LevelSetsAsync<Asset>(biz, ids),
+            };
+            foreach (var row in group)
+            {
+                row.Level = manage.Contains(row.Id) ? AccessLevel.Manage : edit.Contains(row.Id) ? AccessLevel.Edit : AccessLevel.View;
+            }
+        }
+    }
+
+    private static async Task<(HashSet<long> Manage, HashSet<long> Edit)> LevelSetsAsync<T>(Biz biz, List<long> ids) where T : class
+    {
+        var manage = await Access.Visible<T>(biz, AccessLevel.Manage).Where(x => ids.Contains(EF.Property<long>(x, "Id"))).Select(x => EF.Property<long>(x, "Id")).ToListAsync();
+        var edit = await Access.Visible<T>(biz, AccessLevel.Edit).Where(x => ids.Contains(EF.Property<long>(x, "Id"))).Select(x => EF.Property<long>(x, "Id")).ToListAsync();
+        return ([.. manage], [.. edit]);
+    }
+
+    /// <summary>
+    /// Renames an item (the context menu "Umbenennen"). A folder needs Manage, everything else Edit. The name is trimmed and must not be empty; it is cut to the length the kind allows.
+    /// </summary>
+    public static async Task<string> RenameAsync(Biz biz, ItemKind kind, long id, string? name)
+    {
+        biz.RequireSignedIn();
+        if (kind == ItemKind.Folder)
+        {
+            return (await FolderLogic.RenameAsync(biz, id, name)).Name;
+        }
+
+        if (kind == ItemKind.Design)
+        {
+            return await DesignLogic.RenameAsync(biz, id, name);
+        }
+
+        await Access.RequireAsync(biz, kind, id, AccessLevel.Edit);
+        var clean = Clip((name ?? "").Trim(), 200);
+        if (clean.Length == 0)
+        {
+            throw new BizException("Bitte gib einen Namen ein.", "Input.Name");
+        }
+
+        var db = biz.Db;
+        switch (kind)
+        {
+            case ItemKind.DataList:
+                (await db.DataList.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException()).Name = clean;
+                break;
+            case ItemKind.OutputJob:
+                (await db.OutputJob.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException()).Name = clean;
+                break;
+            default:
+                (await db.Asset.FirstOrDefaultAsync(x => x.Id == id) ?? throw new NotFoundException()).Name = clean;
+                break;
+        }
+
+        await db.SaveChangesAsync();
+        await biz.Log.LogAsync("Umbenannt", kind.ToString(), id, clean);
+        return clean;
     }
 
     private static async Task FillNamesAsync(Biz biz, List<ItemRow> rows)
@@ -291,6 +409,20 @@ public static class ItemLogic
         var users = await biz.Db.User.AsNoTracking().Where(u => userIds.Contains(u.Id)).ToDictionaryAsync(u => u.Id, u => u.DisplayName);
         var spaceIds = rows.Where(r => r.SpaceId is not null).Select(r => r.SpaceId!.Value).Distinct().ToList();
         var spaces = await biz.Db.Space.AsNoTracking().Where(s => spaceIds.Contains(s.Id)).ToDictionaryAsync(s => s.Id, s => s.Kind == SpaceKind.Personal ? SpaceLogic.PersonalName : s.Name);
+
+        // the personal area of somebody else is called after them ("Projekte von Anna"), not "Meine Projekte"
+        var me = biz.UserId;
+        var foreign = await (from sp in biz.Db.Space.AsNoTracking()
+                             where spaceIds.Contains(sp.Id) && sp.Kind == SpaceKind.Personal
+                             join m in biz.Db.SpaceMember.AsNoTracking() on sp.Id equals m.SpaceId
+                             where m.Role == SpaceRole.Owner && m.UserId != me
+                             join u in biz.Db.User.AsNoTracking() on m.UserId equals u.Id
+                             select new { sp.Id, u.DisplayName }).ToListAsync();
+        foreach (var f in foreign)
+        {
+            spaces[f.Id] = "Projekte von " + f.DisplayName;
+        }
+
         foreach (var row in rows)
         {
             row.Owner = row.CreateUserId is { } uid && users.TryGetValue(uid, out var name) ? name : null;
@@ -437,6 +569,25 @@ public static class ItemLogic
         return created;
     }
 
+    /// <summary>
+    /// "Kopie erstellen": copies items next to the original (the same folder when the person may write there, else the top of their personal area). Viewing the original is enough.
+    /// </summary>
+    public static async Task<List<ItemRef>> DuplicateAsync(Biz biz, IEnumerable<ItemRef> items)
+    {
+        biz.RequireSignedIn();
+        var created = new List<ItemRef>();
+        foreach (var item in Distinct(items))
+        {
+            await Access.RequireAsync(biz, item.Kind, item.Id, AccessLevel.View);
+            var (sourceSpace, sourceFolder) = await Access.RawPlaceAsync(biz.Db, item.Kind, item.Id);
+            var (space, folder) = await Access.CopyTargetAsync(biz, sourceSpace, sourceFolder);
+            await CopyOneAsync(biz, item, space, folder, created, topLevel: true);
+        }
+
+        await biz.Log.LogAsync("Elemente dupliziert", nameof(Folder), null, $"{created.Count} Element(e)");
+        return created;
+    }
+
     private static async Task CopyOneAsync(Biz biz, ItemRef item, long space, long? folder, List<ItemRef> created, bool topLevel)
     {
         if (created.Count >= MaxCopyItems)
@@ -451,6 +602,7 @@ public static class ItemLogic
             {
                 var copy = await DesignLogic.DuplicateToAsync(biz, item.Id, space, folder, topLevel);
                 created.Add(new ItemRef(ItemKind.Design, copy.Id));
+                if (topLevel) { await VisitAsync(biz, ItemKind.Design, copy.Id); }
                 break;
             }
 
@@ -458,6 +610,7 @@ public static class ItemLogic
             {
                 var copy = await DataListLogic.DuplicateToAsync(biz, item.Id, space, folder, topLevel);
                 created.Add(new ItemRef(ItemKind.DataList, copy.Id));
+                if (topLevel) { await VisitAsync(biz, ItemKind.DataList, copy.Id); }
                 break;
             }
 
@@ -486,6 +639,7 @@ public static class ItemLogic
                 db.OutputJob.Add(copy);
                 await db.SaveChangesAsync();
                 created.Add(new ItemRef(ItemKind.OutputJob, copy.Id));
+                if (topLevel) { await VisitAsync(biz, ItemKind.OutputJob, copy.Id); }
                 break;
             }
 
@@ -720,14 +874,18 @@ public static class ItemLogic
     public static async Task<int> EmptyTrashAsync(Biz biz, long? spaceId)
     {
         biz.RequireSignedIn();
-        var all = (await QueryAsync(biz, new ItemQuery { Scope = ItemScope.Trash, SpaceId = spaceId, Take = MaxPage, FoldersFirst = false })).Items;
-        if (all.Count == 0)
+        var count = 0;
+        while (true)
         {
-            return 0;
-        }
+            var all = (await QueryAsync(biz, new ItemQuery { Scope = ItemScope.Trash, SpaceId = spaceId, Take = MaxPage, FoldersFirst = false })).Items;
+            if (all.Count == 0)
+            {
+                return count;
+            }
 
-        await PurgeAsync(biz, all.Select(r => new ItemRef(r.Kind, r.Id)));
-        return all.Count;
+            await PurgeAsync(biz, all.Select(r => new ItemRef(r.Kind, r.Id)));
+            count += all.Count;
+        }
     }
 
     /// <summary>The delete for good itself, without a check of the person (the trash purger and the checks above call it): soft-deletes the records, lets go of the bytes and the rows.</summary>

@@ -1,7 +1,7 @@
 // Checks the start page and the navigation around it (docs/PLAN-CANVA.md section 1, items 1 and 2):
 //  - the heading, the search, the format tiles (one click creates a design of the right size and opens the designer), "Eigene Größe", the dialog "Design erstellen"
-//  - the menu: "Design erstellen" first, Start, Designs, Vorlagen, Uploads & Medien, Marke, Schriften, then the group "Serien (Zusatz)" (Datenlisten, Serienausgaben, Druckbögen)
-//  - the row of templates ("Vorlage verwenden" opens a copy in the designer), the search (designs and templates), the actions of a recent design (rename, duplicate, delete)
+//  - the menu: "Design erstellen" first, Start, Projekte, Freigegeben, Mit Stern, the group Teams, Vorlagen and Designs, Uploads & Medien, Marke, Schriften, the group "Serien (Zusatz)" (Datenlisten, Serienausgaben, Druckbögen), Papierkorb
+//  - the row of templates ("Vorlage verwenden" opens a copy in the designer), the search (everything the person may see, templates), "Zuletzt verwendet" (the file browser in the mode "recent") and its item menu (rename, copy, trash)
 //  - a member who only looks at one design that was shared with them (tiles and own area as for everybody, read-only actions on the shared design, the API refuses to delete it), the phone (no sideways scrolling), zero console errors and CSP violations
 // The designs the check makes are deleted again at the end.
 //
@@ -49,17 +49,18 @@ const stamp = String(Date.now()).slice(-6);
   check('the tiles are Preisschild, Etikett, Regaletikett, Visitenkarte, Flyer A5, Poster A3, Karte A6, Instagram-Beitrag, Instagram-Story, Präsentation',
     ['Preisschild', 'Etikett', 'Regaletikett', 'Visitenkarte', 'Flyer A5', 'Poster A3', 'Karte A6', 'Instagram-Beitrag', 'Instagram-Story', 'Präsentation'].every((n, i) => tiles[i].startsWith(n)), JSON.stringify(tiles));
   check('a tile shows its size', /85 × 55 mm/.test(tiles[3]) && /1\.080 × 1\.920 px/.test(tiles[8]), tiles[3] + ' | ' + tiles[8]);
-  check('the sections are Design erstellen, Vorlagen and Zuletzt bearbeitet', (await page.$$eval('.dt-section__title', els => els.map(e => e.textContent.trim()))).join('|').startsWith('Design erstellen|Vorlagen|Zuletzt bearbeitet'));
-  check('the key figures are at the bottom and small', await page.evaluate(() => { const f = document.querySelector('.dt-facts'); const last = document.querySelector('[data-recent-designs], #recent-empty'); return !!f && !!last && (f.compareDocumentPosition(last) & Node.DOCUMENT_POSITION_PRECEDING) !== 0; }));
+  check('the sections are Design erstellen, Vorlagen and Zuletzt verwendet', (await page.$$eval('.dt-section__title', els => els.map(e => e.textContent.trim()))).join('|').startsWith('Design erstellen|Vorlagen|Zuletzt verwendet'));
+  check('the key figures are at the bottom and small', await page.evaluate(() => { const f = document.querySelector('.dt-facts'); const last = document.querySelector('#dt-recent'); return !!f && !!last && (f.compareDocumentPosition(last) & Node.DOCUMENT_POSITION_PRECEDING) !== 0; }));
   await settle(page);
   await page.screenshot({ path: path.join(outDir, 'start-desktop.png') });
 
   // ------------------------------------------------------------------------------------------------ the menu
   const menu = await page.$$eval('.mat-nav [data-nav-panel="main"] a, .mat-nav [data-nav-panel="main"] .mat-nav__group', els => els.map(e => ({ text: e.textContent.trim(), href: e.getAttribute('href') })));
-  const texts = menu.map(m => m.text);
-  check('the menu: Design erstellen, Start, Designs, Vorlagen, Uploads & Medien, Marke, Schriften, Serien (Zusatz): Datenlisten, Serienausgaben, Druckbögen',
-    texts.join('|') === 'Design erstellen|Start|Gestalten|Designs|Vorlagen|Bibliothek|Uploads & Medien|Marke|Schriften|Serien (Zusatz)|Datenlisten|Serienausgaben|Druckbögen', texts.join('|'));
-  check('the menu addresses', ['/Designs/Create', '/', '/Designs', '/Templates', '/Assets', '/Brand', '/Fonts', '/DataLists', '/Outputs', '/Sheets'].every(h => menu.some(m => m.href === h)), JSON.stringify(menu));
+  // teams the person belongs to (other checks leave some behind) are listed between "Teams" and "Alle Teams": they are not what this check is about
+  const texts = menu.filter(m => !/^\/Teams\/[^/]+\/Projekte$/.test(m.href || '')).map(m => m.text);
+  check('the menu: Design erstellen, Start, Projekte, Freigegeben, Mit Stern, Teams, Gestalten, Bibliothek, Serien (Zusatz), Aufräumen',
+    texts.join('|') === 'Design erstellen|Start|Projekte|Freigegeben|Mit Stern|Teams|Alle Teams|Gestalten|Vorlagen|Designs|Bibliothek|Uploads & Medien|Marke|Schriften|Serien (Zusatz)|Datenlisten|Serienausgaben|Druckbögen|Aufräumen|Papierkorb', texts.join('|'));
+  check('the menu addresses', ['/Designs/Create', '/', '/Projekte', '/Freigegeben', '/Mit-Stern', '/Teams', '/Designs', '/Templates', '/Assets', '/Brand', '/Fonts', '/DataLists', '/Outputs', '/Sheets', '/Papierkorb'].every(h => menu.some(m => m.href === h)), JSON.stringify(menu));
   check('"Design erstellen" is the primary action', await page.isVisible('.mat-nav a.mat-nav__item--primary'));
   check('"Vorlagen" is the current item on its page', await (async () => { await page.goto(base + '/Templates', { waitUntil: 'networkidle' }); const t = await page.$eval('.mat-nav a.is-active', a => a.textContent.trim()); await page.goto(base + '/', { waitUntil: 'networkidle' }); return t === 'Vorlagen'; })());
   const designsRedirect = await page.goto(base + '/Designs?filter=templates', { waitUntil: 'networkidle' });
@@ -142,7 +143,8 @@ const stamp = String(Date.now()).slice(-6);
   const own = await postJson(page, '/api/designs', { preset: 'a6-landscape', name });
   created.push(own.body.id);
   await page.goto(base + '/?q=' + encodeURIComponent(name.toLowerCase()), { waitUntil: 'networkidle' });
-  check('a search finds the own design by its name', (await page.$$('[data-found-designs] [data-recent]')).length === 1 && (await page.textContent('[data-found-designs]')).includes(name));
+  await page.waitForSelector('#dt-found[data-state=ready]');
+  check('a search finds the own design by its name', (await page.$$('#dt-found .dt-bitem[data-kind=design]')).length === 1 && (await page.textContent('#dt-found')).includes(name));
   check('a search hides the rest of the page (no format tiles)', (await page.$$('main [data-formats]')).length === 0);
   await page.fill('#start-q', 'hoffest');
   await Promise.all([page.waitForNavigation(), page.press('#start-q', 'Enter')]);
@@ -152,39 +154,47 @@ const stamp = String(Date.now()).slice(-6);
   check('a search matches the category ("Social Media") of templates', (await page.$$('[data-found-templates] .dt-tpl')).length >= 2);
   await page.goto(base + '/?q=' + encodeURIComponent('gibt-es-nicht-' + stamp), { waitUntil: 'networkidle' });
   check('a search without a hit says so', (await page.textContent('[data-search-results]')).includes('Nichts gefunden'));
+  const folderName = `Suchordner ${stamp}`;
+  const madeFolder = await postJson(page, '/api/folders', { name: folderName });
+  await page.goto(base + '/?q=' + encodeURIComponent(folderName.toLowerCase()), { waitUntil: 'networkidle' });
+  await page.waitForSelector('#dt-found[data-state=ready]');
+  check('a search also finds a folder', (await page.$$('#dt-found .dt-bitem[data-kind=folder]')).length === 1);
+  await postJson(page, '/api/items/trash', { items: [{ kind: 'folder', id: madeFolder.body.id }] });
+  await postJson(page, '/api/items/purge', { items: [{ kind: 'folder', id: madeFolder.body.id }] });
 
-  // ------------------------------------------------------------------------------------------------ actions of a recent design
+  // ------------------------------------------------------------------------------------------------ "Zuletzt verwendet" and the menu of an item
   await page.goto(base + '/', { waitUntil: 'networkidle' });
-  const tile = page.locator(`[data-recent][data-name="${name}"]`).first();
-  check('the new design is among the first tiles of "Zuletzt bearbeitet"', (await page.$$eval('[data-recent-designs] [data-recent]', els => els.slice(0, 4).map(e => e.getAttribute('data-name')))).includes(name));
+  await page.waitForSelector('#dt-recent[data-state=ready]');
+  const tile = page.locator(`#dt-recent .dt-bitem[data-name="${name}"]`).first();
+  check('the new design is among the first tiles of "Zuletzt verwendet"', (await page.$$eval('#dt-recent .dt-bitem', els => els.slice(0, 6).map(e => e.getAttribute('data-name')))).includes(name));
   await tile.hover();
   await page.waitForTimeout(400);
-  check('hovering a design shows Öffnen, Duplizieren, Umbenennen, Löschen', (await tile.locator('.dt-recent__actions').evaluate(e => getComputedStyle(e).opacity)) === '1' && (await tile.locator('[data-recent-action]').count()) === 3);
-  await page.waitForTimeout(400);
+  check('hovering a design shows the button "⋯"', (await tile.locator('.dt-bitem__more').evaluate(e => getComputedStyle(e).opacity)) === '1');
   await page.screenshot({ path: path.join(outDir, 'start-hover.png') });
-  const tileId = await tile.getAttribute('data-recent');
-  await tile.locator('[data-recent-action=rename]').click();
-  await page.waitForSelector('dialog[open] input[name=value]');
-  await page.fill('dialog[open] input[name=value]', name + ' neu');
-  await page.click('dialog[open] button[value=ok]');
-  await page.waitForFunction(n => document.querySelector('[data-recent-title]') && Array.from(document.querySelectorAll('[data-recent-title]')).some(t => t.textContent === n), name + ' neu');
+  const tileId = await tile.getAttribute('data-id');
+  await tile.locator('.dt-bitem__more').click();
+  await page.waitForSelector('.dt-menu');
+  const entries = await page.$$eval('.dt-menu .dt-menu__label', els => els.map(e => e.textContent.trim()));
+  check('the menu of an own design: Öffnen, Teilen, Umbenennen, Verschieben, Kopie, Stern, Papierkorb', ['Öffnen', 'Teilen …', 'Umbenennen', 'Verschieben nach …', 'Kopie erstellen', 'Mit Stern markieren', 'In den Papierkorb'].every(t => entries.includes(t)), entries.join('|'));
+  await page.click('.dt-menu .dt-menu__item:has-text("Umbenennen")');
+  await page.waitForSelector('#dt-recent .dt-bitem__rename');
+  await page.fill('#dt-recent .dt-bitem__rename', name + ' neu');
+  await page.press('#dt-recent .dt-bitem__rename', 'Enter');
+  await page.waitForFunction(n => Array.from(document.querySelectorAll('#dt-recent .dt-bitem__name')).some(t => t.textContent === n), name + ' neu');
   d = await apiDesign(page, tileId);
   check('rename: the tile and the design carry the new name', d.name === name + ' neu', d.name);
-  await page.locator(`[data-recent="${tileId}"] [data-recent-action=duplicate]`).click({ force: true });
-  await page.waitForFunction(n => Array.from(document.querySelectorAll('[data-recent-title]')).some(t => t.textContent === n + ' (Kopie)'), name + ' neu', { timeout: 15000 });
-  const copyId = Number(await page.locator(`[data-recent][data-name="${name} neu (Kopie)"]`).first().getAttribute('data-recent'));
-  check('duplicate: a copy "(Kopie)" appears on the page', copyId > 0 && copyId !== Number(tileId));
-  await page.locator(`[data-recent="${copyId}"] [data-recent-action=delete]`).click({ force: true });
-  await page.waitForSelector('dialog[open] .mat-btn--danger');
-  check('delete asks first', (await page.textContent('dialog[open]')).includes('wirklich löschen'));
-  await page.click('dialog[open] button[value=ok]');
-  await page.waitForFunction(i => !document.querySelector(`[data-recent="${i}"]`), String(copyId));
+  await page.locator(`#dt-recent .dt-bitem[data-id="${tileId}"] .dt-bitem__more`).click({ force: true });
+  await page.click('.dt-menu .dt-menu__item:has-text("Kopie erstellen")');
+  await page.waitForFunction(n => Array.from(document.querySelectorAll('#dt-recent .dt-bitem__name')).some(t => t.textContent === n + ' (Kopie)'), name + ' neu', { timeout: 15000 });
+  const copyId = Number(await page.locator(`#dt-recent .dt-bitem[data-name="${name} neu (Kopie)"]`).first().getAttribute('data-id'));
+  check('copy: a copy "(Kopie)" appears on the page', copyId > 0 && copyId !== Number(tileId));
+  created.push(copyId);
+  await page.locator(`#dt-recent .dt-bitem[data-id="${copyId}"] .dt-bitem__more`).click({ force: true });
+  await page.click('.dt-menu .dt-menu__item:has-text("In den Papierkorb")');
+  await page.waitForFunction(i => !document.querySelector(`#dt-recent .dt-bitem[data-id="${i}"]`), String(copyId));
   d = await apiDesign(page, copyId);
-  check('delete: the tile is gone and the design cannot be opened any more', d.status === 404, JSON.stringify(d).slice(0, 80));
-  await page.locator(`[data-recent="${tileId}"] [data-recent-action=delete]`).click({ force: true });
-  await page.waitForSelector('dialog[open] .mat-btn--danger');
-  await page.click('dialog[open] button[data-dialog-close]');
-  check('cancelling the delete keeps the design', !!(await page.$(`[data-recent="${tileId}"]`)));
+  check('trash: the tile is gone and the design cannot be opened any more', d.status === 404, JSON.stringify(d).slice(0, 80));
+  await postJson(page, '/api/items/restore', { items: [{ kind: 'design', id: copyId }] });
 
   // ------------------------------------------------------------------------------------------------ a member who only looks (the "viewer" of the older checks)
   // Every member makes designs in their own area; what somebody else made is only there when it was shared, and then it is read-only.
@@ -201,8 +211,16 @@ const stamp = String(Date.now()).slice(-6);
   check('they see the format tiles and "Design erstellen" like everybody', (await viewer.$$('main [data-formats] [data-format], main [data-formats] [data-format-custom]')).length === 11 && await viewer.isVisible('.mat-nav a.mat-nav__item--primary') && (await viewer.$$('#dt-create')).length === 1);
   check('they see the templates, "Vorlage verwenden" is enabled', await viewer.evaluate(() => { const b = Array.from(document.querySelectorAll('.dt-tpl .mat-btn--primary')); return b.length >= 6 && b.every(x => !x.disabled && x.hasAttribute('data-use-template')); }));
   check('they see the heading and the search', (await viewer.textContent('h1')).includes('Was möchtest du heute gestalten?') && await viewer.isVisible('input[name=q]'));
-  const recentCount = await viewer.$$eval('[data-recent-designs] [data-recent]', els => els.length);
-  check('they see the shared design among the recent ones with "Öffnen" only', recentCount > 0 && (await viewer.$$(`[data-recent="${sharedId}"]`)).length === 1 && (await viewer.$$('[data-recent-action]')).length === 0 && (await viewer.$$('.dt-recent__actions a')).length === recentCount);
+  await viewer.goto(base + `/Designs/${sharedId}/Designer`, { waitUntil: 'domcontentloaded' });
+  await viewer.goto(base + '/', { waitUntil: 'networkidle' });
+  await viewer.waitForSelector('#dt-recent[data-state=ready]');
+  const sharedTile = viewer.locator(`#dt-recent .dt-bitem[data-id="${sharedId}"]`);
+  check('after they opened the shared design it is among their recent ones', (await sharedTile.count()) === 1);
+  await sharedTile.locator('.dt-bitem__more').click({ force: true });
+  await viewer.waitForSelector('.dt-menu');
+  const viewerEntries = await viewer.$$eval('.dt-menu .dt-menu__label', els => els.map(e => e.textContent.trim()));
+  check('its menu offers only what a viewer may do (Öffnen, Kopie erstellen, Stern)', viewerEntries.join('|') === 'Öffnen|Kopie erstellen|Mit Stern markieren', viewerEntries.join('|'));
+  await viewer.keyboard.press('Escape');
   await viewer.screenshot({ path: path.join(outDir, 'start-viewer.png') });
   const ownMade = await postJson(viewer, '/api/designs', { preset: 'business-card' });
   check("the API lets them make a design of their own (200)", ownMade.status === 200, String(ownMade.status));

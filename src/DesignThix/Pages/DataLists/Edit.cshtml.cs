@@ -117,7 +117,7 @@ public sealed class EditModel(Biz biz) : PageModelBase
     {
         if (!await LoadAsync())
         {
-            return NotFound();
+            return Id is { } listId ? RedirectToPage("/Share/NoAccess", new { kind = "datalist", id = listId }) : NotFound();
         }
 
         FillForms();

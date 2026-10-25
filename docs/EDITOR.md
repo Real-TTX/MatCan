@@ -8,7 +8,7 @@ Styles: `wwwroot/css/designer.css` (+ `dt-media.css` for the media browser), Mat
 ## Layout
 
 ```
-.dt-top      back | Datei ▾ | undo redo | save state | name (click to rename) | Serie | Herunterladen | Drucken
+.dt-top      back | Datei ▾ | undo redo | save state | name (click to rename) | people (avatars, presence) | Serie | Herunterladen | Drucken | Teilen (or "Kopie erstellen" when read-only)
 .dt-rail     Vorlagen Elemente Text Uploads Marke Ebenen Daten (Zusatz)        .dt-panel (≈ 340 px, collapsible; context pages with a back arrow)
 .dt-ds__center  .dt-ctx (contextual toolbar) / canvas (#dt-viewport > #dt-sheet > #dt-page + #dt-overlay) / .dt-bottom (page strip, zoom)
 .dt-tabbar   phones only: Elemente Text Uploads Ebenen Mehr
@@ -16,7 +16,7 @@ Styles: `wwwroot/css/designer.css` (+ `dt-media.css` for the media browser), Mat
 
 >= 1024 px everything is side by side. 768 to 1023 px the panel is an overlay drawer next to the rail (closes on a tap on the canvas, after adding something) and the toolbar scrolls
 sideways. < 768 px a phone editor: the rail is the tab bar at the bottom, the panel a bottom sheet, popovers bottom sheets, the toolbar a scroller above the tab bar, handles have
-a 44 px hit area. A viewer (`canEdit=false`) gets the same page with `is-readonly`: everything visible, nothing editable; Herunterladen and Drucken work.
+a 44 px hit area. A person with View only (`canEdit=false`) gets the same page with `is-readonly`: everything visible, nothing editable, "Nur ansehen" in the top bar and "Kopie erstellen" instead of "Teilen"; Herunterladen and Drucken work.
 
 ## Modules (load order, see the end of `Designer.cshtml`)
 
@@ -43,6 +43,8 @@ a 44 px hit area. A viewer (`canEdit=false`) gets the same page with `is-readonl
 | `designer.io.js` | `D.dnd.attach` (tiles to the canvas), uploads of images and fonts, **paste** and **drop** of files. |
 | `designer.save.js` | Autosave, revision check (409 dialog), local draft, offline, keepalive on `pagehide`, thumbnail. `D.save`. |
 | `designer.file.js` | Datei menu, Größe ändern, Neues Design, Herunterladen (PNG/JPG/SVG/ZIP, PDF → print view), Drucken. `D.file`. |
+| `share.js` (+ `css/share.css`) | Not an editor module: the Teilen dialog `window.DtShare.open({ kind, id, name })` that the whole app uses (loaded before `designer.share.js`). |
+| `designer.share.js` | `D.share` (P3): the top bar's **Teilen** button (`DtShare.open`) or **Kopie erstellen** for read-only people (`DtMove.pick`, else a plain area select, `POST /api/items/copy`), the avatars of the people with access (max 4 + "+N") and **presence**: `POST /api/designs/{id}/presence` every 15 s while visible, `{ leave: true }` on `pagehide`; a dot on the avatar of everybody who has the design open, the toast "Anna bearbeitet dieses Design gerade.". `D.share.beat()` for the checks. |
 | `designer.shortcuts.js` | Keyboard, clipboard events (copy/cut), the Tastenkürzel dialog. |
 | `designer.js` | Boot: loads design, fonts, assets, brand, formats; starts the modules in order; top bar; phone tab bar. |
 | `dt-media.js` + `css/dt-media.css` | The media browser `window.DtMedia.pick(options, callback(key, asset))`, standalone (also used by `/Brand`). |
@@ -106,7 +108,7 @@ and the sliders of `filters` (brightness, contrast, saturation, blur, grayscale,
 
 `GET/POST /api/designs/{id}` (`{ revision, document, autosave }`; 409 → dialog; autosaves of one person within 10 minutes share one history entry, Ctrl+S makes a new one),
 `/rename`, `/copy`, `/thumbnail`, `/resize`; `POST /api/designs` (one-click create); `GET /api/formats`, `/api/templates`, `/api/brand`, `/api/fonts`, `/api/assets?q&category&sort&take`,
-`POST /api/assets/upload`, `POST /api/fonts/upload`, `GET /api/datalists`, `/api/datalists/{id}/rows`, `/lib/icons.json`. Every POST carries `RequestVerificationToken`.
+`POST /api/assets/upload`, `POST /api/fonts/upload`, `GET /api/datalists`, `/api/datalists/{id}/rows`, `/lib/icons.json`; sharing (P3): `GET /api/share/design/{id}` (the people with access), `POST /api/designs/{id}/presence`, `POST /api/items/copy`. Every POST carries `RequestVerificationToken`.
 
 ## Checks
 

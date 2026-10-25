@@ -16,11 +16,15 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public IReadOnlyList<AssetRow> Items { get; private set; } = [];
 
+    /// <summary>The storage of the personal area (images and fonts count); what lies in a team counts against the team.</summary>
+    public StorageUsage Usage { get; private set; } = null!;
+
     /// <summary>Everybody who is signed in may make things (in their own area), so the buttons that make something new are always there; what a person may do with one item is decided on its page.</summary>
     public bool CanEdit => true;
 
     public async Task OnGetAsync()
     {
+        Usage = await StorageLogic.UsageAsync(biz, await biz.PersonalSpaceIdAsync());
         Head("Uploads & Medien", "Deine hochgeladenen Bilder und die mitgelieferten: Flaggen, Siegel, Logos und Fotos. Sie werden über ihren Schlüssel angesprochen.", ("Bibliothek", null), ("Uploads & Medien", null));
 
         var categories = AssetLogic.Categories.Union(await AssetLogic.UsedCategoriesAsync(biz)).Select(c => new FilterOption(c, c)).ToList();
@@ -38,7 +42,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
                 var like = Like.Contains(text);
                 return q.Where(a => EF.Functions.ILike(a.Name, like) || EF.Functions.ILike(a.Key, like) || EF.Functions.ILike(a.Tags, like));
             },
-            Filters = [new FilterSpec<AssetRow>("kategorie", "Kategorie", categories, (q, v) => q.Where(a => a.Category == v))],
+            Filters = [new FilterSpec<AssetRow>("kategorie", "Kategorie", categories, (q, v) => q.Where(a => a.Category == v)), await AreaFilter.CreateAsync<AssetRow>(biz, a => a.SpaceId)],
             Sorts = new Dictionary<string, (string, Func<IQueryable<AssetRow>, bool, IOrderedQueryable<AssetRow>>)>
             {
                 ["name"] = ("Name", (q, d) => d ? q.OrderByDescending(a => a.Name) : q.OrderBy(a => a.Name)),

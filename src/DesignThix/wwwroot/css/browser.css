@@ -1,0 +1,187 @@
+/* DesignThix: the file browser (js/browser.js, Pages/Shared/_Browser.cshtml) and the dialog "Verschieben nach …" (js/movepicker.js). Tokens only; flat (borders instead of shadows, except the
+   drag ghost); no inline styles anywhere: what is data (the colour of a folder, the depth of a tree row) is a custom property set through the CSSOM. */
+
+/* ---- The head: the path (every step but the last is a drop target), the sub line, storage and buttons ---- */
+.dt-bhead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--mat-space-3) var(--mat-space-6); padding-block: var(--mat-space-2) var(--mat-space-4); }
+.dt-bhead__main { min-width: 0; display: grid; gap: var(--mat-space-1); }
+.dt-bhead__side { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mat-space-3); }
+.dt-bhead__sub { margin: 0; color: var(--mat-text-muted); font-size: var(--mat-fs-sm); max-width: 46rem; }
+.dt-bcrumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mat-space-1); list-style: none; margin: 0; padding: 0; min-width: 0; }
+.dt-bcrumbs li { display: inline-flex; align-items: center; gap: var(--mat-space-1); min-width: 0; }
+.dt-bcrumbs a { padding: var(--mat-space-1) var(--mat-space-2); border-radius: var(--mat-radius); color: var(--mat-text-muted); font-size: var(--mat-fs-lg); font-weight: 600; text-decoration: none; }
+.dt-bcrumbs a:hover { background: var(--mat-surface-3); color: var(--mat-text); text-decoration: none; }
+.dt-bcrumbs a.is-drop { background: var(--mat-accent-soft-strong); color: var(--mat-accent-text); outline: 2px solid var(--mat-accent); }
+.dt-bcrumbs__sep { width: 1rem; height: 1rem; color: var(--mat-text-faint); flex: none; }
+.dt-bcrumbs__current { margin: 0; font-size: var(--mat-fs-2xl); line-height: 1.2; font-weight: 700; letter-spacing: -.01em; overflow-wrap: anywhere; padding-inline: var(--mat-space-2); }
+.dt-storage { display: grid; gap: 6px; min-width: 11rem; }
+.dt-storage__line { display: flex; align-items: center; gap: var(--mat-space-2); color: var(--mat-text-muted); font-size: var(--mat-fs-sm); }
+.dt-storage__line .mat-icon { width: 1rem; height: 1rem; }
+.dt-storage__text strong { color: var(--mat-text); font-variant-numeric: tabular-nums; }
+@media (max-width: 719px) { .dt-bcrumbs__current { font-size: var(--mat-fs-xl); } .dt-bcrumbs a { font-size: var(--mat-fs-md); } }
+
+/* ---- The browser ---- */
+.dt-browser { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--mat-space-3); min-height: 12rem; align-content: start; }
+.dt-browser[hidden], .dt-browser [hidden] { display: none !important; }
+
+/* the toolbar: Neu, the filter by kind, the search, the sort, the view */
+.dt-btool { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mat-space-3); }
+.dt-btool__chips { display: flex; flex-wrap: wrap; gap: var(--mat-space-2); min-width: 0; order: 3; flex-basis: 100%; }
+.dt-btool__right { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mat-space-2); flex: 1 1 auto; justify-content: flex-end; }
+.dt-btool__search { flex: 1 1 14rem; max-width: 26rem; min-width: 0; }
+.dt-btool__sort { width: auto; min-width: 10.5rem; }
+.dt-chip { display: inline-flex; align-items: center; min-height: var(--mat-control-h-sm); padding: 0 var(--mat-space-3); border: 1px solid var(--mat-border-strong); border-radius: var(--mat-radius-pill); background: var(--mat-surface); color: var(--mat-text); font: inherit; font-size: var(--mat-fs-sm); font-weight: 600; cursor: pointer; white-space: nowrap; }
+.dt-chip:hover { background: var(--mat-surface-3); }
+.dt-chip:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-chip.is-active { background: var(--mat-accent-soft-strong); border-color: var(--mat-accent); color: var(--mat-accent-text); }
+@media (pointer: coarse) { .dt-chip { min-height: 44px; } }
+
+/* the selection bar: sticks to the top while scrolling, at the bottom of the screen on a phone */
+.dt-bselwrap { position: sticky; top: var(--mat-space-2); z-index: 20; height: 0; margin-bottom: calc(-1 * var(--mat-space-3)); }
+.dt-bselwrap .dt-bsel { position: absolute; top: 0; left: 0; right: 0; }
+.dt-browser.has-selection .dt-btool { visibility: hidden; }
+.dt-bsel { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mat-space-2) var(--mat-space-3); padding: var(--mat-space-2) var(--mat-space-3); background: var(--mat-accent-soft-strong); border: 1px solid var(--mat-accent); border-radius: var(--mat-radius-lg); }
+.dt-bsel__count { font-weight: 650; color: var(--mat-accent-text); margin-right: var(--mat-space-2); }
+.dt-bsel__buttons { display: flex; flex-wrap: wrap; gap: var(--mat-space-1); }
+.dt-bsel__btn.is-danger, .dt-bsel__btn.is-danger .mat-icon { color: var(--mat-danger-text); }
+@media (max-width: 719px) {
+  .dt-browser.has-selection .dt-btool { visibility: visible; }
+  .dt-bselwrap .dt-bsel { position: fixed; z-index: 60; left: var(--mat-space-2); right: var(--mat-space-2); top: auto; bottom: calc(var(--mat-space-2) + env(safe-area-inset-bottom, 0px)); flex-wrap: nowrap; overflow-x: auto; box-shadow: var(--mat-shadow-2); background: var(--mat-surface); }
+  .dt-bsel__count { white-space: nowrap; }
+  .dt-bsel__buttons { flex-wrap: nowrap; }
+  .dt-bsel__btn { white-space: nowrap; min-width: 44px; justify-content: center; }
+  .dt-bsel__btn span { display: none; }
+  .dt-bhead { padding-block: 0 var(--mat-space-2); gap: var(--mat-space-2); }
+  .dt-browser.has-selection { padding-bottom: 4.5rem; }
+}
+
+.dt-bstatus { margin: 0; color: var(--mat-text-muted); font-size: var(--mat-fs-sm); text-align: center; padding: var(--mat-space-3); }
+.dt-bempty { padding-block: var(--mat-space-8); }
+.dt-bempty__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--mat-space-2); margin-top: var(--mat-space-3); }
+.dt-bmore { display: flex; justify-content: center; padding: var(--mat-space-3); }
+
+/* ---- The tiles: grid ---- */
+.dt-bgrid { display: grid; gap: var(--mat-gap); min-width: 0; }
+.dt-browser.is-grid .dt-bgrid { grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr)); }
+.dt-browser--compact.is-grid .dt-bgrid { grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); }
+.dt-bitem { position: relative; display: flex; flex-direction: column; min-width: 0; background: var(--mat-surface); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-lg); overflow: hidden; -webkit-touch-callout: none; transition: border-color var(--mat-dur) var(--mat-ease), background var(--mat-dur) var(--mat-ease); }
+.dt-bitem:hover { border-color: var(--mat-border-strong); }
+.dt-bitem:focus-within { border-color: var(--mat-accent); }
+.dt-bitem.is-selected { border-color: var(--mat-accent); background: var(--mat-accent-soft); box-shadow: 0 0 0 1px var(--mat-accent); }
+.dt-bitem.is-dragged { opacity: .45; }
+.dt-bitem.is-drop { border-color: var(--mat-accent); background: var(--mat-accent-soft-strong); box-shadow: 0 0 0 2px var(--mat-accent); }
+.dt-bitem__media { position: relative; display: grid; place-items: center; aspect-ratio: 4 / 3; background: var(--mat-surface-3); color: inherit; text-decoration: none; overflow: hidden; min-width: 0; }
+.dt-bitem__body { display: grid; gap: 2px; padding: var(--mat-space-3) var(--mat-space-3) var(--mat-space-3); min-width: 0; }
+.dt-bitem__title { display: flex; align-items: center; gap: var(--mat-space-1); min-width: 0; }
+.dt-bitem__name { flex: 0 1 auto; font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--mat-text); text-decoration: none; min-width: 0; }
+a.dt-bitem__name:hover { color: var(--mat-accent-text); text-decoration: none; }
+.dt-bitem__meta { display: flex; flex-wrap: wrap; gap: 0 var(--mat-space-2); color: var(--mat-text-muted); font-size: var(--mat-fs-xs); min-width: 0; }
+.dt-bitem__area { flex-basis: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-browser.is-list .dt-bitem__area { flex-basis: auto; }
+.dt-browser.is-list .dt-bitem__area::before { content: "·"; margin-right: var(--mat-space-2); }
+.dt-bitem__cell { display: none; color: var(--mat-text-muted); font-size: var(--mat-fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-bitem__rename { height: 2rem; width: 100%; }
+
+/* the checkbox, the star and the "⋯": over the picture; the checkbox and the button show on hover, on focus and while something is chosen */
+.dt-bitem__check { position: absolute; top: var(--mat-space-2); left: var(--mat-space-2); z-index: 2; width: 20px; height: 20px; margin: 0; accent-color: var(--mat-accent); cursor: pointer; opacity: 0; transition: opacity var(--mat-dur) var(--mat-ease); background: var(--mat-surface); border-radius: 4px; }
+.dt-bitem__more { position: absolute; top: var(--mat-space-2); right: var(--mat-space-2); z-index: 2; background: var(--mat-surface); border: 1px solid var(--mat-border); opacity: 0; transition: opacity var(--mat-dur) var(--mat-ease); }
+.dt-bitem__star { flex: none; display: inline-grid; place-items: center; color: var(--mat-warning-text); }
+.dt-bitem__star .mat-icon { width: .9rem; height: .9rem; fill: currentColor; }
+.dt-bitem:hover .dt-bitem__check, .dt-bitem:focus-within .dt-bitem__check, .dt-browser.has-selection .dt-bitem__check, .dt-bitem.is-selected .dt-bitem__check,
+.dt-bitem:hover .dt-bitem__more, .dt-bitem:focus-within .dt-bitem__more, .dt-bitem__more[aria-expanded="true"] { opacity: 1; }
+@media (hover: none) { .dt-bitem__check, .dt-bitem__more { opacity: 1; } }
+
+/* what a picture looks like */
+.dt-bpic { position: absolute; inset: 0; display: grid; grid-template: 100% / 100%; place-items: center; padding: var(--mat-space-3); box-sizing: border-box; }
+.dt-bpic img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.dt-bpic--design { padding: var(--mat-space-3); }
+.dt-bpic--design .dt-designthumb { width: 100%; height: 100%; aspect-ratio: auto; max-height: none; background: transparent; }
+.dt-bpic--design img { background: var(--mat-surface); }
+.dt-bpic--asset { background: repeating-conic-gradient(var(--mat-surface-3) 0% 25%, var(--mat-surface) 0% 50%) 50% / 16px 16px; }
+.dt-bfact { display: grid; place-items: center; width: 4rem; height: 4rem; border-radius: var(--mat-radius-lg); background: var(--mat-accent-soft-strong); color: var(--mat-accent-text); }
+.dt-bfact .mat-icon { width: 1.8rem; height: 1.8rem; }
+.dt-bfolder { position: absolute; inset: 0; display: grid; place-items: center; --dt-folder: var(--mat-accent-text); }
+.dt-bfolder__icon { width: 4.2rem; height: 4.2rem; color: var(--dt-folder); fill: color-mix(in srgb, var(--dt-folder) 22%, transparent); }
+.dt-bfolder.has-previews .dt-bfolder__icon { position: absolute; left: var(--mat-space-2); bottom: var(--mat-space-2); width: 1.7rem; height: 1.7rem; }
+.dt-bfolder__grid { display: grid; grid-template: repeat(2, minmax(0, 1fr)) / repeat(2, minmax(0, 1fr)); gap: 4px; width: 62%; aspect-ratio: 1; }
+.dt-bfolder__pic { position: relative; background: var(--mat-surface); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-xs); overflow: hidden; }
+.dt-bfolder__pic img { position: absolute; inset: 2px; display: block; width: calc(100% - 4px); height: calc(100% - 4px); object-fit: contain; }
+
+/* ---- The tiles: list ---- */
+.dt-browser.is-list .dt-bgrid { gap: 0; border: 1px solid var(--mat-border); border-radius: var(--mat-radius-lg); background: var(--mat-surface); overflow: hidden; }
+.dt-blisthead, .dt-browser.is-list .dt-bitem { display: grid; grid-template-columns: 2.25rem 3.5rem minmax(0, 1fr) 11rem 9rem 2.5rem; align-items: center; gap: var(--mat-space-3); }
+.dt-blisthead { display: none; padding: var(--mat-space-2) var(--mat-space-3) var(--mat-space-2) var(--mat-space-2); color: var(--mat-text-muted); font-size: var(--mat-fs-xs); font-weight: 650; text-transform: uppercase; letter-spacing: .04em; }
+.dt-browser.is-list .dt-blisthead { display: grid; }
+.dt-blisthead__owner, .dt-blisthead__when { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-browser.is-list .dt-bitem { flex-direction: row; padding: var(--mat-space-2) var(--mat-space-3) var(--mat-space-2) var(--mat-space-2); border: 0; border-bottom: 1px solid var(--mat-border); border-radius: 0; overflow: visible; }
+.dt-browser.is-list .dt-bitem:last-child { border-bottom: 0; }
+.dt-browser.is-list .dt-bitem.is-selected { box-shadow: inset 3px 0 0 var(--mat-accent); }
+.dt-browser.is-list .dt-bitem__check { position: static; grid-column: 1; justify-self: center; opacity: 1; }
+.dt-browser--compact.is-list .dt-bitem { grid-template-columns: 3.5rem minmax(0, 1fr) 9rem 2.5rem; }
+.dt-browser.is-list .dt-bitem__media { grid-column: 2; aspect-ratio: 4 / 3; width: 3.5rem; border-radius: var(--mat-radius-xs); }
+.dt-browser.is-list .dt-bpic, .dt-browser.is-list .dt-bpic--design { padding: 2px; }
+.dt-browser.is-list .dt-bfolder__icon { width: 1.8rem; height: 1.8rem; }
+.dt-browser.is-list .dt-bfolder.has-previews .dt-bfolder__icon { display: none; }
+.dt-browser.is-list .dt-bfolder__grid { width: 90%; gap: 1px; }
+.dt-browser.is-list .dt-bfact { width: 2.2rem; height: 2.2rem; border-radius: var(--mat-radius-sm); }
+.dt-browser.is-list .dt-bfact .mat-icon { width: 1.1rem; height: 1.1rem; }
+.dt-browser.is-list .dt-bitem__body { grid-column: 3; padding: 0; }
+.dt-browser.is-list .dt-bitem__cell { display: block; }
+.dt-browser.is-list .dt-bitem__cell--owner { grid-column: 4; }
+.dt-browser.is-list .dt-bitem__cell--when { grid-column: 5; }
+.dt-browser.is-list .dt-bitem__more { position: static; grid-column: 6; opacity: 1; background: transparent; border-color: transparent; justify-self: end; }
+@media (max-width: 899px) {
+  .dt-blisthead, .dt-browser.is-list .dt-bitem { grid-template-columns: 2.25rem 3.5rem minmax(0, 1fr) 7rem 2.5rem; }
+  .dt-blisthead__owner, .dt-browser.is-list .dt-bitem__cell--owner { display: none; }
+  .dt-browser.is-list .dt-bitem__cell--when { grid-column: 4; }
+  .dt-browser.is-list .dt-bitem__more { grid-column: 5; }
+}
+@media (max-width: 719px) {
+  .dt-blisthead { display: none !important; }
+  .dt-browser.is-list .dt-bitem { grid-template-columns: 2.5rem 3.25rem minmax(0, 1fr) 2.75rem; padding-right: var(--mat-space-1); }
+  .dt-browser.is-list .dt-bitem__cell { display: none; }
+  .dt-browser.is-list .dt-bitem__more { grid-column: 4; }
+  .dt-browser.is-grid .dt-bgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--mat-space-2); }
+  .dt-btool { gap: var(--mat-space-2); }
+  .dt-btool__chips { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; padding-bottom: 2px; scrollbar-width: none; }
+  .dt-btool__right { flex: 1 1 100%; order: 2; justify-content: flex-start; }
+  .dt-btool__search { flex: 1 1 100%; max-width: none; }
+  .dt-btool__new { order: 1; }
+}
+
+/* ---- Dragging, dropping files ---- */
+.dt-bghost { position: fixed; z-index: 2000; left: 0; top: 0; display: inline-flex; align-items: center; gap: var(--mat-space-2); max-width: 16rem; padding: var(--mat-space-2) var(--mat-space-3); background: var(--mat-surface); border: 1px solid var(--mat-accent); border-radius: var(--mat-radius-pill); box-shadow: var(--mat-shadow-2); pointer-events: none; font-weight: 600; }
+.dt-bghost .mat-icon { flex: none; color: var(--mat-accent-text); }
+.dt-bghost__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.is-dt-dragging, .is-dt-dragging * { cursor: grabbing !important; user-select: none; -webkit-user-select: none; }
+.dt-browser.is-grid .dt-bitem, .dt-browser.is-list .dt-bitem { user-select: none; -webkit-user-select: none; }
+.dt-bdrop { position: absolute; inset: 0; z-index: 30; display: grid; place-content: center; justify-items: center; gap: var(--mat-space-2); background: color-mix(in srgb, var(--mat-accent-soft-strong) 88%, transparent); border: 2px dashed var(--mat-accent); border-radius: var(--mat-radius-lg); color: var(--mat-accent-text); pointer-events: none; text-align: center; }
+.dt-bdrop .mat-icon { width: 2.4rem; height: 2.4rem; }
+.dt-bdrop.is-over-folder { background: transparent; border-color: transparent; }
+.dt-bdrop.is-over-folder * { visibility: hidden; }
+
+/* ---- The dialog "Verschieben nach …" ---- */
+.dt-move__lead { display: flex; align-items: center; justify-content: space-between; gap: var(--mat-space-3); margin: 0 0 var(--mat-space-2); font-size: var(--mat-fs-sm); }
+.dt-move__tree { display: grid; gap: 1px; max-height: min(55vh, 24rem); overflow-y: auto; padding: var(--mat-space-1); border: 1px solid var(--mat-border); border-radius: var(--mat-radius); background: var(--mat-surface); }
+.dt-move__row { display: flex; align-items: center; gap: var(--mat-space-2); min-height: 2.5rem; padding: 0 var(--mat-space-2) 0 calc(var(--dt-depth, 0) * 1.25rem + var(--mat-space-1)); border-radius: var(--mat-radius-sm); cursor: pointer; user-select: none; }
+.dt-move__row:hover { background: var(--mat-surface-3); }
+.dt-move__row:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-move__row.is-selected { background: var(--mat-accent-soft-strong); color: var(--mat-accent-text); font-weight: 650; }
+.dt-move__row.is-disabled { opacity: .45; cursor: not-allowed; }
+.dt-move__row.is-space { font-weight: 650; }
+.dt-move__fold { display: grid; place-items: center; flex: none; width: 1.5rem; height: 1.5rem; padding: 0; border: 0; border-radius: var(--mat-radius-xs); background: transparent; color: var(--mat-text-muted); cursor: pointer; }
+.dt-move__fold.is-empty { visibility: hidden; }
+.dt-move__fold .mat-icon { width: .95rem; height: .95rem; }
+.dt-move__icon { display: grid; place-items: center; flex: none; color: var(--mat-text-muted); }
+.dt-move__icon.has-color { color: var(--dt-folder); }
+.dt-move__row.is-selected .dt-move__icon { color: var(--mat-accent-text); }
+.dt-move__icon .mat-icon { width: 1.15rem; height: 1.15rem; }
+.dt-move__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-move__status { margin: var(--mat-space-2) 0 0; color: var(--mat-text-muted); font-size: var(--mat-fs-sm); }
+@media (pointer: coarse) { .dt-move__row { min-height: 44px; } .dt-move__fold { width: 2rem; height: 2rem; } }
+
+/* ---- Where a browser sits in a page: the start page row ---- */
+.dt-browser--compact { min-height: 0; }
+
+/* the first step of the path lines up with the left edge of the page */
+.dt-bcrumbs li:first-child > .dt-bcrumbs__current { padding-inline: 0; }
+.dt-bcrumbs li:first-child > a { margin-left: calc(-1 * var(--mat-space-2)); }

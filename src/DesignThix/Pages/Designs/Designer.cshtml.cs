@@ -27,7 +27,8 @@ public sealed class DesignerModel(Biz biz) : PageModelBase
         var design = await DesignLogic.GetAsync(biz, Id);
         if (design is null)
         {
-            return NotFound();
+            // not visible to the person (or not there): the page where they can ask for access, which does not say which of the two it is
+            return RedirectToPage("/Share/NoAccess", new { kind = "design", id = Id });
         }
 
         Design = design;

@@ -141,6 +141,11 @@ public static class DataListLogic
         list.ContainsPersonalData = input.ContainsPersonalData;
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync(id is null ? "Datenliste angelegt" : "Datenliste geändert", nameof(DataList), list.Id, list.Name);
+        if (id is null)
+        {
+            await ItemLogic.VisitAsync(biz, ItemKind.DataList, list.Id);
+        }
+
         return list;
     }
 
@@ -159,7 +164,9 @@ public static class DataListLogic
         await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.View);
         var source = await biz.Db.DataList.AsNoTracking().Where(l => l.Id == id).Select(l => new { l.SpaceId, l.FolderId }).FirstOrDefaultAsync() ?? throw new NotFoundException();
         var (space, folder) = await Access.CopyTargetAsync(biz, source.SpaceId, source.FolderId);
-        return await DuplicateToAsync(biz, id, space, folder, true);
+        var copy = await DuplicateToAsync(biz, id, space, folder, true);
+        await ItemLogic.VisitAsync(biz, ItemKind.DataList, copy.Id);
+        return copy;
     }
 
     /// <summary>A copy of a list in a given place the caller checked (viewing the original is enough).</summary>

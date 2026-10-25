@@ -152,7 +152,7 @@
     @* The dialog "Design erstellen" (format tiles, own size): opened by the menu item and by every link to /Designs/Create; create.js also handles the tiles and "Vorlage verwenden". *@
     @if (shell.CanCreate)
     {
-        <partial name="_CreateDialog" />
+        <partial name="_CreateDialog" model="shell" />
     }
 
     @* After a save the page redirects and shows what was done as a toast. *@
@@ -168,6 +168,7 @@
     <script src="~/ui/matui.js?v=@Sprite.Hash"></script>
     <script src="~/js/app.js" asp-append-version="true"></script>
     <script src="~/js/create.js" asp-append-version="true"></script>
+    <script src="~/js/share.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

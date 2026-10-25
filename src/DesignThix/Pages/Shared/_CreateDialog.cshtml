@@ -1,7 +1,9 @@
 @using DesignThix.Core.Documents
+@model ShellModel
 @*
     The dialog "Design erstellen": the same format tiles as the start page and fields for an own size. Every page of the shell carries it for designers and administrators
     (the menu item "Design erstellen" and every link to /Designs/Create open it: create.js); without script those links lead to the page of the same name.
+    A person who belongs to teams also chooses where the design is saved ("Speichern in": Meine Projekte or a team where they may write); the default is the area they are in.
 *@
 <dialog class="mat-dialog mat-dialog--lg dt-create" id="dt-create" aria-labelledby="dt-create-title">
     <div class="mat-dialog__form">
@@ -12,6 +14,18 @@
         </div>
         <div class="mat-dialog__body">
             <p class="mat-muted">Wähle ein Format: Das neue Design öffnet sich gleich im Designer.</p>
+            @if (Model.WritableSpaces.Count > 1)
+            {
+                <div class="mat-field dt-create__where">
+                    <label class="mat-label" for="dt-create-space">Speichern in</label>
+                    <select class="mat-select" id="dt-create-space" name="spaceId">
+                        @foreach (var s in Model.WritableSpaces)
+                        {
+                            <option value="@s.Id">@(s.Kind == SpaceKind.Personal ? SpaceLogic.PersonalName : "Team " + s.Name)</option>
+                        }
+                    </select>
+                </div>
+            }
             <partial name="_FormatTiles" model="(FormatPresets.Tiles, false)" />
             <h3 class="dt-subhead">Eigene Größe</h3>
             <form class="dt-create__custom" id="dt-create-custom" novalidate>

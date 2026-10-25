@@ -17,6 +17,10 @@ const NAMES = [
   'save', 'printer', 'check', 'pencil', 'grip-vertical', 'rectangle-horizontal', 'space', 'shrink', 'expand', 'move-vertical', 'move-horizontal', 'list', 'database',
   'layout-template', 'shapes', 'cloud-upload', 'group', 'ungroup', 'download', 'ellipsis', 'ellipsis-vertical', 'blend', 'droplet', 'underline', 'strikethrough', 'layers-2', 'frame', 'qr-code', 'barcode', 'triangle', 'hexagon', 'star', 'heart', 'pentagon', 'diamond', 'message-square', 'file-stack', 'file-plus', 'copy-plus', 'clock', 'keyboard', 'replace', 'crop', 'scissors', 'link-2', 'unlink', 'paint-bucket', 'sticker', 'case-sensitive', 'grip-horizontal', 'square-plus', 'image-down', 'wand-sparkles', 'rotate-ccw', 'mouse-pointer-2', 'brush', 'arrow-left-right', 'arrow-up-down', 'chevrons-up-down', 'file-down', 'file-image', 'lock-keyhole', 'panel-bottom', 'layout-grid', 'arrow-right', 'square-pen', 'at-sign', 'list-ordered', 'panel-left-close', 'panel-left-open', 'circle-plus', 'circle-minus', 'folder-open', 'hash', 'badge-check', 'message-circle', 'list-minus', 'file-clock', 'text-quote', 'circle-question-mark', 'palette',
   'search', 'baseline', 'minimize-2', 'monitor', 'smartphone', 'info', 'triangle-alert', 'pipette', 'paintbrush', 'circle-dashed', 'square-dashed', 'tags',
+  // the file browser (P2)
+  'folder-plus', 'folder-input', 'share-2', 'star-off', 'inbox', 'file-up', 'table-2', 'users-round', 'folder-closed', 'check-check', 'search-x',
+  // sharing (P3)
+  'user-plus', 'globe', 'link', 'users', 'user', 'circle-user-round', 'mail-plus',
 ];
 
 const source = process.argv[2] || path.join(__dirname, '..', '..', 'MatDesign', 'src', 'MatUi', 'wwwroot', 'iconlib', 'matui-iconlib.svg');

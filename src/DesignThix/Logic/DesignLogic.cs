@@ -275,6 +275,7 @@ public static class DesignLogic
         }
 
         await biz.Log.LogAsync("Design angelegt", nameof(Design), design.Id, design.Name);
+        await ItemLogic.VisitAsync(biz, ItemKind.Design, design.Id);
         return design;
     }
 
@@ -417,7 +418,9 @@ public static class DesignLogic
         await Access.RequireAsync(biz, ItemKind.Design, id, AccessLevel.View);
         var source = await biz.Db.Design.AsNoTracking().Where(d => d.Id == id).Select(d => new { d.SpaceId, d.FolderId }).FirstOrDefaultAsync() ?? throw new NotFoundException();
         var (space, folder) = await Access.CopyTargetAsync(biz, source.SpaceId, source.FolderId);
-        return await DuplicateToAsync(biz, id, space, folder, true);
+        var copy = await DuplicateToAsync(biz, id, space, folder, true);
+        await ItemLogic.VisitAsync(biz, ItemKind.Design, copy.Id);
+        return copy;
     }
 
     /// <summary>A copy of a design (viewing it is enough) in a given place the caller checked: the area and folder. <paramref name="markAsCopy"/> adds " (Kopie)" to the name.</summary>

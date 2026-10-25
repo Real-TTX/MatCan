@@ -18,9 +18,9 @@ public static class PlatformEndpoints
     {
         // ---------------------------------------------------------------------------------------- items
 
-        // ?scope=space|shared|recent|starred|trash &space= &folder= &recursive= &kinds=folder,design,datalist,outputjob,asset &q= &sort=updated|name|created &desc= &foldersFirst= &skip= &take=
-        // -> { total, items: [{ kind, id, name, folderId, spaceId, spaceName, owner, updated, created, thumbUrl, detail, starred, opened, color, key, isTemplate, trashed }] }
-        app.MapGet("/api/items", async (string? scope, long? space, long? folder, bool? recursive, string? kinds, string? q, string? sort, bool? desc, bool? foldersFirst, int? skip, int? take, Biz biz) =>
+        // ?scope=space|shared|recent|starred|trash &space= &folder= &recursive= &kinds=folder,design,datalist,outputjob,asset &q= &sort=updated|name|created &desc= &foldersFirst= &templates=false &skip= &take=
+        // -> { total, items: [{ kind, id, name, folderId, spaceId, spaceName, owner, updated, created, thumbUrl, detail, starred, opened, color, key, isTemplate, trashed, canEdit, canManage, previews }] }
+        app.MapGet("/api/items", async (string? scope, long? space, long? folder, bool? recursive, string? kinds, string? q, string? sort, bool? desc, bool? foldersFirst, bool? templates, int? skip, int? take, Biz biz) =>
         {
             var query = new ItemQuery
             {
@@ -33,6 +33,7 @@ public static class PlatformEndpoints
                 Sort = sort ?? "updated",
                 Desc = desc ?? true,
                 FoldersFirst = foldersFirst ?? true,
+                ExcludeTemplates = templates == false,
                 Skip = skip ?? 0,
                 Take = take ?? 60,
             };
@@ -43,6 +44,21 @@ public static class PlatformEndpoints
         // { items: [{ kind, id }], spaceId?, folderId? } -> { count }
         app.MapPost("/api/items/move", (HttpContext http, IAntiforgery antiforgery, Biz biz) => Post<ItemsBody>(http, antiforgery, async body =>
             Results.Json(new { count = await ItemLogic.MoveAsync(biz, Refs(body), body.SpaceId, body.FolderId) }, Web))).RequireAuthorization("SignedIn");
+
+        // { items: [{ kind, id }] } -> { items: [{ kind, id }] }: copies next to the originals ("Kopie erstellen")
+        app.MapPost("/api/items/duplicate", (HttpContext http, IAntiforgery antiforgery, Biz biz) => Post<ItemsBody>(http, antiforgery, async body =>
+            Results.Json(new { items = (await ItemLogic.DuplicateAsync(biz, Refs(body))).Select(r => new { kind = KindName(r.Kind), id = r.Id }) }, Web))).RequireAuthorization("SignedIn");
+
+        // { kind, id, name } -> { name }
+        app.MapPost("/api/items/rename", (HttpContext http, IAntiforgery antiforgery, Biz biz) => Post<RenameBody>(http, antiforgery, async body =>
+            Results.Json(new { name = await ItemLogic.RenameAsync(biz, Kind(body.Kind), body.Id, body.Name) }, Web))).RequireAuthorization("SignedIn");
+
+        // { name, spaceId?, folderId? } -> { id, url }: an empty data list in an area or folder (the "Neu" menu of the browser)
+        app.MapPost("/api/items/new-datalist", (HttpContext http, IAntiforgery antiforgery, Biz biz) => Post<NewListBody>(http, antiforgery, async body =>
+        {
+            var list = await DataListLogic.SaveGeneralAsync(biz, null, new DataListLogic.ListInput(body.Name ?? "", null, false), body.SpaceId, body.FolderId);
+            return Results.Json(new { id = list.Id, url = $"/DataLists/Edit/{list.Id}" }, Web);
+        })).RequireAuthorization("SignedIn");
 
         // -> { items: [{ kind, id }] }: the copies
         app.MapPost("/api/items/copy", (HttpContext http, IAntiforgery antiforgery, Biz biz) => Post<ItemsBody>(http, antiforgery, async body =>
@@ -144,7 +160,7 @@ public static class PlatformEndpoints
                 canLink = info.CanLink,
                 publicLinksAllowed = info.PublicLinksAllowed,
                 publicLinkPossible = info.PublicLinkPossible,
-                link = info.Link is null ? null : new { id = info.Link.Id, token = info.Link.Token, audience = info.Link.Audience.ToString(), permission = info.Link.Permission.ToString(), allowDownload = info.Link.AllowDownload, expires = info.Link.ExpiresDate },
+                link = info.Link is null ? null : new { id = info.Link.Id, token = info.Link.Token, audience = info.Link.Audience.ToString(), permission = info.Link.Permission.ToString(), allowDownload = info.Link.AllowDownload, expires = info.Link.ExpiresDate, grantCount = info.Link.GrantCount, expired = info.Link.Expired },
                 entries = info.Entries.Select(e => new
                 {
                     kind = e.Kind,
@@ -167,7 +183,7 @@ public static class PlatformEndpoints
         // { userId? | teamId?, permission: "View"|"Edit" } -> { shareId }
         app.MapPost("/api/share/{kind}/{id:long}", (string kind, long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => Post<ShareBody>(http, antiforgery, async body =>
         {
-            var share = await ShareLogic.AddAsync(biz, Kind(kind), id, body.TeamId is not null, body.TeamId ?? body.UserId ?? throw new BizException("Wähle eine Person oder ein Team."), Permission(body.Permission));
+            var share = await ShareLogic.AddAsync(biz, Kind(kind), id, body.TeamId is not null, body.TeamId ?? body.UserId ?? throw new BizException("Wähle eine Person oder ein Team."), Permission(body.Permission), body.Message);
             return Results.Json(new { shareId = share.Id }, Web);
         })).RequireAuthorization("SignedIn");
 
@@ -283,9 +299,13 @@ public static class PlatformEndpoints
 
     private sealed record StarBody(string? Kind, long Id, bool? On);
 
+    private sealed record RenameBody(string? Kind, long Id, string? Name);
+
+    private sealed record NewListBody(string? Name, long? SpaceId, long? FolderId);
+
     private sealed record FolderBody(long? SpaceId, long? ParentId, string? Name, string? Color);
 
-    private sealed record ShareBody(long? UserId, long? TeamId, long? ShareId, string? Permission);
+    private sealed record ShareBody(long? UserId, long? TeamId, long? ShareId, string? Permission, string? Message = null);
 
     private sealed record LinkBody(string? Audience, string? Permission, bool? AllowDownload, DateTime? Expires);
 
@@ -343,6 +363,9 @@ public static class PlatformEndpoints
         key = r.Kind == ItemKind.Asset ? r.Key : null,
         isTemplate = r.IsTemplate,
         trashed = r.TrashedDate,
+        canEdit = r.CanEdit,
+        canManage = r.CanManage,
+        previews = r.Previews,
     };
 
     private static object ShapeFolder(FolderRow f) => new { id = f.Id, spaceId = f.SpaceId, parentId = f.ParentId, name = f.Name, color = f.Color, path = f.Path, depth = f.Depth, updated = f.UpdateDate };

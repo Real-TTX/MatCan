@@ -23,7 +23,7 @@ public sealed class RunModel(Biz biz) : PageModelBase
         var job = await OutputLogic.GetAsync(biz, Id);
         if (job is null)
         {
-            return NotFound();
+            return RedirectToPage("/Share/NoAccess", new { kind = "outputjob", id = Id });
         }
 
         Head(job.Name, null, ("Serien (Zusatz)", null), ("Serienausgaben", "/Outputs"), (job.Name, null));

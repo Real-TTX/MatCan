@@ -372,6 +372,11 @@ public static class OutputLogic
         job.FileNamePattern = pattern.Length == 0 ? DefaultFileNamePattern : pattern;
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync(id is null ? "Serienausgabe angelegt" : "Serienausgabe geändert", nameof(OutputJob), job.Id, $"{job.Name}: {Services.Fmt.Integer(count)} Etiketten");
+        if (id is null)
+        {
+            await ItemLogic.VisitAsync(biz, ItemKind.OutputJob, job.Id);
+        }
+
         return job;
     }
 

@@ -9,18 +9,22 @@ namespace DesignThix.Tests.Core;
 internal static class RepoFiles
 {
     /// <summary>The folder <c>src/DesignThix/wwwroot</c>, found by walking up from the test binaries. Fails loudly when the repository layout is not there.</summary>
-    public static string WwwRoot()
+    public static string WwwRoot([System.Runtime.CompilerServices.CallerFilePath] string sourceFile = "")
     {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null)
+        // from the test binaries, and from this source file (its path is known at build time: a build with the artifacts in another folder still finds the repository)
+        foreach (var start in new[] { AppContext.BaseDirectory, Path.GetDirectoryName(sourceFile) ?? "" })
         {
-            var candidate = Path.Combine(dir.FullName, "src", "DesignThix", "wwwroot", "builtin", "builtin.json");
-            if (File.Exists(candidate))
+            var dir = start.Length == 0 ? null : new DirectoryInfo(start);
+            while (dir is not null)
             {
-                return Path.GetDirectoryName(Path.GetDirectoryName(candidate))!;
-            }
+                var candidate = Path.Combine(dir.FullName, "src", "DesignThix", "wwwroot", "builtin", "builtin.json");
+                if (File.Exists(candidate))
+                {
+                    return Path.GetDirectoryName(Path.GetDirectoryName(candidate))!;
+                }
 
-            dir = dir.Parent;
+                dir = dir.Parent;
+            }
         }
 
         throw new DirectoryNotFoundException("src/DesignThix/wwwroot/builtin/builtin.json was not found above " + AppContext.BaseDirectory);

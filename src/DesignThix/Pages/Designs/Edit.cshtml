@@ -10,7 +10,14 @@
 
 @if (ro)
 {
-    <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst Designs nur ansehen.</div></div>
+    <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst dieses Design nur ansehen.</div></div>
+}
+
+@section TopbarActions {
+    @if (!ro)
+    {
+        <button type="button" class="mat-btn mat-btn--secondary mat-btn--sm" data-share-open data-share-kind="design" data-share-id="@d.Id" data-share-name="@d.Name">@Ui.Icon("dt:share-2")<span>Teilen</span></button>
+    }
 }
 
 <form class="mat-form" method="post" novalidate>

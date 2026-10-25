@@ -69,22 +69,55 @@
     showError(messageOf(result));
   }
 
+  // Where a new design goes: the area and folder the page is in (the file browser says so: data-create-space, data-create-folder on its section), or what "Speichern in" of the dialog says.
+  // A person without teams has no such field; without a context the server takes their own area.
+  var context = { spaceId: null, folderId: null };
+  var forced = null;
+
+  function readContext() {
+    var node = doc.querySelector('[data-browser][data-create-space]');
+    context = node ? { spaceId: Number(node.getAttribute('data-create-space')) || null, folderId: Number(node.getAttribute('data-create-folder')) || null } : { spaceId: null, folderId: null };
+  }
+
+  function chosenSpace() {
+    var select = doc.getElementById('dt-create-space');
+    return select ? Number(select.value) || null : context.spaceId;
+  }
+
+  function target() {
+    var spaceId = chosenSpace();
+    var result = {};
+    if (spaceId) { result.spaceId = spaceId; }
+    if (context.folderId && context.spaceId === spaceId) { result.folderId = context.folderId; }
+    return result;
+  }
+
+  function withTarget(body) { return Object.assign(body, target()); }
+
   function createFormat(key, element) {
     clearError();
     busy(element, true);
-    return post('/api/designs', { preset: key }).then(function (result) { finish(result, element); });
+    return post('/api/designs', withTarget({ preset: key })).then(function (result) { finish(result, element); });
   }
 
   function createCustom(width, height, unit, element) {
     clearError();
     busy(element, true);
-    return post('/api/designs', { preset: 'custom', width: width, height: height, unit: unit }).then(function (result) { finish(result, element); });
+    return post('/api/designs', withTarget({ preset: 'custom', width: width, height: height, unit: unit })).then(function (result) { finish(result, element); });
   }
 
   function useTemplate(id, element) {
     clearError();
     busy(element, true);
-    return post('/api/designs/' + encodeURIComponent(id) + '/use-template', {}).then(function (result) { finish(result, element); });
+    return post('/api/designs/' + encodeURIComponent(id) + '/use-template', target()).then(function (result) { finish(result, element); });
+  }
+
+  function syncSpaceField() {
+    var select = doc.getElementById('dt-create-space');
+    if (!select) { return; }
+    var wanted = context.spaceId ? String(context.spaceId) : '';
+    var has = Array.prototype.some.call(select.options, function (o) { return o.value === wanted; });
+    select.value = has ? wanted : select.options[0].value;
   }
 
   function openDialog() {
@@ -96,7 +129,13 @@
   // Every link to the page "Design erstellen" opens the dialog (MatUi opens a dialog for data-dialog-open and cancels the link).
   if (dialog) {
     Array.prototype.forEach.call(doc.querySelectorAll('a[href="/Designs/Create"]'), function (link) { link.setAttribute('data-dialog-open', 'dt-create'); });
-    dialog.addEventListener('mat:dialog-open', clearError);
+    // whoever opens the dialog (the menu item, a button, DtCreate.open): the place is the one of the page unless the opener named another
+    dialog.addEventListener('mat:dialog-open', function () {
+      readContext();
+      if (forced) { context = forced; forced = null; }
+      syncSpaceField();
+      clearError();
+    });
   }
 
   doc.addEventListener('click', function (event) {
@@ -143,5 +182,15 @@
     });
   }
 
-  window.DtCreate = { post: post, toast: toast, createFormat: createFormat, useTemplate: useTemplate };
+  readContext();
+  syncSpaceField();
+
+  /** Opens the dialog "Design erstellen" for a place: open({ spaceId, folderId }) (the file browser's "Neu" menu); without a place the area of the page counts. */
+  function openFor(place) {
+    if (!dialog) { window.location.assign('/Designs/Create'); return; }
+    forced = place && place.spaceId ? { spaceId: Number(place.spaceId), folderId: place.folderId ? Number(place.folderId) : null } : null;
+    openDialog();
+  }
+
+  window.DtCreate = { post: post, toast: toast, createFormat: createFormat, useTemplate: useTemplate, open: openFor, target: target };
 })();

@@ -64,6 +64,8 @@ builder.Services.AddSingleton<SettingStore>();
 builder.Services.AddSingleton<AiSecretStore>();
 builder.Services.AddSingleton<AiRateLimiter>();
 builder.Services.AddSingleton<TrashPurger>();
+builder.Services.AddSingleton<PresenceTracker>();
+builder.Services.AddSingleton<PublicRateLimiter>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<TrashPurger>());
 builder.Services.AddSingleton<ChatGptLoginStates>();
 builder.Services.AddScoped<SessionCookieEvents>();
@@ -111,6 +113,7 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AllowAnonymousToPage("/Account/Setup");
     options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
     options.Conventions.AllowAnonymousToPage("/Offline");
+    options.Conventions.AllowAnonymousToPage("/Share/View");
 })
 .AddMvcOptions(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
@@ -319,6 +322,7 @@ app.MapGet("/api/admin/ai/profiles/{id:long}/chatgpt", async (long id, Biz biz) 
 app.MapLibraryEndpoints();
 app.MapStudioEndpoints();
 app.MapPlatformEndpoints();
+app.MapShareEndpoints();
 app.MapOutputEndpoints();
 app.MapAiEndpoints();
 

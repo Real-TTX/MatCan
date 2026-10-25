@@ -209,6 +209,20 @@ public static class FolderLogic
             }
         }
 
+        // images count as well: they are what a folder of pictures looks like
+        var assets = await Access.Visible<Asset>(biz).AsNoTracking()
+            .Where(a => a.FolderId != null && wanted.Contains(a.FolderId.Value))
+            .OrderByDescending(a => a.UpdateDate)
+            .Select(a => new { a.Key, a.ContentHash, FolderId = a.FolderId!.Value })
+            .Take(wanted.Count * perFolder * 3).ToListAsync();
+        foreach (var a in assets)
+        {
+            if (result[a.FolderId].Count < perFolder)
+            {
+                result[a.FolderId].Add(AssetLogic.Url(a.Key, a.ContentHash));
+            }
+        }
+
         return result;
     }
 }

@@ -33,6 +33,14 @@ public sealed class ShellModel
     /// <summary>Whether the person may start designs (designers and administrators): the menu offers "Design erstellen" and every page carries the dialog of it.</summary>
     public bool CanCreate { get; init; }
 
+    /// <summary>The areas the person is a member of: their personal area first, then their teams (the menu lists the teams; the dialog "Design erstellen" offers the ones they may write in).</summary>
+    public IReadOnlyList<SpaceRow> Spaces { get; init; } = [];
+
+    public IReadOnlyList<SpaceRow> Teams => [.. Spaces.Where(s => s.Kind == SpaceKind.Team)];
+
+    /// <summary>Where a new design may go ("Speichern in"): the personal area and the teams where the person is Owner, Admin or Editor.</summary>
+    public IReadOnlyList<SpaceRow> WritableSpaces => [.. Spaces.Where(s => s.MyRole is { } role && role != SpaceRole.Viewer)];
+
     /// <summary>"light" or "dark" when the user chose one; null follows the system.</summary>
     public string? Theme { get; init; }
 
@@ -43,22 +51,24 @@ public sealed class ShellModel
 }
 
 /// <summary>Builds the shell for the person who is signed in: the settings menu only for administrators.</summary>
-public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accessor)
+public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accessor, Biz biz)
 {
-    public Task<ShellModel> BuildAsync()
+    public async Task<ShellModel> BuildAsync()
     {
         var principal = accessor.HttpContext?.User;
         var theme = principal?.FindFirst(AppClaims.Theme)?.Value;
+        IReadOnlyList<SpaceRow> spaces = user.UserId is not null ? await SpaceLogic.MySpacesAsync(biz) : [];
 
-        var menus = new List<NavSet> { WorkMenu() };
+        var menus = new List<NavSet> { WorkMenu(spaces) };
         if (user.IsAdmin)
         {
             menus.Add(AdminMenu());
         }
 
-        return Task.FromResult(new ShellModel
+        return new ShellModel
         {
             Menus = menus,
+            Spaces = spaces,
             UserName = user.Name ?? "Gast",
             UserRole = user.Role is { } role ? Labels.Of(role) : "",
             UserLine = principal?.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "",
@@ -66,7 +76,7 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
             CanCreate = user.UserId is not null,
             Version = $"DesignThix {AppVersion.Current}",
             Theme = theme,
-        });
+        };
     }
 
     /// <summary>The shell of a page without a menu (sign-in, setup).</summary>
@@ -78,24 +88,31 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
     };
 
     /// <summary>
-    /// The main menu (docs/PLAN-CANVA.md section 1.2): "Design erstellen" (primary action; it opens the dialog with the format tiles, the
-    /// link goes to the page of the same name), Start, Designs, Vorlagen, Uploads &amp; Medien, Marke and Schriften, and below them the group "Serien (Zusatz)" with the features
-    /// that fill a design from data: data lists, series outputs and sheets.
+    /// The main menu (docs/PLAN-PLATFORM.md section 1.19): "Design erstellen" (primary action; it opens the dialog with the format tiles, the link goes to the page of the same name), Start,
+    /// Projekte, Freigegeben, Mit Stern; the group Teams (one entry per team of the person, then "Alle Teams"); Gestalten (Vorlagen, Designs); Bibliothek; the group "Serien (Zusatz)" with the
+    /// features that fill a design from data; and at the end the Papierkorb.
     /// </summary>
-    private NavSet WorkMenu()
+    private static NavSet WorkMenu(IReadOnlyList<SpaceRow> spaces)
     {
-        var start = new List<NavItem>();
-        // every member makes designs (in their own area or a team's)
-        start.Add(new("Design erstellen", "/Designs/Create", "plus", Primary: true));
-
-        start.Add(new("Start", "/", "dashboard"));
+        var start = new List<NavItem>
+        {
+            // every member makes designs (in their own area or a team's)
+            new("Design erstellen", "/Designs/Create", "plus", Primary: true),
+            new("Start", "/", "dashboard"),
+            new("Projekte", "/Projekte", "folder"),
+            new("Freigegeben", "/Freigegeben", "dt:share-2"),
+            new("Mit Stern", "/Mit-Stern", "star"),
+        };
+        var teams = spaces.Where(s => s.Kind == SpaceKind.Team && !string.IsNullOrEmpty(s.Slug)).Select(s => new NavItem(s.Name, $"/Teams/{s.Slug}/Projekte", "users")).ToList();
+        teams.Add(new NavItem("Alle Teams", "/Teams", "dt:users-round"));
         return new NavSet("main", "Gestalten", "palette",
         [
             new(null, start),
+            new("Teams", teams),
             new("Gestalten",
             [
-                new("Designs", "/Designs", "layers"),
                 new("Vorlagen", "/Templates", "template"),
+                new("Designs", "/Designs", "layers"),
             ]),
             new("Bibliothek",
             [
@@ -108,6 +125,10 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
                 new("Datenlisten", "/DataLists", "table"),
                 new("Serienausgaben", "/Outputs", "dt:printer"),
                 new("Druckbögen", "/Sheets", "dt:tags"),
+            ]),
+            new("Aufräumen",
+            [
+                new("Papierkorb", "/Papierkorb", "trash"),
             ]),
         ]);
     }

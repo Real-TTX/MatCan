@@ -50,7 +50,7 @@ function isStatic(url) {
 
 function isPrivateOrLive(url) {
   var p = url.pathname;
-  return /^\/(api|account|health)(\/|$)/i.test(p) || p === '/sw.js' || /[?&]preview=/.test(url.search);
+  return /^\/(api|account|health|s)(\/|$)/i.test(p) || p === '/sw.js' || /[?&]preview=/.test(url.search);
 }
 
 self.addEventListener('fetch', function (event) {

@@ -51,6 +51,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
             [
                 new FilterSpec<DesignRow>("filter", "Vorlagen", [new("templates", "Nur Vorlagen"), new("designs", "Ohne Vorlagen")], (q, v) => v == "templates" ? q.Where(d => d.IsTemplate) : q.Where(d => !d.IsTemplate)),
                 new FilterSpec<DesignRow>("kategorie", "Kategorie", categories, (q, v) => q.Where(d => d.Category == v)),
+                await AreaFilter.CreateAsync<DesignRow>(biz, d => d.SpaceId),
             ],
             Sorts = new Dictionary<string, (string, Func<IQueryable<DesignRow>, bool, IOrderedQueryable<DesignRow>>)>
             {

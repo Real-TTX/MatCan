@@ -1,0 +1,63 @@
+@model BrowserView
+@*
+    The file browser (docs/PLAN-PLATFORM.md section 1.2): ONE control for Projekte, the team areas, Freigegeben, Mit Stern, Papierkorb and the rows of the start page. The page gives it a
+    BrowserView; browser.js reads the data attributes, asks /api/items for the items and draws the tiles (everything with DOM APIs, names only through textContent). The path above the browser is
+    server-rendered: its steps are drop targets (data-drop-space / data-drop-folder).
+*@
+<link rel="stylesheet" href="~/css/designs.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/dt-menu.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/browser.css" asp-append-version="true" />
+@if (!Model.Compact)
+{
+    <header class="dt-bhead">
+        <div class="dt-bhead__main">
+            <nav class="dt-bcrumbs" aria-label="Pfad">
+                <ol>
+                    @for (var i = 0; i < Model.Crumbs.Count; i++)
+                    {
+                        var crumb = Model.Crumbs[i];
+                        var last = i == Model.Crumbs.Count - 1;
+                        if (last)
+                        {
+                            <li aria-current="page"><h1 class="dt-bcrumbs__current">@crumb.Text</h1></li>
+                        }
+                        else
+                        {
+                            <li><a href="@crumb.Url" data-drop-space="@crumb.DropSpaceId" data-drop-folder="@crumb.DropFolderId">@crumb.Text</a>@Ui.Icon("chevron-right", "dt-bcrumbs__sep")</li>
+                        }
+                    }
+                </ol>
+            </nav>
+            @if (!string.IsNullOrEmpty(Model.Sub))
+            {
+                <p class="dt-bhead__sub">@Model.Sub</p>
+            }
+            @if (Model.Mode == "trash")
+            {
+                <p class="dt-bhead__sub">Was du hier siehst, wird nach @Model.TrashDays Tagen automatisch gelöscht. Ein gelöschter Ordner bringt beim Zurückholen seinen Inhalt mit.</p>
+            }
+        </div>
+        <div class="dt-bhead__side">
+            @if (Model.Mode == "trash")
+            {
+                <button type="button" class="mat-btn mat-btn--danger" data-browser-empty-trash hidden>@Ui.Icon("trash")<span>Papierkorb leeren</span></button>
+            }
+            @if (Model.FolderId is not null && Model.CanShare)
+            {
+                <button type="button" class="mat-btn mat-btn--secondary" data-browser-share-folder data-share-id="@Model.FolderId" data-share-name="@Model.FolderName">@Ui.Icon("dt:share-2")<span>Teilen</span></button>
+            }
+            @if (Model.Storage is not null)
+            {
+                <partial name="_Storage" model="(Model.Storage, Model.StorageName)" />
+            }
+        </div>
+    </header>
+}
+<section class="dt-browser @(Model.Compact ? "dt-browser--compact" : "")" id="@Model.Id" data-browser
+         data-mode="@Model.Mode" data-scope="@Model.Scope" data-space-id="@Model.SpaceId" data-folder-id="@Model.FolderId" data-folder-name="@Model.FolderName"
+         data-base-url="@Model.BaseUrl" data-spaces="@Model.SpacesJson" data-can-create="@(Model.CanCreate ? "true" : "false")"
+         data-toolbar="@(Model.Toolbar ? "true" : "false")" data-compact="@(Model.Compact ? "true" : "false")" data-take="@Model.Take" data-q="@Model.Q" data-kinds="@Model.Kinds"
+         data-templates="@(Model.ExcludeTemplates ? "false" : "true")" data-empty-icon="@Model.EmptyIcon" data-empty-title="@Model.EmptyTitle" data-empty-text="@Model.EmptyText"
+         data-create-space="@(Model.CanCreate ? Model.SpaceId : null)" data-create-folder="@(Model.CanCreate ? Model.FolderId : null)">
+    <noscript><p class="mat-hint">Die Dateiansicht braucht JavaScript.</p></noscript>
+</section>

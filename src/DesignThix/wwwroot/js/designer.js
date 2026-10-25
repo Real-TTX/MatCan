@@ -171,6 +171,7 @@
     D.io.init(app);
     D.save.init(app, config, refs);
     D.file.init(app, { fileButton: $('#dt-file'), downloadButton: $('#dt-download'), printButton: $('#dt-print') });
+    if (D.share) { D.share.init(app, config, { share: $('#dt-share'), copy: $('#dt-copy'), people: $('#dt-people') }); }
     D.shortcuts.init(app, refs.viewport);
     initName();
     initMenus();

@@ -30,7 +30,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
             Noun = "Druckbögen",
             SearchPlaceholder = "Name des Druckbogens ...",
             Search = (q, text) => q.Where(s => EF.Functions.ILike(s.Name, Like.Contains(text))),
-            Filters = [new FilterSpec<SheetLayout>("herkunft", "Herkunft", [new("mitgeliefert", "Mitgeliefert"), new("eigene", "Eigene")], (q, v) => v == "eigene" ? q.Where(s => !s.IsBuiltIn) : q.Where(s => s.IsBuiltIn))],
+            Filters = [new FilterSpec<SheetLayout>("herkunft", "Herkunft", [new("mitgeliefert", "Mitgeliefert"), new("eigene", "Eigene")], (q, v) => v == "eigene" ? q.Where(s => !s.IsBuiltIn) : q.Where(s => s.IsBuiltIn)), await AreaFilter.CreateAsync<SheetLayout>(biz, s => s.SpaceId, withShared: false)],
             Sorts = new Dictionary<string, (string, Func<IQueryable<SheetLayout>, bool, IOrderedQueryable<SheetLayout>>)>
             {
                 ["name"] = ("Name", (q, d) => d ? q.OrderByDescending(s => s.Name) : q.OrderBy(s => s.Name)),

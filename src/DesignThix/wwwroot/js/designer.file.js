@@ -373,7 +373,8 @@
     var RO = 'Du darfst dieses Design nur ansehen.';
     return [
       { label: 'Neues Design …', icon: 'file-plus', run: newDesignDialog, disabled: ro ? RO : false },
-      { label: 'Kopie erstellen', icon: 'copy-plus', run: makeCopy, disabled: ro ? RO : false },
+      // somebody who may only look makes their own copy in an area they choose (the dialog of designer.share.js); an editor copies the design next to the original
+      { label: 'Kopie erstellen', icon: 'copy-plus', run: ro && D.share ? D.share.copyDialog : makeCopy, disabled: ro && !D.share ? RO : false },
       { label: 'Größe ändern …', icon: 'scaling', run: resizeDialog, disabled: ro ? RO : false },
       { type: 'separator' },
       { label: 'Herunterladen …', icon: 'download', run: downloadDialog },

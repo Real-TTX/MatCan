@@ -1,19 +1,17 @@
 using DesignThix.Data.Entities;
 using DesignThix.Logic;
+using DesignThix.UiKit;
 
 namespace DesignThix.Pages;
 
 /// <summary>
-/// The start page (docs/PLAN-CANVA.md section 1.1): "Was möchtest du heute gestalten?", a search over designs and templates, the format tiles, a row of templates, the designs
-/// worked on last, and at the bottom the key figures. A viewer sees no tiles and read-only actions.
+/// The start page (docs/PLAN-CANVA.md section 1.1, docs/PLAN-PLATFORM.md section 1.4): "Was möchtest du heute gestalten?", a search over everything the person may see, the format tiles, a row of
+/// templates, what they used last ("Zuletzt verwendet": the file browser in the mode "recent"), and at the bottom the key figures.
 /// </summary>
 public sealed class IndexModel(Biz biz) : PageModelBase
 {
     /// <summary>How many templates the row on the start page shows (the page "Vorlagen" has them all).</summary>
     public const int TemplatesShown = 8;
-
-    /// <summary>How many recent designs the grid shows.</summary>
-    public const int RecentShown = 12;
 
     [Microsoft.AspNetCore.Mvc.BindProperty(SupportsGet = true)]
     public string? Q { get; set; }
@@ -34,7 +32,13 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public DesignLogic.Counts Counts { get; private set; } = new(0, 0, 0, 0, 0);
 
-    public IReadOnlyList<DesignRow> Recent { get; private set; } = [];
+    /// <summary>The row "Zuletzt verwendet" (null while searching).</summary>
+    public BrowserView? RecentView { get; private set; }
+
+    /// <summary>The hits of a search among the person's own things (null when there was no search or nothing was found).</summary>
+    public BrowserView? FoundView { get; private set; }
+
+    public bool NothingFound { get; private set; }
 
     public IReadOnlyList<DesignRow> Templates { get; private set; } = [];
 
@@ -55,13 +59,20 @@ public sealed class IndexModel(Biz biz) : PageModelBase
         if (!string.IsNullOrWhiteSpace(Q))
         {
             Search = await DesignLogic.SearchAsync(biz, Q);
-            Manageable = await DesignLogic.ManageableAsync(biz, Search.Designs.Concat(Search.Templates).Select(d => d.Id));
+            Manageable = await DesignLogic.ManageableAsync(biz, Search.Templates.Select(d => d.Id));
+            var found = await ItemLogic.QueryAsync(biz, new ItemQuery { Q = Search.Text, Recursive = true, ExcludeTemplates = true, Take = 1 });
+            if (found.Total > 0)
+            {
+                FoundView = await BrowserViews.ForSearchAsync(biz, Search.Text);
+            }
+
+            NothingFound = found.Total == 0 && Search.Templates.Count == 0;
         }
         else
         {
-            Recent = await DesignLogic.RecentAsync(biz, RecentShown);
+            RecentView = await BrowserViews.ForRecentAsync(biz);
             Templates = await DesignLogic.FeaturedTemplatesAsync(biz, TemplatesShown);
-            Manageable = await DesignLogic.ManageableAsync(biz, Recent.Concat(Templates).Select(d => d.Id));
+            Manageable = await DesignLogic.ManageableAsync(biz, Templates.Select(d => d.Id));
             RecentOutputs = await OutputLogic.RecentAsync(biz, 3);
         }
 

@@ -33,6 +33,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
             [
                 new FilterSpec<FontRow>("herkunft", "Herkunft", [new("mitgeliefert", "Mitgeliefert"), new("eigene", "Eigene")], (q, v) => v == "eigene" ? q.Where(f => !f.IsBuiltIn) : q.Where(f => f.IsBuiltIn)),
                 new FilterSpec<FontRow>("stil", "Stil", [new("normal", "Normal"), new("italic", "Kursiv")], (q, v) => q.Where(f => f.Style == v)),
+                await AreaFilter.CreateAsync<FontRow>(biz, f => f.SpaceId, withShared: false),
             ],
             Sorts = new Dictionary<string, (string, Func<IQueryable<FontRow>, bool, IOrderedQueryable<FontRow>>)>
             {

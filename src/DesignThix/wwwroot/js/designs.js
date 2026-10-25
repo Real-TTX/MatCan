@@ -1,11 +1,12 @@
 /* DesignThix: previews of designs without a saved thumbnail. A box with data-dt-preview and data-dt-preview-url (GET /api/designs/{id}) is drawn
    with the render engine (DtEngine) once it comes into view. Everything is built with DOM APIs; the size of the box follows the page of the design
-   through the custom property --dt-ar (set through the CSSOM, no inline styles). A design that cannot be drawn leaves a calm placeholder. */
+   through the custom property --dt-ar (set through the CSSOM, no inline styles). A design that cannot be drawn leaves a calm placeholder.
+   Boxes that a script adds later (the file browser draws its tiles after the page is loaded) are handed over with window.DtPreviews.add(box). */
 (function () {
   'use strict';
 
   var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-dt-preview]'));
-  if (!boxes.length) { return; }
+  var sequence = 0;
 
   var SVG_NS = 'http://www.w3.org/2000/svg';
   var engine = window.DtEngine;
@@ -91,7 +92,7 @@
         },
         fonts: prepared.fonts,
         icon: function (name) { return loadIcons().then(function (icons) { return icons[name] ? icons[name].b : null; }); },
-        idPrefix: 'dtp' + (box.getAttribute('data-dt-preview') || '0') + '-',
+        idPrefix: 'dtp' + (box.getAttribute('data-dt-preview') || '0') + '-' + (box.__dtpSeq || (box.__dtpSeq = ++sequence)) + '-',
       });
     }).then(function () { box.classList.add('is-ready'); }).catch(function () { placeholder(box); });
   }
@@ -109,8 +110,9 @@
     pump();
   }
 
+  var observer = null;
   if ('IntersectionObserver' in window) {
-    var observer = new IntersectionObserver(function (entries) {
+    observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           observer.unobserve(entry.target);
@@ -118,8 +120,14 @@
         }
       });
     }, { rootMargin: '200px' });
-    boxes.forEach(function (box) { observer.observe(box); });
-  } else {
-    boxes.forEach(enqueue);
   }
+
+  function add(box) {
+    if (box.__dtpAdded) { return; }
+    box.__dtpAdded = true;
+    if (observer) { observer.observe(box); } else { enqueue(box); }
+  }
+
+  window.DtPreviews = { add: add };
+  boxes.forEach(add);
 })();

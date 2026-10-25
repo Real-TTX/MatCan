@@ -271,3 +271,22 @@ per-item audit trail beyond the existing activity log and design history.
 - A person with Edit through a share may change or remove only the shares they made themselves. A link counts as long as it is not revoked (an expired one is still listed; it grants nothing). The sharing search returns teams first, at most 8 hits. Sign-in is refused for Pending/Declined accounts.
 - `/media/{key}` without `?v=hash` needs a signed-in person who may see the asset (anonymous: 401, signed in without access: 404). Extra endpoints: `/api/spaces*`, `/api/share/open`, `/api/spaces/{id}/brand`. Notifications are not written by `ShareLogic` yet (P5).
 - Switching a design to a template needs Manage. The AI "Weitermachen" of an administrator only works where the administrator has Edit on the subject.
+
+## P3 status (what the result does differently)
+
+- Where the plan says an item the person may not see is a 404, the **pages** (Designer, Designs/Edit, Print, DataLists/Edit, Outputs/Edit and Run) send a signed-in person to `/Zugriff/{kind}/{id}` (`Pages/Share/NoAccess`), which offers "Zugriff anfordern" and never says whether the item exists (a request for an id that is not there writes nothing and answers the same). The APIs still answer 404. The page for a folder opened without access belongs to P2's folder pages.
+- The public payload (`/api/s/{token}`, `/api/s/{token}/d/{id}`) is built by `PublicShareLogic` from the design itself; "Herunterladen erlauben" is a courtesy of the viewer (the document is public anyway). The brake is 240 requests per minute and address, a request that finds nothing costs 5 (`PublicRateLimiter`). Public links stop working while `Platform.publicLinks` is off and work again when it is switched on.
+- `ShareLogic.AddAsync` takes the optional message of the dialog; until P4 notifies it is written to the activity log only. `LinkInfo` has `GrantCount` and `Expired`. Notifications (P4) hook into `AccessRequestLogic.CreateAsync`/`DecideAsync` and `ShareLogic.AddAsync`.
+- A SignedIn link of a folder lands on `/Freigegeben/Ordner/{id}` (P2 redirects to the area when the person is a member). The editor's presence is in memory (`PresenceTracker`, 30 s); the toast names only editors.
+- Teilen buttons also sit on the edit pages of designs, data lists and output jobs (`data-share-open`).
+
+---
+
+## P2 status (what the result does differently)
+
+- The browser pages are `Pages/Projects` (four small pages over one base class: area and team area, each with and without a folder), `Pages/Shared/Freigegeben*` (the folder `Pages/Shared` is also the folder of the layouts: the pages there are `/Freigegeben` and `/Freigegeben/Ordner/{id}`), `Pages/Starred`, `Pages/Trash`. The start page row "Zuletzt verwendet" and its search use the same control (modes "recent" and "search").
+- The menu keeps "Designs" (the flat list with the filter "Bereich") in the group Gestalten next to Vorlagen; "Papierkorb" sits in a group "Aufräumen". "Alle Teams" links to `/Teams` (page of P4).
+- Dragging items uses mouse and pen; on a touch screen the long press opens the menu and "Verschieben nach …" does the move. "Herunterladen" in the item menu exists for images only (the editor has no address that opens its download dialog).
+- `DtMenu` (`js/dt-menu.js`) is the menu control of the shell; the editor still has its own copy in `designer.menu.js`. A right click or long press does not select the item (the menu acts on the item, or on the selection when the item is part of it).
+- "Zuletzt verwendet" holds what the person opened or made (`ItemVisit`, also written by creating, copying and duplicating); it is not the newest-first list of the older start page. The storage bar of the page Uploads & Medien shows the personal area; the browser header shows the area that is open.
+- New logic: `ItemLogic.RenameAsync`, `DuplicateAsync` (next to the original), `ItemQuery.ExcludeTemplates`, `ItemRow.Level/Previews/TrashedWithFolderId`; endpoints `/api/items/duplicate|rename|new-datalist`; the personal area of somebody else is called "Projekte von {Name}" in lists.

@@ -2,9 +2,10 @@
 @model DesignThix.Pages.Designs.DesignerModel
 @{
     Layout = "_Designer";
-    ViewData["Styles"] = new[] { "/css/designer.css", "/css/dt-media.css", "/css/ai.css" };
     var d = Model.Design;
     var edit = Model.CanEdit;
+    // somebody who may only look gets "Kopie erstellen", which asks where the copy goes (the dialog of the file browser: its style sheet and scripts are only loaded for them)
+    ViewData["Styles"] = edit ? new[] { "/css/designer.css", "/css/dt-media.css", "/css/ai.css" } : new[] { "/css/designer.css", "/css/dt-media.css", "/css/ai.css", "/css/browser.css" };
     var back = $"/Designs/Edit/{d.Id}";
 }
 
@@ -29,9 +30,18 @@
             <input class="dt-top__name" id="dt-name" type="text" value="@d.Name" maxlength="200" autocomplete="off" spellcheck="false" readonly="@(!edit)" title="Klicken, um das Design umzubenennen" />
         </span>
 
+        <span class="dt-top__people" id="dt-people" role="group" aria-label="Personen mit Zugriff" hidden></span>
         <a class="mat-btn mat-btn--secondary mat-btn--sm dt-top__series" href="/Outputs/Create?designId=@d.Id" id="dt-series" title="Serie: dieses Design mit einer Datenliste für viele Etiketten ausgeben (Zusatz)" data-leave>@Ui.ToolIcon("database")<span>Serie</span></a>
-        <button type="button" class="mat-btn mat-btn--primary mat-btn--sm dt-top__download" id="dt-download" title="Herunterladen: PNG, JPG, SVG oder PDF">@Ui.ToolIcon("download")<span>Herunterladen</span></button>
+        <button type="button" class="mat-btn mat-btn--secondary mat-btn--sm dt-top__download" id="dt-download" title="Herunterladen: PNG, JPG, SVG oder PDF">@Ui.ToolIcon("download")<span>Herunterladen</span></button>
         <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon dt-top__print" id="dt-print" aria-label="Drucken" title="Drucken">@Ui.ToolIcon("printer")</button>
+        @if (edit)
+        {
+            <button type="button" class="mat-btn mat-btn--primary mat-btn--sm dt-top__share" id="dt-share" title="Teilen: Personen einladen oder einen Link weitergeben" aria-haspopup="dialog">@Ui.ToolIcon("share-2")<span>Teilen</span></button>
+        }
+        else
+        {
+            <button type="button" class="mat-btn mat-btn--primary mat-btn--sm dt-top__copy" id="dt-copy" title="Kopie erstellen: eine eigene Kopie, die du bearbeiten kannst" aria-haspopup="dialog">@Ui.ToolIcon("copy-plus")<span>Kopie erstellen</span></button>
+        }
     </header>
 
     <div class="dt-ds__body">
@@ -119,6 +129,13 @@
     <script src="~/js/designer.io.js" asp-append-version="true"></script>
     <script src="~/js/designer.save.js" asp-append-version="true"></script>
     <script src="~/js/designer.file.js" asp-append-version="true"></script>
+    <script src="~/js/share.js" asp-append-version="true"></script>
+    @if (!edit)
+    {
+        <script src="~/js/dt-ui.js" asp-append-version="true"></script>
+        <script src="~/js/movepicker.js" asp-append-version="true"></script>
+    }
+    <script src="~/js/designer.share.js" asp-append-version="true"></script>
     <script src="~/js/designer.shortcuts.js" asp-append-version="true"></script>
     <script src="~/js/designer.js" asp-append-version="true"></script>
 }

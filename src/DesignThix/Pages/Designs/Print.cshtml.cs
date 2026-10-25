@@ -39,7 +39,7 @@ public sealed class PrintModel(Biz biz) : PageModelBase
         var design = await DesignLogic.GetAsync(biz, Id);
         if (design is null)
         {
-            return NotFound();
+            return RedirectToPage("/Share/NoAccess", new { kind = "design", id = Id });
         }
 
         ViewData["FontsHref"] = $"/fonts.css?design={Id}";

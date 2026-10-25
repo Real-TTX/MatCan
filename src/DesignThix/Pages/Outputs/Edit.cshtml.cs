@@ -13,7 +13,7 @@ public sealed class EditModel(Biz biz) : OutputFormPage(biz)
     {
         if (!await LoadAsync())
         {
-            return NotFound();
+            return RedirectToPage("/Share/NoAccess", new { kind = "outputjob", id = Id });
         }
 
         FillFrom(Job!);
