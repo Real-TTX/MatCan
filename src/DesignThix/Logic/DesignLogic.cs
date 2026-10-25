@@ -65,6 +65,13 @@ public static class DesignLogic
         return await biz.Db.Design.AsNoTracking().Where(d => d.Category != null && d.Category != "").Select(d => d.Category!).Distinct().OrderBy(c => c).ToListAsync();
     }
 
+    /// <summary>The categories that templates have (for the filter of the gallery of templates).</summary>
+    public static async Task<List<string>> TemplateCategoriesAsync(Biz biz)
+    {
+        biz.RequireSignedIn();
+        return await biz.Db.Design.AsNoTracking().Where(d => d.IsTemplate && d.Category != null && d.Category != "").Select(d => d.Category!).Distinct().OrderBy(c => c).ToListAsync();
+    }
+
     public static async Task<List<Choice>> ChoicesAsync(Biz biz, bool templatesOnly = false)
     {
         biz.RequireSignedIn();
@@ -88,8 +95,65 @@ public static class DesignLogic
         return new Counts(await db.Design.CountAsync(), await db.Design.CountAsync(d => d.IsTemplate), await db.DataList.CountAsync(), await db.Asset.CountAsync(), await db.Font.CountAsync());
     }
 
+    /// <summary>The designs worked on last ("Zuletzt bearbeitet" of the start page): the newest first, templates not included (they have their own page).</summary>
     public static async Task<List<DesignRow>> RecentAsync(Biz biz, int take)
-        => await Query(biz).OrderByDescending(d => d.UpdateDate).Take(take).ToListAsync();
+        => await Query(biz).Where(d => !d.IsTemplate).OrderByDescending(d => d.UpdateDate).ThenByDescending(d => d.Id).Take(take).ToListAsync();
+
+    /// <summary>
+    /// A few templates of every category for the row on the start page: the first of each category, then the second of each, and so on, until <paramref name="take"/> are found,
+    /// so the row shows the variety (labels, cards, flyers, social media) and not only the category that comes first in the alphabet.
+    /// </summary>
+    public static async Task<List<DesignRow>> FeaturedTemplatesAsync(Biz biz, int take)
+    {
+        var groups = (await TemplatesAsync(biz)).GroupBy(d => d.Category ?? "").Select(g => g.ToList()).ToList();
+        var picked = new List<DesignRow>();
+        for (var round = 0; picked.Count < take && groups.Any(g => g.Count > round); round++)
+        {
+            foreach (var group in groups.Where(g => g.Count > round))
+            {
+                if (picked.Count < take)
+                {
+                    picked.Add(group[round]);
+                }
+            }
+        }
+
+        return picked;
+    }
+
+    /// <summary>The designs that are templates, for the gallery of templates (the list builder adds search, filters and paging).</summary>
+    public static IQueryable<DesignRow> TemplateQuery(Biz biz) => Query(biz).Where(d => d.IsTemplate);
+
+    /// <summary>What the search of the start page found: own designs and templates whose name, category or description contains the text.</summary>
+    public sealed record SearchResult(string Text, IReadOnlyList<DesignRow> Designs, IReadOnlyList<DesignRow> Templates)
+    {
+        public bool Empty => Designs.Count == 0 && Templates.Count == 0;
+    }
+
+    /// <summary>
+    /// Searches designs and templates (case-insensitive, name, category and description). A blank text finds nothing (the start page then shows its normal content).
+    /// At most <paramref name="take"/> of each kind, the newest first.
+    /// </summary>
+    public static async Task<SearchResult> SearchAsync(Biz biz, string? text, int take = 24)
+    {
+        biz.RequireSignedIn();
+        var clean = (text ?? "").Trim();
+        if (clean.Length == 0)
+        {
+            return new SearchResult("", [], []);
+        }
+
+        if (clean.Length > 100)
+        {
+            clean = clean[..100];
+        }
+
+        var like = Services.Like.Contains(clean);
+        var found = Query(biz).Where(d => EF.Functions.ILike(d.Name, like, "\\") || (d.Category != null && EF.Functions.ILike(d.Category, like, "\\")) || (d.Description != null && EF.Functions.ILike(d.Description, like, "\\")));
+        var designs = await found.Where(d => !d.IsTemplate).OrderByDescending(d => d.UpdateDate).ThenByDescending(d => d.Id).Take(take).ToListAsync();
+        var templates = await found.Where(d => d.IsTemplate).OrderBy(d => d.Category).ThenBy(d => d.Name).ThenBy(d => d.Id).Take(take).ToListAsync();
+        return new SearchResult(clean, designs, templates);
+    }
 
     public static async Task<int> CountAsync(Biz biz)
     {

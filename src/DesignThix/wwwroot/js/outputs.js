@@ -183,7 +183,7 @@
           text += ' Auf dem Druckbogen sind das ' + plural(Math.ceil((f.labels + skip) / per), 'Bogen', 'Bögen') + '.';
         }
         if (f.labels === 0 && S.list) { text += ' Wähle auf dem Reiter „Auswahl“ mindestens eine Zeile.'; }
-        if (f.labels > MAX_LABELS) { text += ' Das ist zu viel: eine Ausgabe macht höchstens ' + german(MAX_LABELS, 0) + ' Etiketten.'; }
+        if (f.labels > MAX_LABELS) { text += ' Das ist zu viel: eine Serienausgabe macht höchstens ' + german(MAX_LABELS, 0) + ' Etiketten.'; }
         countText.textContent = text;
         if (countBox) { countBox.classList.toggle('mat-alert--warning', f.labels > MAX_LABELS || (S.list && f.labels === 0)); countBox.classList.toggle('mat-alert--info', !(f.labels > MAX_LABELS || (S.list && f.labels === 0))); }
       }

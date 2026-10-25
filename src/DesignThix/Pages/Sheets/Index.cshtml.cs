@@ -19,7 +19,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public async Task OnGetAsync()
     {
-        Head("Druckbögen", "Wie die Etiketten auf dem Papier sitzen: Anzahl, Größe, Ränder und Abstände.", ("Ausgabe", null), ("Druckbögen", null));
+        Head("Druckbögen", "Wie die Etiketten auf dem Papier sitzen: Anzahl, Größe, Ränder und Abstände.", ("Serien (Zusatz)", null), ("Druckbögen", null));
 
         var spec = new ListSpec<SheetLayout>
         {

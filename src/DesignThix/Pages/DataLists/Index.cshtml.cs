@@ -19,7 +19,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public async Task OnGetAsync()
     {
-        Head("Datenlisten", "Die Werte für deine Etiketten: eine Zeile pro Etikett.", ("Daten", null), ("Datenlisten", null));
+        Head("Datenlisten", "Die Werte für deine Etiketten: eine Zeile pro Etikett.", ("Serien (Zusatz)", null), ("Datenlisten", null));
 
         var spec = new ListSpec<DataListRow>
         {

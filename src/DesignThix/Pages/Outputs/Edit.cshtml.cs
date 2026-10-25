@@ -36,7 +36,7 @@ public sealed class EditModel(Biz biz) : OutputFormPage(biz)
         try
         {
             var job = await OutputLogic.SaveAsync(Biz, Id, ToLogic());
-            Flash("Die Ausgabe ist gespeichert.");
+            Flash("Die Serienausgabe ist gespeichert.");
             return RedirectToPage(new { id = job.Id });
         }
         catch (BizException ex)
@@ -77,7 +77,7 @@ public sealed class EditModel(Biz biz) : OutputFormPage(biz)
         try
         {
             await OutputLogic.DeleteAsync(Biz, Id);
-            Flash("Die Ausgabe ist gelöscht.");
+            Flash("Die Serienausgabe ist gelöscht.");
             return RedirectToPage("/Outputs/Index");
         }
         catch (BizException ex)

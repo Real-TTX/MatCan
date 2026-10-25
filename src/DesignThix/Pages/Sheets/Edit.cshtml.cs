@@ -130,7 +130,7 @@ public sealed class EditModel(Biz biz) : PageModelBase
         }
 
         var title = Sheet?.Name ?? "Neuer Druckbogen";
-        Head(title, null, ("Ausgabe", null), ("Druckbögen", "/Sheets"), (title, null));
+        Head(title, null, ("Serien (Zusatz)", null), ("Druckbögen", "/Sheets"), (title, null));
         ViewData["ActiveHref"] = "/Sheets";
         return true;
     }

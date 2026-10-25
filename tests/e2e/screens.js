@@ -73,6 +73,14 @@ async function ensureAdmin(browser) {
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   await page.waitForFunction(() => document.querySelectorAll('[data-dt-preview]:not(.is-ready)').length === 0, null, { timeout: 20000 }).catch(() => { });
   await shot('start.png');
+  // The dialog "Design erstellen" from the menu and the gallery of templates.
+  await page.click('.mat-nav a.mat-nav__item--primary');
+  await page.waitForSelector('#dt-create[open]');
+  await shot('create-dialog.png');
+  await page.keyboard.press('Escape');
+  await page.goto(base + '/Templates', { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => document.querySelectorAll('[data-dt-preview]:not(.is-ready)').length === 0, null, { timeout: 20000 }).catch(() => { });
+  await shot('templates.png');
   await page.goto(base + '/Designs', { waitUntil: 'networkidle' });
   await page.waitForFunction(() => document.querySelectorAll('[data-dt-preview]:not(.is-ready)').length === 0, null, { timeout: 20000 }).catch(() => { });
   await shot('designs.png');

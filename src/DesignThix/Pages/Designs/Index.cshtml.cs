@@ -1,11 +1,12 @@
 using DesignThix.Logic;
 using DesignThix.Services;
 using DesignThix.UiKit;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DesignThix.Pages.Designs;
 
-/// <summary>The designs as a gallery of thumbnails or a table. <c>?filter=templates</c> is the menu item "Vorlagen".</summary>
+/// <summary>The designs as a gallery of thumbnails or a table. <c>?filter=templates</c> (the old menu item "Vorlagen") redirects to the page <c>/Templates</c>.</summary>
 public sealed class IndexModel(Biz biz) : PageModelBase
 {
     public ToolbarModel Toolbar { get; private set; } = null!;
@@ -18,28 +19,24 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public bool CanEdit => biz.IsDesigner;
 
-    public bool TemplatesOnly { get; private set; }
-
-    public async Task OnGetAsync()
+    public async Task<IActionResult> OnGetAsync()
     {
-        TemplatesOnly = string.Equals(Request.Query["filter"], "templates", StringComparison.Ordinal);
-        if (TemplatesOnly)
+        // The old address of the menu item "Vorlagen" now is a page of its own.
+        if (string.Equals(Request.Query["filter"], "templates", StringComparison.Ordinal))
         {
-            Head("Vorlagen", "Designs, die in „Neues Design“ als Startpunkt angeboten werden.", ("Gestalten", null), ("Vorlagen", null));
-            ViewData["ActiveHref"] = "/Designs?filter=templates";
+            var q = Request.Query["q"].ToString();
+            return Redirect(string.IsNullOrWhiteSpace(q) ? "/Templates" : "/Templates?q=" + Uri.EscapeDataString(q));
         }
-        else
-        {
-            Head("Designs", "Deine Etiketten, Karten, Schilder und Plakate.", ("Gestalten", null), ("Designs", null));
-            ViewData["ActiveHref"] = "/Designs";
-        }
+
+        Head("Designs", "Deine Etiketten, Karten, Flyer, Poster und Beiträge.", ("Gestalten", null), ("Designs", null));
+        ViewData["ActiveHref"] = "/Designs";
 
         var categories = (await DesignLogic.CategoriesAsync(biz)).Select(c => new FilterOption(c, c)).ToList();
         var spec = new ListSpec<DesignRow>
         {
             Id = "designs",
             Action = "/Designs",
-            Label = TemplatesOnly ? "Vorlagen" : "Designs",
+            Label = "Designs",
             Noun = "Designs",
             SearchPlaceholder = "Name, Kategorie oder Beschreibung ...",
             PageSize = 24,
@@ -75,5 +72,6 @@ public sealed class IndexModel(Biz biz) : PageModelBase
             (new TableColumn("Geändert", HideOnPhone: true), d => Ui.Text(Fmt.Date(d.UpdateDate))),
         ],
         d => [new RowAction("edit", CanEdit ? "Eigenschaften" : "Ansehen", $"/Designs/Edit/{d.Id}")]) with { EmptyIcon = "layers", EmptyTitle = "Keine Designs gefunden", View = result.Items.Count == 0 ? null : "list" };
+        return Page();
     }
 }

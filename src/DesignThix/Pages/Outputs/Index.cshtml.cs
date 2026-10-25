@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DesignThix.Pages.Outputs;
 
-/// <summary>The saved outputs (Ausgaben): which design prints which list, how, and when it ran last. "Ausführen" opens the run page.</summary>
+/// <summary>The saved outputs (Serienausgaben): which design prints which list, how, and when it ran last. "Ausführen" opens the run page.</summary>
 public sealed class IndexModel(Biz biz) : PageModelBase
 {
     public ToolbarModel Toolbar { get; private set; } = null!;
@@ -20,16 +20,16 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public async Task OnGetAsync()
     {
-        Head("Ausgaben", "Gespeicherte Druckaufträge: ein Design, eine Datenliste, ein Layout. Ausführen heißt drucken oder als PNG herunterladen.", ("Ausgabe", null), ("Ausgaben", null));
+        Head("Serienausgaben", "Gespeicherte Druckaufträge: ein Design, eine Datenliste, ein Layout. Ausführen heißt drucken oder als PNG herunterladen.", ("Serien (Zusatz)", null), ("Serienausgaben", null));
 
         var designs = (await DesignLogic.ChoicesAsync(biz)).Select(c => new FilterOption(c.Id.ToString(System.Globalization.CultureInfo.InvariantCulture), c.Name)).ToList();
         var spec = new ListSpec<OutputRow>
         {
             Id = "outputs",
             Action = "/Outputs",
-            Label = "Ausgaben",
-            Noun = "Ausgaben",
-            SearchPlaceholder = "Name der Ausgabe, des Designs oder der Liste ...",
+            Label = "Serienausgaben",
+            Noun = "Serienausgaben",
+            SearchPlaceholder = "Name der Serienausgabe, des Designs oder der Liste ...",
             Search = (q, text) =>
             {
                 var like = Like.Contains(text);
@@ -54,16 +54,16 @@ public sealed class IndexModel(Biz biz) : PageModelBase
         Toolbar = result.Toolbar;
         Pager = result.Pager;
         var counts = await OutputLogic.LabelCountsAsync(biz, result.Items);
-        Table = TableModel.Of("output-table", "Ausgaben", result.Items,
+        Table = TableModel.Of("output-table", "Serienausgaben", result.Items,
         [
-            (new TableColumn("Ausgabe"), o => Ui.NameWithSub(o.Name, $"/Outputs/Edit/{o.Id}", o.Format == OutputFormat.Png ? "Einzelne PNG-Bilder in einer ZIP-Datei" : o.Mode == OutputMode.Sheet ? "Mehrere Etiketten auf einem Druckbogen" : "Ein Etikett pro Seite")),
+            (new TableColumn("Serienausgabe"), o => Ui.NameWithSub(o.Name, $"/Outputs/Edit/{o.Id}", o.Format == OutputFormat.Png ? "Einzelne PNG-Bilder in einer ZIP-Datei" : o.Mode == OutputMode.Sheet ? "Mehrere Etiketten auf einem Druckbogen" : "Ein Etikett pro Seite")),
             (new TableColumn("Design", HideOnPhone: true), DesignCell),
             (new TableColumn("Datenliste", HideOnPhone: true), o => o.DataListId is null ? Ui.Concat(Ui.Text("Beispielwerte"), new HtmlString(" "), Ui.Pill("ohne Liste", "plain")) : o.DataListName is null ? Ui.Pill("gelöscht", "warn", "alert") : Ui.Link(o.DataListName, $"/DataLists/Edit/{o.DataListId}")),
             (new TableColumn("Etiketten", Numeric: true), o => CountCell(counts.GetValueOrDefault(o.Id))),
             (new TableColumn("Format", HideOnPhone: true), o => o.Format == OutputFormat.Png ? Ui.Pill($"PNG-ZIP · {o.Dpi} dpi", "info") : Ui.Pill("Drucken / PDF", "accent")),
             (new TableColumn("Zuletzt ausgeführt", HideOnPhone: true), o => o.LastRunDate is null ? Ui.Text("noch nie") : Ui.NameWithSub(Fmt.Moment(o.LastRunDate), null, o.LastRunUserName)),
         ],
-        o => [new RowAction("play", "Ausführen", $"/Outputs/{o.Id}/Run"), new RowAction("edit", CanEdit ? "Bearbeiten" : "Ansehen", $"/Outputs/Edit/{o.Id}")]) with { EmptyIcon = "dashboard", EmptyTitle = "Keine Ausgaben gefunden", EmptyText = "Lege eine Ausgabe an oder ändere Suche und Filter." };
+        o => [new RowAction("play", "Ausführen", $"/Outputs/{o.Id}/Run"), new RowAction("edit", CanEdit ? "Bearbeiten" : "Ansehen", $"/Outputs/Edit/{o.Id}")]) with { EmptyIcon = "dashboard", EmptyTitle = "Keine Serienausgaben gefunden", EmptyText = "Lege eine Serienausgabe an oder ändere Suche und Filter." };
     }
 
     private static IHtmlContent CountCell(OutputLogic.LabelCount? count)

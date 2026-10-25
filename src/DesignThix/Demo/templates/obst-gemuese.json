@@ -1,0 +1,36 @@
+{
+  "name": "Obst & Gemüse – Preisschild",
+  "category": "Etiketten",
+  "description": "Preisschild im Kreidetafel-Look (100 × 70 mm) für Obst und Gemüse: Name, Herkunft mit Flagge, Klasse, Bio-Siegel und ein großer Preis. Die Felder kannst du aus einer Datenliste füllen.",
+  "document": {
+    "schema":2,"unit":"mm","width":100,"height":70,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Erdbeeren","decimals":null,"category":null,"required":true},
+      {"key":"Land","label":"Herkunftsland","type":"image","sample":"flag-de","decimals":null,"category":"Flaggen","required":false},
+      {"key":"Siegel","label":"Siegel","type":"image","sample":"icon-bio","decimals":null,"category":"Siegel","required":false},
+      {"key":"Klasse","label":"Klasse","type":"text","sample":"Klasse I","decimals":null,"category":null,"required":false},
+      {"key":"Herkunft","label":"Herkunft","type":"text","sample":"Region Oberrhein","decimals":null,"category":null,"required":false},
+      {"key":"Preis","label":"Preis","type":"price","sample":"3.49","decimals":2,"category":null,"required":true},
+      {"key":"Einheit","label":"Einheit","type":"text","sample":"/ 500 g","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":160,"stops":[{"offset":0,"color":"#234a3c"},{"offset":1,"color":"#17302a"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Kreiderahmen","x":2.5,"y":2.5,"w":95,"h":65,"rotation":0,"opacity":0.45,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#f5f1e6","strokeWidth":0.6,"dash":"solid","radius":3,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"imageStrip","name":"Herkunft und Siegel","x":7,"y":7,"w":38,"h":8.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"items":[{"field":"Land"},{"field":"Siegel"}],"gap":2.5,"align":"left","mask":"none","border":null},
+        {"id":"e3","type":"text","name":"Klasse","x":52,"y":7.2,"w":41,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Klasse","flipX":false,"flipY":false,"shadow":null,"text":"{{Klasse}}","fontFamily":"Montserrat","fontSize":8,"fontWeight":700,"italic":false,"color":"#17302a","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":4,"underline":false,"strike":false,"list":"none","outline":null,"background":{"color":"#ffd46b","radius":4,"padding":1.9},"curve":0},
+        {"id":"e4","type":"text","name":"Name","x":7,"y":18,"w":86,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Oswald","fontSize":44,"fontWeight":600,"italic":false,"color":"#f5f1e6","align":"left","valign":"bottom","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Herkunft","x":7,"y":35.5,"w":86,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Herkunft","flipX":false,"flipY":false,"shadow":null,"text":"Herkunft: {{Herkunft}}","fontFamily":"Montserrat","fontSize":9.5,"fontWeight":500,"italic":false,"color":"#a9d3b9","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":4,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Trennlinie","x":7,"y":44,"w":86,"h":0,"rotation":0,"opacity":0.4,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#f5f1e6","strokeWidth":0.5,"dash":"dotted","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Preis","x":7,"y":45.5,"w":60,"h":17.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Preis}}","fontFamily":"Oswald","fontSize":60,"fontWeight":700,"italic":false,"color":"#ffd46b","align":"right","valign":"bottom","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Euro","x":69,"y":47,"w":12,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"€","fontFamily":"Oswald","fontSize":32,"fontWeight":500,"italic":false,"color":"#f5f1e6","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Einheit","x":69,"y":58.5,"w":24,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Einheit}}","fontFamily":"Montserrat","fontSize":11,"fontWeight":500,"italic":false,"color":"#f5f1e6","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Erdbeeren","Land":"flag-de","Siegel":"icon-bio","Klasse":"Klasse I","Herkunft":"Region Oberrhein","Preis":"3.49","Einheit":"/ 500 g"},
+    {"Name":"Kirschtomaten","Land":"flag-es","Siegel":"","Klasse":"Klasse I","Herkunft":"Almería","Preis":"2.99","Einheit":"/ 250 g"},
+    {"Name":"Bio-Äpfel Elstar","Land":"flag-de","Siegel":"icon-bio","Klasse":"Klasse I","Herkunft":"Bodensee","Preis":"2.79","Einheit":"/ kg"},
+    {"Name":"Zitronen Primofiori","Land":"flag-it","Siegel":"","Klasse":"","Herkunft":"Sizilien","Preis":"12.90","Einheit":"/ kg"}
+  ]
+}

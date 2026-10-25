@@ -322,7 +322,7 @@ public sealed class EditModel(Biz biz) : PageModelBase
         }
 
         var title = List?.Name ?? "Neue Datenliste";
-        Head(title, null, ("Daten", null), ("Datenlisten", "/DataLists"), (title, null));
+        Head(title, null, ("Serien (Zusatz)", null), ("Datenlisten", "/DataLists"), (title, null));
         ViewData["ActiveHref"] = "/DataLists";
         ViewData["Width"] = Tab == "rows" ? "wide" : null;
         return true;

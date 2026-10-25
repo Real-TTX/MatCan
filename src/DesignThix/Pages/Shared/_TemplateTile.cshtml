@@ -1,0 +1,38 @@
+@using DesignThix.Logic
+@model (DesignRow Template, bool CanCreate, bool CanEdit)
+@*
+    A template as a tile: the thumbnail (drawn by designs.js when none was saved), the name, category and size, and "Vorlage verwenden" (a copy opens in the designer: create.js).
+    Designers and administrators may also open the template itself ("Bearbeiten"); a viewer sees the button disabled, with the reason, and can look at the template ("Ansehen").
+*@
+@{
+    var t = Model.Template;
+}
+<article class="mat-tile dt-designtile dt-tpl" data-template="@t.Id">
+    @if (Model.CanCreate)
+    {
+        <a class="mat-tile__media dt-tpl__media" href="/Designs/Create?template=@t.Id" data-use-template="@t.Id" tabindex="-1" aria-hidden="true">@LibraryUi.DesignThumb(t)</a>
+    }
+    else
+    {
+        <a class="mat-tile__media dt-tpl__media" href="/Designs/@t.Id/Designer" tabindex="-1" aria-hidden="true">@LibraryUi.DesignThumb(t)</a>
+    }
+    <div class="mat-tile__body">
+        <span class="dt-tile__title" title="@t.Name">@t.Name</span>
+        <span class="mat-tile__meta">@t.Size@(string.IsNullOrEmpty(t.Category) ? "" : " · " + t.Category)</span>
+    </div>
+    <div class="dt-tpl__actions">
+        @if (Model.CanCreate)
+        {
+            <a class="mat-btn mat-btn--primary mat-btn--sm" href="/Designs/Create?template=@t.Id" data-use-template="@t.Id" aria-label="Vorlage „@t.Name“ verwenden">@Ui.Icon("plus")<span>Vorlage verwenden</span></a>
+            @if (Model.CanEdit)
+            {
+                <a class="mat-btn mat-btn--secondary mat-btn--sm" href="/Designs/@t.Id/Designer" aria-label="Vorlage „@t.Name“ bearbeiten">@Ui.Icon("edit")<span>Bearbeiten</span></a>
+            }
+        }
+        else
+        {
+            <button type="button" class="mat-btn mat-btn--primary mat-btn--sm" disabled title="Betrachter dürfen keine Designs anlegen." aria-label="Vorlage „@t.Name“ verwenden: nicht möglich, Betrachter dürfen keine Designs anlegen">@Ui.Icon("plus")<span>Vorlage verwenden</span></button>
+            <a class="mat-btn mat-btn--secondary mat-btn--sm" href="/Designs/@t.Id/Designer" aria-label="Vorlage „@t.Name“ ansehen">@Ui.Icon("eye")<span>Ansehen</span></a>
+        }
+    </div>
+</article>

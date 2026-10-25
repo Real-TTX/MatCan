@@ -4,10 +4,10 @@
     print: the values from sessionStorage, posted to /api/outputs/adhoc), renders every label with the engine and sets the paper size through an @page rule.
 *@
 <div class="dt-run" id="dt-run" data-state="loading" data-payload-url="@Model.PayloadUrl" data-output-id="@Model.OutputId" data-adhoc="@(Model.Adhoc ? "true" : "false")" data-back-href="@Model.BackHref">
-    <header class="dt-run__bar" role="toolbar" aria-label="Ausgabe">
+    <header class="dt-run__bar" role="toolbar" aria-label="Serienausgabe">
         <div class="dt-run__info">
             <h1 class="dt-run__title" id="dt-run-title">@Model.Title</h1>
-            <p class="dt-run__meta" id="dt-run-meta">Die Ausgabe wird vorbereitet ...</p>
+            <p class="dt-run__meta" id="dt-run-meta">Die Serienausgabe wird vorbereitet ...</p>
         </div>
         <div class="dt-run__progress">
             <div class="mat-meter mat-meter--sm" aria-hidden="true"><div class="mat-meter__fill" id="dt-run-meter"></div></div>
@@ -27,7 +27,7 @@
         @Ui.Icon("x-circle")
         <div class="mat-alert__body" id="dt-run-error-text"></div>
     </div>
-    <main class="dt-run__stage" id="dt-run-stage" aria-label="Vorschau der Ausgabe">
+    <main class="dt-run__stage" id="dt-run-stage" aria-label="Vorschau der Serienausgabe">
         <div class="dt-run__thumbs" id="dt-run-thumbs" hidden></div>
         <div class="dt-run__pages" id="dt-pages"></div>
     </main>

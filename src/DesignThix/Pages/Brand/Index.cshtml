@@ -1,7 +1,7 @@
 @page
 @model DesignThix.Pages.Brand.IndexModel
 @{
-    ViewData["Styles"] = new[] { "/css/datalist.css", "/css/brand.css" };
+    ViewData["Styles"] = new[] { "/css/datalist.css", "/css/dt-media.css", "/css/brand.css" };
     var kit = Model.Brand.Kit;
     var ro = !Model.CanEdit;
     var roles = new[] { ("heading", "Überschrift", "Für große Titel", "Frisch vom Markt", kit.Fonts.Heading), ("subheading", "Zwischenüberschrift", "Für Untertitel und Hervorhebungen", "Aus der Region, mit Liebe gemacht", kit.Fonts.Subheading), ("body", "Fließtext", "Für alles, was gelesen wird", "Unser Käse reift mindestens sechs Monate im Keller und wird jeden Tag von Hand gepflegt.", kit.Fonts.Body) };
@@ -77,5 +77,6 @@
     </div>
 </div>
 
+<script src="~/js/dt-media.js" asp-append-version="true"></script>
 <script src="~/js/datalist.js" asp-append-version="true"></script>
 <script src="~/js/brand.js" asp-append-version="true"></script>

@@ -26,7 +26,7 @@ public sealed class RunModel(Biz biz) : PageModelBase
             return NotFound();
         }
 
-        Head(job.Name, null, ("Ausgabe", null), ("Ausgaben", "/Outputs"), (job.Name, null));
+        Head(job.Name, null, ("Serien (Zusatz)", null), ("Serienausgaben", "/Outputs"), (job.Name, null));
         View = new RunView(job.Name, $"/api/outputs/{job.Id}/payload", job.Id, false, $"/Outputs/Edit/{job.Id}");
         return Page();
     }

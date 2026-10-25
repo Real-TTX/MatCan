@@ -4,10 +4,10 @@
 
 # DesignThix
 
-**Der Offline-Canva für Etiketten, Karten, Schilder und Plakate – ein Design, viele Etiketten.**
+**Der Offline-Canva für Etiketten, Karten, Flyer und Beiträge für soziale Medien.**
 
-Du gestaltest ein Design einmal, setzt Platzhalter wie `{{Name}}` oder `{{Preis}}` ein und befüllst es aus einer Datenliste.
-Gedruckt oder als PNG-ZIP ausgegeben wird jede Zeile der Liste als eigenes Etikett (Serienbrief-Prinzip).
+Du wählst ein Format oder eine fertige Vorlage, gestaltest im Designer und lädst das Ergebnis herunter oder druckst es.
+Und wenn du viele ähnliche Etiketten brauchst, füllt DesignThix ein Design aus einer Datenliste: ein Design, viele Etiketten.
 
 </div>
 
@@ -18,29 +18,42 @@ DesignThix ist ein Docker-Container mit einer PostgreSQL-Datenbank. Es läuft au
 
 ## Was DesignThix kann
 
-- **Designer:** Text, Bilder, Bildleisten (leere Plätze rücken auf), Rechtecke, Ellipsen und Linien auf einer Fläche in mm oder px. Schrift, die sich verkleinert, bis sie passt.
-  Ausrichten, Einrasten, Rückgängig, Zoom; mit Maus, Stift und Finger.
-- **Platzhalter und Datenlisten:** Felder wie Name, Preis, Herkunftsland. Datenlisten mit Tabellen-Editor, CSV-Import und -Export, Einfügen aus Excel.
-- **Medien und Schriften:** eigene Bilder (PNG, JPEG, WebP, GIF, SVG) und Schriften (TTF, OTF, WOFF, WOFF2); mitgeliefert sind Flaggen, Siegel und zwölf freie Schriften.
-- **Ausgabe:** Druck oder PDF über den Browser (ein Etikett pro Seite oder mehrere auf einem Druckbogen, mit Schnittmarken und Startposition) und PNG-ZIP. Dazu der **Einzeldruck**
-  eines Etiketts mit eingetippten Werten und der Export und Import eines Designs als Datei.
-- **KI-Hilfe (optional):** Daten aus Text übernehmen, eine Spalte füllen lassen, Texte vorschlagen lassen – immer mit Vorschau, Protokoll und Rückgängig.
+- **Designer:** Seiten in mm oder px (mehrere Seiten je Design), Text mit Effekten (Schatten, Kontur, Hintergrund, Kreisbogen), Bilder mit Zuschnitt, Maske und Filtern, Formen mit Verläufen,
+  Gruppen und Ebenen. Kontextmenü, Ausrichten, Einrasten, Rückgängig, automatisches Speichern; mit Maus, Stift und Finger.
+- **Vorlagen:** Zehn fertige Entwürfe zum Anpassen (Preisschilder, Regaletikett, Glasetikett, Visitenkarte, Flyer, Poster, Instagram-Beitrag und -Story, Grußkarte), sortiert nach Kategorien mit Suche.
+  Auf der Startseite genügt ein Klick auf ein Format (Preisschild, Visitenkarte, A5, A3, Instagram …), und das leere Design ist offen.
+- **Elemente, Symbole und Codes:** Formen und Linien, Bildrahmen, rund 1 900 Symbole (Lucide), Flaggen und Siegel, **QR-Codes** und Strichcodes (EAN-13, EAN-8, Code 128) – alles ohne Internet.
+- **Uploads per Drag & Drop und Einfügen:** Bilder und Schriften aus dem Explorer auf die Fläche ziehen oder mit Strg+V einfügen; ein Medienbrowser zeigt alles mit Vorschau.
+- **Marke:** Markenfarben, Markenschriften und Logos einmal festlegen, im Designer überall bereit.
+- **Herunterladen und Drucken:** PNG, JPG, SVG und PDF/Druck, einzelne Seiten oder alle (mehrere Seiten als ZIP), transparenter Hintergrund, eigene Auflösung.
 - **Rollen:** Administrator, Gestalter, Betrachter. Oberfläche auf Deutsch, hell und dunkel.
 - **Installierbare App (PWA)** mit Offline-Anzeige zuletzt geöffneter Seiten.
 
+### Zusatz: Serien mit Daten
+
+Wer viele ähnliche Etiketten oder Karten braucht, nutzt zusätzlich (Menü *Serien (Zusatz)*):
+
+- **Datenlisten und Platzhalter:** Felder wie Name, Preis, Herkunftsland in einem Design (`{{Name}}`); Datenlisten mit Tabellen-Editor, CSV-Import und -Export, Einfügen aus Excel.
+- **Serienausgaben:** Druck oder PDF über den Browser (ein Etikett pro Seite oder mehrere auf einem Druckbogen, mit Schnittmarken und Startposition) und PNG-ZIP. Dazu der **Einzeldruck**
+  eines Etiketts mit eingetippten Werten und der Export und Import eines Designs als Datei.
+- **Druckbögen:** wie die Etiketten auf dem Papier sitzen (A4 mit 2 × 4, 3 × 8 … Etiketten, eigene Bögen).
+- **KI-Import (optional):** Daten aus Text übernehmen, eine Spalte füllen lassen, Texte vorschlagen lassen – immer mit Vorschau, Protokoll und Rückgängig.
+
 ## So sieht es aus
 
-Beim ersten Start ist ein Beispiel dabei: die Vorlage **Käsetheke – Preisschild**, die Datenliste **Käsetheke (Beispiel)** mit sechs Käsen und die Ausgabe
-**Käsetheke – A4 mit 4 Etiketten**. Damit kannst du alles ausprobieren; löschst du sie, kommen sie nicht wieder.
+Beim ersten Start sind die zehn Vorlagen da, dazu ein Beispiel für die Serien mit Daten: die Vorlage **Käsetheke – Preisschild**, die Datenliste **Käsetheke (Beispiel)** mit sechs Käsen und die Serienausgabe
+**Käsetheke – A4 mit 4 Etiketten**. Damit kannst du alles ausprobieren; was du löschst, kommt nicht wieder (eine Vorlage, die eine spätere Version neu mitbringt, wird einmal ergänzt).
+
+> TODO (Phase K6): Die Bilder zeigen noch den Stand vor dem neuen Editor und der neuen Startseite. Sie werden mit `node tests/e2e/screens.js` neu aufgenommen (Start, Design erstellen, Vorlagen, Designer).
 
 | | |
 |---|---|
 | ![Start](docs/images/start.png) | ![Designs](docs/images/designs.png) |
-| **Start:** Zahlen, zuletzt bearbeitete Designs und Ausgaben | **Designs:** Kacheln mit Vorschau, Vorlagen, Suche und Filter |
+| **Start:** Format wählen, Vorlagen, zuletzt bearbeitete Designs | **Designs:** Kacheln mit Vorschau, Vorlagen, Suche und Filter |
 | ![Designer](docs/images/designer.png) | ![Datenliste](docs/images/datalist.png) |
-| **Designer:** Elemente, Medien, Felder und Ebenen links, Eigenschaften rechts | **Datenliste:** eine Zeile je Etikett, Bilder aus der Medienbibliothek |
-| ![Ausgabe](docs/images/output-job.png) | ![Medien](docs/images/media.png) |
-| **Ausgabe:** Design, Datenliste, Auswahl, Druckbogen und Format | **Medien:** Flaggen, Siegel, Logos und Fotos mit eindeutigem Schlüssel |
+| **Designer:** Fläche mit Werkzeugleiste, Seitenleiste mit Elementen, Text, Uploads und Marke | **Datenliste:** eine Zeile je Etikett, Bilder aus der Medienbibliothek |
+| ![Serienausgabe](docs/images/output-job.png) | ![Uploads und Medien](docs/images/media.png) |
+| **Serienausgabe:** Design, Datenliste, Auswahl, Druckbogen und Format | **Uploads & Medien:** Flaggen, Siegel, Logos und Fotos mit eindeutigem Schlüssel |
 | ![KI](docs/images/ai-import.png) | ![Handy](docs/images/phone-start.png) |
 | **KI-Vorschlag:** neue Zeilen aus einem eingefügten Text, du übernimmst, was stimmt | **Auf dem Handy:** alle Listen und Formulare; der Designer zeigt dort nur die Vorschau, bearbeitet wird am größeren Bildschirm |
 
@@ -65,7 +78,7 @@ docker compose -f docker-compose.dev.yml up -d
 ```
 
 **Der erste Aufruf** von http://localhost:3043 öffnet den **Einrichtungsassistenten**: Er legt das Konto der Administration an (es gibt kein Standardpasswort). Danach
-legst du unter *Verwaltung > Benutzer* weitere Konten an: *Gestalter* ändern Designs, Medien, Schriften, Datenlisten und Ausgaben, *Betrachter* sehen alles an und führen Ausgaben
+legst du unter *Verwaltung > Benutzer* weitere Konten an: *Gestalter* ändern Designs, Medien, Schriften, Marke, Datenlisten und Serienausgaben, *Betrachter* sehen alles an und führen Serienausgaben
 aus. Für mehr als das lokale Netz gehört ein Reverse-Proxy mit TLS davor.
 
 Updates: `docker compose pull && docker compose up -d`. Im Volume `web-data` liegen die Schlüssel der App und die KI-Schlüssel; ohne sie sind gespeicherte Geheimnisse nicht lesbar
@@ -84,7 +97,7 @@ Es gibt zwei Branches: **`main`** ist das Release, **`dev`** der Entwicklungssta
 
 Major und Minor stehen in `Directory.Build.props`, die Build-Nummer ist die Nummer des Laufs der Action. Die Version steht links unten im Menü; ein Klick öffnet *Über DesignThix*.
 
-## Platzhalter
+## Serien mit Daten: Platzhalter
 
 Ein **Feld** hat einen Schlüssel (`Name`, `Preis`, `Land`), eine Beschriftung, eine Art und einen Beispielwert. Du legst Felder im Designer an (Reiter *Felder*) und
 benutzt sie so:
@@ -101,17 +114,17 @@ benutzt sie so:
 - **Vorschau mit Daten:** Im Designer wählst du oben eine Datenliste und blätterst mit ◀ ▶ durch ihre Zeilen. Eine Spalte der Liste füllt das Feld mit gleichem Schlüssel; „Spalten aus Design
   übernehmen“ legt die Spalten einer Liste aus den Feldern des Designs an.
 
-## Ausgabe
+## Serienausgaben
 
-Eine **Ausgabe** speichert, was gedruckt wird: Design, Datenliste, Auswahl der Zeilen (alle, nur aktive, ausgewählte), Kopien je Zeile, Layout und Format. *Ausführen* öffnet die Seite, die
+Eine **Serienausgabe** speichert, was gedruckt wird: Design, Datenliste, Auswahl der Zeilen (alle, nur aktive, ausgewählte), Kopien je Zeile, Layout und Format. *Ausführen* öffnet die Seite, die
 jedes Etikett zeichnet.
 
 - **Druck / PDF:** *Drucken / Als PDF speichern* ruft den Druckdialog des Browsers; „Als PDF speichern“ gibt ein PDF in genau der Papiergröße (Schrift eingebettet, Vektoren). Ein Etikett pro
   Seite hat die Größe des Designs; auf einem **Druckbogen** (A4 mit 2 × 4, 3 × 8 … Etiketten, eigene Bögen unter *Druckbögen*) sitzen die Etiketten Zelle für Zelle, auf Wunsch mit **Schnittmarken**.
   Ein Design, das größer als die Zelle ist, wird verkleinert (mit Hinweis). Mit der **Startposition** beginnst du auf einem halb benutzten Bogen beim ersten freien Etikett.
 - **PNG-ZIP:** Jedes Etikett als PNG in der Auflösung des Designs (300 dpi voreingestellt), alle in einer ZIP-Datei; die Dateinamen kommen aus einem Muster wie `{Design}-{Nr}-{Name}`.
-- **Einzeldruck:** Am Design ein Formular mit den Feldern: Werte eintippen oder Medien wählen, Etikett drucken oder als PNG laden – ohne eine Ausgabe zu speichern. Das dürfen auch Betrachter.
-- Höchstens 2000 Etiketten je Ausgabe.
+- **Einzeldruck:** Am Design ein Formular mit den Feldern: Werte eintippen oder Medien wählen, Etikett drucken oder als PNG laden – ohne eine Serienausgabe zu speichern. Das dürfen auch Betrachter.
+- Höchstens 2000 Etiketten je Serienausgabe.
 
 ## KI-Aktionen
 
@@ -139,7 +152,7 @@ DesignThix ist eine **installierbare App** (PWA): im Browser *Installieren* bzw.
 Home-Anzeige werden berücksichtigt, Eingabefelder sind auf dem Handy so groß, dass iOS nicht hineinzoomt; Zoomen mit zwei Fingern bleibt erlaubt.
 
 Ohne Verbindung zeigt DesignThix die Seiten, die du schon geöffnet hattest, als **Kopie** mit Hinweis („Du siehst den Stand vom …“). Schriften, Medien und Vorschaubilder bleiben im Zwischenspeicher, damit
-Designs auch offline gezeichnet werden und eine schon einmal ausgeführte Ausgabe wieder gedruckt werden kann. Geändert wird nur mit Verbindung; der **Designer** behält deine ungespeicherten
+Designs auch offline gezeichnet werden und eine schon einmal ausgeführte Serienausgabe wieder gedruckt werden kann. Geändert wird nur mit Verbindung; der **Designer** behält deine ungespeicherten
 Änderungen als Entwurf im Browser und speichert, sobald die Verbindung zurück ist (hat in der Zwischenzeit jemand anderes gespeichert, fragt er, ob du deine Fassung als Kopie sichern willst). Kommt die
 Verbindung zurück, lädt die Seite sich selbst neu, damit nichts Altes stehen bleibt. Beim Abmelden werden die gemerkten Seiten gelöscht.
 
@@ -164,8 +177,8 @@ dotnet ef migrations add <Name> -p src/DesignThix -s src/DesignThix -o Data/Migr
 ./scripts/redeploy.ps1                        # Image bauen und den lokalen Stack starten (-Clean: leere Datenbank)
 ```
 
-- **Browser-Prüfungen** (`tests/e2e`, Playwright mit dem installierten Edge): `cd tests/e2e && npm install && node run-all.js http://localhost:3043` startet Engine, PWA, Demo, Designer,
-  Ausgabe und KI nacheinander. Jede einzeln und was sie prüft: [tests/e2e/README.md](tests/e2e/README.md). Sie legen ihre Konten selbst an, wenn die Datenbank leer ist.
+- **Browser-Prüfungen** (`tests/e2e`, Playwright mit dem installierten Edge): `cd tests/e2e && npm install && node run-all.js http://localhost:3043` startet Engine, PWA, Demo, Start, Vorlagen, Designer,
+  Serienausgabe und KI nacheinander. Jede einzeln und was sie prüft: [tests/e2e/README.md](tests/e2e/README.md). Sie legen ihre Konten selbst an, wenn die Datenbank leer ist.
 - **Screenshots** dieser Seite: `node tests/e2e/screens.js` gegen einen frisch aufgesetzten Stack (`./scripts/redeploy.ps1 -Clean`), Ergebnis in `docs/images`.
 - **MatUi** (Oberflächen-Bibliothek) wird nie in `src/DesignThix/wwwroot/ui` geändert, sondern aus MatDesign geholt: `./scripts/sync-matui.ps1`, geprüft mit `./scripts/check-matui.ps1`.
 - Aufbau, Regeln und Stolpersteine für die Arbeit am Code: [CLAUDE.md](CLAUDE.md). Der Bauplan mit Produktbeschreibung und Dokumentformat: [docs/PLAN.md](docs/PLAN.md).

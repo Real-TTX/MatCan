@@ -1,0 +1,49 @@
+@page
+@model DesignThix.Pages.Templates.IndexModel
+
+<link rel="stylesheet" href="~/css/designs.css" asp-append-version="true" />
+
+<div class="mat-list" data-view-scope>
+    <partial name="_Toolbar" model="Model.Toolbar" />
+    @if (Model.Items.Count == 0)
+    {
+        <div class="mat-empty" data-templates-empty>
+            <span class="mat-empty__icon">@Ui.Icon("template")</span>
+            <div class="mat-empty__title">Keine Vorlagen gefunden</div>
+            <p>@(Model.Toolbar.Total == 0 ? "Es gibt noch keine Vorlagen. Markiere ein Design in seinen Eigenschaften als Vorlage." : "Ändere die Suche oder den Filter.")</p>
+        </div>
+    }
+    else
+    {
+        var number = 0;
+        @foreach (var group in Model.Groups)
+        {
+            number++;
+            <section class="dt-category" aria-labelledby="cat-@number" data-category="@group.Key">
+                <h2 class="dt-category__title" id="cat-@number">@group.Key<span class="dt-category__count">@group.Count()</span></h2>
+                <div class="dt-tplgrid">
+                    @foreach (var t in group)
+                    {
+                        <partial name="_TemplateTile" model="(t, Model.CanEdit, Model.CanEdit)" />
+                    }
+                </div>
+            </section>
+        }
+    }
+    <partial name="_Pager" model="Model.Pager" />
+    <div class="mat-actions">
+        @if (Model.CanEdit)
+        {
+            <a class="mat-btn mat-btn--primary" href="/Designs/Create">@Ui.Icon("plus")<span>Design erstellen</span></a>
+            <a class="mat-btn mat-btn--secondary" href="/Designs">@Ui.Icon("layers")<span>Meine Designs</span></a>
+            <span class="mat-hint">Eigene Vorlagen entstehen, wenn du ein Design in seinen Eigenschaften als Vorlage anbietest.</span>
+        }
+        else
+        {
+            <span class="mat-hint">Neue Designs legen Gestalter und Administratoren an. Als Betrachter kannst du die Vorlagen ansehen.</span>
+        }
+    </div>
+</div>
+
+<script src="~/js/dt-engine.js" asp-append-version="true"></script>
+<script src="~/js/designs.js" asp-append-version="true"></script>

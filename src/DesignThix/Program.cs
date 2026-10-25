@@ -142,6 +142,7 @@ var settings = app.Services.GetRequiredService<SettingStore>();
 await settings.LoadAsync();
 await LibrarySeeder.SeedAsync(app.Services, app.Environment.WebRootPath, logger);
 await DemoSeeder.SeedAsync(app.Services, logger);
+await TemplateSeeder.SeedAsync(app.Services, logger);
 await StartupFixes.RunAsync(app.Services, logger);
 
 app.UseForwardedHeaders();
@@ -262,16 +263,16 @@ app.MapGet("/llms.txt", (HttpContext http, ConfigStore cfg, SettingStore store) 
     var sb = new StringBuilder();
     sb.AppendLine($"# {(string.IsNullOrWhiteSpace(site.ServiceName) ? "DesignThix" : site.ServiceName)}{(string.IsNullOrWhiteSpace(site.Company) ? "" : " – " + site.Company)}");
     sb.AppendLine();
-    sb.AppendLine("> DesignThix ist ein Offline-Canva: ein Designer für Etiketten, Karten, Schilder und Plakate, die über Platzhalter ({{Name}}) aus Datenlisten befüllt werden. Ein Design druckt so viele Etiketten, wie die Datenliste Zeilen hat (Serienbrief-Prinzip).");
+    sb.AppendLine("> DesignThix ist ein Offline-Canva: ein Designer für Etiketten, Karten, Flyer, Poster und Beiträge für soziale Medien mit fertigen Vorlagen. Zusätzlich füllt es ein Design über Platzhalter ({{Name}}) aus Datenlisten: ein Design druckt so viele Etiketten, wie die Datenliste Zeilen hat (Serienbrief-Prinzip).");
     sb.AppendLine();
     sb.AppendLine("Die Anwendung ist nicht öffentlich: Designs, Datenlisten, Medien und Einstellungen sind nur für angemeldete Benutzer sichtbar. Auf dieser Website werden keine personenbezogenen Daten veröffentlicht.");
     sb.AppendLine();
     sb.AppendLine("## Was DesignThix kann");
     sb.AppendLine();
-    sb.AppendLine("- Designer: Text, Bilder, Bildleisten (leere Plätze rücken auf) und Formen auf einer Fläche in mm oder px; Schrift verkleinert sich bei Bedarf, bis sie passt.");
-    sb.AppendLine("- Platzhalter und Datenlisten: Felder wie Name, Preis oder Herkunftsland; CSV-Import und -Export, Einfügen aus Excel, KI-Import.");
+    sb.AppendLine("- Designer und Vorlagen: Text, Bilder, Formen, Symbole, QR- und Strichcodes auf mehreren Seiten in mm oder px, dazu fertige Vorlagen (Preisschilder, Visitenkarten, Flyer, Poster, Instagram-Beiträge); Schrift verkleinert sich bei Bedarf, bis sie passt.");
+    sb.AppendLine("- Zusatz, Serien mit Daten: Platzhalter und Datenlisten (Felder wie Name, Preis oder Herkunftsland; CSV-Import und -Export, Einfügen aus Excel, KI-Import).");
     sb.AppendLine("- Medien und Schriften: eigene Bilder (PNG, JPEG, WebP, GIF, SVG) und Schriften; mitgeliefert sind Flaggen, Siegel und freie Schriften. Nichts wird aus dem Internet geladen.");
-    sb.AppendLine("- Ausgabe: Druck oder PDF (ein Etikett pro Seite oder mehrere Etiketten auf einem Druckbogen mit Schnittmarken) und PNG-ZIP.");
+    sb.AppendLine("- Herunterladen und Serienausgaben: Druck oder PDF (ein Etikett pro Seite oder mehrere Etiketten auf einem Druckbogen mit Schnittmarken) und PNG-ZIP.");
     sb.AppendLine("- Läuft als installierbare App (PWA) und lässt sich auch ohne Verbindung lesen.");
     sb.AppendLine();
     sb.AppendLine("## Verweise");

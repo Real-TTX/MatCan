@@ -29,7 +29,7 @@ async function measure(page, doc, rows) {
     const norm = engine.normalize(document_);
     const dpi = 120, k = dpi / 25.4;
     const inkOf = async (values, element) => {
-      const single = Object.assign({}, norm, { dpi, elements: norm.elements.map(e => Object.assign({}, e, { hidden: e.id !== element.id })) });
+      const single = Object.assign({}, norm, { dpi, pages: [Object.assign({}, norm.pages[0], { elements: norm.pages[0].elements.map(e => Object.assign({}, e, { hidden: e.id !== element.id })) })] });
       const blob = await engine.rasterize(single, values, { dpi, assetUrl: key => '/media/' + encodeURIComponent(key), fonts });
       const bitmap = await createImageBitmap(blob);
       const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
@@ -73,7 +73,7 @@ async function measure(page, doc, rows) {
     for (const row of rowList) {
       const values = Object.assign(engine.sampleValues(norm), row);
       const inks = {};
-      for (const element of norm.elements) {
+      for (const element of norm.pages[0].elements) {
         if (element.type === 'shape') { continue; }
         inks[element.name] = await inkOf(values, element);
       }
@@ -148,13 +148,13 @@ async function measure(page, doc, rows) {
 
   // ------------------------------------------------------------------------------------------------ 2. the seeded records
   const meta = demoMeta();
-  await page.goto(base + '/Designs?filter=templates', { waitUntil: 'networkidle' });
+  await page.goto(base + '/Templates', { waitUntil: 'networkidle' });
   if (!(await page.textContent('body')).includes(meta.design)) {
     console.log('NOTE the demo records are not in this database (deleted or not a new installation): the seeded records are not checked.');
   } else {
     check('the template is in the list of templates', true);
-    const designHref = await page.locator('a.dt-designtile', { hasText: meta.design }).first().getAttribute('href');
-    const designId = Number(/(\d+)$/.exec(designHref || '')[1]);
+    const designHref = await page.locator('.dt-tpl', { hasText: meta.design }).first().getAttribute('data-template');
+    const designId = Number(designHref);
     await page.goto(`${base}/Designs/${designId}/Designer`);
     await page.waitForSelector('#dt-ds:not(.is-loading)', { timeout: 20000 });
     await page.evaluate(() => window.DtDesigner.canvas.whenIdle());
@@ -168,7 +168,7 @@ async function measure(page, doc, rows) {
     check('the properties of the template open (all tabs, no person recorded as author)', pages.every(status => status === 200), pages.join(','));
     await page.goto(base + '/DataLists', { waitUntil: 'networkidle' });
     check('the data list is there', (await page.textContent('body')).includes(meta.list));
-    await page.goto(base + '/Outputs', { waitUntil: 'networkidle' });
+    await page.goto(base + '/Outputs?q=' + encodeURIComponent(meta.output), { waitUntil: 'networkidle' });
     const runHref = await page.locator('a', { hasText: meta.output }).first().getAttribute('href').catch(() => null);
     check('the output job is there', !!runHref);
     if (runHref) {

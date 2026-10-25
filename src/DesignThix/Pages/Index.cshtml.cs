@@ -3,9 +3,21 @@ using DesignThix.Logic;
 
 namespace DesignThix.Pages;
 
-/// <summary>The start page: counts, the designs worked on last, the outputs run last, quick actions.</summary>
+/// <summary>
+/// The start page (docs/PLAN-CANVA.md section 1.1): "Was möchtest du heute gestalten?", a search over designs and templates, the format tiles, a row of templates, the designs
+/// worked on last, and at the bottom the key figures. A viewer sees no tiles and read-only actions.
+/// </summary>
 public sealed class IndexModel(Biz biz) : PageModelBase
 {
+    /// <summary>How many templates the row on the start page shows (the page "Vorlagen" has them all).</summary>
+    public const int TemplatesShown = 8;
+
+    /// <summary>How many recent designs the grid shows.</summary>
+    public const int RecentShown = 12;
+
+    [Microsoft.AspNetCore.Mvc.BindProperty(SupportsGet = true)]
+    public string? Q { get; set; }
+
     public string Greeting { get; private set; } = "";
 
     public bool IsAdmin => biz.IsAdmin;
@@ -20,18 +32,33 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public IReadOnlyList<DesignRow> Recent { get; private set; } = [];
 
+    public IReadOnlyList<DesignRow> Templates { get; private set; } = [];
+
+    /// <summary>The result of a search (null when there was no search).</summary>
+    public DesignLogic.SearchResult? Search { get; private set; }
+
     public int OutputCount { get; private set; }
 
     public IReadOnlyList<OutputRow> RecentOutputs { get; private set; } = [];
 
     public async Task OnGetAsync()
     {
-        Head("Start", $"Guten Tag, {biz.User.Name}.", ("Start", null));
+        Head("Start", null, ("Start", null));
+        ViewData["OwnHead"] = true;
         Greeting = biz.User.Name ?? "";
         Counts = await DesignLogic.CountsAsync(biz);
-        Recent = await DesignLogic.RecentAsync(biz, 6);
         OutputCount = await OutputLogic.CountAsync(biz);
-        RecentOutputs = await OutputLogic.RecentAsync(biz, 5);
+        if (!string.IsNullOrWhiteSpace(Q))
+        {
+            Search = await DesignLogic.SearchAsync(biz, Q);
+        }
+        else
+        {
+            Recent = await DesignLogic.RecentAsync(biz, RecentShown);
+            Templates = await DesignLogic.FeaturedTemplatesAsync(biz, TemplatesShown);
+            RecentOutputs = await OutputLogic.RecentAsync(biz, 3);
+        }
+
         if (biz.IsAdmin)
         {
             Facts = await SystemLogic.FactsAsync(biz);

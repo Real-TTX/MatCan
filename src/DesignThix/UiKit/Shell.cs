@@ -28,7 +28,10 @@ public sealed class ShellModel
 
     public string Version { get; init; } = "";
 
-    public string Tagline { get; init; } = "Etiketten gestalten";
+    public string Tagline { get; init; } = "Gestalten, drucken, teilen";
+
+    /// <summary>Whether the person may start designs (designers and administrators): the menu offers "Design erstellen" and every page carries the dialog of it.</summary>
+    public bool CanCreate { get; init; }
 
     /// <summary>"light" or "dark" when the user chose one; null follows the system.</summary>
     public string? Theme { get; init; }
@@ -60,6 +63,7 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
             UserRole = user.Role is { } role ? Labels.Of(role) : "",
             UserLine = principal?.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "",
             UserMenu = UserMenu(),
+            CanCreate = user.Role is UserRole.Admin or UserRole.Designer,
             Version = $"DesignThix {AppVersion.Current}",
             Theme = theme,
         });
@@ -74,15 +78,16 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
     };
 
     /// <summary>
-    /// The main menu of docs/PLAN.md section 1.4 as far as its pages exist: "Neues Design" (primary action, only for people who may change things),
-    /// Start, and the groups Gestalten, Daten, Bibliothek and Ausgabe.
+    /// The main menu (docs/PLAN-CANVA.md section 1.2): "Design erstellen" (primary action, only for people who may change things; it opens the dialog with the format tiles, the
+    /// link goes to the page of the same name), Start, Designs, Vorlagen, Uploads &amp; Medien, Marke and Schriften, and below them the group "Serien (Zusatz)" with the features
+    /// that fill a design from data: data lists, series outputs and sheets.
     /// </summary>
     private NavSet WorkMenu()
     {
         var start = new List<NavItem>();
         if (user.Role is UserRole.Admin or UserRole.Designer)
         {
-            start.Add(new("Neues Design", "/Designs/Create", "plus", Primary: true));
+            start.Add(new("Design erstellen", "/Designs/Create", "plus", Primary: true));
         }
 
         start.Add(new("Start", "/", "dashboard"));
@@ -92,11 +97,7 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
             new("Gestalten",
             [
                 new("Designs", "/Designs", "layers"),
-                new("Vorlagen", "/Designs?filter=templates", "template"),
-            ]),
-            new("Daten",
-            [
-                new("Datenlisten", "/DataLists", "table"),
+                new("Vorlagen", "/Templates", "template"),
             ]),
             new("Bibliothek",
             [
@@ -104,9 +105,10 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
                 new("Marke", "/Brand", "palette"),
                 new("Schriften", "/Fonts", "type"),
             ]),
-            new("Ausgabe",
+            new("Serien (Zusatz)",
             [
-                new("Ausgaben", "/Outputs", "dt:printer"),
+                new("Datenlisten", "/DataLists", "table"),
+                new("Serienausgaben", "/Outputs", "dt:printer"),
                 new("Druckbögen", "/Sheets", "dt:tags"),
             ]),
         ]);

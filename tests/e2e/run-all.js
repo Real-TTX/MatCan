@@ -1,7 +1,7 @@
 'use strict';
 // Runs the browser checks one after the other against a running stack and reports one line per check. The exit code is 0 only when all of them passed.
 //
-//   node run-all.js [base url, default http://localhost:3043] [--only engine,pwa,demo,designer,output,ai] [--quiet]
+//   node run-all.js [base url, default http://localhost:3043] [--only engine,pwa,demo,home,templates,designer,output,ai] [--quiet]
 //
 // The checks make their own accounts (see lib.js): start from an empty database (./scripts/redeploy.ps1 -Clean) or put the accounts into tests/e2e/test-account.json.
 // They leave test designs, lists and jobs behind: for the screenshots of the README use screens.js on a clean stack, not after this.
@@ -18,6 +18,8 @@ const checks = [
   { name: 'engine', file: 'engine/engine-check.js', takesBase: false, what: 'the render engine in the browser (own test page)' },
   { name: 'pwa', file: 'pwa-check.js', takesBase: true, what: 'manifest, service worker, iOS meta tags, safe areas, offline' },
   { name: 'demo', file: 'demo-check.js', takesBase: true, what: 'the demo: six labels, nothing touches; the seeded records' },
+  { name: 'home', file: 'home-check.js', takesBase: true, what: 'start page, navigation, format tiles, search, actions of a design, viewer' },
+  { name: 'templates', file: 'templates-check.js', takesBase: true, what: 'gallery of templates, use, filter, every template draws without a warning' },
   { name: 'designer', file: 'designer-check.js', takesBase: true, what: 'the designer: drawing, saving, conflicts, preview, viewer' },
   { name: 'output', file: 'output-check.js', takesBase: true, what: 'output jobs: print pages, sheets, PNG-ZIP, single print, export/import' },
   { name: 'ai', file: 'ai-check.js', takesBase: true, what: 'AI actions against a fake provider' },

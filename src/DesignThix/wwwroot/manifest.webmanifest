@@ -1,7 +1,7 @@
 {
   "name": "DesignThix",
   "short_name": "DesignThix",
-  "description": "Gestalte Etiketten, Karten, Schilder und Plakate und befülle sie aus Datenlisten.",
+  "description": "Gestalte Etiketten, Karten, Flyer, Poster und Beiträge für soziale Medien, offline und im Browser. Bei Bedarf füllt DesignThix ein Design aus Datenlisten.",
   "id": "/",
   "start_url": "/?source=pwa",
   "scope": "/",
@@ -54,7 +54,7 @@
   ],
   "shortcuts": [
     {
-      "name": "Neues Design",
+      "name": "Design erstellen",
       "url": "/Designs/Create",
       "icons": [
         {

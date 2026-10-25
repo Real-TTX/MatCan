@@ -24,6 +24,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Demo\kaesetheke.json" LogicalName="DesignThix.Demo.kaesetheke.json" />
+    <!-- The built-in templates (Services/TemplateSeeder): one file per template, written by tools/templates-build.js -->
+    <EmbeddedResource Include="Demo\templates\*.json" LogicalName="DesignThix.Demo.templates.%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

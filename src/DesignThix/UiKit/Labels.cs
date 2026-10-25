@@ -17,8 +17,8 @@ public static class Labels
     public static string Describe(UserRole r) => r switch
     {
         UserRole.Admin => "Darf alles, auch Benutzer, KI und Einstellungen verwalten.",
-        UserRole.Designer => "Gestaltet Designs, pflegt Medien, Schriften, Datenlisten und Druckbögen und führt Ausgaben aus.",
-        _ => "Sieht Designs und Datenlisten und führt Ausgaben aus, ändert aber nichts.",
+        UserRole.Designer => "Gestaltet Designs, pflegt Medien, Schriften, Datenlisten und Druckbögen und führt Serienausgaben aus.",
+        _ => "Sieht Designs und Datenlisten und führt Serienausgaben aus, ändert aber nichts.",
     };
 
     public static string Of(AiProvider p) => p == AiProvider.ChatGpt ? "ChatGPT-Konto" : "OpenAI-kompatibel (API-Schlüssel)";

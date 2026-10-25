@@ -34,7 +34,7 @@
                             <span class="mat-hint">Hilft beim Finden. Du kannst eine vorhandene Kategorie wählen oder eine neue tippen.</span>
                         </div>
                         <dt-textarea for="Input.Description" label="Beschreibung" rows="3" readonly="@ro" full="true" />
-                        <dt-switch for="Input.IsTemplate" label="Als Vorlage anbieten" disabled="@ro" full="true" hint="Eine Vorlage erscheint in „Neues Design“ unter „Aus Vorlage“ und im Menü unter „Vorlagen“. Neue Designs sind Kopien von ihr." />
+                        <dt-switch for="Input.IsTemplate" label="Als Vorlage anbieten" disabled="@ro" full="true" hint="Eine Vorlage erscheint im Menü unter „Vorlagen“ und in „Design erstellen“ unter „Aus Vorlage“. Neue Designs sind Kopien von ihr." />
                     </div>
                 </dt-tab>
                 <dt-tab id="fields" title="Felder" icon="list" count="@Model.Fields.Count">
@@ -159,7 +159,7 @@
     }
     else
     {
-        <dt-buttons back-href="/Designs" delete-url="@Url.Page("/Designs/Edit", "Delete", new { id = Model.Id })" delete-confirm="Dieses Design löschen? Ausgaben, die es nutzen, können danach nicht mehr laufen.">
+        <dt-buttons back-href="/Designs" delete-url="@Url.Page("/Designs/Edit", "Delete", new { id = Model.Id })" delete-confirm="Dieses Design löschen? Serienausgaben, die es nutzen, können danach nicht mehr laufen.">
             <a class="mat-btn mat-btn--secondary" href="/Designs/@Model.Id/Designer">@Ui.Icon("edit")<span>Im Designer öffnen</span></a>
             <button type="submit" formnovalidate asp-page-handler="Duplicate" asp-route-id="@Model.Id" class="mat-btn mat-btn--secondary">@Ui.Icon("copy")<span>Duplizieren</span></button>
             <a class="mat-btn mat-btn--secondary" href="/Designs/@Model.Id/Print">@Ui.ToolIcon("printer")<span>Einzeldruck</span></a>

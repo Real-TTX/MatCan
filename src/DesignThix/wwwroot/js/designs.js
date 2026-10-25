@@ -11,6 +11,7 @@
   var engine = window.DtEngine;
   var documents = new Map();
   var fontsPromise = null;
+  var iconsPromise = null;
   var running = 0;
   var waiting = [];
   var LIMIT = 3;
@@ -38,6 +39,17 @@
     return fontsPromise;
   }
 
+  /** The icon library (lib/icons.json, cached by the service worker), loaded once and only when a design on the page has an icon. */
+  function loadIcons() {
+    if (!iconsPromise) {
+      iconsPromise = fetch('/lib/icons.json', { credentials: 'same-origin' })
+        .then(function (r) { return r.ok ? r.json() : { icons: {} }; })
+        .then(function (data) { return data && data.icons ? data.icons : {}; })
+        .catch(function () { return {}; });
+    }
+    return iconsPromise;
+  }
+
   function loadDocument(url) {
     if (!documents.has(url)) {
       documents.set(url, fetch(url, { credentials: 'same-origin' }).then(function (r) {
@@ -59,6 +71,7 @@
         mode: 'output',
         assetUrl: function (key) { return '/media/' + encodeURIComponent(key); },
         fonts: parts[1],
+        icon: function (name) { return loadIcons().then(function (icons) { return icons[name] ? icons[name].b : null; }); },
         idPrefix: 'dtp' + (box.getAttribute('data-dt-preview') || '0') + '-',
       });
     }).then(function () { box.classList.add('is-ready'); }).catch(function () { placeholder(box); });

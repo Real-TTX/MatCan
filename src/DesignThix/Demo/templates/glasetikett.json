@@ -1,0 +1,38 @@
+{
+  "name": "Glasetikett – Marmelade & Honig",
+  "category": "Etiketten",
+  "description": "Etikett für Gläser (70 × 50 mm) mit rundem Bildrahmen für ein Foto, Produktname in Schreibschrift, Inhalt, Abfülldatum und einem QR-Code zu einer Internetadresse. Produkt, Sorte, Inhalt, Datum und Adresse sind Felder.",
+  "document": {
+    "schema":2,"unit":"mm","width":70,"height":50,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Produkt","type":"text","sample":"Waldhonig","decimals":null,"category":null,"required":true},
+      {"key":"Sorte","label":"Sorte oder Zusatz","type":"text","sample":"Sommertracht, cremig","decimals":null,"category":null,"required":false},
+      {"key":"Inhalt","label":"Inhalt","type":"text","sample":"500 g","decimals":null,"category":null,"required":false},
+      {"key":"Datum","label":"Abgefüllt","type":"text","sample":"Abgefüllt 07/2026","decimals":null,"category":null,"required":false},
+      {"key":"Erzeuger","label":"Erzeuger","type":"text","sample":"Imkerei Sonnenhang","decimals":null,"category":null,"required":false},
+      {"key":"URL","label":"Internetadresse für den QR-Code","type":"text","sample":"https://example.org/honig","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fbf4e6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rand","x":1.8,"y":1.8,"w":66.4,"h":46.4,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c9892b","strokeWidth":0.7,"dash":"solid","radius":5,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Foto Hintergrund","x":4.5,"y":7,"w":28.5,"h":28.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#f3dca8","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"icon","name":"Foto Platzhalter","x":13.2,"y":15.7,"w":11,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"flower-2","color":"#c9892b","strokeWidth":1.6},
+        {"id":"e4","type":"image","name":"Foto","x":6,"y":8.5,"w":25.5,"h":25.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"circle","border":{"color":"#c9892b","width":1.4},"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Erzeuger","x":3,"y":37.3,"w":32,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Erzeuger","flipX":false,"flipY":false,"shadow":null,"text":"{{Erzeuger}}","fontFamily":"Montserrat","fontSize":6.5,"fontWeight":600,"italic":false,"color":"#7a5a3e","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.04,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":4,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Handgemacht","x":37,"y":6.8,"w":28,"h":3.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Handgemacht","fontFamily":"Montserrat","fontSize":6,"fontWeight":600,"italic":false,"color":"#c9892b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":4,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Produkt","x":37,"y":10.2,"w":29,"h":12.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Kaushan Script","fontSize":25,"fontWeight":400,"italic":false,"color":"#4a2c17","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Sorte","x":37,"y":23.2,"w":29,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Sorte","flipX":false,"flipY":false,"shadow":null,"text":"{{Sorte}}","fontFamily":"Lora","fontSize":8.5,"fontWeight":400,"italic":true,"color":"#7a5a3e","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"shape","name":"Trennlinie","x":37,"y":29.6,"w":28.5,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#e3c88e","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e10","type":"text","name":"Inhalt","x":37,"y":31.6,"w":13,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Inhalt}}","fontFamily":"Montserrat","fontSize":11,"fontWeight":700,"italic":false,"color":"#4a2c17","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Datum","x":37,"y":38,"w":13,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Datum","flipX":false,"flipY":false,"shadow":null,"text":"{{Datum}}","fontFamily":"Montserrat","fontSize":6,"fontWeight":500,"italic":false,"color":"#7a5a3e","align":"left","valign":"top","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"qr","name":"QR-Code","x":50.4,"y":30.4,"w":14.8,"h":14.8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"URL","flipX":false,"flipY":false,"shadow":null,"value":"{{URL}}","color":"#4a2c17","background":null,"ecc":"M","quiet":false}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Waldhonig","Sorte":"Sommertracht, cremig","Inhalt":"500 g","Datum":"Abgefüllt 07/2026","Erzeuger":"Imkerei Sonnenhang","URL":"https://example.org/honig"},
+    {"Produkt":"Erdbeermarmelade","Sorte":"mit 60 % Frucht","Inhalt":"250 g","Datum":"Abgefüllt 06/2026","Erzeuger":"Hofladen Wiesengrund","URL":"https://example.org/erdbeere"},
+    {"Produkt":"Holunder-Gelee","Sorte":"Herbstlese","Inhalt":"200 g","Datum":"","Erzeuger":"Hofladen Wiesengrund","URL":"https://example.org/gelee"},
+    {"Produkt":"Quittenkonfitüre","Sorte":"","Inhalt":"250 g","Datum":"Abgefüllt 10/2026","Erzeuger":"","URL":""}
+  ]
+}

@@ -198,7 +198,7 @@ const runFacts = page => page.evaluate(() => {
   const menuItems = await page.$$eval('.mat-nav a', links => links.map(a => ({ text: a.textContent.trim(), href: a.getAttribute('href') })));
   const outputsAt = menuItems.findIndex(i => i.href === '/Outputs');
   const sheetsAt = menuItems.findIndex(i => i.href === '/Sheets');
-  check('Ausgaben is in the menu, right above Druckbögen', outputsAt >= 0 && sheetsAt === outputsAt + 1, JSON.stringify(menuItems.slice(outputsAt - 1, sheetsAt + 1)));
+  check('Serienausgaben is in the menu, right above Druckbögen', outputsAt >= 0 && sheetsAt === outputsAt + 1, JSON.stringify(menuItems.slice(outputsAt - 1, sheetsAt + 1)));
   check('the menu item has an icon', (await page.$$eval('.mat-nav a[href="/Outputs"] svg use', uses => uses.length)) === 1);
 
   // ---------------------------------------------------------------------------------------- 1. the demo design and its list
@@ -298,7 +298,7 @@ const runFacts = page => page.evaluate(() => {
   check('the row shows design, list, label count and format', listRows.some(r => r.text.includes(designName) && r.text.includes('Output-Check Liste') && r.cells.some(c => c.startsWith('4')) && r.text.includes('PNG-ZIP')), listRows[0] && listRows[0].text);
   check('a design thumbnail or preview box is in the row', (await page.$$('#output-table .dt-designthumb')).length === 3);
   check('never run: "noch nie"', listRows.every(r => r.text.includes('noch nie')));
-  check('the list has the toolbar above and "Neue Ausgabe" below it', (await page.isVisible('.mat-toolbar')) && (await page.isVisible('.mat-actions a:has-text("Neue Ausgabe")')));
+  check('the list has the toolbar above and "Neue Serienausgabe" below it', (await page.isVisible('.mat-toolbar')) && (await page.isVisible('.mat-actions a:has-text("Neue Serienausgabe")')));
   await page.goto(base + '/Outputs?format=Png&q=' + encodeURIComponent(stamp));
   check('the format filter keeps only the PNG output', (await page.$$eval('#output-table tbody tr', r => r.length)) === 1);
   await page.goto(base + '/Outputs?design=' + designId + '&sort=name&dir=desc&q=' + encodeURIComponent(stamp));
@@ -467,8 +467,8 @@ const runFacts = page => page.evaluate(() => {
   check('the test font was uploaded', fontId > 0, page.url());
 
   const exportDoc = demoDocument();
-  exportDoc.elements.push({ id: 'logo1', type: 'image', name: 'Test-Logo', x: 2, y: 2, w: 10, h: 10, rotation: 0, opacity: 1, locked: false, hidden: false, showIf: null, source: { asset: logoKey }, fit: 'contain', radius: 0 });
-  exportDoc.elements.push({ id: 'bebas', type: 'text', name: 'Bebas', x: 20, y: 90, w: 60, h: 8, rotation: 0, opacity: 1, locked: false, hidden: false, showIf: null, text: 'BEBAS', fontFamily: 'Bebas Neue', fontSize: 12, fontWeight: 400, italic: false, color: '#111111', align: 'left', valign: 'middle', lineHeight: 1.1, letterSpacing: 0, uppercase: false, wrap: false, fit: 'none', minFontSize: 4 });
+  exportDoc.pages[0].elements.push({ id: 'logo1', type: 'image', name: 'Test-Logo', x: 2, y: 2, w: 10, h: 10, rotation: 0, opacity: 1, locked: false, hidden: false, showIf: null, source: { asset: logoKey }, fit: 'contain', radius: 0 });
+  exportDoc.pages[0].elements.push({ id: 'bebas', type: 'text', name: 'Bebas', x: 20, y: 90, w: 60, h: 8, rotation: 0, opacity: 1, locked: false, hidden: false, showIf: null, text: 'BEBAS', fontFamily: 'Bebas Neue', fontSize: 12, fontWeight: 400, italic: false, color: '#111111', align: 'left', valign: 'middle', lineHeight: 1.1, letterSpacing: 0, uppercase: false, wrap: false, fit: 'none', minFontSize: 4 });
   const sourceId = await createDesign(page, 'Export-Quelle ' + stamp, exportDoc);
   await page.goto(`${base}/Designs/Edit/${sourceId}`);
   check('the properties page has Exportieren and Einzeldruck', (await page.isVisible('a:has-text("Exportieren")')) && (await page.isVisible('a:has-text("Einzeldruck")')));
@@ -555,12 +555,12 @@ const runFacts = page => page.evaluate(() => {
   watch(viewer, 'viewer');
   if (!await login(viewer, accounts.viewer)) { throw new Error('Anmeldung des Betrachters fehlgeschlagen.'); }
   await viewer.goto(base + '/Outputs?q=' + encodeURIComponent(stamp));
-  check('the viewer sees the outputs, but not "Neue Ausgabe"', (await viewer.$$('#output-table tbody tr')).length === 4 && !(await viewer.isVisible('a:has-text("Neue Ausgabe")')));
+  check('the viewer sees the outputs, but not "Neue Serienausgabe"', (await viewer.$$('#output-table tbody tr')).length === 4 && !(await viewer.isVisible('a:has-text("Neue Serienausgabe")')));
   await viewer.goto(`${base}/Outputs/Edit/${sheetJob}`);
   check('the edit page is read-only for the viewer (disabled fields, run and back only)', (await viewer.isVisible('fieldset[disabled]')) && !(await viewer.isVisible('button[type=submit].mat-btn--primary')) && (await viewer.isVisible('a:has-text("Ausführen")')));
   check('and says so', /nur ansehen und ausführen/.test(await viewer.textContent('main')));
   const create = await viewer.goto(base + '/Outputs/Create');
-  check('"Neue Ausgabe" is closed for the viewer', /AccessDenied/.test(viewer.url()) || create.status() === 403, viewer.url() + ' ' + create.status());
+  check('"Neue Serienausgabe" is closed for the viewer', /AccessDenied/.test(viewer.url()) || create.status() === 403, viewer.url() + ' ' + create.status());
   await viewer.goto(`${base}/Outputs/Edit/${sheetJob}`);
   const post = await viewer.evaluate(async id => {
     const r = await fetch('/Outputs/Edit/' + id, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', RequestVerificationToken: document.querySelector('meta[name=dt-csrf]').content }, body: 'Input.Name=Hacked&Input.DesignId=1', redirect: 'manual' });

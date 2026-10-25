@@ -1,0 +1,28 @@
+@using DesignThix.Core.Documents
+@model (IReadOnlyList<FormatPreset> Tiles, bool WithCustom)
+@*
+    The tiles of the formats (docs/PLAN-CANVA.md section 1.1): one click creates a design of that format and opens it in the designer (create.js: POST /api/designs). Without script the tile is a link
+    to the page "Design erstellen" with the format chosen. "Eigene Größe" opens the dialog (start page) or the page.
+*@
+<ul class="dt-formats" data-formats>
+    @foreach (var p in Model.Tiles)
+    {
+        <li>
+            <a class="dt-formattile" href="/Designs/Create?format=@p.Key" data-format="@p.Key">
+                <span class="dt-formattile__stage"><span class="dt-formattile__shape">@Ui.Icon(p.Icon)</span></span>
+                <span class="dt-formattile__title">@p.ShortName</span>
+                <span class="dt-formattile__size">@Fmt.Number((decimal)p.Width, 0) × @Fmt.Number((decimal)p.Height, 0) @p.Unit</span>
+            </a>
+        </li>
+    }
+    @if (Model.WithCustom)
+    {
+        <li>
+            <a class="dt-formattile dt-formattile--custom" href="/Designs/Create?format=custom" data-format-custom>
+                <span class="dt-formattile__stage"><span class="dt-formattile__shape">@Ui.Icon("dt:scaling")</span></span>
+                <span class="dt-formattile__title">Eigene Größe</span>
+                <span class="dt-formattile__size">Breite × Höhe</span>
+            </a>
+        </li>
+    }
+</ul>

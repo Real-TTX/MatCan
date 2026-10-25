@@ -20,28 +20,28 @@
 
 @if (ro)
 {
-    <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst Ausgaben nur ansehen und ausführen. Ändern können Gestalter und Administratoren.</div></div>
+    <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst Serienausgaben nur ansehen und ausführen. Ändern können Gestalter und Administratoren.</div></div>
 }
 
 @* One form for all four tabs: the script (outputs.js) keeps the count of labels, the table of rows and the preview of the sheet up to date while the person types. *@
 <form class="mat-form" method="post" novalidate data-dt-output-form data-sheets="@Model.SheetsJson" data-design-url="/api/designs/" data-rows-url="/api/datalists/" data-readonly="@(ro ? "true" : "false")">
     <dt-summary />
     <fieldset class="dt-fieldset" disabled="@ro">
-        <legend class="mat-sr-only">Ausgabe</legend>
-        <dt-tabs id="output-tabs" label="Bereiche der Ausgabe" selected="@tab">
+        <legend class="mat-sr-only">Serienausgabe</legend>
+        <dt-tabs id="output-tabs" label="Bereiche der Serienausgabe" selected="@tab">
             <dt-tab id="general" title="Allgemein" icon="settings">
-                <dt-card title="Die Ausgabe" icon="file-text">
+                <dt-card title="Die Serienausgabe" icon="file-text">
                     <div class="mat-form__grid">
                         <dt-input for="Input.Name" label="Name" required="true" autocomplete="off" full="true" hint="Zum Beispiel: Käsetheke Herbst, Wochenangebote." />
                         <dt-select for="Input.DesignId" label="Design" required="true" items="Model.DesignItems" empty="Design wählen ..." full="true" />
                         <dt-select for="Input.DataListId" label="Datenliste" items="Model.ListItems" empty="Keine: die Beispielwerte des Designs drucken" full="true"
-                                   hint="Eine Zeile der Liste ergibt ein Etikett. Ohne Liste druckt die Ausgabe die Beispielwerte des Designs so oft, wie du bei „Kopien“ einträgst." />
+                                   hint="Eine Zeile der Liste ergibt ein Etikett. Ohne Liste druckt die Serienausgabe die Beispielwerte des Designs so oft, wie du bei „Kopien“ einträgst." />
                     </div>
                 </dt-card>
             </dt-tab>
 
             <dt-tab id="selection" title="Auswahl" icon="list-checks">
-                <p class="mat-muted" data-show-if="Input.DataListId" data-show-value="">Ohne Datenliste gibt es keine Zeilen zu wählen: die Ausgabe druckt die Beispielwerte des Designs. Lege hier fest, wie viele Etiketten das sein sollen.</p>
+                <p class="mat-muted" data-show-if="Input.DataListId" data-show-value="">Ohne Datenliste gibt es keine Zeilen zu wählen: die Serienausgabe druckt die Beispielwerte des Designs. Lege hier fest, wie viele Etiketten das sein sollen.</p>
                 <div class="dt-stack" data-show-if="Input.DataListId">
                     <dt-card title="Welche Zeilen?" icon="table">
                         <div class="mat-form__grid">
@@ -76,7 +76,7 @@
                         <div class="dt-stack">
                             <dt-card title="Druckbogen" icon="dt:tags">
                                 <div class="mat-form__grid">
-                                    <dt-select for="Input.SheetLayoutId" label="Druckbogen" items="Model.SheetItems" empty="Druckbogen wählen ..." full="true" hint="Die Druckbögen verwaltest du unter Ausgabe → Druckbögen." />
+                                    <dt-select for="Input.SheetLayoutId" label="Druckbogen" items="Model.SheetItems" empty="Druckbogen wählen ..." full="true" hint="Die Druckbögen verwaltest du unter Serien (Zusatz) → Druckbögen." />
                                     <dt-input for="Input.StartPosition" label="Startposition (Nummer des ersten Etiketts)" type="number" min="1" inputmode="numeric" hint="Ist der Bogen schon halb benutzt? Dann beginne beim ersten freien Etikett: die Plätze davor bleiben leer." />
                                     <dt-switch for="Input.CropMarks" label="Schnittmarken drucken" full="true" hint="Kleine Linien außerhalb jedes Etiketts zeigen, wo geschnitten wird." />
                                     <dt-radios for="Input.Scale" label="Ist das Design größer als das Etikett?" items="Model.ScaleItems" full="true" />
@@ -117,7 +117,7 @@
     }
     else
     {
-        <dt-buttons back-href="/Outputs" delete-url="@Url.Page("/Outputs/Edit", "Delete", new { id = job!.Id })" delete-confirm="Diese Ausgabe löschen? Das Design und die Datenliste bleiben, wie sie sind.">
+        <dt-buttons back-href="/Outputs" delete-url="@Url.Page("/Outputs/Edit", "Delete", new { id = job!.Id })" delete-confirm="Diese Serienausgabe löschen? Das Design und die Datenliste bleiben, wie sie sind.">
             <button type="submit" formnovalidate asp-page-handler="Run" asp-route-id="@job!.Id" class="mat-btn mat-btn--secondary dt-btn-run">@Ui.Icon("play")<span>Ausführen</span></button>
         </dt-buttons>
     }

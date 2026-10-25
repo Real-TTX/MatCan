@@ -1,114 +1,159 @@
 @page
+@using DesignThix.Core.Documents
 @model DesignThix.Pages.IndexModel
 @{
     ViewData["Robots"] = "noindex, nofollow";
+    var searching = Model.Search is not null;
 }
 
 <link rel="stylesheet" href="~/css/designs.css" asp-append-version="true" />
 
-<div class="mat-grid dt-stats">
-    @Ui.Kpi("Designs", Fmt.Integer(Model.Counts.Designs), Model.Counts.Templates == 0 ? null : Ui.Plural(Model.Counts.Templates, "Vorlage", "Vorlagen"), "layers", href: "/Designs")
-    @Ui.Kpi("Datenlisten", Fmt.Integer(Model.Counts.DataLists), null, "table", href: "/DataLists")
-    @Ui.Kpi("Ausgaben", Fmt.Integer(Model.OutputCount), null, "download", href: "/Outputs")
-    @Ui.Kpi("Medien", Fmt.Integer(Model.Counts.Assets), null, "image", href: "/Assets")
-    @Ui.Kpi("Schriften", Fmt.Integer(Model.Counts.Fonts), null, "type", href: "/Fonts")
-    @if (Model.Facts is { } f)
-    {
-        @Ui.Kpi("Benutzer", Fmt.Integer(f.Users), null, "users", href: "/Admin/Users")
-        @Ui.Kpi("KI-Läufe", Fmt.Integer(f.AiRuns), null, "sparkles", href: "/Admin/Ai/Runs")
-    }
-</div>
+<header class="dt-start__hero">
+    <p class="dt-start__hello">Guten Tag, @Model.Greeting.</p>
+    <h1 class="dt-start__title">Was möchtest du heute gestalten?</h1>
+    <form class="dt-start__search" method="get" action="/" role="search">
+        <div class="mat-input-icon">
+            @Ui.Icon("search")
+            <input class="mat-input" type="search" id="start-q" name="q" value="@Model.Q" placeholder="Designs und Vorlagen suchen" aria-label="Designs und Vorlagen suchen" autocomplete="off" enterkeyhint="search" maxlength="100" />
+        </div>
+        <button type="submit" class="mat-btn mat-btn--primary">@Ui.Icon("search")<span>Suchen</span></button>
+    </form>
+</header>
 
-<dt-card title="Zuletzt bearbeitet" icon="clock">
-    @if (Model.Recent.Count == 0)
-    {
-        <div class="mat-empty" id="recent-empty">
-            <span class="mat-empty__icon">@Ui.Icon("layers")</span>
-            <div class="mat-empty__title">Noch kein Design</div>
-            <p>@(Model.CanEdit ? "Lege dein erstes Design an: ein Etikett, eine Karte oder ein Schild." : "Sobald jemand ein Design anlegt, siehst du es hier.")</p>
-            @if (Model.CanEdit)
-            {
-                <a class="mat-btn mat-btn--primary" href="/Designs/Create">@Ui.Icon("plus")<span>Neues Design</span></a>
-            }
+@if (searching)
+{
+    var found = Model.Search!;
+    <section class="dt-section" aria-labelledby="start-results" data-search-results>
+        <div class="dt-section__head">
+            <h2 class="dt-section__title" id="start-results">@(found.Empty ? "Nichts gefunden" : "Gefunden für „" + found.Text + "“")</h2>
+            <a class="dt-section__more" href="/">Suche zurücksetzen</a>
         </div>
-    }
-    else
-    {
-        <div class="mat-gallery dt-gallery" data-recent-designs>
-            @foreach (var d in Model.Recent)
-            {
-                <a class="mat-tile dt-designtile" href="/Designs/Edit/@d.Id">
-                    <span class="mat-tile__media dt-designtile__media">@LibraryUi.DesignThumb(d)</span>
-                    <span class="mat-tile__body">
-                        <span class="mat-tile__title">@d.Name</span>
-                        <span class="mat-tile__meta">@d.Size · @Fmt.Ago(d.UpdateDate, DateTime.UtcNow)</span>
-                    </span>
-                </a>
-            }
-        </div>
-        <div class="mat-actions mat-mt-4">
-            <a class="mat-btn mat-btn--secondary" href="/Designs">@Ui.Icon("layers")<span>Alle Designs</span></a>
-        </div>
-    }
-</dt-card>
-
-<dt-card title="Zuletzt ausgeführt" icon="download">
-    @if (Model.RecentOutputs.Count == 0)
-    {
-        <div class="mat-empty" id="recent-outputs-empty">
-            <span class="mat-empty__icon">@Ui.Icon("download")</span>
-            <div class="mat-empty__title">Noch keine Ausgabe</div>
-            <p>@(Model.CanEdit ? "Eine Ausgabe druckt ein Design mit den Zeilen einer Datenliste: auf ein Blatt pro Etikett, auf einen Druckbogen oder als PNG-Bilder." : "Sobald jemand eine Ausgabe anlegt, kannst du sie hier ausführen.")</p>
-            @if (Model.CanEdit)
-            {
-                <a class="mat-btn mat-btn--primary" href="/Outputs/Create">@Ui.Icon("plus")<span>Neue Ausgabe</span></a>
-            }
-        </div>
-    }
-    else
-    {
-        <ul class="dt-notes" data-recent-outputs>
-            @foreach (var o in Model.RecentOutputs)
-            {
-                <li class="dt-note">
-                    <span class="dt-note__icon dt-note__icon--info">@Ui.Icon(o.Format == OutputFormat.Png ? "image" : "download")</span>
-                    <div class="dt-note__body">
-                        <a class="dt-note__title" href="/Outputs/Edit/@o.Id">@o.Name</a>
-                        <span class="dt-note__meta">@(o.DesignName ?? "Design gelöscht")@(o.DataListName is null ? "" : " · " + o.DataListName) · @(o.LastRunDate is null ? "noch nie ausgeführt" : "ausgeführt " + Fmt.Ago(o.LastRunDate.Value, DateTime.UtcNow))</span>
-                    </div>
-                    <a class="mat-btn mat-btn--secondary mat-btn--sm" href="/Outputs/@o.Id/Run" aria-label="@o.Name ausführen">@Ui.Icon("play")<span>Ausführen</span></a>
-                </li>
-            }
-        </ul>
-        <div class="mat-actions mat-mt-4">
-            <a class="mat-btn mat-btn--secondary" href="/Outputs">@Ui.Icon("download")<span>Alle Ausgaben</span></a>
-        </div>
-    }
-</dt-card>
-
-<dt-card title="Schnell zur Sache" icon="rocket">
-    <div class="mat-btn-row mat-btn-row--plain">
-        @if (Model.CanEdit)
+        @if (found.Empty)
         {
-            <a class="mat-btn mat-btn--primary" href="/Designs/Create">@Ui.Icon("plus")<span>Neues Design</span></a>
-            <a class="mat-btn mat-btn--secondary" href="/DataLists/Edit">@Ui.Icon("table")<span>Datenliste anlegen</span></a>
-            <a class="mat-btn mat-btn--secondary" href="/Assets/Upload">@Ui.Icon("upload")<span>Medien hochladen</span></a>
-            <a class="mat-btn mat-btn--secondary" href="/Outputs/Create">@Ui.Icon("download")<span>Ausgabe anlegen</span></a>
-            <a class="mat-btn mat-btn--secondary" href="/Sheets">@Ui.Icon("dt:tags")<span>Druckbögen</span></a>
+            <div class="mat-empty">
+                <span class="mat-empty__icon">@Ui.Icon("search")</span>
+                <div class="mat-empty__title">Kein Design und keine Vorlage passt zu „@found.Text“</div>
+                <p>Die Suche schaut in Name, Kategorie und Beschreibung. Versuche einen kürzeren Begriff.</p>
+            </div>
+        }
+    </section>
+    @if (found.Designs.Count > 0)
+    {
+        <section class="dt-section" aria-labelledby="start-found-designs">
+            <div class="dt-section__head"><h2 class="dt-section__title" id="start-found-designs">Designs <span class="dt-category__count">@found.Designs.Count</span></h2></div>
+            <div class="mat-gallery dt-gallery" data-found-designs>
+                @foreach (var d in found.Designs)
+                {
+                    <partial name="_RecentTile" model="(d, Model.CanEdit)" />
+                }
+            </div>
+        </section>
+    }
+    @if (found.Templates.Count > 0)
+    {
+        <section class="dt-section" aria-labelledby="start-found-templates">
+            <div class="dt-section__head"><h2 class="dt-section__title" id="start-found-templates">Vorlagen <span class="dt-category__count">@found.Templates.Count</span></h2><a class="dt-section__more" href="/Templates?q=@Uri.EscapeDataString(found.Text)">In den Vorlagen ansehen</a></div>
+            <div class="dt-tplgrid" data-found-templates>
+                @foreach (var t in found.Templates)
+                {
+                    <partial name="_TemplateTile" model="(t, Model.CanEdit, Model.CanEdit)" />
+                }
+            </div>
+        </section>
+    }
+}
+else
+{
+    @if (Model.CanEdit)
+    {
+        <section class="dt-section" aria-labelledby="start-formats">
+            <div class="dt-section__head"><h2 class="dt-section__title" id="start-formats">Design erstellen</h2></div>
+            <partial name="_FormatTiles" model="(FormatPresets.Tiles, true)" />
+        </section>
+    }
+
+    @if (Model.Templates.Count > 0)
+    {
+        <section class="dt-section" aria-labelledby="start-templates">
+            <div class="dt-section__head">
+                <h2 class="dt-section__title" id="start-templates">Vorlagen</h2>
+                <a class="dt-section__more" href="/Templates">Alle Vorlagen</a>
+            </div>
+            <div class="dt-tilerow" data-start-templates>
+                @foreach (var t in Model.Templates)
+                {
+                    <partial name="_TemplateTile" model="(t, Model.CanEdit, false)" />
+                }
+            </div>
+            @if (!Model.CanEdit)
+            {
+                <p class="mat-hint">Neue Designs legen Gestalter und Administratoren an. Als Betrachter siehst du die Vorlagen und kannst sie ansehen.</p>
+            }
+        </section>
+    }
+
+    <section class="dt-section" aria-labelledby="start-recent">
+        <div class="dt-section__head">
+            <h2 class="dt-section__title" id="start-recent">Zuletzt bearbeitet</h2>
+            @if (Model.Recent.Count > 0)
+            {
+                <a class="dt-section__more" href="/Designs">Alle Designs</a>
+            }
+        </div>
+        @if (Model.Recent.Count == 0)
+        {
+            <div class="mat-empty" id="recent-empty">
+                <span class="mat-empty__icon">@Ui.Icon("layers")</span>
+                <div class="mat-empty__title">Noch kein Design</div>
+                <p>@(Model.CanEdit ? "Wähle oben ein Format oder eine Vorlage: Dein erstes Design ist in einem Klick angelegt." : "Sobald jemand ein Design anlegt, siehst du es hier.")</p>
+            </div>
         }
         else
         {
-            <a class="mat-btn mat-btn--secondary" href="/Designs">@Ui.Icon("layers")<span>Designs ansehen</span></a>
-            <a class="mat-btn mat-btn--secondary" href="/DataLists">@Ui.Icon("table")<span>Datenlisten ansehen</span></a>
+            <div class="mat-gallery dt-gallery" data-recent-designs>
+                @foreach (var d in Model.Recent)
+                {
+                    <partial name="_RecentTile" model="(d, Model.CanEdit)" />
+                }
+            </div>
         }
-        @if (Model.IsAdmin)
-        {
-            <a class="mat-btn mat-btn--ghost" href="/Admin/Users">@Ui.Icon("users")<span>Benutzer verwalten</span></a>
-            <a class="mat-btn mat-btn--ghost" href="/Admin/Ai">@Ui.Icon("sparkles")<span>KI einrichten</span></a>
-        }
-    </div>
-    <p class="mat-muted mat-mt-4">DesignThix gestaltet Etiketten, Karten, Schilder und Plakate und füllt sie aus Datenlisten: ein Design, viele Etiketten. Du zeichnest ein Design einmal, setzt Platzhalter wie <span class="mat-mono">{{Name}}</span> ein und druckst die ganze Liste in einem Zug. Die Ausgabe druckt als PDF oder liefert PNG-Bilder in einer ZIP-Datei. Deine Rolle: @Labels.Of(Model.Role).</p>
-</dt-card>
+    </section>
+
+    @if (Model.RecentOutputs.Count > 0)
+    {
+        <section class="dt-series" aria-labelledby="start-series">
+            <h2 class="dt-series__title" id="start-series">Serien (Zusatz): zuletzt ausgeführt</h2>
+            <ul class="dt-notes" data-recent-outputs>
+                @foreach (var o in Model.RecentOutputs)
+                {
+                    <li class="dt-note">
+                        <span class="dt-note__icon dt-note__icon--info">@Ui.Icon(o.Format == OutputFormat.Png ? "image" : "download")</span>
+                        <div class="dt-note__body">
+                            <a class="dt-note__title" href="/Outputs/Edit/@o.Id">@o.Name</a>
+                            <span class="dt-note__meta">@(o.DesignName ?? "Design gelöscht")@(o.DataListName is null ? "" : " · " + o.DataListName) · @(o.LastRunDate is null ? "noch nie ausgeführt" : "ausgeführt " + Fmt.Ago(o.LastRunDate.Value, DateTime.UtcNow))</span>
+                        </div>
+                        <a class="mat-btn mat-btn--secondary mat-btn--sm" href="/Outputs/@o.Id/Run" aria-label="@o.Name ausführen">@Ui.Icon("play")<span>Ausführen</span></a>
+                    </li>
+                }
+            </ul>
+        </section>
+    }
+}
+
+<ul class="dt-facts" aria-label="Zahlen">
+    <li><a class="dt-fact" href="/Designs"><strong>@Fmt.Integer(Model.Counts.Designs)</strong> @(Model.Counts.Designs == 1 ? "Design" : "Designs")</a></li>
+    <li><a class="dt-fact" href="/Templates"><strong>@Fmt.Integer(Model.Counts.Templates)</strong> @(Model.Counts.Templates == 1 ? "Vorlage" : "Vorlagen")</a></li>
+    <li><a class="dt-fact" href="/Assets"><strong>@Fmt.Integer(Model.Counts.Assets)</strong> @(Model.Counts.Assets == 1 ? "Bild" : "Bilder")</a></li>
+    <li><a class="dt-fact" href="/Fonts"><strong>@Fmt.Integer(Model.Counts.Fonts)</strong> @(Model.Counts.Fonts == 1 ? "Schrift" : "Schriften")</a></li>
+    <li><a class="dt-fact" href="/DataLists"><strong>@Fmt.Integer(Model.Counts.DataLists)</strong> @(Model.Counts.DataLists == 1 ? "Datenliste" : "Datenlisten")</a></li>
+    <li><a class="dt-fact" href="/Outputs"><strong>@Fmt.Integer(Model.OutputCount)</strong> @(Model.OutputCount == 1 ? "Serienausgabe" : "Serienausgaben")</a></li>
+    @if (Model.Facts is { } f)
+    {
+        <li><a class="dt-fact" href="/Admin/Users"><strong>@Fmt.Integer(f.Users)</strong> @(f.Users == 1 ? "Benutzer" : "Benutzer")</a></li>
+        <li><a class="dt-fact" href="/Admin/Ai/Runs"><strong>@Fmt.Integer(f.AiRuns)</strong> @(f.AiRuns == 1 ? "KI-Lauf" : "KI-Läufe")</a></li>
+    }
+</ul>
 
 <script src="~/js/dt-engine.js" asp-append-version="true"></script>
 <script src="~/js/designs.js" asp-append-version="true"></script>
+<script src="~/js/home.js" asp-append-version="true"></script>

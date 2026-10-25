@@ -5,7 +5,7 @@
     // the pages (output.css hides the bar and sets the size of the paper through an @page rule that output.js inserts). Everything else of the app (theme, dialogs,
     // toasts) is as in _Layout.
     var shell = await ShellFactory.BuildAsync();
-    var title = ViewData["Title"] as string ?? "Ausgabe";
+    var title = ViewData["Title"] as string ?? "Serienausgabe";
     ViewData["Styles"] = new[] { "/css/output.css" };
 }
 <!DOCTYPE html>

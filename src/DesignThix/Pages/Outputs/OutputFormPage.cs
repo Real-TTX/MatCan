@@ -93,7 +93,7 @@ public abstract class OutputFormPage(Biz biz) : PageModelBase
         var sheets = await SheetLogic.Query(Biz).OrderBy(s => s.Name).ToListAsync();
         SheetItems = [.. sheets.Select(s => new SelectListItem(s.Name, s.Id.ToString(System.Globalization.CultureInfo.InvariantCulture)))];
         SheetsJson = JsonSerializer.Serialize(sheets.Select(s => new { id = s.Id, name = s.Name, paperWidth = s.PaperWidth, paperHeight = s.PaperHeight, marginTop = s.MarginTop, marginLeft = s.MarginLeft, columns = s.Columns, rows = s.Rows, cellWidth = s.CellWidth, cellHeight = s.CellHeight, gapX = s.GapX, gapY = s.GapY, cropMarks = s.CropMarks }), Web);
-        Head(title, null, ("Ausgabe", null), ("Ausgaben", "/Outputs"), (crumb, null));
+        Head(title, null, ("Serien (Zusatz)", null), ("Serienausgaben", "/Outputs"), (crumb, null));
         ViewData["ActiveHref"] = "/Outputs";
         ViewData["Width"] = "wide";
     }

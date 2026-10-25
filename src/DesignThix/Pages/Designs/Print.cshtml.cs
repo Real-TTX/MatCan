@@ -49,7 +49,7 @@ public sealed class PrintModel(Biz biz) : PageModelBase
         var sheets = await SheetLogic.Query(biz).OrderBy(s => s.Name).ToListAsync();
         SheetItems = [.. sheets.Select(s => new SelectListItem(s.Name, s.Id.ToString(System.Globalization.CultureInfo.InvariantCulture)))];
         SheetsJson = JsonSerializer.Serialize(sheets.Select(s => new { id = s.Id, name = s.Name, paperWidth = s.PaperWidth, paperHeight = s.PaperHeight, marginTop = s.MarginTop, marginLeft = s.MarginLeft, columns = s.Columns, rows = s.Rows, cellWidth = s.CellWidth, cellHeight = s.CellHeight, gapX = s.GapX, gapY = s.GapY, cropMarks = s.CropMarks }), Web);
-        Head($"Einzeldruck: {design.Name}", "Trage die Werte ein und drucke ein einzelnes Etikett, ohne eine Datenliste oder eine gespeicherte Ausgabe.", ("Gestalten", null), ("Designs", "/Designs"), (design.Name, $"/Designs/Edit/{design.Id}"), ("Einzeldruck", null));
+        Head($"Einzeldruck: {design.Name}", "Trage die Werte ein und drucke ein einzelnes Etikett, ohne eine Datenliste oder eine gespeicherte Serienausgabe.", ("Gestalten", null), ("Designs", "/Designs"), (design.Name, $"/Designs/Edit/{design.Id}"), ("Einzeldruck", null));
         ViewData["ActiveHref"] = "/Designs";
         ViewData["Width"] = "wide";
         return Page();

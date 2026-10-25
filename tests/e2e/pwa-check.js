@@ -51,7 +51,7 @@ const rgb = hex => {
   })), manifest.icons);
   check('the PNG icons have the size they announce', pngSizes.length >= 4 && pngSizes.every(i => i.expected === i.actual), JSON.stringify(pngSizes));
   check('the manifest colours are the colour of the app', rgb(manifest.theme_color) === rgb(manifest.background_color) && rgb(manifest.theme_color) === (await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--mat-bg')).then(v => rgb(v.trim()))), `${manifest.theme_color} ${manifest.background_color}`);
-  check('shortcut "Neues Design" is offered', (manifest.shortcuts || []).some(s => s.url === '/Designs/Create'));
+  check('shortcut "Design erstellen" is offered', (manifest.shortcuts || []).some(s => s.url === '/Designs/Create'));
   check('apple touch icon and favicon are linked and reachable', await page.evaluate(async () => {
     const hrefs = [...document.querySelectorAll('link[rel=apple-touch-icon], link[rel=icon]')].map(l => l.href);
     if (hrefs.length < 2) { return false; }

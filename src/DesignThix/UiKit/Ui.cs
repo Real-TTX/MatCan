@@ -121,7 +121,7 @@ public static partial class Ui
     private static readonly Dictionary<string, string> Singulars = new(StringComparer.Ordinal)
     {
         ["Einträge"] = "Eintrag", ["Benutzer"] = "Benutzer", ["Profile"] = "Profil", ["Läufe"] = "Lauf", ["Designs"] = "Design", ["Datenlisten"] = "Datenliste",
-        ["Medien"] = "Medium", ["Schriften"] = "Schrift", ["Ausgaben"] = "Ausgabe", ["Druckbögen"] = "Druckbogen", ["Zeilen"] = "Zeile", ["Spalten"] = "Spalte",
+        ["Medien"] = "Medium", ["Schriften"] = "Schrift", ["Serienausgaben"] = "Serienausgabe", ["Vorlagen"] = "Vorlage", ["Ausgaben"] = "Ausgabe", ["Druckbögen"] = "Druckbogen", ["Zeilen"] = "Zeile", ["Spalten"] = "Spalte",
     };
 
     /// <summary>The name of the things in a list for a count: "1 Design", "3 Designs". Names that are not known keep their plural.</summary>

@@ -1,12 +1,13 @@
 # DesignThix: notes for working in this repository
 
-An **offline Canva**: designs (labels, cards, signs, posters) are drawn in a WYSIWYG designer and filled from **data lists** through placeholders
-(`{{Name}}`), so one design prints many labels (mail merge). ASP.NET Core 10 Razor Pages, EF Core 10 on PostgreSQL 17, one container (port **3043**)
+An **offline Canva**, first a design tool (labels, cards, flyers, posters, social media posts: start from a format tile or one of ten templates, draw in the designer, download or print) and
+second, as an add-on ("Zusatz: Serien"), a tool that fills a design from **data lists** through placeholders (`{{Name}}`), so one design prints many labels (mail merge). **`docs/PLAN-CANVA.md` is plan 2** (what "like Canva" means,
+document schema 2, phases K1 to K6) and wins over `docs/PLAN.md` where they differ; `docs/EDITOR.md` describes the editor (K3/K4). ASP.NET Core 10 Razor Pages, EF Core 10 on PostgreSQL 17, one container (port **3043**)
 plus a database. User-facing text is **German** ("du"); code, comments and docs (except the README) are English. The infrastructure (setup, sign-in, TOTP,
 sessions, list controls, shell, AI layer, PWA, Docker, CI) was ported from `../MatTicket`; the look is MatDesign (`../MatDesign`, MatUi copied into
 `src/DesignThix/wwwroot/ui`, version in `scripts/matui-synced.txt`, never edited there). Before changing UI read MatDesign's `CLAUDE.md` and
-`docs/ADOPTING.md`. **`docs/PLAN.md` is the build plan (product, document format, architecture); its "Status" section at the top lists where the result differs from it.** All phases (A to I) are done; read the plan
-for the product and the document format, and change it only when the owner says so.
+`docs/ADOPTING.md`. **`docs/PLAN.md` is the build plan (product, document format, architecture); its "Status" section at the top lists where the result differs from it.** Phases A to I (plan 1) are done; plan 2 (K1 to K6) is under way. Read the plans
+for the product and the document format, and change them only when the owner says so.
 
 ## Commands
 
@@ -22,7 +23,7 @@ node tools/dt-icons.js                          # img/dt-icons.svg (designer and
 
 # browser checks (Playwright + installed Edge; see tests/e2e/README.md): a stack must run; from an empty database they make their own accounts
 cd tests/e2e && npm install
-node run-all.js http://localhost:3043           # engine, pwa, demo, designer, output, ai in sequence; --only pwa,demo for a selection
+node run-all.js http://localhost:3043           # engine, pwa, demo, home, templates, designer, output, ai in sequence; --only pwa,demo for a selection
 node screens.js http://localhost:3043           # the screenshots of the README (docs/images): ONLY on a clean stack (redeploy -Clean), before the other checks
 ```
 
@@ -40,24 +41,27 @@ No `${...}` variables and no `.env` in any compose file. Environment variables o
 - `src/DesignThix/Logic`: **the business layer, static classes** taking `Biz` (db, current user, clock, services) as first argument and checking permissions
   themselves (`RequireAdmin` / `RequireDesigner` / `RequireSignedIn`). `ForbiddenException` becomes 403 (middleware), `BizException` is a message at the field.
   Pages never query the database; list pages pass the `IQueryable` the logic returns to `UiKit/ListBuilder`.
+- **Document schema 2** (`docs/PLAN-CANVA.md` section 2): `pages` (1..50) instead of `elements`/`background`, groups, shapes with gradients, masks, filters, shadows, text effects (also curved), icon (Lucide name; bodies from `wwwroot/lib/icons.json`, built by `tools/iconlib.js`), `qr`, `barcode`.
+  `DocumentValidator` (C#) and `DtEngine.normalize` (JS) upgrade schema 1 identically; a stored document is upgraded on read and once at start-up (`Services/StartupFixes`). Brand kit: setting `Brand` (`BrandLogic`, `/Brand`, `/api/brand`).
 - `src/DesignThix/Services`: infrastructure (auth, sessions, 2FA, AI secret store + rate limiter, activity log, database initializer, formatting, `LibrarySeeder` (built-in
-  media, fonts and sheet layouts at start-up), `DemoSeeder` (the demo, once per database, see "The demo"), `TextDecoder` (UTF-8 or cp1252 CSV files)).
+  media, fonts and sheet layouts at start-up), `DemoSeeder` (the demo, once per database, see "The demo"), `TemplateSeeder` (the built-in templates, see "Start, navigation, templates"), `TextDecoder` (UTF-8 or cp1252 CSV files)).
 - `src/DesignThix/Endpoints/LibraryEndpoints.cs`: `/media/{key}`, `/fonts/{id}-{hash}.{ext}`, `/fonts.css`, `/api/fonts`, `/api/assets`, `/api/designs/{id}` (GET/POST),
   `/api/designs/{id}/thumbnail`, `/api/designs/{id}/rename`, `/api/designs/{id}/copy` (the document of the designer as a new design: the answer to an edit conflict), `/designs/{id}/thumbnail.png`,
   `/api/datalists` (name + columns, for the designer's data selector), `/api/datalists/{id}/rows` (GET/POST). Everything needs a signed-in person; every POST checks the antiforgery header.
+- `src/DesignThix/Endpoints/StudioEndpoints.cs`: `/api/formats` (the tiles), `/api/templates`, `POST /api/designs` (one click: `{ preset }` or `{ preset: 'custom', width, height, unit }` -> `{ id, url }`), `/api/designs/{id}/use-template|duplicate|delete|resize`, `/api/assets/upload`, `/api/fonts/upload`, `/api/brand`.
 - `src/DesignThix/Endpoints/OutputEndpoints.cs`: `GET /api/outputs/{id}/payload` (what the run page renders: document, labels with copies, sheet, fonts, media addresses, warnings), `POST /api/outputs/adhoc` (the same for a
   single print, from typed values), `POST /api/outputs/{id}/ran` (notes who ran a job and when; does not touch the audit columns). Signed in is enough (a viewer runs outputs); the logic checks again.
 - `src/DesignThix/Endpoints/AiEndpoints.cs`: `/api/ai/datalists/{id}/import|fill` (+ `/prompt`), `/api/ai/datalists/{id}/runs`, `/api/ai/designs/{id}/suggest` (+ `/prompt`), `/api/ai/runs/{id}/proposal|apply|discard|undo` (see "AI actions").
 - `src/DesignThix/UiKit` (shell, nav, lists, labels, `Ui` helpers, icon sprite) and `Controls` (tag helpers `<dt-card>`, `<dt-input>`, `<dt-tabs>` ...):
   **one code base per control**; several controls of one kind on a page must work (ids come from a prefix).
-- `src/DesignThix/Pages`: `Assets` (gallery + table, upload, edit with tabs), `Fonts`, `DataLists` (edit with tabs Allgemein / Spalten / Zeilen / Import/Export), `Sheets`
-  (live SVG preview), `Designs` (gallery, create, properties with Felder and Verlauf, Einzeldruck `Print`, `Import`), `Outputs` (list, create/edit with four tabs, the run pages `Run` and `RunAdhoc`), the Start dashboard, `Account` (setup, login, 2FA, profile, security),
+- `src/DesignThix/Pages`: `Index` (the start page, see "Start, navigation, templates"), `Templates` (gallery of templates), `Brand`, `Assets` ("Uploads & Medien": gallery + table, upload, edit with tabs), `Fonts`, `DataLists` (edit with tabs Allgemein / Spalten / Zeilen / Import/Export), `Sheets`
+  (live SVG preview), `Designs` (gallery, "Design erstellen" page = no-script fallback of the dialog, properties with Felder and Verlauf, Einzeldruck `Print`, `Import`), `Outputs` (the "Serienausgaben": list, create/edit with four tabs, the run pages `Run` and `RunAdhoc`), `Account` (setup, login, 2FA, profile, security),
   `Admin` (Users, Ai: settings, profiles, runs; Activity, System), `About`
   (reached through the version at the bottom of the menu), `Offline`, `Error`, `Shared` (layouts and partials: `_Layout`, `_Bare`, `_Head`, `_Menu`,
-  `_Toolbar`, `_Table`, `_Pager`, `_LinkTabs`, `_ListPage`, menu switcher, `_Print` = layout of the run page, `_Designer`).
-- `wwwroot`: `css/app.css` (the few `dt-` styles), `css/datalist.css` and `css/designs.css` (linked by the pages that need them), `js/app.js` (shell glue, offline banner,
+  `_Toolbar`, `_Table`, `_Pager`, `_LinkTabs`, `_ListPage`, menu switcher, `_Print` = layout of the run page, `_Designer`, and the partials `_FormatTiles`, `_CreateDialog`, `_TemplateTile`, `_RecentTile` of the start page).
+- `wwwroot`: `css/app.css` (the few `dt-` styles), `css/datalist.css` and `css/designs.css` (linked by the pages that need them), `css/home.css` (format tiles, template and recent tiles, the create dialog; linked in every signed-in head), `js/app.js` (shell glue, offline banner,
   service worker registration), `js/admin.js` (AI profile page), `js/ai.js` + `css/ai.css` (the AI dialogs of the data list and the designer), `js/library.js` (font specimens, sheet preview, column editor), `js/datalist.js` (the row grid),
-  `js/designs.js` (thumbnails drawn with the engine), `js/output.js` + `css/output.css` (the run page: print/PDF and PNG-ZIP, see "Output"), `js/outputs.js` (the forms of outputs and of the single print), `js/designer*.js` + `css/designer.css` (the designer, see below), `js/dt-engine.js` (the renderer, `DtEngine`), `sw.js` (the `dt-library` cache: hashed font/media/thumbnail addresses cache first,
+  `js/designs.js` (thumbnails drawn with the engine, with icons from `lib/icons.json`, lazily through an IntersectionObserver, three at a time), `js/create.js` (every signed-in page: format tiles, "Eigene Größe", "Vorlage verwenden", the dialog; `window.DtCreate.post`), `js/home.js` (rename/duplicate/delete of a design tile), `js/output.js` + `css/output.css` (the run page: print/PDF and PNG-ZIP, see "Output"), `js/outputs.js` (the forms of outputs and of the single print), `js/designer*.js` + `css/designer.css` (the designer, see below), `js/dt-engine.js` (the renderer, `DtEngine`), `sw.js` (the `dt-library` cache: hashed font/media/thumbnail addresses cache first,
   `/fonts.css`, `/api/fonts`, unhashed media and the payload of an output network first), `manifest.webmanifest`, `builtin/` (flags and seals + `builtin.json`), `fonts/` (OFL fonts + `fonts.json` + `LICENSES/`),
   `ui/` (MatUi), logos and `img/` (`img/dt-icons.svg`: the tool icons of the designer, symbols `dt-i-*`, generated by `node tools/dt-icons.js` from MatDesign's Lucide library; the licence note stays in the file).
 - `tests/DesignThix.Tests` (xunit): `Core/` unit tests for everything in Core, `Web/` logic tests, `Integration/` against PostgreSQL (`DESIGNTHIX_TEST_DB`; without it they return at once; every run gets a database of its own): app, library, output, AI, **permissions per role** and the demo.
@@ -88,6 +92,23 @@ No `${...}` variables and no `.env` in any compose file. Environment variables o
   the revision and writes a `DesignRevision` (the newest 30 stay). The data list grid saves ALL rows in one POST in their order (rows left out are deleted, `Position` = index).
   CSV export writes `;`, UTF-8 BOM, the column keys as header plus `_Kopien` and `_Aktiv` (no key can start with an underscore); the import maps each CSV column to a column, `@new`, `@copies`, `@active` or nothing.
 - Accent (light blue, slightly green) `#1fb3d6`, dark text on it (`--mat-app-on-accent`), links `#0a7590`; the turquoise-to-blue gradient is only for logos.
+
+## Start, navigation, templates (K5)
+
+- **Menu** (`UiKit/Shell.cs`): "Design erstellen" (primary, designers and administrators only; `ShellModel.CanCreate`), Start; group Gestalten: Designs, Vorlagen (`/Templates`); group Bibliothek: Uploads & Medien, Marke, Schriften;
+  group **"Serien (Zusatz)"**: Datenlisten, **Serienausgaben** (`/Outputs`; "Ausgaben" is only the name in code and URLs), Druckbögen. Breadcrumbs of the batch pages start with "Serien (Zusatz)". Admin menu unchanged.
+- **Design erstellen**: `_CreateDialog` (in `_Layout` for designers) with the format tiles of `FormatPresets.Tiles` and fields for an own size; `create.js` gives every `a[href="/Designs/Create"]` `data-dialog-open`. A tile is a link to
+  `/Designs/Create?format=<key>` (works without script) that `create.js` turns into `POST /api/designs` -> editor `/Designs/{id}/Designer`. A new format tile needs its proportions in `home.css` (attribute selectors on `data-format`; no inline styles).
+- **Start page** (`Pages/Index`, `OwnHead`): heading, search (`?q=`, server-side, `DesignLogic.SearchAsync`: designs and templates by name, category, description; it passes an ILIKE escape character, the older list searches do not, so a `%` there is not literal),
+  format tiles (not for viewers), row of templates (`FeaturedTemplatesAsync`: round robin over the categories), "Zuletzt bearbeitet" (`RecentAsync`, templates left out) with hover actions, key figures at the bottom.
+  A viewer gets a disabled "Vorlage verwenden" (with the reason) and "Öffnen" only.
+- **`/Templates`**: list builder (search, category filter, sort), tiles grouped by category; "Vorlage verwenden" = `DesignLogic.UseTemplateAsync` (a copy, not a template), "Bearbeiten" opens the template itself. `/Designs?filter=templates` redirects here.
+- **Templates** are `src/DesignThix/Demo/templates/<slug>.json` (`{ name, category, description, document, sampleRows? }`, embedded as `DesignThix.Demo.templates.<slug>.json`), seeded by `Services/TemplateSeeder` at start-up after the demo: the setting
+  `Templates.Seeded` holds the JSON list of the slugs seeded, so a template added in a later version is added to an existing database once and a deleted one never comes back. The Käsetheke is not in that list: it is the demo (`kaesetheke.json`, schema 2).
+  **The files are generated**: write the template in `tools/templates/NN-<slug>.js` (helpers in `tools/templates/dsl.js`: `text`, `rect`, `icon`, `frame`, `qr`, `barcode`, `group` ...), run `node tools/templates-build.js` (it normalises through the engine, so the file is already what
+  `DocumentValidator` writes; a test compares) and LOOK at the result with `node tools/templates-preview.js --out <folder> [--rows] [--sheet 2] [--editor]` (Playwright + Edge, needs no app). Rules: only bundled fonts, built-in media keys, Lucide names that exist,
+  no photos (an image without a source is a frame; put a tinted shape behind it so the thumbnail does not look empty), sizes readable at the physical size, font sizes in pt (in a px document 1 pt = 1.333 px), letter spacing in em.
+- Tests: `Integration/TemplateTests` (files valid and already normalised, every font/medium/icon exists, seeding once / new one added / deleted stays deleted, search, recent, featured, roles), `tests/e2e/home-check.js`, `tests/e2e/templates-check.js` (every template draws without an engine warning).
 
 ## The designer
 
@@ -174,7 +195,7 @@ checks (pure functions, unit tested with hostile answers), the run stores the CH
 
 ## The demo
 
-`Services/DemoSeeder` adds the template **"Käsetheke – Preisschild"** (150 x 100 mm, `IsTemplate`, category Etiketten), the data list **"Käsetheke (Beispiel)"** (six cheeses, columns from the document) and the output job
+(The ten built-in templates are seeded separately, see "Start, navigation, templates".) `Services/DemoSeeder` adds the template **"Käsetheke – Preisschild"** (150 x 100 mm, `IsTemplate`, category Etiketten), the data list **"Käsetheke (Beispiel)"** (six cheeses, columns from the document) and the output job
 **"Käsetheke – A4 mit 4 Etiketten"** (sheet `a4-2x2-a6`, fit) at start-up, after `LibrarySeeder`, **to a database that has no designs, data lists and output jobs** (deleted ones count). It runs once per database: the setting
 `Demo.Seeded` is written whether or not it seeded, so a deleted demo does not come back. The single source is the embedded file `src/DesignThix/Demo/kaesetheke.json` (design, list, output, the document and the rows);
 `tests/e2e/demo-label.js` reads the same file (`demoRows()` = the first four rows, the checks count on four labels). No thumbnail is stored: the gallery and the start page draw the design with the engine (`designs.js`).

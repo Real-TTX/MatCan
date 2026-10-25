@@ -75,7 +75,7 @@
     setState('error');
     ui.error.hidden = false;
     ui.errorText.textContent = message;
-    setStatus('Die Ausgabe konnte nicht erstellt werden.');
+    setStatus('Die Serienausgabe konnte nicht erstellt werden.');
     ui.meter.style.setProperty('--mat-meter', '0%');
   }
 
@@ -122,7 +122,7 @@
 
   function readAnswer(response) {
     return response.json().catch(function () { return {}; }).then(function (body) {
-      if (!response.ok) { throw new Error(body && body.error ? body.error : 'Die Ausgabe konnte nicht geladen werden (Fehler ' + response.status + ').'); }
+      if (!response.ok) { throw new Error(body && body.error ? body.error : 'Die Serienausgabe konnte nicht geladen werden (Fehler ' + response.status + ').'); }
       return body;
     });
   }
@@ -130,7 +130,7 @@
   function loadPayload() {
     var url = root.getAttribute('data-payload-url');
     var failed = function (e) {
-      if (e instanceof TypeError) { throw new Error('Die Ausgabe konnte nicht geladen werden: keine Verbindung. Eine Ausgabe, die schon einmal geladen war, lässt sich ohne Verbindung noch einmal öffnen.'); }
+      if (e instanceof TypeError) { throw new Error('Die Serienausgabe konnte nicht geladen werden: keine Verbindung. Eine Serienausgabe, die schon einmal geladen war, lässt sich ohne Verbindung noch einmal öffnen.'); }
       throw e;
     };
     if (root.getAttribute('data-adhoc') === 'true') {

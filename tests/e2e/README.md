@@ -9,7 +9,7 @@ npm install            # once
 node run-all.js [base url]          # all checks one after the other, one summary line each; exit code 0 = all green
 ```
 
-`run-all.js http://localhost:3043 --only pwa,designer` runs a selection (`engine`, `pwa`, `demo`, `designer`, `output`, `ai`), `--quiet` prints only failures.
+`run-all.js http://localhost:3043 --only pwa,designer` runs a selection (`engine`, `pwa`, `demo`, `home`, `templates`, `designer`, `output`, `ai`), `--quiet` prints only failures.
 
 | Check | Run with | What it checks |
 |---|---|---|
@@ -19,6 +19,8 @@ node run-all.js [base url]          # all checks one after the other, one summar
 | `output-check.js` | `node output-check.js [base] [--out folder]` | Output jobs: print pages and sheets (PDF page sizes), crop marks, start position, PNG-ZIP, single print, design export/import, 200 labels. |
 | `ai-check.js` | `node ai-check.js [base] [--fake-host h] [--fake-port 3066]` | The AI actions against a fake OpenAI-compatible server (`fake-ai.js`) that the script starts: import, fill, text suggestions, undo, limits, errors. With the app in Docker the fake server is reached at `host.docker.internal`; with `dotnet run` pass `--fake-host 127.0.0.1`. |
 | `demo-check.js` | `node demo-check.js [base]` | The demo of a new installation: the six labels drawn by the engine, ink of every element measured (nothing touches, the name keeps its margin, the price keeps clear of the euro sign, the logo words sit next to each other) and the seeded records (template, list, output job runs). |
+| `home-check.js` | `node home-check.js [base] [--out folder]` | The start page and the navigation: heading, search, the eleven format tiles (one click creates the design of that size and opens the designer, "Eigene Größe"), the dialog "Design erstellen", the menu with the group "Serien (Zusatz)", titles and breadcrumbs, the row of templates, search over designs and templates, rename/duplicate/delete of a recent design, the viewer (no tiles, disabled buttons, API 403), the phone. Deletes what it creates. |
+| `templates-check.js` | `node templates-check.js [base] [--out folder]` | The gallery "Vorlagen": the ten templates grouped by category, thumbnails drawn lazily, search and category filter, "Vorlage verwenden" (a copy), "Bearbeiten", and that every page of every template draws without an engine warning (medium, icon, font, code). |
 | `screens.js` | `node screens.js [base] [--out ../../docs/images] [--no-ai]` | Takes the screenshots of the README. **Run it on a clean stack, before the other checks**: they leave test data behind, and the screenshots show the demo only. |
 
 Notes

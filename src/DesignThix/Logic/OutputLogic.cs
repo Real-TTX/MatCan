@@ -302,13 +302,13 @@ public static class OutputLogic
         var count = input.DataListId is null ? Math.Clamp(input.Copies, 1, OutputPlan.MaxCopies) : OutputPlan.LabelCount(rows, selection.ToString(), selected.ToHashSet(), input.Copies);
         if (count > OutputPlan.MaxLabels)
         {
-            throw new BizException($"Das wären {Services.Fmt.Integer(count)} Etiketten: eine Ausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxLabels)}. Teile die Auswahl auf mehrere Ausgaben auf.", "Input.Copies");
+            throw new BizException($"Das wären {Services.Fmt.Integer(count)} Etiketten: eine Serienausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxLabels)}. Teile die Auswahl auf mehrere Serienausgaben auf.", "Input.Copies");
         }
 
         var pageCount = DocumentValidator.Parse(design.DocumentJson)?.Pages.Count ?? 1;
         if (OutputPlan.Units(count, pageCount) > OutputPlan.MaxUnits)
         {
-            throw new BizException($"Das Design hat {pageCount} Seiten: {Services.Fmt.Integer(count)} Etiketten wären {Services.Fmt.Integer(OutputPlan.Units(count, pageCount))} Seiten, eine Ausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxUnits)}. Teile die Auswahl auf mehrere Ausgaben auf.", "Input.Copies");
+            throw new BizException($"Das Design hat {pageCount} Seiten: {Services.Fmt.Integer(count)} Etiketten wären {Services.Fmt.Integer(OutputPlan.Units(count, pageCount))} Seiten, eine Serienausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxUnits)}. Teile die Auswahl auf mehrere Serienausgaben auf.", "Input.Copies");
         }
 
         OutputJob job;
@@ -319,7 +319,7 @@ public static class OutputLogic
         }
         else
         {
-            job = await biz.Db.OutputJob.FirstOrDefaultAsync(j => j.Id == id) ?? throw new BizException("Die Ausgabe gibt es nicht mehr.");
+            job = await biz.Db.OutputJob.FirstOrDefaultAsync(j => j.Id == id) ?? throw new BizException("Die Serienausgabe gibt es nicht mehr.");
         }
 
         job.Name = name.Length > 200 ? name[..200] : name;
@@ -337,7 +337,7 @@ public static class OutputLogic
         job.Dpi = dpi;
         job.FileNamePattern = pattern.Length == 0 ? DefaultFileNamePattern : pattern;
         await biz.Db.SaveChangesAsync();
-        await biz.Log.LogAsync(id is null ? "Ausgabe angelegt" : "Ausgabe geändert", nameof(OutputJob), job.Id, $"{job.Name}: {Services.Fmt.Integer(count)} Etiketten");
+        await biz.Log.LogAsync(id is null ? "Serienausgabe angelegt" : "Serienausgabe geändert", nameof(OutputJob), job.Id, $"{job.Name}: {Services.Fmt.Integer(count)} Etiketten");
         return job;
     }
 
@@ -346,10 +346,10 @@ public static class OutputLogic
     public static async Task DeleteAsync(Biz biz, long id)
     {
         biz.RequireDesigner();
-        var job = await biz.Db.OutputJob.FirstOrDefaultAsync(j => j.Id == id) ?? throw new BizException("Die Ausgabe gibt es nicht mehr.");
+        var job = await biz.Db.OutputJob.FirstOrDefaultAsync(j => j.Id == id) ?? throw new BizException("Die Serienausgabe gibt es nicht mehr.");
         biz.Db.OutputJob.Remove(job);
         await biz.Db.SaveChangesAsync();
-        await biz.Log.LogAsync("Ausgabe gelöscht", nameof(OutputJob), id, job.Name);
+        await biz.Log.LogAsync("Serienausgabe gelöscht", nameof(OutputJob), id, job.Name);
     }
 
     /// <summary>Notes that a job was run (printed or downloaded): time and person. Does not count as a change of the job (the audit columns stay).</summary>
@@ -361,11 +361,11 @@ public static class OutputLogic
         var changed = await biz.Db.OutputJob.Where(j => j.Id == id).ExecuteUpdateAsync(s => s.SetProperty(j => j.LastRunDate, now).SetProperty(j => j.LastRunUserId, userId));
         if (changed == 0)
         {
-            throw new BizException("Die Ausgabe gibt es nicht mehr.");
+            throw new BizException("Die Serienausgabe gibt es nicht mehr.");
         }
 
         var name = await biz.Db.OutputJob.AsNoTracking().Where(j => j.Id == id).Select(j => j.Name).FirstOrDefaultAsync();
-        await biz.Log.LogAsync("Ausgabe ausgeführt", nameof(OutputJob), id, name);
+        await biz.Log.LogAsync("Serienausgabe ausgeführt", nameof(OutputJob), id, name);
     }
 
     // ------------------------------------------------------------------------------------------------ the payload of the run page
@@ -380,16 +380,16 @@ public static class OutputLogic
     public static async Task<OutputPayload> PayloadAsync(Biz biz, long id)
     {
         biz.RequireSignedIn();
-        var job = await biz.Db.OutputJob.AsNoTracking().FirstOrDefaultAsync(j => j.Id == id) ?? throw new BizException("Die Ausgabe gibt es nicht mehr.");
+        var job = await biz.Db.OutputJob.AsNoTracking().FirstOrDefaultAsync(j => j.Id == id) ?? throw new BizException("Die Serienausgabe gibt es nicht mehr.");
         var design = await biz.Db.Design.AsNoTracking().Where(d => d.Id == job.DesignId).Select(d => new { d.Name, d.DocumentJson }).FirstOrDefaultAsync()
-            ?? throw new BizException("Das Design dieser Ausgabe gibt es nicht mehr.");
+            ?? throw new BizException("Das Design dieser Serienausgabe gibt es nicht mehr.");
         var document = DocumentValidator.Parse(design.DocumentJson) ?? throw new BizException("Das Design ist beschädigt.");
         var warnings = new List<string>();
 
         var labels = new List<PayloadLabel>();
         if (job.DataListId is { } listId)
         {
-            var list = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == listId) ?? throw new BizException("Die Datenliste dieser Ausgabe gibt es nicht mehr.");
+            var list = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == listId) ?? throw new BizException("Die Datenliste dieser Serienausgabe gibt es nicht mehr.");
             var columns = ColumnDefs.Parse(list.ColumnsJson);
             var rows = await biz.Db.DataRow.AsNoTracking().Where(r => r.DataListId == listId).OrderBy(r => r.Position).ThenBy(r => r.Id).ToListAsync();
             var chosen = OutputPlan.Select(rows.Select(r => new PlanRow(r.Id, r.Copies, r.IsActive)), job.RowSelection.ToString(), SelectedIds(job.SelectedRowIdsJson).ToHashSet())
@@ -470,13 +470,13 @@ public static class OutputLogic
         long count = labels.Sum(l => (long)l.Copies);
         if (count > OutputPlan.MaxLabels)
         {
-            throw new BizException($"Das wären {Services.Fmt.Integer(count)} Etiketten: eine Ausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxLabels)}.");
+            throw new BizException($"Das wären {Services.Fmt.Integer(count)} Etiketten: eine Serienausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxLabels)}.");
         }
 
         var pages = document.Pages.Count;
         if (OutputPlan.Units(count, pages) > OutputPlan.MaxUnits)
         {
-            throw new BizException($"Das Design hat {pages} Seiten: {Services.Fmt.Integer(count)} Etiketten wären {Services.Fmt.Integer(OutputPlan.Units(count, pages))} Seiten, eine Ausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxUnits)}.");
+            throw new BizException($"Das Design hat {pages} Seiten: {Services.Fmt.Integer(count)} Etiketten wären {Services.Fmt.Integer(OutputPlan.Units(count, pages))} Seiten, eine Serienausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxUnits)}.");
         }
 
         var cells = sheet is null ? 1 : sheet.Columns * sheet.Rows;

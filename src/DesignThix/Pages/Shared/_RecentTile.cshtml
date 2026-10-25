@@ -1,0 +1,26 @@
+@using DesignThix.Logic
+@model (DesignRow Design, bool CanEdit)
+@*
+    A design of the start page: the thumbnail and the name open it in the designer; on hover or focus the actions appear (Öffnen, and for designers Duplizieren, Umbenennen, Löschen:
+    home.js, through /api/designs/{id}/duplicate|rename|delete). A viewer only gets "Öffnen" (the designer shows the design read-only).
+*@
+@{
+    var d = Model.Design;
+    var open = $"/Designs/{d.Id}/Designer";
+}
+<article class="mat-tile dt-designtile dt-recent" data-recent="@d.Id" data-name="@d.Name">
+    <a class="mat-tile__media dt-recent__media" href="@open" tabindex="-1" aria-hidden="true">@LibraryUi.DesignThumb(d)</a>
+    <div class="mat-tile__body">
+        <a class="dt-tile__title" href="@open" data-recent-title title="@d.Name">@d.Name</a>
+        <span class="mat-tile__meta">@d.Size · @Fmt.Ago(d.UpdateDate, DateTime.UtcNow)</span>
+    </div>
+    <div class="dt-recent__actions" role="group" aria-label="Aktionen für @d.Name">
+        <a class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" href="@open" data-tip="Öffnen" aria-label="@d.Name öffnen">@Ui.Icon("external")</a>
+        @if (Model.CanEdit)
+        {
+            <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" data-recent-action="duplicate" data-tip="Duplizieren" aria-label="@d.Name duplizieren">@Ui.Icon("copy")</button>
+            <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" data-recent-action="rename" data-tip="Umbenennen" aria-label="@d.Name umbenennen">@Ui.Icon("edit")</button>
+            <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" data-recent-action="delete" data-tip="Löschen" aria-label="@d.Name löschen">@Ui.Icon("trash")</button>
+        }
+    </div>
+</article>

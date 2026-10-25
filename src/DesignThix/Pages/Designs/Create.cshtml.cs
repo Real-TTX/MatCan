@@ -45,6 +45,10 @@ public sealed class CreateModel(Biz biz) : PageModelBase
     [BindProperty(SupportsGet = true)]
     public long? Template { get; set; }
 
+    /// <summary>The key of a format tile (<c>?format=price-tag</c>, or <c>custom</c>): the link of a tile without script lands here with the format chosen.</summary>
+    [BindProperty(SupportsGet = true)]
+    public string? Format { get; set; }
+
     public List<SelectListItem> Presets { get; private set; } = [];
 
     public List<SelectListItem> Templates { get; private set; } = [];
@@ -58,6 +62,13 @@ public sealed class CreateModel(Biz biz) : PageModelBase
     public async Task OnGetAsync()
     {
         await PrepareAsync();
+        if (!string.IsNullOrEmpty(Format) && (Format == CustomPreset || FormatPresets.Find(Format) is not null))
+        {
+            Input.Start = "format";
+            Input.PresetKey = FormatPresets.Find(Format)?.Key ?? CustomPreset;
+            Input.Name = FormatPresets.Find(Format) is { } chosen ? chosen.ShortName : "";
+        }
+
         if (Template is { } id && Templates.Any(t => t.Value == id.ToString(System.Globalization.CultureInfo.InvariantCulture)))
         {
             Input.Start = "template";
@@ -96,7 +107,7 @@ public sealed class CreateModel(Biz biz) : PageModelBase
 
     private async Task PrepareAsync()
     {
-        Head("Neues Design", "Fange mit einem Format an oder kopiere eine Vorlage.", ("Gestalten", null), ("Designs", "/Designs"), ("Neues Design", null));
+        Head("Design erstellen", "Fange mit einem Format an oder kopiere eine Vorlage.", ("Gestalten", null), ("Designs", "/Designs"), ("Design erstellen", null));
         ViewData["Width"] = "narrow";
         ViewData["ActiveHref"] = "/Designs/Create";
         Presets = [.. FormatPresets.All.Select(p => new SelectListItem(p.Name, p.Key) { Group = new SelectListGroup { Name = p.Group } }), new SelectListItem("Eigene Größe ...", CustomPreset)];

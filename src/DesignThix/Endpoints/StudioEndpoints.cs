@@ -53,6 +53,20 @@ public static class StudioEndpoints
             return Results.Json(new { id = design.Id, url = DesignerUrl(design.Id) }, Web);
         })).RequireAuthorization("SignedIn");
 
+        // -> { id, name, url }: a copy of the design (the name gets " (Kopie)"), for "Duplizieren" on the start page
+        app.MapPost("/api/designs/{id:long}/duplicate", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => LibraryEndpoints.Guard(http, antiforgery, async () =>
+        {
+            var copy = await DesignLogic.DuplicateAsync(biz, id);
+            return Results.Json(new { id = copy.Id, name = copy.Name, url = DesignerUrl(copy.Id) }, Web);
+        })).RequireAuthorization("SignedIn");
+
+        // -> { id }: deletes the design (it can no longer be opened; outputs that use it say so), for "Löschen" on the start page
+        app.MapPost("/api/designs/{id:long}/delete", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => LibraryEndpoints.Guard(http, antiforgery, async () =>
+        {
+            await DesignLogic.DeleteAsync(biz, id);
+            return Results.Json(new { id }, Web);
+        })).RequireAuthorization("SignedIn");
+
         // { width, height, unit, scale } -> { revision, document, warnings }
         app.MapPost("/api/designs/{id:long}/resize", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => LibraryEndpoints.Guard(http, antiforgery, async () =>
         {

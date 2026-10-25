@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DesignThix.Pages.Outputs;
 
-/// <summary>A new output. <c>?designId=</c> preselects the design (the "Ausgabe" button of the designer links here).</summary>
+/// <summary>A new output. <c>?designId=</c> preselects the design (the "Serienausgabe" button of the designer links here).</summary>
 public sealed class CreateModel(Biz biz) : OutputFormPage(biz)
 {
     [BindProperty(SupportsGet = true)]
@@ -11,12 +11,12 @@ public sealed class CreateModel(Biz biz) : OutputFormPage(biz)
 
     public async Task<IActionResult> OnGetAsync()
     {
-        await PrepareAsync("Neue Ausgabe", "Neue Ausgabe");
+        await PrepareAsync("Neue Serienausgabe", "Neue Serienausgabe");
         if (DesignId is { } id && DesignItems.Any(d => d.Value == id.ToString(System.Globalization.CultureInfo.InvariantCulture)))
         {
             var design = await DesignLogic.GetAsync(Biz, id);
             Input.DesignId = id;
-            Input.Name = design is null ? "" : $"{design.Name} – Ausgabe";
+            Input.Name = design is null ? "" : $"{design.Name} – Serienausgabe";
             Input.Dpi = (await DesignLogic.DocumentAsync(Biz, id)).Dpi;
         }
 
@@ -26,7 +26,7 @@ public sealed class CreateModel(Biz biz) : OutputFormPage(biz)
     public async Task<IActionResult> OnPostAsync()
     {
         Biz.RequireDesigner();
-        await PrepareAsync("Neue Ausgabe", "Neue Ausgabe");
+        await PrepareAsync("Neue Serienausgabe", "Neue Serienausgabe");
         if (!ModelState.IsValid)
         {
             return Page();
@@ -35,7 +35,7 @@ public sealed class CreateModel(Biz biz) : OutputFormPage(biz)
         try
         {
             var job = await OutputLogic.SaveAsync(Biz, null, ToLogic());
-            Flash("Die Ausgabe ist angelegt.");
+            Flash("Die Serienausgabe ist angelegt.");
             return RedirectToPage("/Outputs/Edit", new { id = job.Id });
         }
         catch (BizException ex)
