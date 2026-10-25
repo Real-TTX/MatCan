@@ -141,6 +141,42 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
     }
 
     [Fact]
+    public async Task Uploads_with_the_same_name_at_the_same_moment_all_get_a_key_of_their_own()
+    {
+        if (!Enabled)
+        {
+            return;
+        }
+
+        var name = Unique("zugleich");
+        var keys = await Task.WhenAll(Enumerable.Range(0, 6).Select(_ => As(UserRole.Designer, async biz =>
+            (await AssetLogic.UploadAsync(biz, name + ".png", Png(), null)).Asset?.Key)));
+        Assert.All(keys, key => Assert.NotNull(key));
+        Assert.Equal(6, keys.Distinct().Count());
+    }
+
+    [Theory]
+    [InlineData("..\\..\\etc\\passwd.png")]
+    [InlineData("../../Fotos/Käse & Brot <b>.png")]
+    [InlineData("   .png")]
+    [InlineData("a‮gnp.exe.png")]
+    public async Task Odd_file_names_give_a_plain_key_and_nothing_of_the_path(string fileName)
+    {
+        if (!Enabled)
+        {
+            return;
+        }
+
+        await As(UserRole.Designer, async biz =>
+        {
+            var result = await AssetLogic.UploadAsync(biz, fileName, Png(), "../../x");
+            var key = result.Asset!.Key;
+            Assert.Matches("^[a-z0-9][a-z0-9_-]{0,63}$", key);
+            Assert.Equal(AssetLogic.UploadsCategory, result.Asset.Category);
+        });
+    }
+
+    [Fact]
     public async Task A_hostile_svg_is_cleaned_before_it_is_stored_and_garbage_is_refused()
     {
         if (!Enabled)

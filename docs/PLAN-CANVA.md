@@ -11,6 +11,24 @@ no commits by the phases, verification in a real browser), the stack, the ports.
 
 ---
 
+## Status: done (2026-10-25)
+
+K1 to K6 are finished: engine 2, server 2, editor shell, editor content, start page / navigation / templates, and the final pass (clean run of every browser check on a fresh database, twice;
+README with new screenshots; review of uploads, icon parsing, CSP and permissions). The editor is described in `docs/EDITOR.md`, the rules for working on it in `CLAUDE.md`.
+The text below is the plan as it was written; where the result differs:
+
+- **Text effect "Hohl"** (outline text) draws the outline in the old text colour and fills the text with the **page colour**, because `color` of a text is a hex colour only (no "none"). On a page with a gradient or an image
+  as background the text therefore looks like a solid shape; the preset is also what the effects page shows for any outlined text whose colour equals the page colour.
+- **German icon search**: Lucide has no cheese, cow or goat. `lib/icons.json` (1 874 icons) carries English tags and the German titles of its categories, and `designer.icons-de.js` maps about 360 German words to the nearest icons ("käse" finds pizza, cookie, sandwich and triangle, not a cheese).
+- **Crop mode** works for an image whose source is an **asset of the library**. An image bound to a field and an empty frame are not cropped (the picture comes from the data, or there is none yet).
+- **Empty frames** show the toolbar button **"Bild wählen"** (an image with a source has "Ersetzen"); the frame is only drawn in the editor, nothing in the output.
+- **Templates**: nine template files in `Demo/templates` plus the Käsetheke (the demo, seeded by `DemoSeeder`) are the ten of §5; photos are frames with a tinted shape behind them, no stock photos.
+- **PDF** is the print view (the browser's print dialog, "Als PDF speichern"), as in plan 1: there is no server-side PDF. **SVG** and **PNG/JPG** are made in the browser; several pages become one ZIP.
+- **Not built**: the optional page grid view of the bottom bar (§1.7). The data selector is in the panel *Daten (Zusatz)*, not in the top bar (as planned).
+- **Autosave history**: autosaves of one person within 10 minutes share one `DesignRevision` (Ctrl+S makes a new one), so the history does not fill with a version per keystroke; the newest 30 stay.
+
+---
+
 ## 1. What "like Canva" means here (acceptance list)
 
 **Start and navigation**

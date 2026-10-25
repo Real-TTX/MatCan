@@ -3,8 +3,8 @@
    The server renders the frame; this script draws the colours and the logos from the state, keeps the fonts and saves everything with POST /api/brand (the antiforgery token is
    in <meta name="dt-csrf">). Nothing here builds markup from text (createElement, createElementNS, textContent); the colour of a swatch and the font of a preview are set
    through the CSSOM (a custom property on the element, a rule in a constructed style sheet).
-   Hook for the media browser (phase K3, wwwroot/js/dt-media.js): pickLogo() uses window.DtMedia.pick({ category: 'Logos', title }, callback) when that exists and falls back to the
-   picker of the data list grid (window.DtDataListGrid.pickMedia), which is what the page has today. */
+   Logos are chosen with the media browser (wwwroot/js/dt-media.js): pickLogo() uses window.DtMedia.pick({ category: 'Logos', title }, callback) and falls back to the
+   picker of the data list grid (window.DtDataListGrid.pickMedia) when the browser script is missing. */
 (function () {
   'use strict';
 

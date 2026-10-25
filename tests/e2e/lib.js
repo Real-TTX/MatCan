@@ -23,7 +23,7 @@ function create(args, options) {
 
   function watch(page, label) {
     page.on('console', m => {
-      if (m.type() === 'error' && !ignore.test(m.text()) && !(ignoreUrl && ignoreUrl.test(m.location().url || ''))) { problems.push(`[${label}] console error: ${m.text()}`); }
+      if (m.type() === 'error' && !ignore.test(m.text()) && !(ignoreUrl && ignoreUrl.test(m.location().url || ''))) { problems.push(`[${label}] console error: ${m.text()}${m.location().url ? ' (' + m.location().url + ')' : ''}`); }
     });
     page.on('pageerror', e => problems.push(`[${label}] page error: ${e.message}`));
     page.on('dialog', d => { dialogs.push(d.type()); d.accept().catch(() => {}); });

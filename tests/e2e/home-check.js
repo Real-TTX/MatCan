@@ -33,7 +33,9 @@ const stamp = String(Date.now()).slice(-6);
   check('the designer signs in', await login(page, accounts.designer));
 
   const settle = async p => {
-    await p.waitForFunction(() => document.querySelectorAll('[data-dt-preview]:not(.is-ready):not(.is-failed)').length === 0, null, { timeout: 30000 }).catch(() => { });
+    // only the previews in view are drawn (IntersectionObserver): the ones below the fold or beyond the edge of the row of templates stay empty until they are scrolled to,
+    // so only those whose centre is on the screen are waited for
+    await p.waitForFunction(() => Array.from(document.querySelectorAll('[data-dt-preview]:not(.is-ready):not(.is-failed)')).every(e => { const r = e.getBoundingClientRect(); const x = (r.left + r.right) / 2; const y = (r.top + r.bottom) / 2; return r.width === 0 || x < 0 || x > window.innerWidth || y < 0 || y > window.innerHeight; }), null, { timeout: 30000 }).catch(() => { });
   };
   const apiDesign = (p, id) => p.evaluate(async i => { const r = await fetch('/api/designs/' + i); return r.ok ? r.json() : { status: r.status }; }, id);
   const designIdOf = url => { const m = /\/Designs\/(\d+)\/Designer/.exec(url); return m ? Number(m[1]) : null; };

@@ -148,13 +148,15 @@ async function measure(page, doc, rows) {
 
   // ------------------------------------------------------------------------------------------------ 2. the seeded records
   const meta = demoMeta();
-  await page.goto(base + '/Templates', { waitUntil: 'networkidle' });
-  if (!(await page.textContent('body')).includes(meta.design)) {
+  // The records are found through the API (all of them, not the first page of a list: other checks leave many designs and lists behind).
+  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  const apiGet = url => page.evaluate(async u => (await fetch(u)).json(), url);
+  const demoTemplate = (await apiGet('/api/templates')).find(t => t.name === meta.design);
+  if (!demoTemplate) {
     console.log('NOTE the demo records are not in this database (deleted or not a new installation): the seeded records are not checked.');
   } else {
     check('the template is in the list of templates', true);
-    const designHref = await page.locator('.dt-tpl', { hasText: meta.design }).first().getAttribute('data-template');
-    const designId = Number(designHref);
+    const designId = demoTemplate.id;
     await page.goto(`${base}/Designs/${designId}/Designer`);
     await page.waitForSelector('#dt-ds:not(.is-loading)', { timeout: 20000 });
     await page.evaluate(() => window.DtDesigner.canvas.whenIdle());
@@ -166,8 +168,7 @@ async function measure(page, doc, rows) {
       pages.push(response.status());
     }
     check('the properties of the template open (all tabs, no person recorded as author)', pages.every(status => status === 200), pages.join(','));
-    await page.goto(base + '/DataLists', { waitUntil: 'networkidle' });
-    check('the data list is there', (await page.textContent('body')).includes(meta.list));
+    check('the data list is there', (await apiGet('/api/datalists')).some(l => l.name === meta.list));
     await page.goto(base + '/Outputs?q=' + encodeURIComponent(meta.output), { waitUntil: 'networkidle' });
     const runHref = await page.locator('a', { hasText: meta.output }).first().getAttribute('href').catch(() => null);
     check('the output job is there', !!runHref);

@@ -297,23 +297,37 @@ public static class AssetLogic
         var moment = Services.Fmt.Local(biz.Now);
         var pasted = IsGenericName(fileName);
         var wish = pasted ? "bild-" + moment.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture) : KeyFromFileName(fileName);
-        var key = await FreeKeyAsync(biz.Db, wish);
-        var asset = new Asset
+        var displayName = pasted ? "Bild vom " + moment.ToString("dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) : DisplayName(fileName);
+        Asset asset;
+        for (var attempt = 1; ; attempt++)
         {
-            Key = key,
-            Name = pasted ? "Bild vom " + moment.ToString("dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) : DisplayName(fileName),
-            Category = UploadCategory(category),
-            Tags = "",
-            ContentType = prepared.ContentType,
-            Extension = prepared.Extension,
-            Width = prepared.Width,
-            Height = prepared.Height,
-            Bytes = prepared.Bytes,
-            ContentHash = prepared.Hash,
-            SizeBytes = prepared.Bytes.LongLength,
-        };
-        biz.Db.Asset.Add(asset);
-        await biz.Db.SaveChangesAsync();
+            // Two uploads with the same name at the same moment both see the key as free; the unique index lets one win and the other asks again.
+            asset = new Asset
+            {
+                Key = await FreeKeyAsync(biz.Db, wish),
+                Name = displayName,
+                Category = UploadCategory(category),
+                Tags = "",
+                ContentType = prepared.ContentType,
+                Extension = prepared.Extension,
+                Width = prepared.Width,
+                Height = prepared.Height,
+                Bytes = prepared.Bytes,
+                ContentHash = prepared.Hash,
+                SizeBytes = prepared.Bytes.LongLength,
+            };
+            biz.Db.Asset.Add(asset);
+            try
+            {
+                await biz.Db.SaveChangesAsync();
+                break;
+            }
+            catch (DbUpdateException) when (attempt < 10)
+            {
+                biz.Db.Entry(asset).State = EntityState.Detached;
+            }
+        }
+
         await biz.Log.LogAsync("Medium hochgeladen", nameof(Asset), asset.Id, $"{asset.Key} ({asset.ContentType}, {Services.Fmt.FileSize(asset.SizeBytes)})");
         return new AssetUploadResult(fileName, await GetAsync(biz, asset.Id), null, prepared.Cleaned);
     }

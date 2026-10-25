@@ -1,16 +1,19 @@
-// Takes the screenshots of the README (docs/images/*.png) from a running stack, light mode, with the content of the seeded demo ONLY: run it against a clean stack
-// (./scripts/redeploy.ps1 -Clean), NOT after the other checks, which leave test designs and lists behind. On an empty database the setup assistant makes the
-// administrator "Anna Beispiel" (the account is written to the git-ignored tests/e2e/test-account.json); otherwise that file must hold the administrator.
+// Takes the screenshots of the README (docs/images/*.png) from a running stack, light mode, 1440 x 900 (and one phone, 390 wide), with the content of the seeded demo and templates ONLY:
+// run it against a CLEAN DATABASE (./scripts/redeploy.ps1 -Clean, or the app from source against a new database, see CLAUDE.md), NOT after the other checks, which leave test designs and lists behind.
+// On an empty database the setup assistant makes the administrator "Anna Beispiel" (the account is written to the git-ignored tests/e2e/test-account.json, replacing it: back it up first); otherwise
+// that file must hold the administrator. The script changes nothing that lasts: the copy of a template that it needs for the text effects is deleted again, the AI profile is removed.
 //
 //   cd tests/e2e && npm install
 //   node screens.js [base url, default http://localhost:3043] [--out ../../docs/images] [--fake-host <host the APP reaches this machine by>] [--fake-port 3066] [--no-ai]
 //
-// The screenshot of the AI preview needs a provider: the script starts the fake server of ai-check.js, makes a profile through the admin pages, shows the preview of an
+// Shots: start, create-dialog, templates, datalist, media, output, output-job, phone-start, then the editor (editor, context-menu, text-combinations, download, media-browser, editor-data,
+// text-effects, phone-editor) and ai-import. The shot of the AI preview needs a provider: the script starts the fake server of ai-check.js, makes a profile through the admin pages, shows the preview of an
 // import (nothing is applied) and removes the profile again. With --no-ai that screenshot is skipped.
 const fs = require('fs');
 const path = require('path');
 const lib = require('./lib.js');
 const { fake, startFake } = require('./fake-ai.js');
+const { openDesigner, openPanel, idle, raf2 } = require('./editor-lib.js');
 
 const args = process.argv.slice(2);
 const argValue = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
@@ -69,43 +72,29 @@ async function ensureAdmin(browser) {
     return href;
   }
 
-  // The start page, the gallery of designs.
+  const waitPreviews = p => p.waitForFunction(() => document.querySelectorAll('[data-dt-preview]:not(.is-ready)').length === 0, null, { timeout: 20000 }).catch(() => { });
+
+  // The start page ("Was möchtest du heute gestalten?"), the dialog "Design erstellen" and the gallery of templates.
   await page.goto(base + '/', { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => document.querySelectorAll('[data-dt-preview]:not(.is-ready)').length === 0, null, { timeout: 20000 }).catch(() => { });
+  await waitPreviews(page);
+  await page.setViewportSize({ width: 1440, height: 1100 });   // taller, so that the row of templates shows
   await shot('start.png');
-  // The dialog "Design erstellen" from the menu and the gallery of templates.
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.click('.mat-nav a.mat-nav__item--primary');
   await page.waitForSelector('#dt-create[open]');
   await shot('create-dialog.png');
   await page.keyboard.press('Escape');
   await page.goto(base + '/Templates', { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => document.querySelectorAll('[data-dt-preview]:not(.is-ready)').length === 0, null, { timeout: 20000 }).catch(() => { });
+  await waitPreviews(page);
   await shot('templates.png');
-  await page.goto(base + '/Designs', { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => document.querySelectorAll('[data-dt-preview]:not(.is-ready)').length === 0, null, { timeout: 20000 }).catch(() => { });
-  await shot('designs.png');
 
-  // The designer with the demo label, the name selected.
-  const designId = Number((await hrefOf('/Designs', 'a.dt-designtile', 'Käsetheke – Preisschild')).match(/(\d+)$/)[1]);
-  await page.goto(`${base}/Designs/${designId}/Designer`);
-  await page.waitForSelector('#dt-ds:not(.is-loading)', { timeout: 20000 });
-  await page.evaluate(() => window.DtDesigner.canvas.whenIdle());
-  await page.evaluate(() => { const app = window.DtDesigner.app; const name = app.doc.elements.find(e => e.name === 'Name'); app.select([name.id]); });
-  await page.evaluate(() => window.DtDesigner.canvas.whenIdle());
-  await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
-  await shot('designer.png');
-
-  // The data list: the grid of the six cheeses.
+  // The add-on "Serien": the data list, the library of media, the output job with its sheets.
   const listId = Number((await hrefOf('/DataLists', 'a', 'Käsetheke (Beispiel)')).match(/(\d+)(\?.*)?$/)[1]);
   await page.goto(`${base}/DataLists/Edit/${listId}?tab=rows`, { waitUntil: 'networkidle' });
   await page.waitForSelector('[data-dt-grid][data-ready="true"]', { state: 'attached', timeout: 20000 });
   await shot('datalist.png');
-
-  // The media library.
   await page.goto(base + '/Assets', { waitUntil: 'networkidle' });
   await shot('media.png');
-
-  // The output job: the run page with the sheets.
   const jobHref = await hrefOf('/Outputs', 'a', 'Käsetheke – A4 mit 4 Etiketten');
   const jobId = Number(jobHref.match(/(\d+)/)[1]);
   await page.goto(`${base}/Outputs/${jobId}/Run`);
@@ -114,23 +103,104 @@ async function ensureAdmin(browser) {
   await page.goto(`${base}/Outputs/Edit/${jobId}?tab=layout`, { waitUntil: 'networkidle' });
   await shot('output-job.png');
 
-  // The phone: the start page and the designs (before the AI run, so that the counts on the start page are those of a new installation).
+  // The phone: the start page, before anything changes the counts, and later the editor.
   const phone = await newContext(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, colorScheme: 'light', deviceScaleFactor: 2 });
   const p = await phone.newPage();
   watch(p, 'phone');
   await login(p, admin);
   await p.goto(base + '/', { waitUntil: 'networkidle' });
-  await p.waitForFunction(() => document.querySelectorAll('[data-dt-preview]:not(.is-ready)').length === 0, null, { timeout: 20000 }).catch(() => { });
+  await waitPreviews(p);
   await p.waitForTimeout(500);
   await p.screenshot({ path: path.join(out, 'phone-start.png') });
   written.push('phone-start.png');
   console.log('wrote phone-start.png');
-  await p.goto(base + '/Designs', { waitUntil: 'networkidle' });
-  await p.waitForFunction(() => document.querySelectorAll('[data-dt-preview]:not(.is-ready)').length === 0, null, { timeout: 20000 }).catch(() => { });
-  await p.waitForTimeout(500);
-  await p.screenshot({ path: path.join(out, 'phone-designs.png') });
-  written.push('phone-designs.png');
-  console.log('wrote phone-designs.png');
+
+  // The editor. A template is opened itself where nothing is changed; a copy (deleted at the end) is made for the effects.
+  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  const templates = await page.evaluate(async () => (await (await fetch('/api/templates')).json()));
+  const templateId = name => { const t = templates.find(x => x.name.indexOf(name) === 0); if (!t) { throw new Error('No template ' + name); } return t.id; };
+  const open = id => openDesigner(page, base, id);
+  const select = async name => {
+    await page.evaluate(n => { const app = window.DtDesigner.app; const el = app.elements().find(e => e.name === n); app.select([el.id]); }, name);
+    await raf2(page);
+    await idle(page);
+  };
+  const elementId = name => page.evaluate(n => window.DtDesigner.app.elements().find(e => e.name === n).id, name);
+
+  // 1. The Instagram post with the panel Elemente and a selected headline.
+  await open(templateId('Instagram-Beitrag'));
+  await openPanel(page, 'elements');
+  await page.waitForTimeout(800);
+  await select('SALE');
+  await page.waitForTimeout(400);
+  await shot('editor.png');
+  // 2. The context menu of the headline.
+  const at = await page.evaluate(id => { const r = window.DtDesigner.canvas.clientRectOf(id); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }, await elementId('SALE'));
+  await page.mouse.click(at.x, at.y, { button: 'right' });
+  await page.waitForSelector('.mat-menu');
+  await shot('context-menu.png');
+  await page.keyboard.press('Escape');
+  // 3. The panel Text with the font combinations.
+  await openPanel(page, 'text');
+  await page.waitForFunction(() => document.querySelectorAll('.dt-combo__thumb svg').length >= 10, null, { timeout: 15000 }).catch(() => { });
+  await page.waitForTimeout(500);
+  await shot('text-combinations.png');
+  // 4. The download dialog.
+  await page.click('#dt-download');
+  await page.waitForSelector('dialog.dt-downloaddlg[open]');
+  await shot('download.png');
+  await page.keyboard.press('Escape');
+  await page.waitForSelector('dialog.dt-downloaddlg', { state: 'detached' });
+
+  // 5. The media browser through "Ersetzen" of the photo frame.
+  await open(templateId('Glasetikett'));
+  await openPanel(page, 'uploads');
+  await select('Foto');
+  await page.click('#dt-ctx button:has-text("Bild wählen")');
+  await page.waitForSelector('dialog.dt-media[open]');
+  await page.click('.dt-media__tab[data-tab="all"]');
+  await page.waitForSelector('.dt-media__tile');
+  await page.waitForTimeout(700);
+  await shot('media-browser.png');
+  await page.keyboard.press('Escape');
+  await page.waitForSelector('dialog.dt-media', { state: 'detached' });
+
+  // 6. The demo label with the panel Daten (Zusatz): the preview with a row of the data list.
+  await open(templateId('Käsetheke'));
+  await page.evaluate(id => window.DtDesigner.data.choose(id, 1), listId);
+  await page.waitForFunction(() => window.DtDesigner.app.preview && window.DtDesigner.app.preview.rows.length > 0);
+  await openPanel(page, 'data');
+  await idle(page);
+  await select('Name');
+  await page.waitForTimeout(500);
+  await shot('editor-data.png');
+
+  // 7. Text effects on a copy of the Instagram template.
+  const copy = await page.evaluate(async id => {
+    const token = document.querySelector('meta[name=dt-csrf]').content;
+    const r = await fetch('/api/designs/' + id + '/use-template', { method: 'POST', headers: { RequestVerificationToken: token } });
+    return r.json();
+  }, templateId('Instagram-Beitrag'));
+  await open(copy.id);
+  await select('Hinweis');
+  await page.click('#dt-ctx button[aria-label="Effekte"]');
+  await page.waitForFunction(() => document.querySelectorAll(".dt-fxpreset__thumb svg").length >= 7, null, { timeout: 10000 });
+  await page.click(".dt-fxpreset[data-fx=\"background\"]");
+  await idle(page);
+  await page.waitForFunction(() => window.DtDesigner.app.saveState === 'saved', null, { timeout: 15000 });   // the autosave must be through before the shot and before the copy goes
+  await page.waitForTimeout(500);
+  await shot('text-effects.png');
+  await page.evaluate(async id => {
+    const token = document.querySelector('meta[name=dt-csrf]').content;
+    await fetch('/api/designs/' + id + '/delete', { method: 'POST', headers: { RequestVerificationToken: token } });
+  }, copy.id);
+
+  // 8. The phone editor.
+  await openDesigner(p, base, templateId('Instagram-Beitrag'));
+  await p.waitForTimeout(800);
+  await p.screenshot({ path: path.join(out, 'phone-editor.png') });
+  written.push('phone-editor.png');
+  console.log('wrote phone-editor.png');
 
   // The AI import preview, against the fake provider (last: it leaves one run in the log).
   if (withAi) {

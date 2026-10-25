@@ -8,11 +8,11 @@ This file is the contract between the phases. Every phase reads it first, follow
 
 ---
 
-## Status: plan 2 is under way (2026-10-25)
+## Status: plan 2 is done (2026-10-25)
 
 DesignThix is now **first a design tool like Canva, second a tool for data**: see **[PLAN-CANVA.md](PLAN-CANVA.md)** (acceptance list, document schema 2, phases K1 to K6). It replaces §2 (document format) and §1.4 (menu) of this plan and changes the weight
 of the product: the start page asks "Was möchtest du heute gestalten?", templates and one-click formats come first, the batch features (data lists, **Serienausgaben** = the former Ausgaben, sheets, AI import) are the add-on in the menu group "Serien (Zusatz)".
-Everything else of this plan (ground rules §0, stack, roles, ports) stays valid. K5 (start, navigation, ten built-in templates, `Services/TemplateSeeder`) is done; the editor (K3/K4) is described in `docs/EDITOR.md`.
+Everything else of this plan (ground rules §0, stack, roles, ports) stays valid. Plan 2 (K1 to K6) is done: see the "Status" section of **[PLAN-CANVA.md](PLAN-CANVA.md)** for what differs from it; the editor is described in `docs/EDITOR.md`.
 
 ## Status of plan 1: done (2026-10-24)
 
