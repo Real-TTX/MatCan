@@ -1,0 +1,137 @@
+# DesignThix plan 5: Kataloge (media sources as modules)
+
+Plan 5 follows plan 4 (`docs/PLAN-AI-DESIGN.md`). Where it differs from the earlier plans, this one wins. The owner's words: *"Kann man irgendwie Google Image Search,
+sonstige StockPhoto Suchen einbinden? Also diverse Quellen? Sollte modular sein, dass wir in Zukunft noch andere hinzufügen können. Evtl. als Art Kataloge einbauen.
+Mitgeliefert, Unsplash, Awesomefont, Whatever-Catalogue … Es gibt Kataloge, die man nicht auflisten kann, sondern nur durchsuchen."*
+
+Agreed with the owner (2026-10-25): **Google image search is out** (the Custom Search JSON API is closed to new customers and ends on 2027-01-01; its results are mostly
+copyrighted). First set: Mitgeliefert, Uploads (own + teams), a server folder, Pexels, Pixabay, Openverse, Iconify (with Font Awesome Free), Google Fonts. **Unsplash later**
+(its rules demand hotlinked image URLs and a download ping, which clashes with the offline copy and the strict CSP).
+
+## Status
+
+Not started. Phases C1 to C3 below.
+
+---
+
+## 1. Principles
+
+1. **A catalogue is a module**: one C# class implementing `ICatalog`, registered in ONE list (`Catalogs/CatalogRegistry.cs`). Adding a source = one class + one line + its
+   tests. No catalogue-specific code outside its class (UI, admin page, proxy, import and attribution are generic).
+2. **Browsable or search-only**: a catalogue declares its capabilities. Browsable ones show collections/categories and a first page without a query; search-only ones show a
+   search field, suggestion chips and the empty state "Gib einen Suchbegriff ein".
+3. **Used = copied**: what goes into a design is imported into the library of the design's area (an `Asset`, a `Font`, or an icon body) with source, author and licence.
+   Designs stay offline-printable, the public view and output never fetch from a third party, a vanished provider breaks nothing.
+4. **The server talks to providers, never the browser**: search and thumbnails go through the app (`/api/catalogs/...`), so the CSP stays `img-src 'self' data: blob:`,
+   the keys stay on the server and the people's addresses are not sent to third parties.
+5. **Off by default**: external catalogues are switched on by an administrator (`/Admin/Catalogs`) with their key; without internet they say "Nicht erreichbar" and the rest works.
+6. **Licences in code**: each catalogue states which licences it lets through and what attribution they need; items with NC (non-commercial) or ND (no derivatives) licences
+   are never offered (designs change pictures and may be used commercially).
+
+## 2. The interface (`src/DesignThix/Catalogs/`)
+
+```csharp
+public interface ICatalog
+{
+    string Id { get; }                       // "builtin", "uploads", "folder", "pexels", "pixabay", "openverse", "iconify", "googlefonts"
+    string Name { get; }                     // German display name
+    CatalogKind Kinds { get; }               // [Flags] Photo, Illustration, Vector, Icon, Font
+    CatalogCaps Caps { get; }                // [Flags] Browse, Search, Collections, Filters, NeedsKey, External
+    CatalogInfo Info { get; }                // homepage, key help URL, required provider link text ("Fotos von Pexels"), licence summary, default limits
+    Task<IReadOnlyList<CatalogCollection>> CollectionsAsync(CatalogContext ctx, CancellationToken ct);
+    Task<CatalogPage> SearchAsync(CatalogContext ctx, CatalogQuery query, CancellationToken ct);   // query.Text empty + Browse = the first page / a collection
+    Task<CatalogFetch> FetchAsync(CatalogContext ctx, string itemId, CancellationToken ct);         // bytes or font files or icon body + metadata, for the import
+}
+```
+
+- `CatalogQuery`: `Text`, `Collection`, `Kind`, `Orientation` (any|landscape|portrait|square), `Colour` (where supported), `Page`, `PerPage` (≤ 50), `Locale` ("de").
+- `CatalogItem`: `Id` (catalogue-local), `Kind`, `Title`, `Width`, `Height`, `Thumb` (a signed proxy token, never a provider URL in the page), `Author`, `AuthorUrl`,
+  `SourceUrl`, `Licence` (`{ code, name, url, attributionRequired }`), for local catalogues `AssetKey`/`FontFamily`/`IconName` (already in the library: no import).
+- `CatalogContext`: the `Biz` of the person, the settings and key of the catalogue, an `HttpClient` from `CatalogHttp` (see 4), the cache.
+- Local catalogues implement the same interface: **Mitgeliefert** (built-in media by category = collections Flaggen, Siegel, Logos; Lucide icons; bundled fonts),
+  **Uploads** (one collection per area the person may see: Meine Uploads, each team, Freigegeben; through `Access.Visible`), **Ordner auf dem Server** (`{data}/catalogs/<name>/`,
+  sub-folders = collections, read-only, sniffed like an upload; an administrator names the folders; the Docker compose files get a commented example volume).
+
+## 3. Data
+
+- `Asset.SourceJson` (jsonb, null for own uploads): `{ catalog, itemId, title, author, authorUrl, sourceUrl, licence: { code, name, url }, attribution, importedDate }`;
+  unique index on (`SpaceId`, catalog, itemId) among live assets (an item imported twice into one area is reused). Same for `Font.SourceJson`.
+- `IconBody` (new): `Prefix`, `Name`, `BodyJson` (the parsed allowlisted `{ tag, attrs }` tree, never raw SVG), `Width`, `Height`, `Licence`, `SourceJson`; unique (Prefix, Name).
+  Icons are platform-wide (one copy, they are tiny and licensed for everybody).
+- `CatalogCacheEntry` (new): `Catalog`, `KeyHash`, `ResponseJson`, `ExpiresDate`. Search answers are cached 24 h (Pixabay requires it; the others profit); thumbnails are
+  cached on disk under `{data}/catalog-cache/` (24 h, at most 500 MB, oldest first out; a background cleanup).
+- Settings `Catalogs`: per catalogue `Enabled`, `Order`, `PerUserPerMinute`, `PerHour` (budget of the key), `SafeSearch`, `AllowedLicences` (Openverse, Iconify),
+  `Folders` (folder catalogue). Keys in a secret store like the AI's (`{data}/secrets/catalogs/<id>`; generalise `AiSecretStore` into a `SecretFileStore` if that is clean).
+
+## 4. Server
+
+- **Endpoints** (`Endpoints/CatalogEndpoints.cs`, signed in): `GET /api/catalogs` (the enabled ones the person may use, with caps, kinds, provider link text),
+  `GET /api/catalogs/{id}/collections`, `GET /api/catalogs/{id}/search?q&collection&kind&orientation&colour&page`, `GET /api/catalogs/thumb/{token}` (the proxy: the token is
+  an HMAC (`SecretProtector`) over catalogue + provider URL + expiry, so it is no open proxy), `POST /api/catalogs/{id}/import` (`{ itemId, spaceId?, folderId? }` -> the asset key /
+  font family / icon name; antiforgery; `AssetLogic.RequireUploader` + quota + `Access` on the target; default target = the design's area when called from the editor with
+  `designId`), `GET /api/designs/{id}/credits` (the "Bildnachweise": every external source the design uses, with the attribution text).
+- **`CatalogHttp`**: one named `HttpClient` per catalogue, the allowed hosts of the catalogue (requests and redirects to other hosts are refused), 10 s timeout for searches,
+  60 s for downloads, at most 25 MB per download, a `User-Agent` "DesignThix/<version>", no cookies. Never a URL from the browser: the browser sends item ids, the catalogue
+  builds the URL itself (SSRF).
+- **Limits**: per person per minute (default 30 searches), the budget per hour of the key (Pexels 200/h, Pixabay 100/min); exceeded = a German message
+  ("Pexels hat für diese Stunde genug Anfragen bekommen. Versuch es in ein paar Minuten wieder."), never a retry loop around a provider's limit.
+- **Import**: through the upload path (`FileSniffer`, `SvgSafe`, key from the title through `Slug`, retry on a taken key), `SourceJson` filled, category "Katalog: <Name>".
+  A font import: the regular, bold, italic and bold-italic files (WOFF2 or TTF), through the font checks of `FontLogic`.
+- **The catalogues of the first set** (each verified against the provider's CURRENT documentation while building; numbers below are from 2026-10):
+  - **Pexels** (key; search-only + "Kuratiert" as a browsable collection): attribution "Foto von <Name> auf Pexels" with links; the tab shows a visible link to Pexels
+    (their rule); 200 requests per hour by default.
+  - **Pixabay** (key; search + browse with categories; photo/illustration/vector): result URLs may only be used for temporary display, so the import downloads
+    `largeImageURL` to the server (their rule: download to your server, no permanent hotlinking); requests cached 24 h; 100 per minute; `lang=de`; `safesearch` from the settings;
+    "Bilder von Pixabay" shown with the results.
+  - **Openverse** (no key needed, optional client credentials for higher limits; search-only): `license_type=commercial,modification` always; licence + attribution text
+    stored; the CC licence of each item shown on the tile and in the asset details.
+  - **Iconify** (no key; browsable: icon sets as collections, and search): only sets whose licence is in `AllowedLicences` (default MIT, Apache-2.0, ISC, CC0-1.0, CC-BY-4.0,
+    OFL-1.1); **Font Awesome Free** = the sets `fa6-solid`, `fa6-regular`, `fa6-brands` (CC BY 4.0: attribution in the credits); the import stores the icon body (see 5).
+    The address of the Iconify API is a setting (default `https://api.iconify.design`; a company may run its own Iconify server).
+  - **Google Fonts** (the families of `fonts.google.com` through the Google Fonts Developer API with a key, or a key-free mirror such as Fontsource if it is reliable;
+    browsable by category serif/sans/display/handwriting/mono and searchable): OFL/Apache only; the import adds the family to the area's fonts.
+- **Fake providers for the tests**: `tests/e2e/fake-catalogs.js` (Pexels-, Pixabay-, Openverse-, Iconify-, Google-Fonts-shaped answers with local pictures) and the same in
+  the integration tests through a `CatalogTestSeam` (like `AiTestSeam`). The base URLs can be overridden ONLY through the configuration file / environment
+  (`DESIGNTHIX__Catalogs__<id>__BaseUrl`), never through the admin page (SSRF).
+
+## 5. Icons from catalogues (a small schema change)
+
+The `icon` element's name may be `prefix:name` (`^[a-z0-9-]{1,64}(:[a-z0-9-]{1,64})?$`); a name without a prefix is Lucide as today. `DtEngine.normalize` and
+`DocumentValidator` change identically (the test that compares them covers it). The engine's `opts.icon(name)` already asks the app: the editor, designs.js, the run page,
+the public view and the templates preview get bodies of prefixed icons from `GET /api/icons?names=a:b,c:d` (from `IconBody`; built-in Lucide stays in `lib/icons.json`),
+and the output payload and the public payload include the bodies of the prefixed icons a document uses. Colour and stroke work as for Lucide (a filled icon set uses `fill`
+= the icon colour). An imported icon body goes through the same allowlist parser as Lucide (`parseIconBody` / its C# twin), never raw SVG.
+
+## 6. Browser
+
+- **The media browser** (`dt-media.js`, `DtMedia.pick`) becomes catalogue-driven: the tabs are the catalogues (`/api/catalogs`) with their collections as chips or a side list;
+  "Alle" stays for the local ones. A search-only catalogue shows the search field, chips with suggestions ("Natur", "Essen", "Büro", "Hintergrund", "Textur", "Menschen") and
+  "Gib einen Suchbegriff ein"; a browsable one shows its first page. Tiles: the thumbnail, on hover/focus author and licence; external results carry a small source badge.
+  Picking an external item imports it (a spinner on the tile, then the callback with the new key) - every place that uses `DtMedia.pick` gets catalogues for free.
+  The provider link (Pexels, Pixabay) is shown with their results. Paging: "Mehr laden" + IntersectionObserver.
+- **Editor**: a new rail entry **"Fotos"** (after Uploads): the photo catalogues (Pexels, Pixabay, Openverse, the folder catalogue) with one search field over the chosen catalogue,
+  orientation filter, tiles that drag onto the canvas (`D.dnd.attach` + `D.canvas.dropAsset` after the import; a drop onto a frame or image replaces its source as today) or
+  insert on click. The **Elemente** panel's icon section gets a set switch (Lucide built in + Iconify sets the admin allows, e.g. Font Awesome, Material, Tabler, Phosphor);
+  search covers the chosen set. The **font select** gets "Weitere Schriften …" (a dialog over Google Fonts: preview text, category, search, "Hinzufügen").
+- **Bildnachweise**: Datei menu "Bildnachweise" (a dialog: one line per external source with author, licence and link, "Text kopieren"); asset edit page: a "Quelle" block;
+  the public view: a "Bildnachweise" link in its footer when the design uses external sources (attribution of CC-BY material must travel with the design).
+- **`/Admin/Catalogs`**: a list (name, kind, on/off, key status, "Testen" = one search), the edit page (key, limits, safe search, allowed licences, order; the folder catalogue:
+  folder names), the provider's licence summary in German, and "Cache leeren".
+
+## 7. Phases (Sonnet agents; the planner reviews and commits after each)
+
+- **C1 Framework and local catalogues**: `ICatalog` + registry, `CatalogHttp`, cache, proxy, import, settings + secret store, `/Admin/Catalogs`, the local catalogues
+  (Mitgeliefert, Uploads, Ordner), `Asset/Font.SourceJson`, credits endpoint + dialog, the catalogue-driven `DtMedia` and the editor panel "Fotos" (works with the local ones),
+  `CatalogTestSeam` + `fake-catalogs.js`, tests (`Integration/CatalogTests`: registry, caps, browse vs search-only, proxy token tamper/expiry, allowed hosts, import reuse,
+  quota, `Access` on the target, folder catalogue path traversal; `PermissionTests` rows), `tests/e2e/catalogs-check.js`.
+- **C2 External pictures**: Pexels, Pixabay, Openverse with their rules (attribution, caching, limits, licence filter), the provider links, Bildnachweise in the public view,
+  tests against the fakes (also: a provider that is down, 429, a huge file, a redirect to another host, an NC licence that must not appear).
+- **C3 Icons and fonts + AI + final pass**: Iconify (sets, licence filter, `IconBody`, schema change of section 5 in engine and validator, `/api/icons`, payloads), Google Fonts,
+  the KI-Design tools `search_catalog` / `import_from_catalog` (plan 4's agent can then place stock photos and catalogue icons; the model sees thumbnails through `look`),
+  the browser checks twice on a fresh database, the security review (SSRF, proxy tokens, keys never in a page or log, licence filter, quotas), README section "Kataloge" with a
+  screenshot (fake providers), CLAUDE.md, this plan's status.
+
+## 8. Out of scope
+
+Unsplash (later, needs hotlinking + download ping: an exception to the CSP for `images.unsplash.com` and a different import rule), Google image search, paid stock
+(Shutterstock, Adobe Stock: licences per download), video and audio, AI image generation, uploading to a catalogue.
