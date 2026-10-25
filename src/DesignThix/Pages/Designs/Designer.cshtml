@@ -2,152 +2,115 @@
 @model DesignThix.Pages.Designs.DesignerModel
 @{
     Layout = "_Designer";
-    ViewData["Styles"] = new[] { "/css/designer.css", "/css/ai.css" };
+    ViewData["Styles"] = new[] { "/css/designer.css", "/css/dt-media.css", "/css/ai.css" };
     var d = Model.Design;
     var edit = Model.CanEdit;
-    var back = $"/Designs/{d.Id}";
+    var back = $"/Designs/Edit/{d.Id}";
 }
 
-@* The frame of the designer. The panels, the layers and the properties are built by designer.js (DOM APIs only); the document comes from /api/designs/{id}.
-   Left: tabs Elemente / Medien / Felder / Ebenen. Middle: the canvas (engine drawing + an overlay for selection, handles and guides). Right: properties. *@
-<div class="dt-ds is-loading" id="dt-ds" data-design-id="@d.Id" data-can-edit="@(edit ? "true" : "false")" data-back-href="@back"
-     data-presets="@Model.PresetsJson" data-ai="@(Model.AiVisible ? "true" : "false")" data-output-href="/Outputs/Create?designId=@d.Id" data-properties-href="@back" data-name="@d.Name">
+@* The frame of the editor. Everything inside (rail, panels, toolbar, page strip, canvas) is built by designer*.js with DOM APIs; the document comes from /api/designs/{id}.
+   Top bar | rail + panel | toolbar above the canvas, canvas, page strip and zoom below. Phones: the rail becomes the tab bar at the bottom and the panel a bottom sheet. *@
+<div class="dt-ds is-loading" id="dt-ds" data-design-id="@d.Id" data-can-edit="@(edit ? "true" : "false")" data-back-href="@back" data-ai="@(Model.AiVisible ? "true" : "false")"
+     data-output-href="/Outputs/Create?designId=@d.Id" data-name="@d.Name">
 
-    <header class="dt-ds__bar" role="toolbar" aria-label="Designer">
-        <a class="mat-btn mat-btn--ghost mat-btn--icon dt-ds__back" href="@back" aria-label="Zurück zum Design" title="Zurück zum Design" data-leave>@Ui.Icon("back")</a>
-        <label class="mat-sr-only" for="dt-name">Name des Designs</label>
-        <input class="dt-ds__name" id="dt-name" type="text" value="@d.Name" maxlength="200" autocomplete="off" spellcheck="false" readonly="@(!edit)" />
-
-        <span class="dt-ds__group" role="group" aria-label="Verlauf">
+    <header class="dt-top" role="banner">
+        <a class="mat-btn mat-btn--ghost mat-btn--icon dt-top__back" href="/" id="dt-back" aria-label="Zurück zur Startseite" title="Zurück zur Startseite" data-leave>@Ui.ToolIcon("arrow-left")</a>
+        <button type="button" class="mat-btn mat-btn--ghost mat-btn--sm dt-top__file" id="dt-file" aria-haspopup="menu" aria-expanded="false"><span>Datei</span>@Ui.ToolIcon("chevron-down")</button>
+        <span class="dt-top__group" role="group" aria-label="Verlauf">
             <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon" id="dt-undo" aria-label="Rückgängig (Strg+Z)" title="Rückgängig (Strg+Z)" disabled>@Ui.ToolIcon("undo-2")</button>
             <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon" id="dt-redo" aria-label="Wiederholen (Strg+Y)" title="Wiederholen (Strg+Y)" disabled>@Ui.ToolIcon("redo-2")</button>
         </span>
-
-        <span class="dt-ds__spacer"></span>
-
-        <span class="dt-ds__group dt-ds__preview" role="group" aria-label="Vorschau mit Daten">
-            <label class="mat-sr-only" for="dt-data">Daten für die Vorschau</label>
-            @Ui.ToolIcon("database", "dt-ds__preview-icon")
-            <select class="mat-select mat-select--sm dt-ds__data" id="dt-data" title="Daten für die Vorschau">
-                <option value="">Beispielwerte</option>
-            </select>
-            <span class="dt-ds__rowctl" id="dt-rowctl" hidden>
-                <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon" id="dt-row-prev" aria-label="Vorherige Zeile" title="Vorherige Zeile">@Ui.Icon("chevron-left")</button>
-                <span class="dt-ds__rowinfo" id="dt-row-info" aria-live="polite">–</span>
-                <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon" id="dt-row-next" aria-label="Nächste Zeile" title="Nächste Zeile">@Ui.Icon("chevron-right")</button>
-            </span>
+        <span class="dt-top__state" id="dt-state" data-state="saved" role="status" aria-live="polite">
+            @Ui.Icon("check-circle", "dt-top__state-icon")<span class="dt-top__state-text" id="dt-state-text">Alle Änderungen gespeichert</span>
         </span>
 
-        <span class="dt-ds__spacer"></span>
-
-        <span class="dt-ds__state" id="dt-state" data-state="saved" role="status" aria-live="polite">
-            @Ui.Icon("check-circle", "dt-ds__state-icon")<span class="dt-ds__state-text" id="dt-state-text">Gespeichert</span>
+        <span class="dt-top__center">
+            <label class="mat-sr-only" for="dt-name">Name des Designs</label>
+            <input class="dt-top__name" id="dt-name" type="text" value="@d.Name" maxlength="200" autocomplete="off" spellcheck="false" readonly="@(!edit)" title="Klicken, um das Design umzubenennen" />
         </span>
-        @if (edit)
-        {
-            <button type="button" class="mat-btn mat-btn--primary mat-btn--sm dt-ds__save" id="dt-save" title="Speichern (Strg+S)">@Ui.Icon("save")<span>Speichern</span></button>
-        }
-        <a class="mat-btn mat-btn--ghost mat-btn--icon dt-ds__output" href="/Designs/@d.Id/Print" id="dt-print" aria-label="Einzeldruck" title="Einzeldruck: ein Etikett mit eigenen Werten drucken" data-leave>@Ui.ToolIcon("text-cursor-input")</a>
-        <a class="mat-btn mat-btn--secondary mat-btn--sm dt-ds__output" href="/Outputs/Create?designId=@d.Id" id="dt-output" title="Ausgabe aus diesem Design anlegen" data-leave>@Ui.ToolIcon("printer")<span>Ausgabe</span></a>
-        <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon dt-ds__drawer dt-ds__drawer--left" id="dt-toggle-left" aria-label="Bibliothek ein- oder ausblenden" aria-expanded="false" title="Bibliothek">@Ui.ToolIcon("panel-left")</button>
-        <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon dt-ds__drawer dt-ds__drawer--right" id="dt-toggle-right" aria-label="Eigenschaften ein- oder ausblenden" aria-expanded="false" title="Eigenschaften">@Ui.ToolIcon("panel-right")</button>
+
+        <a class="mat-btn mat-btn--secondary mat-btn--sm dt-top__series" href="/Outputs/Create?designId=@d.Id" id="dt-series" title="Serie: dieses Design mit einer Datenliste für viele Etiketten ausgeben (Zusatz)" data-leave>@Ui.ToolIcon("database")<span>Serie</span></a>
+        <button type="button" class="mat-btn mat-btn--primary mat-btn--sm dt-top__download" id="dt-download" title="Herunterladen: PNG, JPG, SVG oder PDF">@Ui.ToolIcon("download")<span>Herunterladen</span></button>
+        <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon dt-top__print" id="dt-print" aria-label="Drucken" title="Drucken">@Ui.ToolIcon("printer")</button>
     </header>
 
-    @* Phones: the preview only (the data selector stays in the bar); editing needs a larger screen. *@
-    <div class="dt-ds__phonehint mat-alert mat-alert--info" role="note">
-        @Ui.Icon("info")
-        <div class="mat-alert__body">
-            <strong>Zum Bearbeiten brauchst du einen größeren Bildschirm.</strong>
-            Hier siehst du das Design und kannst es mit Daten ansehen. <a href="@back">Eigenschaften öffnen</a>
-        </div>
-    </div>
-
     <div class="dt-ds__body">
-        <aside class="dt-ds__left" id="dt-left" aria-label="Bibliothek">
-            <div class="dt-tabs" role="tablist" aria-label="Bibliothek">
-                <button type="button" class="dt-tabs__tab is-active" role="tab" id="dt-tab-elements" aria-selected="true" aria-controls="dt-pane-elements" data-tab="elements">@Ui.ToolIcon("square")<span>Elemente</span></button>
-                <button type="button" class="dt-tabs__tab" role="tab" id="dt-tab-media" aria-selected="false" aria-controls="dt-pane-media" data-tab="media" tabindex="-1">@Ui.ToolIcon("images")<span>Medien</span></button>
-                <button type="button" class="dt-tabs__tab" role="tab" id="dt-tab-fields" aria-selected="false" aria-controls="dt-pane-fields" data-tab="fields" tabindex="-1">@Ui.ToolIcon("braces")<span>Felder</span><b class="dt-tabs__badge" id="dt-fields-badge" hidden></b></button>
-                <button type="button" class="dt-tabs__tab" role="tab" id="dt-tab-layers" aria-selected="false" aria-controls="dt-pane-layers" data-tab="layers" tabindex="-1">@Ui.Icon("layers")<span>Ebenen</span></button>
-            </div>
+        <nav class="dt-rail" id="dt-rail" aria-label="Bereiche"></nav>
 
-            <section class="dt-pane is-active" id="dt-pane-elements" role="tabpanel" aria-labelledby="dt-tab-elements" data-pane="elements">
-                <h2 class="dt-pane__title">Element hinzufügen</h2>
-                <div class="dt-tools">
-                    <button type="button" class="dt-tool" data-add="text">@Ui.ToolIcon("type")<span>Text</span></button>
-                    <button type="button" class="dt-tool" data-add="heading">@Ui.ToolIcon("heading-1")<span>Überschrift</span></button>
-                    <button type="button" class="dt-tool" data-add="rect">@Ui.ToolIcon("square")<span>Rechteck</span></button>
-                    <button type="button" class="dt-tool" data-add="ellipse">@Ui.ToolIcon("circle")<span>Ellipse</span></button>
-                    <button type="button" class="dt-tool" data-add="line">@Ui.ToolIcon("minus")<span>Linie</span></button>
-                    <button type="button" class="dt-tool" data-add="image">@Ui.Icon("image")<span>Bild</span></button>
-                    <button type="button" class="dt-tool" data-add="strip">@Ui.ToolIcon("gallery-horizontal-end")<span>Bildleiste</span></button>
-                    <button type="button" class="dt-tool" data-add="placeholder">@Ui.ToolIcon("braces")<span>Platzhalter-Text</span></button>
-                </div>
-                <p class="dt-pane__hint">Ein Klick setzt das Element in die Mitte der Seite. Bilder findest du unter <strong>Medien</strong>, Platzhalter unter <strong>Felder</strong>.</p>
-                <h2 class="dt-pane__title">Tastenkürzel</h2>
-                <dl class="dt-keys">
-                    <dt>Strg+Z / Strg+Y</dt><dd>Rückgängig / Wiederholen</dd>
-                    <dt>Strg+C / V / D</dt><dd>Kopieren / Einfügen / Duplizieren</dd>
-                    <dt>Pfeiltasten</dt><dd>Verschieben (mit Umschalt: ×10)</dd>
-                    <dt>Entf</dt><dd>Löschen</dd>
-                    <dt>Strg+A</dt><dd>Alles auswählen</dd>
-                    <dt>Leertaste + Ziehen</dt><dd>Ansicht verschieben</dd>
-                    <dt>Strg + Mausrad</dt><dd>Zoomen</dd>
-                    <dt>Alt beim Ziehen</dt><dd>Einrasten aus</dd>
-                </dl>
-            </section>
-
-            <section class="dt-pane" id="dt-pane-media" role="tabpanel" aria-labelledby="dt-tab-media" data-pane="media" hidden></section>
-            <section class="dt-pane" id="dt-pane-fields" role="tabpanel" aria-labelledby="dt-tab-fields" data-pane="fields" hidden></section>
-            <section class="dt-pane" id="dt-pane-layers" role="tabpanel" aria-labelledby="dt-tab-layers" data-pane="layers" hidden></section>
+        <aside class="dt-panel" id="dt-panel" aria-label="Bereich" hidden>
+            <header class="dt-panel__head">
+                <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm dt-panel__back" id="dt-panel-back" aria-label="Zurück" title="Zurück" hidden>@Ui.ToolIcon("arrow-left")</button>
+                <h2 class="dt-panel__title" id="dt-panel-title"></h2>
+                <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm dt-panel__close" id="dt-panel-close" aria-label="Bereich schließen" title="Bereich schließen">@Ui.ToolIcon("panel-left-close")</button>
+            </header>
+            <div class="dt-panel__body" id="dt-panel-body"></div>
         </aside>
 
-        <div class="dt-ds__center">
-        <main class="dt-ds__canvas" id="dt-viewport" tabindex="0" aria-label="Zeichenfläche">
-            <div class="dt-stage" id="dt-stage">
-                <div class="dt-sheet" id="dt-sheet">
-                    <div class="dt-page" id="dt-page"></div>
-                    <svg class="dt-overlay" id="dt-overlay" aria-hidden="true" focusable="false"></svg>
+        <div class="dt-ds__center" id="dt-center">
+            <div class="dt-ctx" id="dt-ctx"></div>
+
+            <div class="dt-ds__stage">
+                <main class="dt-ds__canvas" id="dt-viewport" tabindex="0" aria-label="Zeichenfläche">
+                    <div class="dt-stage" id="dt-stage">
+                        <div class="dt-sheet" id="dt-sheet">
+                            <div class="dt-page" id="dt-page"></div>
+                            <svg class="dt-overlay" id="dt-overlay" aria-hidden="true" focusable="false"></svg>
+                        </div>
+                    </div>
+                </main>
+                <div class="dt-dropzone" id="dt-dropzone" hidden aria-hidden="true">@Ui.ToolIcon("cloud-upload")<strong>Zum Hochladen loslassen</strong><span>Bilder, Schriften</span></div>
+                <div class="dt-loading" id="dt-loading" role="status"><span class="mat-spinner" aria-hidden="true"></span><span>Design wird geladen ...</span></div>
+                <div class="dt-warnbar dt-canvas-tools" id="dt-warnbar" hidden role="status"></div>
+            </div>
+
+            <div class="dt-bottom" id="dt-bottom">
+                <div class="dt-bottom__pages">
+                    <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm dt-bottom__fold" id="dt-pages-toggle" aria-expanded="true" aria-label="Seitenleiste ausblenden" title="Seitenleiste ausblenden">@Ui.ToolIcon("chevrons-up-down")</button>
+                    <div class="dt-pages" id="dt-pages" role="tablist" aria-label="Seiten"></div>
+                </div>
+                <div class="dt-zoombar" id="dt-zoombar" role="group" aria-label="Zoom">
+                    <span class="dt-zoombar__pages" id="dt-pagecount" aria-label="Seite"></span>
+                    <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" id="dt-zoom-out" aria-label="Verkleinern (−)" title="Verkleinern (−)">@Ui.ToolIcon("zoom-out")</button>
+                    <label class="mat-sr-only" for="dt-zoom">Zoomstufe</label>
+                    <input type="range" class="dt-range dt-zoombar__range" id="dt-zoom" min="10" max="400" step="1" value="100" />
+                    <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" id="dt-zoom-in" aria-label="Vergrößern (+)" title="Vergrößern (+)">@Ui.ToolIcon("zoom-in")</button>
+                    <button type="button" class="dt-zoombar__percent" id="dt-zoom-percent" title="Zoomstufe wählen" aria-haspopup="menu">100 %</button>
+                    <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" id="dt-zoom-fit" aria-label="Einpassen (Strg+0)" title="Einpassen (Strg+0)">@Ui.ToolIcon("scan")</button>
+                    <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" id="dt-snap" aria-label="Einrasten" aria-pressed="true" title="Einrasten an Rändern, Mitte und anderen Elementen (Alt beim Ziehen schaltet aus)">@Ui.ToolIcon("magnet")</button>
                 </div>
             </div>
-        </main>
-            <div class="dt-loading" id="dt-loading" role="status"><span class="mat-spinner" aria-hidden="true"></span><span>Design wird geladen ...</span></div>
-
-            <div class="dt-zoombar" id="dt-zoombar" role="group" aria-label="Zoom">
-                <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" id="dt-zoom-out" aria-label="Verkleinern (−)" title="Verkleinern (−)">@Ui.ToolIcon("zoom-out")</button>
-                <label class="mat-sr-only" for="dt-zoom">Zoomstufe</label>
-                <select class="dt-zoombar__select" id="dt-zoom" title="Zoomstufe">
-                    <option value="fit">Einpassen</option>
-                    <option value="0.25">25 %</option>
-                    <option value="0.5">50 %</option>
-                    <option value="0.75">75 %</option>
-                    <option value="1">100 %</option>
-                    <option value="1.5">150 %</option>
-                    <option value="2">200 %</option>
-                    <option value="4">400 %</option>
-                    <option value="8">800 %</option>
-                </select>
-                <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" id="dt-zoom-in" aria-label="Vergrößern (+)" title="Vergrößern (+)">@Ui.ToolIcon("zoom-in")</button>
-                <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" id="dt-zoom-fit" aria-label="Einpassen (Strg+0)" title="Einpassen (Strg+0)">@Ui.ToolIcon("scan")</button>
-                <span class="dt-zoombar__sep"></span>
-                <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm" id="dt-snap" aria-label="Einrasten" aria-pressed="true" title="Einrasten an Rändern, Mitte und anderen Elementen (Alt beim Ziehen schaltet aus)">@Ui.ToolIcon("magnet")</button>
-            </div>
-            <div class="dt-warnbar" id="dt-warnbar" hidden role="status"></div>
         </div>
-
-        <aside class="dt-ds__right" id="dt-right" aria-label="Eigenschaften">
-            <div class="dt-props" id="dt-props"></div>
-        </aside>
-        <div class="dt-ds__scrim" id="dt-scrim" hidden></div>
     </div>
+
+    <nav class="dt-tabbar" id="dt-tabbar" aria-label="Bereiche">
+        <button type="button" class="dt-tabbar__btn" data-panel="elements" aria-pressed="false">@Ui.ToolIcon("shapes")<span>Elemente</span></button>
+        <button type="button" class="dt-tabbar__btn" data-panel="text" aria-pressed="false">@Ui.ToolIcon("type")<span>Text</span></button>
+        <button type="button" class="dt-tabbar__btn" data-panel="uploads" aria-pressed="false">@Ui.ToolIcon("cloud-upload")<span>Uploads</span></button>
+        <button type="button" class="dt-tabbar__btn" data-panel="layers" aria-pressed="false">@Ui.ToolIcon("layers")<span>Ebenen</span></button>
+        <button type="button" class="dt-tabbar__btn" id="dt-tabbar-more" aria-haspopup="menu" aria-expanded="false">@Ui.ToolIcon("ellipsis")<span>Mehr</span></button>
+    </nav>
 </div>
 
 @section Scripts {
     <script src="~/js/dt-engine.js" asp-append-version="true"></script>
     <script src="~/js/ai.js" asp-append-version="true"></script>
+    <script src="~/js/dt-media.js" asp-append-version="true"></script>
     <script src="~/js/designer.core.js" asp-append-version="true"></script>
     <script src="~/js/designer.canvas.js" asp-append-version="true"></script>
-    <script src="~/js/designer.props.js" asp-append-version="true"></script>
+    <script src="~/js/designer.menu.js" asp-append-version="true"></script>
+    <script src="~/js/designer.ui.js" asp-append-version="true"></script>
+    <script src="~/js/designer.colors.js" asp-append-version="true"></script>
+    <script src="~/js/designer.commands.js" asp-append-version="true"></script>
+    <script src="~/js/designer.toolbar.js" asp-append-version="true"></script>
     <script src="~/js/designer.panels.js" asp-append-version="true"></script>
+    <script src="~/js/designer.panel-uploads.js" asp-append-version="true"></script>
+    <script src="~/js/designer.panel-layers.js" asp-append-version="true"></script>
+    <script src="~/js/designer.panel-data.js" asp-append-version="true"></script>
+    <script src="~/js/designer.panel-position.js" asp-append-version="true"></script>
+    <script src="~/js/designer.pages.js" asp-append-version="true"></script>
+    <script src="~/js/designer.io.js" asp-append-version="true"></script>
+    <script src="~/js/designer.save.js" asp-append-version="true"></script>
+    <script src="~/js/designer.file.js" asp-append-version="true"></script>
+    <script src="~/js/designer.shortcuts.js" asp-append-version="true"></script>
     <script src="~/js/designer.js" asp-append-version="true"></script>
 }

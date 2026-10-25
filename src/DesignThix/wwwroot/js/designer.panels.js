@@ -1,524 +1,506 @@
-/* DesignThix designer, part 4: the left panel. Tabs Elemente (add), Medien (search the library, click or drag onto the page), Felder (the fields of the
-   design: define, sample values, insert {{Key}}, warnings) and Ebenen (the stack: order by drag, lock, hide, rename). The panel of the properties is in
-   designer.props.js. Everything is built with DOM APIs; names, keys and values only ever reach the page through textContent or attributes. */
+/* DesignThix editor, part 8: the left side. A vertical rail of icons (Vorlagen, Elemente, Text, Uploads, Marke, Ebenen, Daten) opens a wide panel (about 340 px, collapsible);
+   context pages (Position, later Effekte, Anpassen, Farbe) open in the same panel with a back arrow. Framework: D.panels.register(def) with
+     { id, title, label, icon, order, build(host, api), page: true for a context page, badge() }
+   build fills `host` each time the panel is shown; api = { app, host, on(event, fn) (removed when the panel is hidden), rebuild(), setTitle(text) }.
+   This file also holds the simple panels Elemente, Text, Vorlagen and Marke; Uploads, Ebenen, Daten and Position are in their own files (designer.panel-*.js).
+   Phones: the same panel is a bottom sheet (CSS) opened from the tab bar; 768-1023 px: an overlay drawer next to the rail. */
 (function () {
   'use strict';
 
   var D = window.DtDesigner;
   var app;
-  var panes = {};
-  var tabs = [];
-  var mediaState = { q: '', category: '', loaded: false, timer: 0, token: 0, items: [] };
-  var fieldsState = { open: null, adding: false };
-  var layerEdit = null;
-  var dragAsset = null;
-  var suppressClick = false;
+  var refs = {};
+  var defs = {};
+  var order = [];
+  var state = { open: false, id: null, stack: [] };   // stack: the rail panel below a context page
+  var cleanups = [];
+  var STORE = 'dt-panel';
 
-  // ================================================================================================ tabs
+  function def(id) { return defs[id]; }
 
-  function showTab(name) {
-    tabs.forEach(function (t) {
-      var on = t.getAttribute('data-tab') === name;
-      t.classList.toggle('is-active', on);
-      t.setAttribute('aria-selected', String(on));
-      t.tabIndex = on ? 0 : -1;
-    });
-    Object.keys(panes).forEach(function (key) {
-      var on = key === name;
-      panes[key].hidden = !on;
-      panes[key].classList.toggle('is-active', on);
-    });
-    if (name === 'media' && !mediaState.loaded) { loadMedia(); }
-    if (name === 'layers') { buildLayers(); }
-    if (name === 'fields') { buildFields(); }
+  function save() {
+    try { localStorage.setItem(STORE, JSON.stringify({ open: state.open, id: state.stack.length ? state.stack[0] : state.id })); } catch (e) { /* ignore */ }
   }
 
-  function currentTab() {
-    var active = tabs.find(function (t) { return t.classList.contains('is-active'); });
-    return active ? active.getAttribute('data-tab') : 'elements';
+  function clearBody() {
+    cleanups.forEach(function (fn) { try { fn(); } catch (e) { /* ignore */ } });
+    cleanups = [];
+    D.empty(refs.body);
   }
 
-  // ================================================================================================ elements
-
-  function addFromTool(kind) {
-    if (!app.editable()) { return; }
-    var id = app.addElement(kind);
-    if (!id) { return; }
-    if (kind === 'text' || kind === 'heading') { D.canvas.startTextEdit(id, { selectAll: true }); }
-    else if (kind === 'image') { showTab('media'); D.toast('Wähle ein Medium aus der Liste, oder lege rechts ein Feld für das Bild fest.'); }
-    else if (kind === 'strip') { D.toast('Ziehe Medien auf die Bildleiste, oder lege rechts die Plätze fest.'); }
-    else if (kind === 'placeholder') { showTab('fields'); }
-  }
-
-  function initElements() {
-    D.$$('[data-add]').forEach(function (b) {
-      b.addEventListener('click', function () { addFromTool(b.getAttribute('data-add')); });
-    });
-    var refreshTools = function () { D.$$('[data-add]').forEach(function (b) { b.disabled = !app.editable(); }); };
-    refreshTools();
-    app.on('readonly', refreshTools);
-  }
-
-  // ================================================================================================ media
-
-  function loadMedia() {
-    mediaState.loaded = true;
-    var token = ++mediaState.token;
-    var url = '/api/assets?take=200' + (mediaState.q ? '&q=' + encodeURIComponent(mediaState.q) : '') + (mediaState.category ? '&category=' + encodeURIComponent(mediaState.category) : '');
-    panes.media.classList.add('is-loading');
-    D.request('GET', url).then(function (res) {
-      if (token !== mediaState.token) { return; }
-      panes.media.classList.remove('is-loading');
-      mediaState.items = res.ok && Array.isArray(res.data) ? res.data : [];
-      mediaState.failed = !res.ok;
-      drawMediaGrid();
-    }, function () {
-      if (token !== mediaState.token) { return; }
-      panes.media.classList.remove('is-loading');
-      mediaState.failed = true;
-      mediaState.items = [];
-      drawMediaGrid();
-    });
-  }
-
-  function useAsset(asset) {
-    if (!app.editable()) { return; }
-    var e = app.single();
-    if (e && e.type === 'image' && !e.source && !e.locked) { app.setSource(e.id, { asset: asset.key }); return; }
-    D.canvas.addAssetImage(asset, null);
-  }
-
-  function startAssetDrag(ev, asset, tile) {
-    if (ev.button !== 0 || !app.editable()) { return; }
-    dragAsset = { asset: asset, pointerId: ev.pointerId, x: ev.clientX, y: ev.clientY, started: false, ghost: null, tile: tile };
-    // all following events of this pointer go to the tile, however fast the pointer leaves it
-    try { tile.setPointerCapture(ev.pointerId); } catch (err) { /* ignore */ }
-    var move = function (e) {
-      if (!dragAsset || e.pointerId !== dragAsset.pointerId) { return; }
-      var d = dragAsset;
-      if (!d.started) {
-        var dx = e.clientX - d.x;
-        var dy = e.clientY - d.y;
-        // a touch scrolls the list vertically; a sideways or clear move starts the drag
-        var threshold = e.pointerType === 'touch' ? 10 : 6;
-        if (Math.hypot(dx, dy) < threshold) { return; }
-        if (e.pointerType === 'touch' && Math.abs(dy) > Math.abs(dx) * 1.5) { return; }
-        d.started = true;
-        d.ghost = D.el('div', { class: 'dt-dragghost' }, D.el('img', { src: asset.url, alt: '' }));
-        document.body.appendChild(d.ghost);
-        document.documentElement.classList.add('is-dragging-asset');
-      }
-      d.ghost.style.setProperty('left', e.clientX + 'px');
-      d.ghost.style.setProperty('top', e.clientY + 'px');
-      var over = document.elementFromPoint(e.clientX, e.clientY);
-      document.getElementById('dt-viewport').classList.toggle('is-drop-target', !!(over && over.closest && over.closest('#dt-viewport')));
-      e.preventDefault();
+  function makeApi(d) {
+    var api = {
+      app: app, host: refs.body, def: d,
+      on: function (name, fn) { app.on(name, fn); cleanups.push(function () { app.off(name, fn); }); return fn; },
+      rebuild: function () { if (state.id === d.id && state.open) { show(d.id, true); } },
+      setTitle: function (t) { refs.title.textContent = t; },
+      cleanup: function (fn) { cleanups.push(fn); },
     };
-    var finish = function (e, cancelled) {
-      if (!dragAsset || e.pointerId !== dragAsset.pointerId) { return; }
-      var d = dragAsset;
-      dragAsset = null;
-      tile.removeEventListener('pointermove', move);
-      tile.removeEventListener('pointerup', up);
-      tile.removeEventListener('pointercancel', cancel);
-      document.getElementById('dt-viewport').classList.remove('is-drop-target');
-      document.documentElement.classList.remove('is-dragging-asset');
-      if (d.ghost && d.ghost.parentNode) { d.ghost.parentNode.removeChild(d.ghost); }
-      if (!d.started) { return; }
-      suppressClick = true;
-      setTimeout(function () { suppressClick = false; }, 50);
-      if (cancelled) { return; }
-      var over = document.elementFromPoint(e.clientX, e.clientY);
-      if (over && over.closest && over.closest('#dt-viewport') && !over.closest('.dt-zoombar')) { D.canvas.dropAsset(asset, e.clientX, e.clientY); }
-    };
-    var up = function (e) { finish(e, false); };
-    var cancel = function (e) { finish(e, true); };
-    tile.addEventListener('pointermove', move);
-    tile.addEventListener('pointerup', up);
-    tile.addEventListener('pointercancel', cancel);
+    return api;
   }
 
-  function drawMediaGrid() {
-    var grid = D.$('.dt-media__grid', panes.media);
-    D.empty(grid);
-    var info = D.$('.dt-media__info', panes.media);
-    if (mediaState.failed) { info.textContent = 'Die Medien konnten nicht geladen werden.'; info.hidden = false; return; }
-    info.hidden = mediaState.items.length > 0;
-    info.textContent = mediaState.q || mediaState.category ? 'Nichts gefunden. Lade neue Medien unter „Medien“ im Menü hoch.' : 'Es gibt noch keine Medien. Lade sie unter „Medien“ im Menü hoch.';
-    mediaState.items.forEach(function (a) {
-      var tile = D.el('button', { type: 'button', class: 'dt-asset', title: a.name + ' (' + a.key + ')', 'data-key': a.key, disabled: !app.editable() }, [
-        D.el('span', { class: 'dt-asset__thumb' }, D.el('img', { src: a.url, alt: '', loading: 'lazy', decoding: 'async', draggable: 'false' })),
-        D.el('span', { class: 'dt-asset__name', text: a.name }),
-      ]);
-      tile.addEventListener('click', function () { if (!suppressClick) { useAsset(a); } });
-      tile.addEventListener('pointerdown', function (ev) { startAssetDrag(ev, a, tile); });
-      grid.appendChild(tile);
+  function show(id, keepScroll) {
+    var d = def(id);
+    if (!d) { return; }
+    var scroll = keepScroll ? refs.body.scrollTop : 0;
+    clearBody();
+    state.id = id;
+    refs.title.textContent = d.title;
+    refs.panel.setAttribute('data-panel', id);
+    refs.panel.classList.toggle('is-page', !!d.page);
+    refs.back.hidden = !d.page;
+    D.$$('.dt-rail__btn', refs.rail).forEach(function (b) {
+      var on = b.getAttribute('data-panel') === (d.page ? state.stack[0] : id);
+      b.setAttribute('aria-pressed', String(on && state.open));
+      b.classList.toggle('is-active', on && state.open);
     });
+    d.build(refs.body, makeApi(d));
+    refs.body.scrollTop = scroll;
   }
 
-  function buildMedia() {
-    var search = D.el('input', { type: 'search', class: 'mat-input mat-input--sm', placeholder: 'Medien suchen', 'aria-label': 'Medien suchen', autocomplete: 'off' });
-    var category = D.el('select', { class: 'mat-select mat-select--sm', 'aria-label': 'Kategorie' }, [D.el('option', { value: '', text: 'Alle Kategorien' })].concat(D.CATEGORIES.map(function (c) { return D.el('option', { value: c, text: c }); })));
-    search.addEventListener('input', function () {
-      clearTimeout(mediaState.timer);
-      mediaState.timer = setTimeout(function () { mediaState.q = search.value.trim(); loadMedia(); }, 250);
+  function setOpen(open) {
+    state.open = open;
+    refs.root.classList.toggle('is-panel-open', open);
+    refs.panel.hidden = !open;
+    D.$$('.dt-rail__btn', refs.rail).forEach(function (b) {
+      var d = def(b.getAttribute('data-panel'));
+      var on = open && state.id && (b.getAttribute('data-panel') === (def(state.id).page ? state.stack[0] : state.id));
+      b.setAttribute('aria-pressed', String(!!on));
+      b.classList.toggle('is-active', !!on);
+      void d;
     });
-    category.addEventListener('change', function () { mediaState.category = category.value; loadMedia(); });
-    panes.media.appendChild(D.el('div', { class: 'dt-media__tools' }, [search, category]));
-    panes.media.appendChild(D.el('p', { class: 'dt-media__info mat-muted', hidden: true }));
-    panes.media.appendChild(D.el('div', { class: 'dt-media__grid', role: 'list' }));
-    panes.media.appendChild(D.el('p', { class: 'dt-pane__hint', text: 'Klicken setzt das Bild in die Seite, Ziehen auf die Fläche setzt es an die Stelle. Auf ein Bild oder eine Bildleiste gezogen, ersetzt es deren Quelle.' }));
-  }
-
-  // ================================================================================================ fields
-
-  function typeLabel(type) {
-    var t = D.FIELD_TYPES.find(function (x) { return x[0] === type; });
-    return t ? t[1] : type;
-  }
-
-  function fieldKeyMessage(key, ownKey) {
-    if (!D.KEY_PATTERN.test(key)) { return 'Der Schlüssel beginnt mit einem Buchstaben und hat nur Buchstaben, Ziffern und _ (höchstens 40 Zeichen).'; }
-    var clash = D.fieldByKey(app.doc, key);
-    if (clash && (!ownKey || D.lower(clash.key) !== D.lower(ownKey))) { return 'Ein Feld mit diesem Schlüssel gibt es schon.'; }
-    return '';
-  }
-
-  function insertButton(key) {
-    var b = D.el('button', { type: 'button', class: 'mat-btn mat-btn--secondary mat-btn--sm dt-field__insert', 'data-keep-edit': '', title: '{{' + key + '}} in den ausgewählten Text einfügen', disabled: !app.editable() });
-    b.appendChild(D.icon('text-cursor-input'));
-    b.appendChild(D.el('span', { text: 'In Text einfügen' }));
-    var keep = function (ev) { ev.preventDefault(); };
-    b.addEventListener('pointerdown', keep);
-    b.addEventListener('mousedown', keep);
-    b.addEventListener('click', function () { app.insertPlaceholder(key); });
-    return b;
-  }
-
-  function sampleInput(f) {
-    var multi = f.type === 'multiline';
-    var input = multi
-      ? D.el('textarea', { class: 'mat-input mat-input--sm dt-field__sample', rows: 2, maxlength: 2000 })
-      : D.el('input', { type: 'text', class: 'mat-input mat-input--sm dt-field__sample', maxlength: 2000, autocomplete: 'off', spellcheck: 'false', list: f.type === 'image' ? 'dt-asset-keys' : null });
-    input.value = f.sample;
-    input.disabled = !app.editable();
-    input.setAttribute('aria-label', 'Beispielwert für ' + f.key);
-    input.placeholder = f.type === 'image' ? 'Schlüssel eines Mediums' : 'Beispielwert';
-    input.addEventListener('input', function () {
-      app.updateField(f.key, { sample: input.value }, 'sample:' + f.key, false);
+    D.$$('.dt-tabbar__btn', refs.root).forEach(function (b) {
+      var id = b.getAttribute('data-panel');
+      b.setAttribute('aria-pressed', String(!!(open && id && state.id === id)));
     });
-    return input;
+    app.emit('panel');
   }
 
-  function fieldForm(f) {
-    var disabled = !app.editable();
-    var key = D.el('input', { type: 'text', class: 'mat-input mat-input--sm', value: f.key, maxlength: 40, autocomplete: 'off', spellcheck: 'false', disabled: disabled, 'aria-label': 'Schlüssel' });
-    var message = D.el('p', { class: 'dt-field__error', role: 'alert', hidden: true });
-    var label = D.el('input', { type: 'text', class: 'mat-input mat-input--sm', value: f.label, maxlength: 80, autocomplete: 'off', disabled: disabled, 'aria-label': 'Bezeichnung' });
-    var type = D.el('select', { class: 'mat-select mat-select--sm', disabled: disabled, 'aria-label': 'Art' }, D.FIELD_TYPES.map(function (t) { return D.el('option', { value: t[0], text: t[1] }); }));
-    type.value = f.type;
-    var decimals = D.el('input', { type: 'number', class: 'mat-input mat-input--sm', min: 0, max: 4, step: 1, value: f.decimals === null ? '' : String(f.decimals), disabled: disabled, 'aria-label': 'Nachkommastellen' });
-    var category = D.el('select', { class: 'mat-select mat-select--sm', disabled: disabled, 'aria-label': 'Kategorie' }, [D.el('option', { value: '', text: 'Alle Kategorien' })].concat(D.CATEGORIES.map(function (c) { return D.el('option', { value: c, text: c }); })));
-    category.value = f.category || '';
-    var decRow = D.el('div', { class: 'dt-f', hidden: !(f.type === 'price' || f.type === 'number') }, [D.el('label', { class: 'dt-f__label', text: 'Nachkommastellen' }), decimals]);
-    var catRow = D.el('div', { class: 'dt-f', hidden: f.type !== 'image' }, [D.el('label', { class: 'dt-f__label', text: 'Vorgeschlagene Kategorie' }), category]);
-    key.addEventListener('change', function () {
-      var msg = fieldKeyMessage(key.value.trim(), f.key);
-      message.hidden = !msg;
-      message.textContent = msg;
-      if (msg) { return; }
-      var previous = fieldsState.open;
-      fieldsState.open = key.value.trim();      // the form stays open under the new key when the pane is drawn again
-      var err = app.updateField(f.key, { key: key.value.trim() });
-      if (err) { fieldsState.open = previous; message.textContent = err; message.hidden = false; }
-    });
-    label.addEventListener('input', function () { app.updateField(f.key, { label: label.value.slice(0, 80) || f.key }, 'label:' + f.key, false); });
-    type.addEventListener('change', function () { app.updateField(f.key, { type: type.value }); });
-    decimals.addEventListener('input', function () {
-      var v = decimals.value === '' ? null : D.clamp(Math.round(Number(decimals.value)), 0, 4);
-      app.updateField(f.key, { decimals: v }, 'decimals:' + f.key, false);
-    });
-    category.addEventListener('change', function () { app.updateField(f.key, { category: category.value || null }, null, false); });
-    var remove = D.el('button', { type: 'button', class: 'mat-btn mat-btn--secondary mat-btn--sm dt-actions__danger', disabled: disabled }, [D.icon('trash'), D.el('span', { text: 'Feld löschen' })]);
-    remove.addEventListener('click', function () {
-      var used = window.DtEngine.fieldsUsed(app.doc).find(function (u) { return D.lower(u.key) === D.lower(f.key); });
-      var uses = used ? used.uses.length : 0;
-      var run = function () { fieldsState.open = null; app.deleteField(f.key); };
-      if (!uses) { run(); return; }
-      window.MatUi.confirm('Das Feld „' + f.key + '“ wird an ' + uses + ' Stelle' + (uses === 1 ? '' : 'n') + ' verwendet. Die Platzhalter bleiben stehen, bis du sie änderst.', { ok: 'Löschen', danger: true, title: 'Feld löschen' }).then(function (ok) { if (ok) { run(); } });
-    });
-    var done = D.el('button', { type: 'button', class: 'mat-btn mat-btn--secondary mat-btn--sm', text: 'Schließen' });
-    done.addEventListener('click', function () { fieldsState.open = null; buildFields(); });
-    return D.el('div', { class: 'dt-fieldform' }, [
-      D.el('div', { class: 'dt-f' }, [D.el('label', { class: 'dt-f__label', text: 'Schlüssel (so steht er im Platzhalter)' }), key, message]),
-      D.el('div', { class: 'dt-f' }, [D.el('label', { class: 'dt-f__label', text: 'Bezeichnung' }), label]),
-      D.el('div', { class: 'dt-f' }, [D.el('label', { class: 'dt-f__label', text: 'Art' }), type]),
-      decRow, catRow,
-      D.el('div', { class: 'dt-fieldform__buttons' }, [done, D.el('span', { class: 'dt-fieldform__space' }), remove]),
-    ]);
+  function open(id) {
+    var d = def(id);
+    if (!d) { return; }
+    state.stack = [];
+    show(id);
+    setOpen(true);
+    save();
   }
 
-  function newFieldForm() {
-    var key = D.el('input', { type: 'text', class: 'mat-input mat-input--sm', value: app.freeKey('Feld'), maxlength: 40, autocomplete: 'off', spellcheck: 'false', 'aria-label': 'Schlüssel' });
-    var label = D.el('input', { type: 'text', class: 'mat-input mat-input--sm', maxlength: 80, autocomplete: 'off', placeholder: 'wie der Schlüssel', 'aria-label': 'Bezeichnung' });
-    var type = D.el('select', { class: 'mat-select mat-select--sm', 'aria-label': 'Art' }, D.FIELD_TYPES.map(function (t) { return D.el('option', { value: t[0], text: t[1] }); }));
-    var sample = D.el('input', { type: 'text', class: 'mat-input mat-input--sm', maxlength: 2000, autocomplete: 'off', placeholder: 'Beispielwert', 'aria-label': 'Beispielwert' });
-    var message = D.el('p', { class: 'dt-field__error', role: 'alert', hidden: true });
-    var add = D.el('button', { type: 'button', class: 'mat-btn mat-btn--primary mat-btn--sm', text: 'Feld anlegen' });
-    var cancel = D.el('button', { type: 'button', class: 'mat-btn mat-btn--secondary mat-btn--sm', text: 'Abbrechen' });
-    var submit = function () {
-      var k = key.value.trim();
-      var msg = fieldKeyMessage(k, null);
-      if (msg) { message.textContent = msg; message.hidden = false; key.focus(); return; }
-      var err = app.addField({ key: k, label: label.value.trim() || k, type: type.value, sample: sample.value });
-      if (err) { message.textContent = err; message.hidden = false; return; }
-      fieldsState.adding = false;
-      fieldsState.open = null;
-      buildFields();
-    };
-    add.addEventListener('click', submit);
-    cancel.addEventListener('click', function () { fieldsState.adding = false; buildFields(); });
-    [key, label, sample].forEach(function (i) { i.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); submit(); } }); });
-    return D.el('form', { class: 'dt-fieldform dt-fieldform--new', novalidate: true, 'aria-label': 'Neues Feld' }, [
-      D.el('div', { class: 'dt-f' }, [D.el('label', { class: 'dt-f__label', text: 'Schlüssel' }), key, message]),
-      D.el('div', { class: 'dt-f' }, [D.el('label', { class: 'dt-f__label', text: 'Bezeichnung' }), label]),
-      D.el('div', { class: 'dt-f' }, [D.el('label', { class: 'dt-f__label', text: 'Art' }), type]),
-      D.el('div', { class: 'dt-f' }, [D.el('label', { class: 'dt-f__label', text: 'Beispielwert' }), sample]),
-      D.el('div', { class: 'dt-fieldform__buttons' }, [add, cancel]),
-    ]);
+  function close() {
+    if (!state.open) { return; }
+    clearBody();
+    setOpen(false);
+    save();
   }
 
-  /** The field a placeholder or a binding needs, with the type that its use implies (image for pictures, else text). */
-  function createFieldFor(entry) {
-    var isImage = entry.uses.some(function (u) { return u.kind === 'image' || u.kind === 'strip'; });
-    var err = app.addField({ key: entry.key, label: entry.key, type: isImage ? 'image' : 'text', sample: isImage ? '' : 'Beispieltext' });
-    if (err) { D.toast(err, 'warning'); }
+  function toggle(id) {
+    if (state.open && state.id === id && !def(id).page) { close(); } else { open(id); }
   }
 
-  function buildFields() {
-    var pane = panes.fields;
-    if (!app.doc) { return; }
-    var focusKey = document.activeElement && pane.contains(document.activeElement) ? document.activeElement.getAttribute('aria-label') : null;
-    D.empty(pane);
-    var disabled = !app.editable();
-    var head = D.el('div', { class: 'dt-pane__head' }, [D.el('h2', { class: 'dt-pane__title', text: 'Felder' })]);
-    var addBtn = D.el('button', { type: 'button', class: 'mat-btn mat-btn--secondary mat-btn--sm', disabled: disabled }, [D.icon('plus'), D.el('span', { text: 'Neues Feld' })]);
-    addBtn.addEventListener('click', function () { fieldsState.adding = true; fieldsState.open = null; buildFields(); var k = D.$('.dt-fieldform--new input', pane); if (k) { k.focus(); k.select(); } });
-    head.appendChild(addBtn);
-    pane.appendChild(head);
-    pane.appendChild(D.el('p', { class: 'dt-pane__hint', text: 'Felder sind die Stellen, die eine Datenliste füllt. Setze {{Schlüssel}} in einen Text oder binde ein Bild an ein Feld.' }));
-
-    var used = window.DtEngine.fieldsUsed(app.doc);
-    var missing = used.filter(function (u) { return !u.defined; });
-    if (missing.length) {
-      var box = D.el('div', { class: 'mat-alert mat-alert--warning dt-fieldwarn', role: 'status' }, [D.icon('alert'), D.el('div', { class: 'mat-alert__body' }, [D.el('strong', { text: 'Platzhalter ohne Feld' })])]);
-      var list = D.el('ul', { class: 'dt-plain' });
-      missing.forEach(function (m) {
-        var btn = D.el('button', { type: 'button', class: 'mat-btn mat-btn--secondary mat-btn--sm', disabled: disabled, text: 'Feld anlegen' });
-        btn.addEventListener('click', function () { createFieldFor(m); });
-        list.appendChild(D.el('li', null, [D.el('code', { class: 'mat-mono', text: '{{' + m.key + '}}' }), btn]));
-      });
-      box.querySelector('.mat-alert__body').appendChild(list);
-      pane.appendChild(box);
-    }
-    var assetWarnings = (app.warnings || []).filter(function (w) { return w.kind === 'asset'; });
-    if (assetWarnings.length) {
-      var abox = D.el('div', { class: 'mat-alert mat-alert--warning dt-fieldwarn', role: 'status' }, [D.icon('alert'), D.el('div', { class: 'mat-alert__body' }, [D.el('strong', { text: 'Unbekannte Medien' })])]);
-      var alist = D.el('ul', { class: 'dt-plain dt-plain--text' });
-      assetWarnings.slice(0, 12).forEach(function (w) { alist.appendChild(D.el('li', { text: w.text })); });
-      abox.querySelector('.mat-alert__body').appendChild(alist);
-      pane.appendChild(abox);
-    }
-
-    if (fieldsState.adding) { pane.appendChild(newFieldForm()); }
-
-    if (!app.doc.fields.length && !fieldsState.adding) {
-      pane.appendChild(D.el('p', { class: 'dt-empty', text: 'Dieses Design hat noch keine Felder. Lege eines an oder füge links einen „Platzhalter-Text“ ein.' }));
-    }
-
-    var usedByKey = new Map(used.map(function (u) { return [D.lower(u.key), u]; }));
-    var ul = D.el('ul', { class: 'dt-fields', role: 'list' });
-    app.doc.fields.forEach(function (f) {
-      var open = fieldsState.open && D.lower(fieldsState.open) === D.lower(f.key);
-      var useCount = (usedByKey.get(D.lower(f.key)) || { uses: [] }).uses.length;
-      var edit = D.el('button', { type: 'button', class: 'mat-btn mat-btn--ghost mat-btn--icon mat-btn--sm', title: 'Feld bearbeiten', 'aria-label': 'Feld ' + f.key + ' bearbeiten', 'aria-expanded': String(!!open) }, D.icon('sliders-horizontal'));
-      edit.addEventListener('click', function () { fieldsState.open = open ? null : f.key; fieldsState.adding = false; buildFields(); });
-      var li = D.el('li', { class: 'dt-field' + (open ? ' is-open' : '') }, [
-        D.el('div', { class: 'dt-field__head' }, [
-          D.el('span', { class: 'dt-field__key mat-mono', text: f.key }),
-          D.el('span', { class: 'mat-pill dt-field__type', text: typeLabel(f.type) }),
-          D.el('span', { class: 'dt-field__uses', text: useCount ? useCount + '×' : 'unbenutzt', title: useCount ? 'Wird an ' + useCount + ' Stelle(n) benutzt' : 'Dieses Feld wird noch nirgends benutzt' }),
-          edit,
-        ]),
-        f.label && f.label !== f.key ? D.el('div', { class: 'dt-field__label', text: f.label }) : null,
-        sampleInput(f),
-        f.type === 'image' ? null : D.el('div', { class: 'dt-field__actions' }, insertButton(f.key)),
-      ]);
-      if (open) { li.appendChild(fieldForm(f)); }
-      ul.appendChild(li);
-    });
-    pane.appendChild(ul);
-
-    var badge = D.$('#dt-fields-badge');
-    if (badge) { badge.hidden = !missing.length; badge.textContent = String(missing.length); badge.setAttribute('aria-label', missing.length + ' Platzhalter ohne Feld'); }
-    if (focusKey) { var back = D.$('[aria-label="' + focusKey.replace(/"/g, '') + '"]', pane); if (back && back.focus) { back.focus(); } }
+  /** Opens a context page (Position ...) in the panel; the back arrow returns to the panel that was open. */
+  function openPage(id) {
+    var d = def(id);
+    if (!d) { return; }
+    if (!state.stack.length) { state.stack = [state.id && !def(state.id).page ? state.id : 'elements']; }
+    show(id);
+    setOpen(true);
   }
 
-  function updateFieldBadge() {
-    var missing = window.DtEngine.fieldsUsed(app.doc).filter(function (u) { return !u.defined; }).length;
-    var badge = D.$('#dt-fields-badge');
-    if (!badge) { return; }
-    badge.hidden = !missing;
-    badge.textContent = String(missing);
+  function back() {
+    var to = state.stack.length ? state.stack[0] : 'elements';
+    state.stack = [];
+    show(to);
+    setOpen(true);
+    save();
   }
 
-  // ================================================================================================ layers
-
-  function buildLayers() {
-    var pane = panes.layers;
-    if (!app.doc || layerEdit) { return; }
-    D.empty(pane);
-    pane.appendChild(D.el('div', { class: 'dt-pane__head' }, [D.el('h2', { class: 'dt-pane__title', text: 'Ebenen' }), D.el('span', { class: 'dt-pane__count mat-muted', text: String(app.doc.elements.length) })]));
-    if (!app.doc.elements.length) {
-      pane.appendChild(D.el('p', { class: 'dt-empty', text: 'Noch keine Elemente. Füge links im Reiter „Elemente“ etwas hinzu.' }));
-      return;
-    }
-    pane.appendChild(D.el('p', { class: 'dt-pane__hint', text: 'Oben liegt vorn. Ziehe am Griff, um die Reihenfolge zu ändern. Ein Doppelklick auf den Namen benennt um.' }));
-    var ul = D.el('ul', { class: 'dt-layers', role: 'list' });
-    var elements = app.doc.elements.slice().reverse();
-    var editable = app.editable();
-    elements.forEach(function (e) {
-      var grip = D.el('button', { type: 'button', class: 'dt-layer__grip', title: 'Ziehen, um die Reihenfolge zu ändern (oder Pfeil auf/ab)', 'aria-label': 'Reihenfolge von ' + D.elementTitle(e) + ' ändern', disabled: !editable }, D.icon('grip-vertical'));
-      var name = D.el('button', { type: 'button', class: 'dt-layer__name', text: D.elementTitle(e), title: D.elementTitle(e) });
-      var eye = D.el('button', { type: 'button', class: 'dt-layer__toggle' + (e.hidden ? ' is-on' : ''), title: e.hidden ? 'Einblenden' : 'Ausblenden', 'aria-label': (e.hidden ? 'Einblenden: ' : 'Ausblenden: ') + D.elementTitle(e), 'aria-pressed': String(e.hidden), disabled: !editable }, D.icon(e.hidden ? 'eye-off' : 'eye'));
-      var lock = D.el('button', { type: 'button', class: 'dt-layer__toggle' + (e.locked ? ' is-on' : ''), title: e.locked ? 'Entsperren' : 'Sperren', 'aria-label': (e.locked ? 'Entsperren: ' : 'Sperren: ') + D.elementTitle(e), 'aria-pressed': String(e.locked), disabled: !editable }, D.icon(e.locked ? 'lock' : 'lock-open'));
-      var li = D.el('li', { class: 'dt-layer' + (app.isSelected(e.id) ? ' is-selected' : '') + (e.hidden ? ' is-hidden' : '') + (e.locked ? ' is-locked' : ''), 'data-id': e.id }, [
-        grip, D.el('span', { class: 'dt-layer__icon' }, D.icon(D.elementIcon(e))), name, eye, lock,
-      ]);
-      li.addEventListener('click', function (ev) {
-        if (ev.target.closest('.dt-layer__toggle, .dt-layer__grip, input')) { return; }
-        if (ev.shiftKey || ev.ctrlKey || ev.metaKey) { app.toggleSelect(e.id); } else { app.select([e.id]); }
-        D.canvas.reveal(e.id);
-      });
-      name.addEventListener('dblclick', function () { if (editable) { renameLayer(li, e); } });
-      eye.addEventListener('click', function () { app.toggleHidden([e.id]); });
-      lock.addEventListener('click', function () { app.toggleLock([e.id]); });
-      grip.addEventListener('keydown', function (ev) {
-        if (ev.key !== 'ArrowUp' && ev.key !== 'ArrowDown') { return; }
-        ev.preventDefault();
-        app.select([e.id]);
-        app.order(ev.key === 'ArrowUp' ? 'forward' : 'backward');
-        var again = D.$('.dt-layer[data-id="' + e.id + '"] .dt-layer__grip', pane);
-        if (again) { again.focus(); }
-      });
-      grip.addEventListener('pointerdown', function (ev) { startLayerDrag(ev, e, li, ul); });
-      ul.appendChild(li);
-    });
-    pane.appendChild(ul);
-  }
-
-  function renameLayer(li, e) {
-    var nameBtn = D.$('.dt-layer__name', li);
-    var input = D.el('input', { type: 'text', class: 'mat-input mat-input--sm dt-layer__input', value: e.name || D.elementTitle(e), maxlength: 80, 'aria-label': 'Name der Ebene' });
-    layerEdit = { id: e.id };
-    li.replaceChild(input, nameBtn);
-    input.focus();
-    input.select();
-    var done = false;
-    var finish = function (commit) {
-      if (done) { return; }
-      done = true;
-      layerEdit = null;
-      if (commit && input.value.trim() !== (e.name || D.elementTitle(e))) { app.rename(e.id, input.value.trim()); } else { buildLayers(); }
-    };
-    input.addEventListener('keydown', function (ev) {
-      ev.stopPropagation();
-      if (ev.key === 'Enter') { ev.preventDefault(); finish(true); } else if (ev.key === 'Escape') { ev.preventDefault(); finish(false); }
-    });
-    input.addEventListener('blur', function () { finish(true); });
-  }
-
-  function startLayerDrag(ev, element, li, ul) {
-    if (ev.button !== 0 || !app.editable()) { return; }
-    ev.preventDefault();
-    var grip = ev.currentTarget;
-    var rows = D.$$('.dt-layer', ul);
-    var from = rows.indexOf(li);
-    var state = { moved: false, to: from };
-    var line = D.el('li', { class: 'dt-layers__line', 'aria-hidden': 'true' });
-    try { grip.setPointerCapture(ev.pointerId); } catch (e) { /* ignore */ }
-    var targetFor = function (y) {
-      // the slot between rows (0..n) nearest to the pointer
-      var best = 0;
-      for (var i = 0; i < rows.length; i++) {
-        var r = rows[i].getBoundingClientRect();
-        if (y > r.top + r.height / 2) { best = i + 1; }
-      }
-      return best;
-    };
-    var move = function (e) {
-      if (!state.moved && Math.abs(e.clientY - ev.clientY) < 4) { return; }
-      state.moved = true;
-      li.classList.add('is-dragging');
-      state.to = targetFor(e.clientY);
-      if (line.parentNode) { line.parentNode.removeChild(line); }
-      if (state.to >= rows.length) { ul.appendChild(line); } else { ul.insertBefore(line, rows[state.to]); }
-    };
-    var end = function (e, cancelled) {
-      grip.removeEventListener('pointermove', move);
-      grip.removeEventListener('pointerup', up);
-      grip.removeEventListener('pointercancel', cancel);
-      li.classList.remove('is-dragging');
-      if (line.parentNode) { line.parentNode.removeChild(line); }
-      if (!state.moved || cancelled) { return; }
-      var slot = state.to > from ? state.to - 1 : state.to;     // position in the list without the dragged row
-      if (slot === from) { return; }
-      var count = rows.length;
-      app.moveToIndex(element.id, count - 1 - slot);
-    };
-    var up = function (e) { end(e, false); };
-    var cancel = function (e) { end(e, true); };
-    grip.addEventListener('pointermove', move);
-    grip.addEventListener('pointerup', up);
-    grip.addEventListener('pointercancel', cancel);
-  }
-
-  // ================================================================================================ init
-
-  function init(theApp) {
+  function init(theApp, theRefs) {
     app = theApp;
-    tabs = D.$$('.dt-tabs__tab');
-    ['elements', 'media', 'fields', 'layers'].forEach(function (name) { panes[name] = document.getElementById('dt-pane-' + name); });
-    tabs.forEach(function (t, i) {
-      t.addEventListener('click', function () { showTab(t.getAttribute('data-tab')); });
-      t.addEventListener('keydown', function (ev) {
-        var next = ev.key === 'ArrowRight' ? i + 1 : (ev.key === 'ArrowLeft' ? i - 1 : null);
-        if (next === null) { return; }
-        ev.preventDefault();
-        var target = tabs[(next + tabs.length) % tabs.length];
-        showTab(target.getAttribute('data-tab'));
-        target.focus();
-      });
+    refs = theRefs;
+    order.slice().sort(function (a, b) { return (def(a).order || 0) - (def(b).order || 0); }).forEach(function (id) {
+      var d = def(id);
+      if (d.page) { return; }
+      var btn = D.el('button', { type: 'button', class: 'dt-rail__btn', 'data-panel': id, 'aria-pressed': 'false', title: d.title, 'aria-label': d.title });
+      btn.appendChild(D.icon(d.icon));
+      btn.appendChild(D.el('span', { class: 'dt-rail__label', text: d.label || d.title }));
+      if (d.badge) { var badge = D.el('b', { class: 'dt-rail__badge', hidden: true }); btn.appendChild(badge); d._badge = badge; }
+      btn.addEventListener('click', function () { toggle(id); });
+      refs.rail.appendChild(btn);
     });
-    initElements();
-    buildMedia();
-    app.on('doc', function (ev) {
-      var tab = currentTab();
-      if (ev.structure || ev.reason === 'load' || ev.reason === 'history') {
-        if (tab === 'layers') { buildLayers(); }
-        if (tab === 'fields' && !ev.noFields) { buildFields(); }
-        updateFieldBadge();
-      } else { updateFieldBadge(); }
-    });
+    refs.back.addEventListener('click', back);
+    refs.close.addEventListener('click', close);
+    refs.panel.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && !D.menu.isOpen() && !D.popover.isOpen() && !/^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName)) { close(); } });
+    var updateBadges = function () { order.forEach(function (id) { var d = def(id); if (d._badge) { var n = d.badge(); d._badge.hidden = !n; d._badge.textContent = String(n || ''); } }); };
+    app.on('doc', updateBadges);
+    app.on('page', updateBadges);
+    app.on('warnings', updateBadges);
+    // a context page that depends on the selection goes back when nothing is selected
     app.on('selection', function () {
-      if (currentTab() === 'layers') {
-        D.$$('.dt-layer', panes.layers).forEach(function (li) { li.classList.toggle('is-selected', app.isSelected(li.getAttribute('data-id'))); });
-      }
+      if (state.open && state.id && def(state.id).page && def(state.id).needsSelection && !app.sel.length) { back(); }
     });
-    app.on('warnings', function () { if (currentTab() === 'fields' && !panes.fields.contains(document.activeElement)) { buildFields(); } else { updateFieldBadge(); } });
-    app.on('readonly', function () { drawMediaGrid(); if (currentTab() === 'layers') { buildLayers(); } if (currentTab() === 'fields') { buildFields(); } });
-    app.on('assets', function () { drawMediaGrid(); });
+    var wide = window.matchMedia('(min-width: 1024px)').matches;
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(STORE) || 'null'); } catch (e) { saved = null; }
+    var startId = saved && def(saved.id) && !def(saved.id).page ? saved.id : 'elements';
+    state.id = startId;
+    show(startId);
+    setOpen(wide && (!saved || saved.open !== false));
+    if (!state.open) { clearBody(); }
   }
 
-  D.panels = { init: init, showTab: showTab, currentTab: currentTab, buildFields: buildFields, buildLayers: buildLayers };
+  /** Registers a panel or a context page. */
+  function register(d) {
+    defs[d.id] = d;
+    if (order.indexOf(d.id) < 0) { order.push(d.id); }
+  }
+
+  D.panels = {
+    init: init, register: register, open: open, close: close, toggle: toggle, openPage: openPage, back: back,
+    current: function () { return state.open ? state.id : null; },
+    isOpen: function () { return state.open; },
+    refresh: function () { if (state.open && state.id) { show(state.id, true); } },
+  };
+
+  // ================================================================================================ shared: small engine previews for tiles
+
+  /** A little SVG drawn by the engine for a tile (shapes, codes). spec = { w, h, element }; resolves with an <svg> that has no fixed size. */
+  D.tilePreview = function (key, spec) {
+    var make = function () {
+      var doc = { schema: 2, unit: 'mm', width: spec.w || 100, height: spec.h || 100, pages: [{ elements: [Object.assign({ id: 'e1', x: 0, y: 0, w: spec.w || 100, h: spec.h || 100 }, spec.element)] }] };
+      return window.DtEngine.render(doc, null, { mode: spec.mode || 'output', background: false, idPrefix: 'tp' + key.replace(/[^A-Za-z0-9]/g, '') }).then(function (svg) { svg.removeAttribute('width'); svg.removeAttribute('height'); return svg; });
+    };
+    return make();
+  };
+
+  // ================================================================================================ Elemente
+
+  var SHAPE_TILES = [
+    ['rect', 'Rechteck'], ['rounded', 'Abgerundet'], ['ellipse', 'Kreis'], ['triangle', 'Dreieck'], ['diamond', 'Raute'], ['pentagon', 'Fünfeck'],
+    ['hexagon', 'Sechseck'], ['star', 'Stern'], ['star8', 'Stern (8)'], ['heart', 'Herz'], ['arrow', 'Pfeil'], ['speech', 'Sprechblase'],
+  ];
+  var LINE_TILES = [['line', 'Linie'], ['line-dashed', 'Gestrichelt'], ['line-dotted', 'Gepunktet'], ['line-arrow', 'Pfeil'], ['line-arrows', 'Doppelpfeil']];
+  var FRAME_TILES = [['frame', 'Rechteck'], ['frame-rounded', 'Abgerundet'], ['frame-circle', 'Kreis'], ['frame-heart', 'Herz'], ['frame-star', 'Stern'], ['frame-hexagon', 'Sechseck']];
+  var CODE_TILES = [['qr', 'QR-Code'], ['ean13', 'EAN-13'], ['ean8', 'EAN-8'], ['code128', 'Code 128']];
+
+  function previewElement(kind) {
+    var base = { type: 'shape', fill: '#1fb3d6', stroke: null, strokeWidth: 1 };
+    var shapes = { rect: { shape: 'rect' }, rounded: { shape: 'rect', radius: 18 }, ellipse: { shape: 'ellipse' }, triangle: { shape: 'triangle' }, diamond: { shape: 'diamond' }, pentagon: { shape: 'pentagon' },
+      hexagon: { shape: 'hexagon' }, star: { shape: 'star' }, star8: { shape: 'star', points: 8, innerRadius: 0.6 }, heart: { shape: 'heart', fill: '#e5484d' }, arrow: { shape: 'arrow' }, speech: { shape: 'speech' } };
+    if (shapes[kind]) { return Object.assign({}, base, shapes[kind]); }
+    var line = { type: 'shape', shape: 'line', fill: null, stroke: '#1f2937', strokeWidth: 3, x: 6, y: 50, w: 88, h: 0 };
+    if (kind === 'line') { return line; }
+    if (kind === 'line-dashed') { return Object.assign({}, line, { dash: 'dashed' }); }
+    if (kind === 'line-dotted') { return Object.assign({}, line, { dash: 'dotted' }); }
+    if (kind === 'line-arrow') { return Object.assign({}, line, { endCap: 'arrow' }); }
+    if (kind === 'line-arrows') { return Object.assign({}, line, { startCap: 'arrow', endCap: 'arrow' }); }
+    if (kind === 'qr') { return { type: 'qr', value: 'https://designthix.example', quiet: false }; }
+    if (kind === 'ean13') { return { type: 'barcode', format: 'ean13', value: '4006381333931', showText: true }; }
+    if (kind === 'ean8') { return { type: 'barcode', format: 'ean8', value: '96385074', showText: true }; }
+    if (kind === 'code128') { return { type: 'barcode', format: 'code128', value: 'DesignThix', showText: true }; }
+    return { type: 'shape', shape: 'rect', fill: '#1fb3d6' };
+  }
+
+  function addByKind(kind) {
+    if (!app.editable()) { return null; }
+    var extra = null;
+    if (kind === 'line-dashed') { kind = 'line'; extra = { dash: 'dashed' }; }
+    else if (kind === 'line-dotted') { kind = 'line'; extra = { dash: 'dotted' }; }
+    else if (kind === 'line-arrow') { kind = 'line'; extra = { endCap: 'arrow' }; }
+    else if (kind === 'line-arrows') { kind = 'line'; extra = { startCap: 'arrow', endCap: 'arrow' }; }
+    return app.addElement(kind, extra);
+  }
+  D.addByKind = addByKind;
+
+  /** Places a new element of a kind with its centre at a document point (drop from a tile). */
+  function addByKindAt(kind, p) {
+    var id = addByKind(kind);
+    var r = id ? app.locate(id, false) : null;
+    if (!r || !p) { return id; }
+    app.setProps([id], { x: D.round(p.x - r.el.w / 2, 2), y: D.round(p.y - r.el.h / 2, 2) }, { merge: false });
+    return id;
+  }
+
+  function tileGrid(cls) { return D.el('div', { class: 'dt-tiles ' + (cls || '') }); }
+
+  function elementTile(kind, label, previewKind) {
+    var tile = D.el('button', { type: 'button', class: 'dt-tile', title: label, 'aria-label': label + ' hinzufügen', 'data-add': kind, disabled: !app.editable() });
+    var thumb = D.el('span', { class: 'dt-tile__thumb' });
+    tile.appendChild(thumb);
+    tile.appendChild(D.el('span', { class: 'dt-tile__label', text: label }));
+    var spec = { element: previewElement(previewKind || kind), mode: 'editor' };
+    if (/^line/.test(kind)) { spec.h = 100; }
+    if (/^(ean13|ean8|code128)$/.test(kind)) { spec.w = 100; spec.h = 60; }
+    if (/^frame/.test(kind)) {
+      // an empty frame draws nothing in the output: the tile shows the shape of the mask in a soft grey
+      var frameShape = { frame: { shape: 'rect' }, 'frame-rounded': { shape: 'rect', radius: 18 }, 'frame-circle': { shape: 'ellipse' }, 'frame-heart': { shape: 'heart' }, 'frame-star': { shape: 'star' }, 'frame-hexagon': { shape: 'hexagon' } }[kind];
+      spec.element = Object.assign({ type: 'shape', fill: '#c9d3df', stroke: '#8d9bad', strokeWidth: 1.5, dash: 'dashed' }, frameShape);
+      spec.mode = 'output';
+    }
+    D.tilePreview(kind, spec).then(function (svg) { thumb.appendChild(svg); }, function () { thumb.appendChild(D.icon('square')); });
+    D.dnd.attach(tile, { ghost: function () { return thumb.cloneNode(true); }, onClick: function () { addByKind(kind); }, onDrop: function (x, y) {
+      var t = D.canvas.dropTarget(x, y);
+      if (t.kind === 'page' && !t.inside) { return; }
+      addByKindAt(kind, t.point);
+    } });
+    return tile;
+  }
+
+  function section(title, tiles) { return D.el('section', { class: 'dt-psec' }, [D.el('h3', { class: 'dt-psec__title', text: title }), tiles]); }
+
+  register({
+    id: 'elements', title: 'Elemente', label: 'Elemente', icon: 'shapes', order: 20,
+    build: function (host, api) {
+      var search = D.el('input', { type: 'search', class: 'mat-input dt-psearch', placeholder: 'Elemente suchen', 'aria-label': 'Elemente suchen', autocomplete: 'off' });
+      host.appendChild(D.el('div', { class: 'dt-pbar' }, search));
+      var results = D.el('div', { class: 'dt-presults' });
+      host.appendChild(results);
+      var groups = [
+        ['Formen', SHAPE_TILES, 'dt-tiles--3'], ['Linien', LINE_TILES, 'dt-tiles--3'], ['Rahmen für Bilder', FRAME_TILES, 'dt-tiles--3'],
+        ['Codes', CODE_TILES, 'dt-tiles--3'], ['Bildleiste', [['strip', 'Bildleiste']], 'dt-tiles--3'],
+      ];
+      var draw = function () {
+        D.empty(results);
+        var q = D.lower(search.value).trim();
+        var any = false;
+        groups.forEach(function (g) {
+          var items = g[1].filter(function (t) { return !q || D.lower(t[1]).indexOf(q) >= 0 || D.lower(g[0]).indexOf(q) >= 0; });
+          if (!items.length) { return; }
+          any = true;
+          var grid = tileGrid(g[2]);
+          items.forEach(function (t) {
+            if (t[0] === 'strip') {
+              var tile = D.el('button', { type: 'button', class: 'dt-tile dt-tile--wide', 'data-add': 'strip', disabled: !app.editable() }, [D.el('span', { class: 'dt-tile__thumb dt-tile__thumb--strip' }, [0, 1, 2, 3].map(function () { return D.el('i', { class: 'dt-tile__slot' }, D.icon('image')); })), D.el('span', { class: 'dt-tile__label', text: 'Bildleiste: mehrere Bilder in einer Reihe' })]);
+              D.dnd.attach(tile, { ghost: function () { return D.$('.dt-tile__thumb', tile).cloneNode(true); }, onClick: function () { addByKind('strip'); }, onDrop: function (x, y) { var d = D.canvas.dropTarget(x, y); if (d.kind === 'page' && !d.inside) { return; } addByKindAt('strip', d.point); } });
+              grid.appendChild(tile);
+              return;
+            }
+            grid.appendChild(elementTile(t[0], t[1]));
+          });
+          results.appendChild(section(g[0], grid));
+        });
+        if (!any) { results.appendChild(D.el('p', { class: 'dt-empty', text: 'Nichts gefunden. Icons, Flaggen und Siegel kommen bald dazu.' })); }
+      };
+      search.addEventListener('input', draw);
+      draw();
+      host.appendChild(D.el('p', { class: 'dt-pnote', text: 'Ein Klick setzt das Element in die Mitte der Seite, Ziehen setzt es dorthin, wo du es loslässt.' }));
+      api.on('readonly', draw);
+    },
+  });
+
+  // ================================================================================================ Text
+
+  register({
+    id: 'text', title: 'Text', label: 'Text', icon: 'type', order: 30,
+    build: function (host, api) {
+      var rows = [
+        ['heading', 'Überschrift hinzufügen', 'heading', 28, 700],
+        ['subheading', 'Zwischenüberschrift hinzufügen', 'subheading', 20, 600],
+        ['body', 'Fließtext hinzufügen', 'body', 15, 400],
+      ];
+      var list = D.el('div', { class: 'dt-textadd' });
+      rows.forEach(function (r) {
+        var family = app.familyFor(r[2]);
+        var b = D.el('button', { type: 'button', class: 'dt-textadd__btn ' + D.fontClass(family), 'data-add': r[0], disabled: !app.editable(), title: 'Schrift: ' + family });
+        b.appendChild(D.el('span', { class: 'dt-textadd__text', text: r[1], css: { 'font-size': r[3] + 'px', 'font-weight': String(r[4]) } }));
+        b.addEventListener('click', function () {
+          var id = app.addElement(r[0]);
+          if (id) { D.canvas.startTextEdit(id, { selectAll: true }); }
+        });
+        list.appendChild(b);
+      });
+      host.appendChild(D.el('div', { class: 'dt-pbar' }, D.el('h3', { class: 'dt-psec__title', text: 'Text hinzufügen' })));
+      host.appendChild(list);
+      var hasBrand = app.brand && app.brand.fonts && (app.brand.fonts.heading || app.brand.fonts.subheading || app.brand.fonts.body);
+      host.appendChild(D.el('p', { class: 'dt-pnote' }, hasBrand
+        ? ['Die Schriften kommen aus deiner Marke. ', D.el('a', { href: '/Brand', target: '_blank', rel: 'noopener', text: 'Marke bearbeiten' })]
+        : ['Lege unter ', D.el('a', { href: '/Brand', target: '_blank', rel: 'noopener', text: 'Marke' }), ' deine Schriften fest: dann nutzen die Textvorlagen sie.']));
+      host.appendChild(D.el('p', { class: 'dt-pnote', text: 'Doppelklick auf einen Text bearbeitet ihn direkt auf der Seite.' }));
+      api.on('readonly', function () { api.rebuild(); });
+      api.on('brand', function () { api.rebuild(); });
+    },
+  });
+
+  // ================================================================================================ Vorlagen
+
+  var templates = { list: null, loading: false, failed: false };
+
+  function loadTemplates() {
+    if (templates.list || templates.loading) { return Promise.resolve(); }
+    templates.loading = true;
+    return D.request('GET', '/api/templates').then(function (res) {
+      templates.list = res.ok && Array.isArray(res.data) ? res.data : [];
+      templates.failed = !res.ok;
+    }, function () { templates.failed = true; templates.list = []; }).then(function () { templates.loading = false; });
+  }
+
+  /** Unit factor and fit scale for putting a page of another size onto the current page. */
+  function templateScale(src, dst) {
+    var u = src.unit === dst.unit ? 1 : (dst.unit === 'px' ? 96 / 25.4 : 25.4 / 96);
+    var s = Math.min(dst.width / (src.width * u), dst.height / (src.height * u));
+    if (Math.abs(s - 1) < 0.001) { s = 1; }
+    return { u: u, s: s, G: u * s, dx: (dst.width - src.width * u * s) / 2, dy: (dst.height - src.height * u * s) / 2 };
+  }
+
+  /** Applies the template document: mode 'replace' = its first page replaces the current page, 'add' = all its pages come after the current page. */
+  function applyTemplate(template, mode) {
+    return D.request('GET', '/api/designs/' + template.id).then(function (res) {
+      if (!res.ok) { D.toast('Die Vorlage konnte nicht geladen werden.', 'danger'); return false; }
+      var src = window.DtEngine.normalize(res.data.document);
+      var pages = mode === 'replace' ? [src.pages[0]] : src.pages;
+      if (mode === 'add' && app.doc.pages.length + pages.length > D.MAX_PAGES) { D.toast('Es passen höchstens ' + D.MAX_PAGES + ' Seiten in ein Design.', 'warning'); return false; }
+      var sc = templateScale(src, app.doc);
+      var makePageId = D.pageIdMaker(app.doc);
+      var made = [];
+      var nextId = D.idMaker(app.doc);
+      pages.forEach(function (p) {
+        var copy = D.clone(p);
+        copy.id = makePageId();
+        copy.elements = D.cloneNodes(copy.elements, nextId, 0, 0);
+        if (sc.G !== 1 || sc.s !== 1) { D.scaleNodes(copy.elements, sc.G, sc.s); }
+        if (sc.dx || sc.dy) { copy.elements.forEach(function (n) { D.translate(n, sc.dx, sc.dy); }); }
+        made.push(copy);
+      });
+      var at = app.pageIndex;
+      app.edit(function (doc) {
+        src.fields.forEach(function (f) { if (!D.fieldByKey(doc, f.key)) { doc.fields.push(D.clone(f)); } });
+        if (mode === 'replace') {
+          var keep = doc.pages[at];
+          made[0].id = keep.id;
+          made[0].name = keep.name;
+          doc.pages[at] = made[0];
+        } else {
+          doc.pages.splice.apply(doc.pages, [at + 1, 0].concat(made));
+          app.pageIndex = at + 1;
+        }
+        app.sel = [];
+      }, { structure: true, reason: 'template' });
+      app.emit('pages');
+      app.emit('page');
+      app.emit('selection');
+      D.toast(mode === 'replace' ? 'Die Vorlage ersetzt die Seite.' : 'Die Vorlage ist als neue Seite da.', 'success');
+      return true;
+    }, function () { D.toast('Keine Verbindung: Die Vorlage konnte nicht geladen werden.', 'warning'); return false; });
+  }
+
+  function templateDialog(t) {
+    var hasContent = app.elements().length > 0;
+    return D.dialog.show({
+      title: 'Vorlage „' + t.name + '“', icon: 'layout-template',
+      body: function (body) {
+        body.appendChild(D.el('p', { text: 'Wie möchtest du die Vorlage verwenden?' }));
+        body.appendChild(D.el('p', { class: 'mat-muted', text: 'Passt die Vorlage nicht zur Seitengröße, wird sie verkleinert oder vergrößert und mittig platziert.' }));
+        if (hasContent) { body.appendChild(D.el('p', { class: 'mat-muted', text: '„Seite ersetzen“ löscht den Inhalt dieser Seite (mit Rückgängig holst du ihn zurück).' })); }
+      },
+      buttons: [
+        { label: 'Als neue Seite', kind: 'primary', value: 'add' },
+        { label: 'Seite ersetzen', kind: 'secondary', value: 'replace' },
+        { label: 'Abbrechen', kind: 'secondary', value: 'cancel', spacer: true },
+      ],
+    }).then(function (v) { if (v === 'add' || v === 'replace') { return applyTemplate(t, v); } return false; });
+  }
+
+  register({
+    id: 'templates', title: 'Vorlagen', label: 'Vorlagen', icon: 'layout-template', order: 10,
+    build: function (host, api) {
+      var search = D.el('input', { type: 'search', class: 'mat-input dt-psearch', placeholder: 'Vorlagen suchen', 'aria-label': 'Vorlagen suchen', autocomplete: 'off' });
+      host.appendChild(D.el('div', { class: 'dt-pbar' }, search));
+      var grid = D.el('div', { class: 'dt-tpl' });
+      host.appendChild(grid);
+      var draw = function () {
+        D.empty(grid);
+        if (!templates.list) { grid.appendChild(D.el('p', { class: 'dt-empty', text: 'Vorlagen werden geladen …' })); return; }
+        var q = D.lower(search.value).trim();
+        var items = templates.list.filter(function (t) { return !q || D.lower(t.name + ' ' + (t.category || '')).indexOf(q) >= 0; });
+        if (!items.length) { grid.appendChild(D.el('p', { class: 'dt-empty', text: templates.failed ? 'Die Vorlagen konnten nicht geladen werden.' : (q ? 'Nichts gefunden.' : 'Es gibt noch keine Vorlagen. Markiere ein Design in den Eigenschaften als Vorlage.') })); return; }
+        items.forEach(function (t) {
+          var b = D.el('button', { type: 'button', class: 'dt-tpl__item', title: t.name + ' (' + t.size + ')', 'data-template': t.id, disabled: !app.editable() }, [
+            D.el('span', { class: 'dt-tpl__thumb' }, D.el('img', { src: t.thumbnailUrl, alt: '', loading: 'lazy', draggable: 'false' })),
+            D.el('span', { class: 'dt-tpl__name', text: t.name }),
+            D.el('span', { class: 'dt-tpl__meta', text: t.size }),
+          ]);
+          b.addEventListener('click', function () { templateDialog(t); });
+          grid.appendChild(b);
+        });
+      };
+      search.addEventListener('input', draw);
+      draw();
+      loadTemplates().then(function () { if (state.id === 'templates') { draw(); } });
+    },
+  });
+
+  // ================================================================================================ Marke
+
+  /** Applies a brand (or any) colour to the selection: text colour, shape fill, line colour, icon/QR colour; with nothing selected the page background. */
+  D.applyColour = function (value) {
+    var els = app.selected().filter(function (e) { return !e.locked; });
+    if (!app.editable()) { return; }
+    if (!els.length) { app.setBackground({ color: value, gradient: null }, { merge: false }); return; }
+    app.setProps(els.map(function (e) { return e.id; }), function (e) {
+      if (e.type === 'text' || e.type === 'icon' || e.type === 'qr' || e.type === 'barcode') { return { color: value }; }
+      if (e.type === 'shape') { return e.shape === 'line' ? { stroke: value } : { fill: value }; }
+      return {};
+    }, { merge: false });
+  };
+
+  register({
+    id: 'brand', title: 'Marke', label: 'Marke', icon: 'badge-check', order: 50,
+    build: function (host, api) {
+      var b = app.brand || { colors: [], fonts: {}, logos: [], logoAssets: [] };
+      var empty = !b.colors.length && !(b.fonts && (b.fonts.heading || b.fonts.subheading || b.fonts.body)) && !(b.logoAssets && b.logoAssets.length);
+      if (empty) {
+        host.appendChild(D.el('div', { class: 'dt-pempty' }, [
+          D.icon('badge-check', 'dt-pempty__icon'),
+          D.el('h3', { text: 'Deine Marke' }),
+          D.el('p', { text: 'Lege Farben, Schriften und Logos fest. Sie stehen dann hier und in der Farbauswahl bereit.' }),
+          D.el('a', { class: 'mat-btn mat-btn--primary', href: '/Brand', target: '_blank', rel: 'noopener' }, [D.icon('palette'), D.el('span', { text: 'Marke einrichten' })]),
+        ]));
+        return;
+      }
+      if (b.colors.length) {
+        var row = D.el('div', { class: 'dt-palette dt-palette--grid' });
+        b.colors.forEach(function (c) {
+          var sw = D.el('button', { type: 'button', class: 'dt-swatch', title: c + ' anwenden', 'aria-label': 'Markenfarbe ' + c + ' anwenden', 'data-colour': c, css: { '--dt-swatch': c }, disabled: !app.editable() });
+          sw.addEventListener('click', function () { D.applyColour(c); });
+          row.appendChild(sw);
+        });
+        host.appendChild(section('Farben', row));
+        host.appendChild(D.el('p', { class: 'dt-pnote', text: 'Ein Klick färbt die Auswahl: Text, Füllung, Linie oder – ohne Auswahl – den Hintergrund.' }));
+      }
+      var roles = [['heading', 'Überschrift', 700, 22], ['subheading', 'Zwischenüberschrift', 600, 17], ['body', 'Fließtext', 400, 14]];
+      var fonts = roles.filter(function (r) { return b.fonts && b.fonts[r[0]]; });
+      if (fonts.length) {
+        var list = D.el('div', { class: 'dt-textadd' });
+        fonts.forEach(function (r) {
+          var family = b.fonts[r[0]];
+          var btn = D.el('button', { type: 'button', class: 'dt-textadd__btn ' + D.fontClass(family), disabled: !app.editable(), title: family });
+          btn.appendChild(D.el('span', { class: 'dt-textadd__text', text: r[1], css: { 'font-size': r[3] + 'px', 'font-weight': String(r[2]) } }));
+          btn.appendChild(D.el('span', { class: 'dt-textadd__font', text: family }));
+          btn.addEventListener('click', function () {
+            var texts = app.selected().filter(function (e) { return e.type === 'text' && !e.locked; });
+            if (texts.length) { app.setProps(texts.map(function (e) { return e.id; }), function (e) { return D.canvas.textPatch(e, { fontFamily: family }); }, { merge: false }); return; }
+            var id = app.addElement(r[0] === 'heading' ? 'heading' : (r[0] === 'subheading' ? 'subheading' : 'body'));
+            if (id) { D.canvas.startTextEdit(id, { selectAll: true }); }
+          });
+          list.appendChild(btn);
+        });
+        host.appendChild(section('Schriften', list));
+      }
+      if (b.logoAssets && b.logoAssets.length) {
+        var grid = D.el('div', { class: 'dt-assetgrid' });
+        b.logoAssets.forEach(function (a) {
+          var tile = D.el('button', { type: 'button', class: 'dt-asset', title: a.name, 'data-key': a.key, disabled: !app.editable() }, [
+            D.el('span', { class: 'dt-asset__thumb' }, D.el('img', { src: a.url, alt: '', loading: 'lazy', draggable: 'false' })),
+            D.el('span', { class: 'dt-asset__name', text: a.name }),
+          ]);
+          D.dnd.attach(tile, { ghost: function () { return D.$('img', tile).cloneNode(true); }, onClick: function () { D.io.useAsset(a); }, onDrop: function (x, y) { D.canvas.dropAsset(a, x, y); } });
+          grid.appendChild(tile);
+        });
+        host.appendChild(section('Logos', grid));
+      }
+      host.appendChild(D.el('p', { class: 'dt-pnote' }, [D.el('a', { href: '/Brand', target: '_blank', rel: 'noopener', text: 'Marke bearbeiten' })]));
+      api.on('brand', function () { api.rebuild(); });
+      api.on('readonly', function () { api.rebuild(); });
+    },
+  });
+
+  D.panelHelpers = { section: section, tileGrid: tileGrid };
 })();

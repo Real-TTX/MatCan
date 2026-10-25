@@ -49,6 +49,9 @@ public static class DesignLogic
 {
     public const int KeptRevisions = 30;
 
+    /// <summary>Autosaves of one person within this time share one entry of the history (an explicit save, Ctrl+S, starts a new one).</summary>
+    public static readonly TimeSpan AutosaveWindow = TimeSpan.FromMinutes(10);
+
     public const int MaxThumbnailBytes = 2 * 1024 * 1024;
 
     public static IQueryable<DesignRow> Query(Biz biz)
@@ -464,7 +467,7 @@ public static class DesignLogic
     /// Saves a document: validated and normalised by the Core, the revision bumped, the state written to the history (the newest 30 stay).
     /// A stale revision throws <see cref="RevisionConflictException"/>; an invalid document a <see cref="BizException"/>.
     /// </summary>
-    public static async Task<DesignSaved> SaveDocumentAsync(Biz biz, long id, int revision, string? documentJson)
+    public static async Task<DesignSaved> SaveDocumentAsync(Biz biz, long id, int revision, string? documentJson, bool autosave = false)
     {
         biz.RequireDesigner();
         var result = DocumentValidator.Validate(documentJson);
@@ -484,7 +487,19 @@ public static class DesignLogic
         design.Width = result.Document.Width;
         design.Height = result.Document.Height;
         design.Unit = result.Document.Unit;
-        biz.Db.DesignRevision.Add(new DesignRevision { DesignId = id, Revision = design.Revision, DocumentJson = result.Json });
+        // The editor saves by itself after every pause: such saves of one person in a short time refresh the newest entry of the history instead of filling it (30 entries are
+        // only a few minutes of work otherwise). A save the person asked for (Ctrl+S, restore, resize, no autosave flag) is always a new entry.
+        var newest = autosave ? await biz.Db.DesignRevision.FirstOrDefaultAsync(r => r.DesignId == id && r.Revision == design.Revision - 1) : null;
+        if (newest is not null && newest.CreateUserId == biz.UserId && biz.Now - newest.CreateDate < AutosaveWindow)
+        {
+            newest.Revision = design.Revision;
+            newest.DocumentJson = result.Json;
+        }
+        else
+        {
+            biz.Db.DesignRevision.Add(new DesignRevision { DesignId = id, Revision = design.Revision, DocumentJson = result.Json });
+        }
+
         try
         {
             await biz.Db.SaveChangesAsync();

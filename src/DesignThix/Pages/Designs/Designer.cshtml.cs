@@ -1,18 +1,14 @@
-using System.Text.Json;
-using DesignThix.Core.Documents;
 using DesignThix.Logic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DesignThix.Pages.Designs;
 
 /// <summary>
-/// The designer: the page is only the frame (top bar, panels, the empty canvas); the document is fetched by designer.js from <c>/api/designs/{id}</c> and saved
-/// back with its revision. A viewer opens the same page read-only (no saving, panels disabled; the preview with data still works).
+/// The editor: the page is only the frame (top bar, rail, panel, toolbar, page strip, the empty canvas); the document is fetched by designer.js from <c>/api/designs/{id}</c> and saved
+/// back with its revision (autosave). A viewer opens the same page read-only (nothing editable; downloading and printing work).
 /// </summary>
 public sealed class DesignerModel(Biz biz) : PageModelBase
 {
-    private static readonly JsonSerializerOptions Web = new(JsonSerializerDefaults.Web);
-
     [BindProperty(SupportsGet = true)]
     public long Id { get; set; }
 
@@ -22,10 +18,6 @@ public sealed class DesignerModel(Biz biz) : PageModelBase
 
     /// <summary>The button "Mit KI formulieren" is offered to people who may change the design, when the AI is switched on.</summary>
     public bool AiVisible => biz.IsDesigner && AiLogic.IsEnabled(biz);
-
-    /// <summary>The format presets for the document panel, as JSON for the page (a data attribute, no inline script).</summary>
-    public string PresetsJson { get; } = JsonSerializer.Serialize(
-        FormatPresets.All.Select(p => new { key = p.Key, name = p.Name, group = p.Group, width = p.Width, height = p.Height, unit = p.Unit }), Web);
 
     public async Task<IActionResult> OnGetAsync()
     {

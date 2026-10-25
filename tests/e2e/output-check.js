@@ -493,7 +493,7 @@ const runFacts = page => page.evaluate(() => {
   let imp = await importFile(exportBytes);
   check('importing it creates a design; every medium and the font are already there', imp.ok && /schon vorhanden/.test(imp.text) && /Schriften: 0 neu, 1 schon vorhanden/.test(imp.text), imp.text.replace(/\s+/g, ' ').slice(0, 400));
   const imported1 = await apiDesign(imp.id);
-  check('the keys are unchanged when the content is the same', JSON.stringify(imported1.document.elements.find(e => e.id === 'logo1').source) === JSON.stringify({ asset: logoKey }) && imported1.name === 'Export-Quelle ' + stamp);
+  check('the keys are unchanged when the content is the same', JSON.stringify(imported1.document.pages[0].elements.find(e => e.id === 'logo1').source) === JSON.stringify({ asset: logoKey }) && imported1.name === 'Export-Quelle ' + stamp);
 
   // the key is taken by another picture: a new key, the document points to it
   await page.goto(`${base}/Assets/Edit/${logoId}?tab=file`);
@@ -501,10 +501,10 @@ const runFacts = page => page.evaluate(() => {
   await Promise.all([page.waitForNavigation(), page.click('button[type=submit].mat-btn--primary')]);
   imp = await importFile(exportBytes);
   const imported2 = imp.ok ? await apiDesign(imp.id) : null;
-  check('a taken key with other content: the medium comes in under a new key (…-2)', imp.ok && /unter neuem Schlüssel/.test(imp.text) && imported2 && imported2.document.elements.find(e => e.id === 'logo1').source.asset === logoKey + '-2', imp.text.replace(/\s+/g, ' ').slice(0, 500));
+  check('a taken key with other content: the medium comes in under a new key (…-2)', imp.ok && /unter neuem Schlüssel/.test(imp.text) && imported2 && imported2.document.pages[0].elements.find(e => e.id === 'logo1').source.asset === logoKey + '-2', imp.text.replace(/\s+/g, ' ').slice(0, 500));
   const mediaStatus = await page.evaluate(async k => (await fetch('/media/' + k)).status, logoKey + '-2');
   check('the new medium is served and keeps the picture of the file', mediaStatus === 200);
-  check('built-in media are reused, not duplicated', !imp.text.includes('flag-de-2') && imported2 && imported2.document.elements.some(e => e.type === 'imageStrip'));
+  check('built-in media are reused, not duplicated', !imp.text.includes('flag-de-2') && imported2 && imported2.document.pages[0].elements.some(e => e.type === 'imageStrip'));
 
   // the font: when only the built-in one is left, the file's font is not added
   await page.goto(`${base}/Fonts/Edit/${fontId}`);

@@ -314,8 +314,11 @@ const IMPORT_TEXT = 'Lieferschein Käse Herbst\nGouda jung, 2,50 € pro 100 g, 
   check('nothing selected: no AI button', await page.locator('.dt-aibtn').count() === 0);
   await page.evaluate(() => window.DtDesigner.app.select(['e8']));
   await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
-  const aiButton = page.locator('.dt-aibtn');
-  check('the text of an element has "Mit KI formulieren"', await aiButton.count() === 1 && /Mit KI formulieren/.test(await aiButton.textContent()));
+  // "Mit KI formulieren" is an entry of the ⋯ menu of the text toolbar (and of the context menu)
+  await page.click('#dt-ctx button[aria-label="Mehr"]');
+  await page.waitForSelector('.dt-menu');
+  const aiButton = page.locator('.dt-menu .dt-aibtn');
+  check('the text toolbar has "Mit KI formulieren" in its ⋯ menu', await aiButton.count() === 1 && /Mit KI formulieren/.test(await aiButton.textContent()));
   const undoBefore = await page.evaluate(() => window.DtDesigner.app.undoStack.length);
   await aiButton.click();
   await page.waitForSelector('dialog.dt-ai[open]');
@@ -337,12 +340,13 @@ const IMPORT_TEXT = 'Lieferschein Käse Herbst\nGouda jung, 2,50 € pro 100 g, 
   const applied = await page.evaluate(() => window.DtDesigner.app.element('e8').text);
   check('picking one applies it to the element', applied === suggestions[1], applied);
   check('it is one undo step', await page.evaluate(() => window.DtDesigner.app.undoStack.length) === undoBefore + 1);
-  check('the design is marked as changed (saved only with the design)', await page.evaluate(() => window.DtDesigner.app.dirty === true));
+  check('the design is marked as changed (the autosave takes it from there)', await page.evaluate(() => window.DtDesigner.app.dirty === true || window.DtDesigner.app.saveState !== 'saved'));
   await page.keyboard.press('Control+z');
   await page.waitForTimeout(300);
   check('Strg+Z brings the old text back', await page.evaluate(() => window.DtDesigner.app.element('e8').text) === '{{Name}}');
-  const stored = await page.evaluate(async id => (await (await fetch('/api/designs/' + id)).json()).document.elements.find(e => e.id === 'e8').text, designId);
-  check('nothing was saved on the server by the suggestion', stored === '{{Name}}', stored);
+  await page.waitForFunction(() => window.DtDesigner.app.saveState === 'saved', null, { timeout: 15000 });
+  const stored = await page.evaluate(async id => (await (await fetch('/api/designs/' + id)).json()).document.pages[0].elements.find(e => e.id === 'e8').text, designId);
+  check('after the undo the saved design holds the old text again', stored === '{{Name}}', stored);
   // a hostile model: the dialog never turns the text into HTML
   const fakeSuggest = await page.evaluate(async id => {
     const r = await fetch('/api/ai/designs/' + id + '/suggest', { method: 'POST', headers: { 'Content-Type': 'application/json', RequestVerificationToken: document.querySelector('meta[name=dt-csrf]').content }, body: JSON.stringify({ text: '{{Name}}', instruction: '' }) });

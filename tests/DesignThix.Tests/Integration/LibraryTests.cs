@@ -323,6 +323,38 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
     }
 
     [Fact]
+    public async Task Autosaves_of_one_person_share_one_history_entry_and_an_explicit_save_starts_a_new_one()
+    {
+        if (!Enabled)
+        {
+            return;
+        }
+
+        await As(UserRole.Designer, async biz =>
+        {
+            var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Autosave "), "Käse", "label-150x100", null, null, null, null));
+            var json = """{"schema":2,"width":150,"height":100,"pages":[{"id":"p1","elements":[]}]}""";
+            var revision = 1;
+            for (var i = 0; i < 5; i++)
+            {
+                revision = (await DesignLogic.SaveDocumentAsync(biz, design.Id, revision, json, autosave: true)).Revision;
+            }
+
+            Assert.Equal(6, revision);
+            var history = await DesignLogic.RevisionsAsync(biz, design.Id);
+            Assert.Single(history);                              // all five autosaves refreshed the one entry that was there
+            Assert.Equal(6, history[0].Revision);
+
+            // a save the person asked for is a new entry, and the autosaves after it share the next one
+            revision = (await DesignLogic.SaveDocumentAsync(biz, design.Id, revision, json)).Revision;
+            revision = (await DesignLogic.SaveDocumentAsync(biz, design.Id, revision, json, autosave: true)).Revision;
+            revision = (await DesignLogic.SaveDocumentAsync(biz, design.Id, revision, json, autosave: true)).Revision;
+            history = await DesignLogic.RevisionsAsync(biz, design.Id);
+            Assert.Equal([9, 6], history.Select(h => h.Revision).ToArray());
+        });
+    }
+
+    [Fact]
     public async Task The_designer_renames_a_design_and_saves_its_own_version_as_a_copy_after_a_conflict()
     {
         if (!Enabled)

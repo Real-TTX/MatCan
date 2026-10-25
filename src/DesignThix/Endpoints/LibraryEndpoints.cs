@@ -139,7 +139,7 @@ public static partial class LibraryEndpoints
                 return Results.Json(new { error = "Die Anfrage braucht revision und document." }, statusCode: StatusCodes.Status400BadRequest);
             }
 
-            var saved = await DesignLogic.SaveDocumentAsync(biz, id, body.Revision, body.Document.GetRawText());
+            var saved = await DesignLogic.SaveDocumentAsync(biz, id, body.Revision, body.Document.GetRawText(), body.Autosave);
             using var document = JsonDocument.Parse(saved.DocumentJson);
             return Results.Json(new { revision = saved.Revision, document = document.RootElement.Clone(), warnings = saved.Warnings }, Web);
         })).RequireAuthorization("SignedIn");
@@ -235,7 +235,7 @@ public static partial class LibraryEndpoints
         })).RequireAuthorization("SignedIn");
     }
 
-    private sealed record DesignBody(int Revision, JsonElement Document);
+    private sealed record DesignBody(int Revision, JsonElement Document, bool Autosave = false);
 
     private sealed record CopyBody(JsonElement Document);
 
