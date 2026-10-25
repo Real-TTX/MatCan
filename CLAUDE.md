@@ -6,7 +6,7 @@ document schema 2, phases K1 to K6) and wins over `docs/PLAN.md` where they diff
 plus a database. User-facing text is **German** ("du"); code, comments and docs (except the README) are English. The infrastructure (setup, sign-in, TOTP,
 sessions, list controls, shell, AI layer, PWA, Docker, CI) was ported from `../MatTicket`; the look is MatDesign (`../MatDesign`, MatUi copied into
 `src/DesignThix/wwwroot/ui`, version in `scripts/matui-synced.txt`, never edited there). Before changing UI read MatDesign's `CLAUDE.md` and
-`docs/ADOPTING.md`. **`docs/PLAN.md` is the build plan (product, document format, architecture); its "Status" section at the top lists where the result differs from it.** Phases A to I (plan 1) and K1 to K6 (plan 2) are done; `docs/PLAN-CANVA.md` has a "Status" section with the deviations. Read the plans
+`docs/ADOPTING.md`. **`docs/PLAN.md` is the build plan (product, document format, architecture); its "Status" section at the top lists where the result differs from it.** Phases A to I (plan 1) and K1 to K6 (plan 2) are done; `docs/PLAN-CANVA.md` has a "Status" section with the deviations. **`docs/PLAN-PLATFORM.md` is plan 3** (personal and team areas, folders, sharing with people, teams and links, registration, invitations, notifications, comments; phases P1 to P6) and wins over both where they differ. Read the plans
 for the product and the document format, and change them only when the owner says so.
 
 ## Commands
