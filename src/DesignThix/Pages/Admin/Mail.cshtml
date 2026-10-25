@@ -1,0 +1,32 @@
+@page
+@model DesignThix.Pages.Admin.MailModel
+@{
+    var security = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> { new("STARTTLS (Port 587)", "starttls"), new("SSL/TLS (Port 465)", "ssl"), new("Keine (nur im internen Netz)", "none") };
+}
+
+<form class="mat-form" method="post" asp-page-handler="" novalidate>
+    <dt-summary />
+    <dt-card title="Mailserver (SMTP)" icon="mail">
+        <div class="mat-form__grid">
+            <dt-switch for="Input.Enabled" label="Mails verschicken" full="true" />
+            <dt-input for="Input.Host" label="Server" placeholder="smtp.example.com" />
+            <dt-input for="Input.Port" label="Port" type="number" min="1" max="65535" step="1" />
+            <dt-select for="Input.Security" label="Verschlüsselung" items="security" />
+            <dt-input for="Input.UserName" label="Benutzername" autocomplete="off" />
+            <dt-input for="Input.Password" label="Passwort" type="password" autocomplete="new-password" hint="@(Model.HasPassword ? "Gespeichert (verschlüsselt). Leer lassen, um es zu behalten." : "Wird verschlüsselt gespeichert.")" />
+            <dt-input for="Input.FromAddress" label="Absenderadresse" type="email" placeholder="designthix@example.com" />
+            <dt-input for="Input.FromName" label="Absendername" />
+        </div>
+        <p class="mat-hint">Verschickt werden Einladungen in Teams, Hinweise auf Freigaben, Zugriffsanfragen und Erwähnungen. Jede Person stellt in ihrem Profil ein, bei welchen Anlässen sie eine Mail möchte. Ohne Mailserver zeigt DesignThix den Link einer Einladung zum Kopieren an.</p>
+    </dt-card>
+    <dt-buttons back-href="/Admin/System" back-text="Zum System" />
+</form>
+
+<form class="mat-form" method="post" asp-page-handler="Test" novalidate>
+    <dt-card title="Test" icon="mail">
+        <div class="mat-form__grid">
+            <dt-input for="TestTo" label="Testnachricht an" type="email" />
+        </div>
+        <div class="mat-actions"><button type="submit" class="mat-btn mat-btn--secondary">@Ui.Icon("mail")<span>Testnachricht senden</span></button></div>
+    </dt-card>
+</form>

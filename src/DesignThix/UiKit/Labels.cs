@@ -19,6 +19,31 @@ public static class Labels
         _ => "Arbeitet im eigenen Bereich und in Teams; was jemand mit einem Design, einer Datenliste oder einem Bild darf, ergibt sich aus Besitz, Teamrolle und Freigaben.",
     };
 
+    /// <summary>The role of a person in a team.</summary>
+    public static string Of(SpaceRole r) => r switch
+    {
+        SpaceRole.Owner => "Inhaber",
+        SpaceRole.Admin => "Admin",
+        SpaceRole.Editor => "Bearbeiter",
+        _ => "Betrachter",
+    };
+
+    /// <summary>What a team role may do, in a sentence (the member list and the invitation dialog show it).</summary>
+    public static string Describe(SpaceRole r) => r switch
+    {
+        SpaceRole.Owner => "Darf alles, auch das Team löschen und die Inhaberschaft übergeben.",
+        SpaceRole.Admin => "Verwaltet Mitglieder, Einladungen, Marke, Vorlagen und Einstellungen und arbeitet im Team mit.",
+        SpaceRole.Editor => "Legt alles im Teambereich an und ändert es, teilt, verschiebt und löscht.",
+        _ => "Sieht den Teambereich nur an.",
+    };
+
+    public static string Of(ApprovalState s) => s switch
+    {
+        ApprovalState.Pending => "Wartet auf Freigabe",
+        ApprovalState.Declined => "Abgelehnt",
+        _ => "Freigegeben",
+    };
+
     public static string Of(AiProvider p) => p == AiProvider.ChatGpt ? "ChatGPT-Konto" : "OpenAI-kompatibel (API-Schlüssel)";
 
     public static string Of(AiAction a) => a switch

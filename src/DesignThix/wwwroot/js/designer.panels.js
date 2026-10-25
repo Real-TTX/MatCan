@@ -241,7 +241,7 @@
           D.icon('badge-check', 'dt-pempty__icon'),
           D.el('h3', { text: 'Deine Marke' }),
           D.el('p', { text: 'Lege Farben, Schriften und Logos fest. Sie stehen dann hier und in der Farbauswahl bereit.' }),
-          D.el('a', { class: 'mat-btn mat-btn--primary', href: '/Brand', target: '_blank', rel: 'noopener' }, [D.icon('palette'), D.el('span', { text: 'Marke einrichten' })]),
+          D.el('a', { class: 'mat-btn mat-btn--primary', href: D.brandHref || '/Brand', target: '_blank', rel: 'noopener' }, [D.icon('palette'), D.el('span', { text: 'Marke einrichten' })]),
         ]));
         return;
       }
@@ -286,7 +286,7 @@
         });
         host.appendChild(section('Logos', grid));
       }
-      host.appendChild(D.el('p', { class: 'dt-pnote' }, [D.el('a', { href: '/Brand', target: '_blank', rel: 'noopener', text: 'Marke bearbeiten' })]));
+      host.appendChild(D.el('p', { class: 'dt-pnote' }, [D.el('a', { href: D.brandHref || '/Brand', target: '_blank', rel: 'noopener', text: 'Marke bearbeiten' })]));
       api.on('brand', function () { api.rebuild(); });
       api.on('readonly', function () { api.rebuild(); });
     },

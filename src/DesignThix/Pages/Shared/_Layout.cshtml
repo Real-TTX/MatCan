@@ -87,6 +87,7 @@
                     </ol>
                 </nav>
                 <div class="mat-topbar__actions">
+                    <partial name="_Bell" />
                     @await RenderSectionAsync("TopbarActions", required: false)
                 </div>
             </header>
@@ -169,6 +170,7 @@
     <script src="~/js/app.js" asp-append-version="true"></script>
     <script src="~/js/create.js" asp-append-version="true"></script>
     <script src="~/js/share.js" asp-append-version="true"></script>
+    <script src="~/js/notify.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

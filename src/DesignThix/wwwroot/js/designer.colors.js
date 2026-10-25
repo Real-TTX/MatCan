@@ -46,7 +46,7 @@
       build: function (host, ctx) {
         var colours = (ctx.app.brand && ctx.app.brand.colors) || [];
         if (!colours.length) {
-          host.appendChild(D.el('p', { class: 'dt-hint' }, ['Noch keine Markenfarben. ', D.el('a', { href: '/Brand', target: '_blank', rel: 'noopener', text: 'Marke einrichten' })]));
+          host.appendChild(D.el('p', { class: 'dt-hint' }, ['Noch keine Markenfarben. ', D.el('a', { href: D.brandHref || '/Brand', target: '_blank', rel: 'noopener', text: 'Marke einrichten' })]));
           return true;
         }
         swatchRow(host, colours, ctx, 'Markenfarben');

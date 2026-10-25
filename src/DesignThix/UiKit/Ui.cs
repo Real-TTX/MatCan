@@ -60,6 +60,20 @@ public static partial class Ui
     public static IHtmlContent Logo(string size = "md")
         => new HtmlString($"<span class=\"mat-logo mat-logo--{size} dt-logo--detailed\" role=\"img\" aria-label=\"DesignThix\"><img src=\"/logo-mark.svg\" alt=\"\" width=\"56\" height=\"56\" /></span>");
 
+    /// <summary>"light" when dark text reads better on this colour (#rrggbb), else "dark": the badge of a team picks its text colour from it (the colour itself is data and comes through a custom property).</summary>
+    public static string ToneOf(string? hex)
+    {
+        var h = (hex ?? "").TrimStart('#');
+        if (h.Length != 6 || !int.TryParse(h, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out var rgb))
+        {
+            return "light";
+        }
+
+        double Channel(int v) { var c = v / 255d; return c <= 0.03928 ? c / 12.92 : Math.Pow((c + 0.055) / 1.055, 2.4); }
+        var luminance = 0.2126 * Channel((rgb >> 16) & 0xff) + 0.7152 * Channel((rgb >> 8) & 0xff) + 0.0722 * Channel(rgb & 0xff);
+        return luminance > 0.3 ? "light" : "dark";
+    }
+
     /// <summary>The first letters of a name, for an avatar.</summary>
     public static string Initials(string name) => Services.Fmt.Initials(name);
 

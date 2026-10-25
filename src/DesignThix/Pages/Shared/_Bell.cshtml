@@ -1,0 +1,19 @@
+@*
+    The bell in the header bar (docs/PLAN-PLATFORM.md section 1.17): an icon button with the count of the unread notifications and a popover with the newest ones. js/notify.js asks /api/notifications/count
+    once a minute while the page is visible, and when the window gets the focus. Without script the bell is a link to the full list.
+*@
+<div class="dt-bell" data-notify>
+    <a class="mat-btn mat-btn--ghost mat-btn--icon dt-bell__button" href="/Account/Notifications" data-notify-toggle aria-haspopup="dialog" aria-expanded="false" aria-controls="dt-notify-pop" aria-label="Benachrichtigungen" title="Benachrichtigungen">
+        @Ui.Icon("bell")
+        <span class="mat-topbar__badge" data-notify-badge hidden></span>
+    </a>
+    <div class="dt-notify" id="dt-notify-pop" role="dialog" aria-label="Benachrichtigungen" hidden>
+        <div class="dt-notify__head">
+            <strong>Benachrichtigungen</strong>
+            <button type="button" class="mat-btn mat-btn--ghost mat-btn--sm" data-notify-read-all>Alle als gelesen markieren</button>
+        </div>
+        <ul class="dt-notify__list" data-notify-list aria-live="polite"></ul>
+        <p class="dt-notify__empty" data-notify-empty hidden>Alles gelesen. Hier erscheint, was dich betrifft.</p>
+        <div class="dt-notify__foot"><a href="/Account/Notifications" data-notify-all>Alle anzeigen</a></div>
+    </div>
+</div>

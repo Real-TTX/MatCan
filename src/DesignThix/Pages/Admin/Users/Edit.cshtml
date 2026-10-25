@@ -20,11 +20,25 @@
         </div>
     </dt-card>
 
-    <dt-buttons back-href="/Admin/Users" delete-url="@(Model.Account is null || Model.IsMe ? null : Url.Page("/Admin/Users/Edit", "Delete", new { id = Model.Id }))" delete-confirm="Diesen Benutzer löschen? Er kann sich nicht mehr anmelden, seine Einträge bleiben erhalten." />
+    <dt-buttons back-href="/Admin/Users" />
 </form>
 
 @if (d is not null)
 {
+    @if (d.User.ApprovalState != ApprovalState.Approved)
+    {
+        <dt-card title="Freigabe" icon="clock" sub="@Labels.Of(d.User.ApprovalState)">
+            <p class="mat-hint">@(d.User.ApprovalState == ApprovalState.Pending ? "Dieses Konto hat sich selbst registriert und wartet auf deine Entscheidung. Erst nach der Freigabe kann sich die Person anmelden." : "Dieses Konto wurde abgelehnt. Du kannst es noch freigeben.")</p>
+            <form method="post" class="mat-actions">
+                <button type="submit" asp-page-handler="Approve" asp-route-id="@Model.Id" class="mat-btn mat-btn--primary" data-approve>@Ui.Icon("check")<span>Freigeben</span></button>
+                @if (d.User.ApprovalState == ApprovalState.Pending)
+                {
+                    <button type="submit" asp-page-handler="Decline" asp-route-id="@Model.Id" class="mat-btn mat-btn--secondary" data-confirm="Dieses Konto ablehnen? Die Person kann sich dann nicht anmelden." data-confirm-ok="Ablehnen" data-decline>@Ui.Icon("x")<span>Ablehnen</span></button>
+                }
+            </form>
+        </dt-card>
+    }
+
     <dt-card title="Anmeldung" icon="shield">
         <dl class="mat-kv">
             <dt>Zwei-Faktor-Anmeldung</dt><dd>@(d.User.Totp is { IsConfirmed: true } ? "an (Authenticator-App)" : "aus")</dd>
@@ -47,4 +61,52 @@
             }
         </form>
     </dt-card>
+
+    @if (Model.Storage is { } storage)
+    {
+        <dt-card title="Speicherplatz" icon="hard-drive" sub="persönlicher Bereich">
+            <p class="mat-hint">Bilder und Schriften im persönlichen Bereich: <strong>@Fmt.FileSize(storage.UsedBytes)</strong> von @Fmt.FileSize(storage.QuotaBytes) belegt. Die Inhalte siehst du als Administrator nicht.</p>
+            <form class="mat-form" method="post" asp-page-handler="Quota" asp-route-id="@Model.Id">
+                <div class="mat-form__grid">
+                    <div class="mat-field">
+                        <label class="mat-label" for="QuotaMb">Grenze in MB</label>
+                        <input class="mat-input" type="number" id="QuotaMb" name="QuotaMb" min="1" step="1" inputmode="numeric" value="@Model.QuotaMb" placeholder="Standard" />
+                        <span class="mat-hint">Leer lassen für den Standard der Plattform.</span>
+                    </div>
+                </div>
+                <div class="mat-actions"><button type="submit" class="mat-btn mat-btn--secondary">@Ui.Icon("save")<span>Grenze speichern</span></button></div>
+            </form>
+        </dt-card>
+    }
+
+    @if (!Model.IsMe)
+    {
+        <dt-card title="Konto löschen" icon="trash">
+            <p class="mat-hint">Die Person kann sich nicht mehr anmelden. Ihre Inhalte können an eine andere Person oder an ein Team gehen; Teams, die nur sie leitet, brauchen vorher einen neuen Inhaber.</p>
+            <div class="mat-actions"><button type="button" class="mat-btn mat-btn--danger" data-dialog-open="dt-delete-user">@Ui.Icon("trash")<span>Konto löschen</span></button></div>
+        </dt-card>
+
+        <dialog class="mat-dialog" id="dt-delete-user" aria-labelledby="dt-delete-user-title">
+            <form class="mat-dialog__form mat-form" method="post" asp-page-handler="Delete" asp-route-id="@Model.Id">
+                <div class="mat-dialog__head">
+                    @Ui.Icon("trash")
+                    <h2 class="mat-dialog__title" id="dt-delete-user-title">@d.User.DisplayName löschen</h2>
+                    <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-dialog__close" data-dialog-close aria-label="Schließen">@Ui.Icon("x")</button>
+                </div>
+                <div class="mat-dialog__body">
+                    <p>Was soll mit den Inhalten aus dem persönlichen Bereich von @d.User.DisplayName passieren? Sie landen in einem neuen Ordner „Übernommen von @d.User.DisplayName“.</p>
+                    <dt-radios for="TransferKind" label="Inhalte" items="Model.TransferKinds" full="true" />
+                    <dt-select name="TransferUserId" label="An welche Person?" items="Model.People" show-if="TransferKind" show-value="person" id="TransferUserId" />
+                    <dt-select name="TransferTeamId" label="An welches Team?" items="Model.Teams" show-if="TransferKind" show-value="team" id="TransferTeamId" />
+                    <p class="mat-hint">Ihre Freigaben, Mitgliedschaften und Sitzungen enden in jedem Fall.</p>
+                </div>
+                <div class="mat-dialog__foot">
+                    <div class="mat-btn-row mat-btn-row--plain">
+                        <button type="submit" class="mat-btn mat-btn--danger">@Ui.Icon("trash")<span>Konto löschen</span></button>
+                        <button type="button" class="mat-btn mat-btn--secondary" data-dialog-close>Abbrechen</button>
+                    </div>
+                </div>
+            </form>
+        </dialog>
+    }
 }

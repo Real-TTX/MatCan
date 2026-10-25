@@ -1,0 +1,66 @@
+@page "/Teams"
+@model DesignThix.Pages.Teams.IndexModel
+@{
+    ViewData["Styles"] = new[] { "/css/browser.css", "/css/teams.css" };
+}
+
+@if (Model.Tiles.Count == 0)
+{
+    <div class="mat-empty" data-teams-empty>
+        <span class="mat-empty__icon">@Ui.Icon("users")</span>
+        <div class="mat-empty__title">Du bist noch in keinem Team</div>
+        <p>@(Model.MayCreate ? "Lege ein Team an und lade die Leute ein, mit denen du zusammenarbeitest." : "Wenn dich jemand in ein Team einlädt, erscheint es hier. Teams anlegen darf nur die Administration.")</p>
+        @if (Model.MayCreate)
+        {
+            <a class="mat-btn mat-btn--primary" href="/Teams/Create">@Ui.Icon("plus")<span>Team erstellen</span></a>
+        }
+    </div>
+}
+else
+{
+    <div class="dt-teamgrid" data-team-grid>
+        @foreach (var tile in Model.Tiles)
+        {
+            var t = tile.Team;
+            <article class="mat-card dt-teamtile" data-team="@t.Slug">
+                <a class="dt-teamtile__link" href="/Teams/@t.Slug/Projekte" aria-label="Team @t.Name öffnen">
+                    <span class="dt-teamtile__band" data-colour="@t.Color" aria-hidden="true"></span>
+                    <span class="dt-teamtile__head">
+                        <span class="dt-teambadge dt-teambadge--lg" data-colour="@t.Color" data-tone="@Ui.ToneOf(t.Color)" aria-hidden="true">@Ui.Initials(t.Name)</span>
+                        <span class="dt-teamtile__title">
+                            <strong class="dt-teamtile__name">@t.Name</strong>
+                            <small class="mat-muted">@Ui.Plural(t.MemberCount, "Mitglied", "Mitglieder") · @(t.MyRole is { } role ? Labels.Of(role) : "")</small>
+                        </span>
+                    </span>
+                    @if (!string.IsNullOrWhiteSpace(t.Description))
+                    {
+                        <span class="dt-teamtile__desc">@t.Description</span>
+                    }
+                </a>
+                <div class="dt-teamtile__foot">
+                    <span class="dt-avatars" role="group" aria-label="Mitglieder">
+                        @foreach (var name in tile.MemberNames)
+                        {
+                            @Ui.Avatar(name, "sm")
+                        }
+                        @if (t.MemberCount > tile.MemberNames.Count)
+                        {
+                            <span class="mat-avatar mat-avatar--sm dt-avatars__more" aria-label="und @(t.MemberCount - tile.MemberNames.Count) weitere">+@(t.MemberCount - tile.MemberNames.Count)</span>
+                        }
+                    </span>
+                    <partial name="_Storage" model="(tile.Storage, t.Name)" />
+                </div>
+            </article>
+        }
+    </div>
+    <div class="mat-actions">
+        @if (Model.MayCreate)
+        {
+            <a class="mat-btn mat-btn--primary" href="/Teams/Create">@Ui.Icon("plus")<span>Team erstellen</span></a>
+        }
+        @if (Model.MayInvite)
+        {
+            <a class="mat-btn mat-btn--secondary" href="/Account/Invitations">@Ui.Icon("mail")<span>Zu DesignThix einladen</span></a>
+        }
+    </div>
+}

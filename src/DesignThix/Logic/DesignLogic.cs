@@ -193,6 +193,30 @@ public static class DesignLogic
         return wanted.Count == 0 ? [] : (await Access.Visible<Design>(biz, AccessLevel.Manage).Where(d => wanted.Contains(d.Id)).Select(d => d.Id).ToListAsync()).ToHashSet();
     }
 
+    /// <summary>The designs of an area that are not templates yet, by name (the choice of "Als Teamvorlage"): the person must be allowed to change them.</summary>
+    public static async Task<List<Choice>> TemplateCandidatesAsync(Biz biz, long spaceId)
+    {
+        await Access.RequireSpaceRole(biz, spaceId, SpaceRole.Editor);
+        var rows = await Access.Visible<Design>(biz, AccessLevel.Manage, AccessVia.Membership).AsNoTracking().Where(d => d.SpaceId == spaceId && !d.IsTemplate).OrderBy(d => d.Name).Take(300)
+            .Select(d => new { d.Id, d.Name, d.Width, d.Height, d.Unit }).ToListAsync();
+        return [.. rows.Select(d => new Choice(d.Id, d.Name, $"{Services.Fmt.Number((decimal)d.Width, d.Width % 1 == 0 ? 0 : 1)} × {Services.Fmt.Number((decimal)d.Height, d.Height % 1 == 0 ? 0 : 1)} {d.Unit}"))];
+    }
+
+    /// <summary>Makes a design a template of its area (or a normal design again). Needs Manage on the design, like the template flag in its properties.</summary>
+    public static async Task SetTemplateAsync(Biz biz, long id, bool isTemplate)
+    {
+        await Access.RequireAsync(biz, ItemKind.Design, id, AccessLevel.Manage);
+        var design = await biz.Db.Design.FirstOrDefaultAsync(d => d.Id == id) ?? throw new NotFoundException();
+        if (design.IsTemplate == isTemplate)
+        {
+            return;
+        }
+
+        design.IsTemplate = isTemplate;
+        await biz.Db.SaveChangesAsync();
+        await biz.Log.LogAsync(isTemplate ? "Design als Vorlage angeboten" : "Design ist keine Vorlage mehr", nameof(Design), id, design.Name);
+    }
+
     /// <summary>Where the design is and what the person may do with it (the flags of the pages); <see cref="NotFoundException"/> when they may not see it.</summary>
     public static Task<ItemPlace> PlaceAsync(Biz biz, long id) => Access.PlaceAsync(biz, ItemKind.Design, id);
 

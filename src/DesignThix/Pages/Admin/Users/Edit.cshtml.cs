@@ -3,10 +3,15 @@ using DesignThix.Data.Entities;
 using DesignThix.Logic;
 using DesignThix.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace DesignThix.Pages.Admin.Users;
 
-/// <summary>One account: name, address, role, whether it may sign in, a new password, the second factor and the sessions.</summary>
+/// <summary>
+/// One account: name, address, role (Administrator or Mitglied), whether it may sign in, a new password, the approval of a registration, the storage of the personal area, the second factor and the
+/// sessions; and the deletion with a transfer of the content to another person or to a team.
+/// </summary>
 public sealed class EditModel(Biz biz) : PageModelBase
 {
     public sealed class InputModel
@@ -30,7 +35,6 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
         [Display(Name = "Passwort")]
         public string? Password { get; set; }
-
     }
 
     [BindProperty(SupportsGet = true)]
@@ -39,11 +43,33 @@ public sealed class EditModel(Biz biz) : PageModelBase
     [BindProperty]
     public InputModel Input { get; set; } = new();
 
+    /// <summary>The storage limit of the personal area in megabytes; empty = the default of the platform.</summary>
+    [BindProperty]
+    public long? QuotaMb { get; set; }
+
+    /// <summary>"person", "team" or "trash": where the content of a deleted account goes.</summary>
+    [BindProperty]
+    public string TransferKind { get; set; } = "trash";
+
+    [BindProperty]
+    public long? TransferUserId { get; set; }
+
+    [BindProperty]
+    public long? TransferTeamId { get; set; }
+
     public UserLogic.UserDetails? Details { get; private set; }
 
     public User? Account => Details?.User;
 
     public bool IsMe => Account is not null && Account.Id == biz.User.UserId;
+
+    public StorageUsage? Storage { get; private set; }
+
+    public IReadOnlyList<SelectListItem> People { get; private set; } = [];
+
+    public IReadOnlyList<SelectListItem> Teams { get; private set; } = [];
+
+    public IReadOnlyList<SelectListItem> TransferKinds { get; } = [new("Inhalte an eine Person übertragen", "person"), new("Inhalte an ein Team übertragen", "team"), new("Nicht übertragen: alles in den Papierkorb", "trash")];
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -55,10 +81,13 @@ public sealed class EditModel(Biz biz) : PageModelBase
         if (Details is { } d)
         {
             Input = new InputModel { DisplayName = d.User.DisplayName, Email = d.User.Email, Phone = d.User.Phone, Role = d.User.Role, IsActive = d.User.IsActive };
+            QuotaMb = QuotaOverrideMb;
         }
 
         return Page();
     }
+
+    private long? QuotaOverrideMb { get; set; }
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -67,6 +96,8 @@ public sealed class EditModel(Biz biz) : PageModelBase
             return NotFound();
         }
 
+        ModelState.Remove(nameof(QuotaMb));
+        ModelState.Remove(nameof(TransferKind));
         if (ModelState.IsValid)
         {
             try
@@ -82,6 +113,40 @@ public sealed class EditModel(Biz biz) : PageModelBase
         }
 
         return Page();
+    }
+
+    public async Task<IActionResult> OnPostApproveAsync()
+    {
+        await UserLogic.SetApprovalAsync(biz, Id ?? 0, true);
+        Flash("Das Konto ist freigegeben. Die Person kann sich jetzt anmelden.");
+        return RedirectToPage(new { id = Id });
+    }
+
+    public async Task<IActionResult> OnPostDeclineAsync()
+    {
+        await UserLogic.SetApprovalAsync(biz, Id ?? 0, false);
+        Flash("Das Konto ist abgelehnt.");
+        return RedirectToPage(new { id = Id });
+    }
+
+    public async Task<IActionResult> OnPostQuotaAsync()
+    {
+        try
+        {
+            if (QuotaMb is < 1)
+            {
+                throw new BizException("Der Speicherplatz muss mindestens 1 MB betragen (leer lassen für den Standard).");
+            }
+
+            await UserLogic.SetPersonalQuotaAsync(biz, Id ?? 0, QuotaMb);
+            Flash(QuotaMb is null ? "Der Speicherplatz ist wieder der Standard der Plattform." : $"Der Speicherplatz ist auf {Fmt.Integer(QuotaMb.Value)} MB gesetzt.");
+        }
+        catch (BizException ex)
+        {
+            FlashError(ex.Message);
+        }
+
+        return RedirectToPage(new { id = Id });
     }
 
     public async Task<IActionResult> OnPostResetTotpAsync()
@@ -110,8 +175,14 @@ public sealed class EditModel(Biz biz) : PageModelBase
     {
         try
         {
-            await UserLogic.DeleteAsync(biz, Id ?? 0);
-            Flash("Der Benutzer ist gelöscht. Seine Einträge bleiben erhalten.");
+            var target = TransferKind switch
+            {
+                "person" => new UserLogic.TransferTarget(TransferUserId ?? throw new BizException("Bitte wähle die Person, die die Inhalte bekommt."), null),
+                "team" => new UserLogic.TransferTarget(null, TransferTeamId ?? throw new BizException("Bitte wähle das Team, das die Inhalte bekommt.")),
+                _ => UserLogic.TransferTarget.None,
+            };
+            await UserLogic.DeleteAsync(biz, Id ?? 0, target);
+            Flash(target.IsNone ? "Der Benutzer ist gelöscht. Seine Inhalte liegen im Papierkorb und werden nach der eingestellten Zeit entfernt." : "Der Benutzer ist gelöscht. Seine Inhalte sind übertragen.");
             return RedirectToPage("/Admin/Users/Index");
         }
         catch (BizException ex)
@@ -130,6 +201,15 @@ public sealed class EditModel(Biz biz) : PageModelBase
             {
                 return false;
             }
+
+            Storage = await UserLogic.PersonalStorageAsync(biz, id);
+            if (Details.User.PersonalSpaceId is { } space)
+            {
+                QuotaOverrideMb = await biz.Db.Space.AsNoTracking().Where(s => s.Id == space).Select(s => s.StorageQuotaBytes).FirstOrDefaultAsync() is { } bytes ? bytes / (1024 * 1024) : null;
+            }
+
+            People = [.. (await UserLogic.TransferPeopleAsync(biz, id)).Select(p => new SelectListItem($"{p.Name} ({p.Detail})", p.Id.ToString()))];
+            Teams = [.. await SpaceLogic.AdminTeams(biz).OrderBy(t => t.Name).Select(t => new SelectListItem(t.Name, t.Id.ToString())).ToListAsync()];
         }
 
         var title = Id is null ? "Neuer Benutzer" : Account!.DisplayName;

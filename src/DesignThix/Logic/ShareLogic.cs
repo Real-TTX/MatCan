@@ -145,7 +145,7 @@ public static class ShareLogic
     /// Shares an item with a person (<paramref name="isTeam"/> false) or a team. Needs Edit on the item (Manage for everything the rules allow). A share that exists is changed. The person must have an active,
     /// approved account; a team must be one the sharer is a member of. Returns the share.
     /// </summary>
-    public static async Task<Share> AddAsync(Biz biz, ItemKind kind, long itemId, bool isTeam, long targetId, SharePermission permission, string? message = null)
+    public static async Task<Share> AddAsync(Biz biz, ItemKind kind, long itemId, bool isTeam, long targetId, SharePermission permission, string? message = null, bool notify = true)
     {
         RequireShareable(kind);
         var level = await Access.RequireAsync(biz, kind, itemId, AccessLevel.Edit);
@@ -169,6 +169,7 @@ public static class ShareLogic
         }
 
         var share = await db.Share.FirstOrDefaultAsync(s => s.ItemKind == kind && s.ItemId == itemId && (isTeam ? s.SpaceId == targetId : s.UserId == targetId));
+        var changed = share is null || share.Permission != permission;
         if (share is null)
         {
             share = new Share { ItemKind = kind, ItemId = itemId, UserId = isTeam ? null : targetId, SpaceId = isTeam ? targetId : null, Permission = permission };
@@ -185,11 +186,38 @@ public static class ShareLogic
         }
 
         await db.SaveChangesAsync();
-        // the optional message of the dialog goes to the log for now; the notification of the receiver (P4) takes it from here
+        // the optional message of the dialog goes to the log and, below, into the notification of the receiver(s)
         var text = message?.Trim() ?? "";
         var note = text.Length == 0 ? "" : " – " + (text.Length > 200 ? text[..200] : text);
         await biz.Log.LogAsync("Freigabe", kind.ToString(), itemId, $"{(isTeam ? "Team" : "Person")} {targetId}: {permission}{note}");
+        if (notify && changed)
+        {
+            await NotifyShareAsync(biz, kind, itemId, isTeam, targetId, permission, text);
+        }
+
         return share;
+    }
+
+    /// <summary>Tells the receiver: the person, or every member of the team except the one who shared. The optional message of the dialog goes along (in the data, shown as text).</summary>
+    private static async Task NotifyShareAsync(Biz biz, ItemKind kind, long itemId, bool isTeam, long targetId, SharePermission permission, string message)
+    {
+        var db = biz.Db;
+        var by = await NotificationLogic.ActorNameAsync(biz);
+        var itemName = await NotificationLogic.ItemNameAsync(db, kind, itemId);
+        string? viaTeam = null;
+        List<long> receivers;
+        if (isTeam)
+        {
+            viaTeam = await db.Space.AsNoTracking().Where(s => s.Id == targetId).Select(s => s.Name).FirstOrDefaultAsync();
+            receivers = await NotificationLogic.TeamMemberIdsAsync(db, targetId);
+        }
+        else
+        {
+            receivers = [targetId];
+        }
+
+        var clean = message.Length > 500 ? message[..500] : message;
+        await NotificationLogic.NotifyAsync(biz, receivers, NotificationKinds.Share, new { by, byId = biz.User.UserId, itemKind = kind.ToString(), itemId, itemName, permission = permission.ToString(), viaTeam, message = clean.Length == 0 ? null : clean }, NotificationLogic.ItemUrl(kind, itemId));
     }
 
     private static async Task<(Share Share, AccessLevel Level)> OwnShareAsync(Biz biz, long shareId)

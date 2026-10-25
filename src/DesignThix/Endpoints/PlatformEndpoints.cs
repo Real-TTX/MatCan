@@ -284,6 +284,27 @@ public static class PlatformEndpoints
             return Results.Json(new { ok = true }, Web);
         })).RequireAuthorization("SignedIn");
 
+        // { name, description?, color? } -> { id, slug }: name, colour and description of a team (Owner and Admin)
+        app.MapPost("/api/spaces/{id:long}", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => Post<SpaceBody>(http, antiforgery, async body =>
+        {
+            var team = await SpaceLogic.UpdateTeamAsync(biz, id, body.Name, body.Description, body.Color);
+            return Results.Json(new { id = team.Id, slug = team.Slug }, Web);
+        })).RequireAuthorization("SignedIn");
+
+        // { name }: deletes a team (the Owner; the body must carry the team's name exactly, as the page makes the person type it): the content goes to the trash
+        app.MapPost("/api/spaces/{id:long}/delete", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => Post<DeleteSpaceBody>(http, antiforgery, async body =>
+        {
+            await SpaceLogic.DeleteTeamAsync(biz, id, body.Name);
+            return Results.Json(new { ok = true }, Web);
+        })).RequireAuthorization("SignedIn");
+
+        // { userId }: the Owner hands the ownership to another member (and becomes Admin)
+        app.MapPost("/api/spaces/{id:long}/transfer", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => Post<MemberBody>(http, antiforgery, async body =>
+        {
+            await SpaceLogic.TransferOwnershipAsync(biz, id, body.UserId);
+            return Results.Json(new { ok = true }, Web);
+        })).RequireAuthorization("SignedIn");
+
         app.MapPost("/api/spaces/{id:long}/leave", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => LibraryEndpoints.Guard(http, antiforgery, async () =>
         {
             await SpaceLogic.LeaveAsync(biz, id);
@@ -314,6 +335,8 @@ public static class PlatformEndpoints
     private sealed record SpaceBody(string? Name, string? Description, string? Color);
 
     private sealed record MemberBody(long UserId, string? Role);
+
+    private sealed record DeleteSpaceBody(string? Name);
 
     private static Task<IResult> Post<T>(HttpContext http, IAntiforgery antiforgery, Func<T, Task<IResult>> action) where T : class
         => LibraryEndpoints.Guard(http, antiforgery, async () =>

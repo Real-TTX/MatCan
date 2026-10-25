@@ -57,7 +57,7 @@ const stamp = String(Date.now()).slice(-6);
   // ------------------------------------------------------------------------------------------------ the menu
   const menu = await page.$$eval('.mat-nav [data-nav-panel="main"] a, .mat-nav [data-nav-panel="main"] .mat-nav__group', els => els.map(e => ({ text: e.textContent.trim(), href: e.getAttribute('href') })));
   // teams the person belongs to (other checks leave some behind) are listed between "Teams" and "Alle Teams": they are not what this check is about
-  const texts = menu.filter(m => !/^\/Teams\/[^/]+\/Projekte$/.test(m.href || '')).map(m => m.text);
+  const texts = menu.filter(m => !/^\/Teams\/[^/]+\/Projekte$/.test(m.href || '') && m.href !== '/Teams/Create').map(m => m.text);
   check('the menu: Design erstellen, Start, Projekte, Freigegeben, Mit Stern, Teams, Gestalten, Bibliothek, Serien (Zusatz), Aufräumen',
     texts.join('|') === 'Design erstellen|Start|Projekte|Freigegeben|Mit Stern|Teams|Alle Teams|Gestalten|Vorlagen|Designs|Bibliothek|Uploads & Medien|Marke|Schriften|Serien (Zusatz)|Datenlisten|Serienausgaben|Druckbögen|Aufräumen|Papierkorb', texts.join('|'));
   check('the menu addresses', ['/Designs/Create', '/', '/Projekte', '/Freigegeben', '/Mit-Stern', '/Teams', '/Designs', '/Templates', '/Assets', '/Brand', '/Fonts', '/DataLists', '/Outputs', '/Sheets', '/Papierkorb'].every(h => menu.some(m => m.href === h)), JSON.stringify(menu));

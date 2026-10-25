@@ -1,7 +1,11 @@
+using System.Net;
+using System.Text.RegularExpressions;
+using DesignThix.Core.Security;
 using DesignThix.Data;
 using DesignThix.Data.Entities;
 using DesignThix.Logic;
 using DesignThix.Services;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -117,4 +121,105 @@ public abstract class PlatformTestBase(AppTests.AppFactory factory)
         await action(db);
         return 0;
     });
+
+    // ------------------------------------------------------------------------------------------------ platform settings, anonymous callers, HTTP (phase P4)
+
+    protected const string TestPassword = "Passw0rd!Passw0rd";
+
+    /// <summary>Runs the action as a visitor who is not signed in (the registration, the invitation page).</summary>
+    protected async Task<T> AsAnonymous<T>(Func<Biz, Task<T>> action)
+    {
+        using var client = Factory.CreateClient();
+        using var scope = Factory.Services.CreateScope();
+        var current = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
+        using var acting = current.RunAs(null, null, UserRole.Member);
+        return await action(scope.ServiceProvider.GetRequiredService<Biz>());
+    }
+
+    /// <summary>Sets the platform settings for the test and puts the old ones back afterwards (the host is shared).</summary>
+    protected async Task<IAsyncDisposable> PlatformAsync(PlatformSettings settings)
+    {
+        var store = Factory.Services.GetRequiredService<SettingStore>();
+        var old = store.Get<PlatformSettings>(SettingStore.Platform);
+        await Db(db => store.SetAsync(db, SettingStore.Platform, settings));
+        return new Restore(async () => await Db(db => store.SetAsync(db, SettingStore.Platform, old)));
+    }
+
+    /// <summary>Sets the mail settings (usable or not) for the test and puts the old ones back.</summary>
+    protected async Task<IAsyncDisposable> MailAsync(MailSettings settings)
+    {
+        var store = Factory.Services.GetRequiredService<SettingStore>();
+        var old = store.Get<MailSettings>(SettingStore.Mail);
+        await Db(db => store.SetAsync(db, SettingStore.Mail, settings));
+        return new Restore(async () => await Db(db => store.SetAsync(db, SettingStore.Mail, old)));
+    }
+
+    protected static MailSettings UsableMail() => new() { Enabled = true, Host = "smtp.test.local", FromAddress = "design@test.local" };
+
+    private sealed class Restore(Func<Task> undo) : IAsyncDisposable
+    {
+        public async ValueTask DisposeAsync() => await undo();
+    }
+
+    /// <summary>Forgets the calls the rate limiter counted (the host is shared, and every test that registers or opens invitations shares the one address "unknown").</summary>
+    protected void ResetLimiter() => Factory.Services.GetRequiredService<PublicRateLimiter>().Reset();
+
+    /// <summary>Real administrator accounts (the claim of the other tests is only a claim): removed again when disposed, so the app asks for its first administrator again.</summary>
+    protected sealed class RealAdmins(AppTests.AppFactory factory, IReadOnlyList<long> ids) : IAsyncDisposable
+    {
+        public IReadOnlyList<long> Ids => ids;
+
+        public async ValueTask DisposeAsync()
+        {
+            using var scope = factory.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<DtDbContext>();
+            foreach (var id in ids)
+            {
+                await db.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM \"User\" WHERE \"Id\" = {id}");
+            }
+
+            factory.Services.GetRequiredService<SetupState>().Reset();
+        }
+    }
+
+    protected async Task<RealAdmins> RealAdminsAsync(int count = 1)
+    {
+        var ids = new List<long>();
+        for (var i = 0; i < count; i++)
+        {
+            ids.Add(await NewUserAsync(Factory, "Real Admin " + i, UserRole.Admin));
+        }
+
+        return new RealAdmins(Factory, ids);
+    }
+
+    /// <summary>A browser: signs the person in through the sign-in page and keeps the cookie.</summary>
+    protected async Task<HttpClient> SignInAsync(long userId)
+    {
+        var email = await Db(async db =>
+        {
+            var user = await db.User.FirstAsync(u => u.Id == userId);
+            user.PasswordHash = PasswordHasher.Hash(TestPassword);
+            await db.SaveChangesAsync();
+            return user.Email;
+        });
+        var client = Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = true });
+        var page = await client.GetStringAsync("/Account/Login");
+        var token = Regex.Match(page, "<input[^>]*name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"").Groups[1].Value;
+        var response = await client.PostAsync("/Account/Login", new FormUrlEncodedContent([new("Input.Email", email), new("Input.Password", TestPassword), new("__RequestVerificationToken", token)]));
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        return client;
+    }
+
+    /// <summary>Posts JSON like the scripts of the app do: with the antiforgery token of a page of the signed-in client in the header.</summary>
+    protected static async Task<HttpResponseMessage> ApiPostAsync(HttpClient client, string url, object body)
+    {
+        var page = await client.GetStringAsync("/");
+        var csrf = Regex.Match(page, "<meta name=\"dt-csrf\" content=\"([^\"]+)\"").Groups[1].Value;
+        using var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = System.Net.Http.Json.JsonContent.Create(body) };
+        request.Headers.Add("RequestVerificationToken", csrf);
+        return await client.SendAsync(request);
+    }
+
+    protected static string FormToken(string html) => Regex.Match(html, "<input[^>]*name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"").Groups[1].Value;
 }

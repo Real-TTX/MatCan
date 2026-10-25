@@ -1,35 +1,30 @@
-using System.Text.Json;
+using DesignThix.Data.Entities;
 using DesignThix.Logic;
+using DesignThix.UiKit;
 
 namespace DesignThix.Pages.Brand;
 
-/// <summary>The brand kit (Marke): the colours, the three fonts and the logos that the designs of the team share. Everybody reads it, designers and administrators change it.</summary>
+/// <summary>
+/// The brand kit (Marke) of the personal area: the colours, the three fonts and the logos that the designs of the person share. A person who is Owner or Admin of teams gets a switch to the brand
+/// of each of them (the same control as the tab Marke of the team page).
+/// </summary>
 public sealed class IndexModel(Biz biz) : PageModelBase
 {
-    private static readonly JsonSerializerOptions Web = new(JsonSerializerDefaults.Web);
+    public BrandPageView View { get; private set; } = null!;
 
-    public BrandView Brand { get; private set; } = null!;
-
-    public IReadOnlyList<string> Families { get; private set; } = [];
-
-    /// <summary>Everybody who is signed in may make things (in their own area), so the buttons that make something new are always there; what a person may do with one item is decided on its page.</summary>
-    public bool CanEdit => true;
-
-    /// <summary>The state the script starts from (attribute <c>data-brand</c>): colours, fonts, logos with their addresses.</summary>
-    public string StateJson { get; private set; } = "{}";
+    /// <summary>The switch between "Meine Marke" and the teams the person may change the brand of; null when there are none.</summary>
+    public LinkTabsModel? Switch { get; private set; }
 
     public async Task OnGetAsync()
     {
         Head("Marke", "Farben, Schriften und Logos deiner Marke: Sie stehen im Designer bereit, damit jedes Design gleich aussieht.", ("Bibliothek", null), ("Marke", null));
-        Brand = await BrandLogic.GetAsync(biz);
-        Families = await BrandLogic.FamiliesAsync(biz, Brand.SpaceId);
-        StateJson = JsonSerializer.Serialize(new
+        View = await BrandPageView.BuildAsync(biz, null, true, "/", "Du darfst die Marke nur ansehen.");
+        var teams = (await SpaceLogic.MyTeamsAsync(biz)).Where(t => t.MyRole is SpaceRole.Owner or SpaceRole.Admin).ToList();
+        if (teams.Count > 0)
         {
-            colors = Brand.Kit.Colors,
-            fonts = new { heading = Brand.Kit.Fonts.Heading, subheading = Brand.Kit.Fonts.Subheading, body = Brand.Kit.Fonts.Body },
-            logos = Brand.LogoAssets.Select(a => new { key = a.Key, name = a.Name, url = a.Url }),
-            maxColors = BrandLogic.MaxColors,
-            maxLogos = BrandLogic.MaxLogos,
-        }, Web);
+            var tabs = new List<LinkTab> { new("mine", "Meine Marke", "/Brand", "user") };
+            tabs.AddRange(teams.Select(t => new LinkTab("team-" + t.Slug, t.Name, $"/Teams/{t.Slug}/Marke", "users")));
+            Switch = new LinkTabsModel("Marke von", tabs, "mine");
+        }
     }
 }

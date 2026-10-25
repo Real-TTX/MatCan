@@ -134,8 +134,8 @@
       host.appendChild(list);
       var hasBrand = app.brand && app.brand.fonts && (app.brand.fonts.heading || app.brand.fonts.subheading || app.brand.fonts.body);
       host.appendChild(D.el('p', { class: 'dt-pnote' }, hasBrand
-        ? ['Die Schriften kommen aus deiner Marke. ', D.el('a', { href: '/Brand', target: '_blank', rel: 'noopener', text: 'Marke bearbeiten' })]
-        : ['Lege unter ', D.el('a', { href: '/Brand', target: '_blank', rel: 'noopener', text: 'Marke' }), ' deine Schriften fest: dann nutzen die Textvorlagen sie.']));
+        ? ['Die Schriften kommen aus deiner Marke. ', D.el('a', { href: D.brandHref || '/Brand', target: '_blank', rel: 'noopener', text: 'Marke bearbeiten' })]
+        : ['Lege unter ', D.el('a', { href: D.brandHref || '/Brand', target: '_blank', rel: 'noopener', text: 'Marke' }), ' deine Schriften fest: dann nutzen die Textvorlagen sie.']));
 
       var combos = D.el('div', { class: 'dt-combos', role: 'list', 'aria-label': 'Schriftkombinationen' });
       host.appendChild(D.el('section', { class: 'dt-psec dt-psec--gap' }, [D.el('h3', { class: 'dt-psec__title', text: 'Schriftkombinationen' }), combos]));

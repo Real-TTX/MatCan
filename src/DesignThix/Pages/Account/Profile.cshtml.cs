@@ -39,6 +39,24 @@ public sealed class ProfileModel(Biz biz, SignInService signIn) : PageModelBase
         public string Repeat { get; set; } = "";
     }
 
+    /// <summary>"E-Mail bei ...": which kinds of notifications also arrive by mail.</summary>
+    public sealed class NotifyInput
+    {
+        public bool Shares { get; set; }
+
+        public bool Requests { get; set; }
+
+        public bool Mentions { get; set; }
+
+        public bool Invitations { get; set; }
+    }
+
+    [BindProperty]
+    public NotifyInput Notify { get; set; } = new();
+
+    /// <summary>Whether the administrator has set up the mail server (without it the settings are kept but nothing is sent).</summary>
+    public bool MailReady { get; private set; }
+
     [BindProperty]
     public ProfileInput Profile { get; set; } = new();
 
@@ -54,6 +72,13 @@ public sealed class ProfileModel(Biz biz, SignInService signIn) : PageModelBase
         var user = await UserLogic.MeAsync(biz);
         Profile = new ProfileInput { DisplayName = user.DisplayName, Phone = user.Phone, Theme = user.Theme };
         Prepare(user);
+    }
+
+    public async Task<IActionResult> OnPostMailAsync()
+    {
+        await NotificationLogic.SaveMailSettingsAsync(biz, new NotifyMailSettings { Shares = Notify.Shares, Requests = Notify.Requests, Mentions = Notify.Mentions, Invitations = Notify.Invitations });
+        Flash("Deine Einstellungen für E-Mails sind gespeichert.");
+        return RedirectToPage();
     }
 
     public async Task<IActionResult> OnPostProfileAsync()
@@ -107,6 +132,9 @@ public sealed class ProfileModel(Biz biz, SignInService signIn) : PageModelBase
     {
         Email = user.Email;
         Role = user.Role;
+        MailReady = SettingLogic.Get<MailSettings>(biz, SettingStore.Mail).IsUsable;
+        var mail = NotifyMailSettings.Parse(user.NotifyMailJson);
+        Notify = new NotifyInput { Shares = mail.Shares, Requests = mail.Requests, Mentions = mail.Mentions, Invitations = mail.Invitations };
         Head("Profil", "Dein Name, deine Darstellung und dein Passwort.", ("Profil", null));
     }
 }

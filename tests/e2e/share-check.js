@@ -569,7 +569,8 @@ const shot = async (page, name, width) => {
   check('B sees A as present too', await (async () => { await B.evaluate(() => window.DtDesigner.share.beat()); return B.waitForFunction(() => Number(document.getElementById('dt-people').getAttribute('data-present')) === 1, null, { timeout: 8000 }).then(() => true, () => false); })());
   // B leaves: the room empties on the next beat
   await B.goto(base + '/');
-  for (let i = 0; i < 12 && Number(await A.getAttribute('#dt-people', 'data-present')) !== 0; i++) {
+  // the goodbye (a keepalive fetch on pagehide) is not always delivered when the page is left at once; then the 30 s timeout of the server empties the room: wait for that too
+  for (let i = 0; i < 80 && Number(await A.getAttribute('#dt-people', 'data-present')) !== 0; i++) {
     await A.waitForTimeout(500);
     await A.evaluate(() => window.DtDesigner.share.beat());
   }

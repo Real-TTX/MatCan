@@ -27,10 +27,18 @@ public abstract class BrowserPageBase(Biz biz) : PageModelBase
         return (await SpaceLogic.MySpacesAsync(Biz)).First(s => s.Id == id);
     }
 
-    /// <summary>The folder's own address: <c>null</c> when this is it, else where to go.</summary>
-    protected async Task<(FolderRow Folder, SpaceRow? Space, string? Redirect)> LocateFolderAsync(long id, string current)
+    /// <summary>
+    /// The folder's own address: <c>null</c> when this is it, else where to go. A folder the person may not see (or that does not exist: the two look the same) sends them to the page "Zugriff anfordern", like every
+    /// other page of an item does.
+    /// </summary>
+    protected async Task<(FolderRow? Folder, SpaceRow? Space, string? Redirect)> LocateFolderAsync(long id, string current)
     {
-        var folder = await FolderLogic.GetAsync(Biz, id) ?? throw new NotFoundException();
+        var folder = await FolderLogic.GetAsync(Biz, id);
+        if (folder is null)
+        {
+            return (null, null, $"/Zugriff/folder/{id}");
+        }
+
         var space = (await SpaceLogic.MySpacesAsync(Biz)).FirstOrDefault(s => s.Id == folder.SpaceId);
         var home = space is null ? $"/Freigegeben/Ordner/{id}" : $"{BrowserViews.BaseOf(space)}/Ordner/{id}";
         return (folder, space, string.Equals(home, current, StringComparison.OrdinalIgnoreCase) ? null : home);
@@ -87,7 +95,7 @@ public sealed class TeamFolderModel(Biz biz) : BrowserPageBase(biz)
             return Redirect(redirect);
         }
 
-        View = await BrowserViews.ForSpaceAsync(Biz, team, folder.Id);
+        View = await BrowserViews.ForSpaceAsync(Biz, team, folder!.Id);
         HeadFor(View, ("Teams", "/Teams"), (team.Name, BrowserViews.TeamBase(team.Slug ?? "")), (View.Title, null));
         return Page();
     }

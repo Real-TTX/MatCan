@@ -1,0 +1,18 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [AllowAnonymous]
+@{
+    Layout = "_Bare";
+    ViewData["Title"] = "Konto wartet auf Freigabe";
+}
+
+<div class="mat-auth__card" data-pending>
+    <div class="mat-auth__brand">
+        @Ui.Logo("lg")
+        <h1>Dein Konto wartet auf Freigabe</h1>
+        <p class="mat-muted">Danke für deine Registrierung. Die Administration prüft dein Konto und gibt es frei. Sobald das passiert ist, kannst du dich anmelden.</p>
+    </div>
+    <div class="mat-btn-row mat-btn-row--plain">
+        <a class="mat-btn mat-btn--secondary mat-btn--block" href="/Account/Login">@Ui.Icon("login")<span>Zur Anmeldung</span></a>
+    </div>
+</div>

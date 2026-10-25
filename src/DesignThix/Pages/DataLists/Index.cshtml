@@ -6,13 +6,6 @@
     <partial name="_Table" model="Model.Table" />
     <partial name="_Pager" model="Model.Pager" />
     <div class="mat-actions">
-        @if (Model.CanEdit)
-        {
-            <a class="mat-btn mat-btn--primary" href="/DataLists/Edit">@Ui.Icon("plus")<span>Neue Datenliste</span></a>
-        }
-        else
-        {
-            <span class="mat-hint">Anlegen dürfen Gestalter und Administratoren.</span>
-        }
+        <a class="mat-btn mat-btn--primary" href="/DataLists/Edit">@Ui.Icon("plus")<span>Neue Datenliste</span></a>
     </div>
 </div>

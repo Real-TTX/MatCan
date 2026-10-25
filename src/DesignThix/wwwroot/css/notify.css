@@ -1,0 +1,56 @@
+/* DesignThix: the bell and the notifications (Pages/Shared/_Bell.cshtml, js/notify.js, Pages/Account/Notifications). Tokens only; flat except the popover, which floats. No inline styles. */
+
+.dt-bell { position: relative; display: inline-flex; }
+.dt-bell__button { position: relative; }
+.dt-bell .mat-topbar__badge { top: 2px; right: 2px; }
+
+/* ---- the popover: under the bell on a desktop, a sheet under the header bar on a phone ---- */
+.dt-notify {
+  position: absolute; z-index: 60; top: calc(100% + 6px); right: 0;
+  width: min(26rem, calc(100vw - 2 * var(--mat-space-3)));
+  max-height: min(34rem, calc(100dvh - var(--mat-topbar-h) - var(--mat-space-6)));
+  display: flex; flex-direction: column;
+  background: var(--mat-surface); border: 1px solid var(--mat-border-strong); border-radius: var(--mat-radius-lg, 12px);
+  box-shadow: var(--mat-shadow-lg, 0 12px 32px rgb(0 0 0 / .18));
+  overflow: hidden;
+}
+.dt-notify[hidden] { display: none; }
+.dt-notify__head { display: flex; align-items: center; justify-content: space-between; gap: var(--mat-space-2); padding: var(--mat-space-3) var(--mat-space-3) var(--mat-space-2) var(--mat-space-4); border-bottom: 1px solid var(--mat-border); }
+.dt-notify__list { list-style: none; margin: 0; padding: 0; overflow-y: auto; overscroll-behavior: contain; }
+.dt-notify__empty { margin: 0; padding: var(--mat-space-6) var(--mat-space-4); text-align: center; color: var(--mat-text-muted); font-size: var(--mat-fs-sm); }
+.dt-notify__foot { padding: var(--mat-space-2) var(--mat-space-4); border-top: 1px solid var(--mat-border); text-align: center; font-size: var(--mat-fs-sm); }
+.dt-notify__foot a { font-weight: 600; }
+@media (max-width: 640px) {
+  .dt-bell { position: static; }
+  .dt-notify { position: fixed; top: calc(var(--mat-topbar-h) + var(--mat-safe-top, 0px) + 4px); left: var(--mat-space-2); right: var(--mat-space-2); width: auto; max-height: calc(100dvh - var(--mat-topbar-h) - var(--mat-safe-top, 0px) - var(--mat-space-6)); }
+}
+
+/* ---- one notification (the popover and the page share it) ---- */
+.dt-notif { position: relative; display: grid; border-bottom: 1px solid var(--mat-border); }
+.dt-notif:last-child { border-bottom: 0; }
+.dt-notif.is-unread { background: var(--mat-accent-soft); }
+.dt-notif__main { display: flex; align-items: flex-start; gap: var(--mat-space-3); width: 100%; padding: var(--mat-space-3) var(--mat-space-4); border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.dt-notif__main:hover { background: var(--mat-surface-3); }
+.dt-notif__main:focus-visible { outline: none; box-shadow: inset var(--mat-focus-ring); }
+.dt-notif__icon { display: inline-grid; place-items: center; flex: none; width: 2rem; height: 2rem; border-radius: 50%; background: var(--mat-surface-3); color: var(--mat-text-muted); }
+.dt-notif.is-unread .dt-notif__icon { background: var(--mat-accent-soft-strong); color: var(--mat-accent-text); }
+.dt-notif__icon .mat-icon { width: 1.05rem; height: 1.05rem; }
+.dt-notif__body { display: grid; gap: 2px; min-width: 0; flex: 1 1 auto; }
+.dt-notif__text { font-size: var(--mat-fs-sm); line-height: 1.35; overflow-wrap: anywhere; }
+.dt-notif.is-unread .dt-notif__text { font-weight: 600; }
+.dt-notif__message { display: block; margin-top: 2px; padding-left: var(--mat-space-2); border-left: 2px solid var(--mat-border-strong); color: var(--mat-text-muted); font-size: var(--mat-fs-sm); overflow-wrap: anywhere; quotes: none; white-space: pre-line; }
+.dt-notif__time { color: var(--mat-text-faint); font-size: var(--mat-fs-xs); }
+.dt-notif__dot { flex: none; width: 8px; height: 8px; margin-top: .55rem; border-radius: 50%; background: var(--mat-accent); }
+.dt-notif__actions { display: flex; flex-wrap: wrap; gap: var(--mat-space-2); padding: 0 var(--mat-space-4) var(--mat-space-3) calc(var(--mat-space-4) + 2rem + var(--mat-space-3)); }
+.dt-notif__state { padding: 0 var(--mat-space-4) var(--mat-space-3) calc(var(--mat-space-4) + 2rem + var(--mat-space-3)); color: var(--mat-text-muted); font-size: var(--mat-fs-xs); font-weight: 600; }
+
+/* ---- the page /Account/Notifications ---- */
+.dt-notifbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--mat-space-3); margin-bottom: var(--mat-space-3); }
+.dt-notifbar form { margin: 0; }
+.dt-notiflist { list-style: none; margin: 0; padding: 0; background: var(--mat-surface); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-lg, 12px); overflow: hidden; }
+.dt-notiflist .dt-notif { grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: var(--mat-space-3); padding: var(--mat-space-3) var(--mat-space-4); }
+.dt-notiflist .dt-notif__body { grid-column: 2; }
+.dt-notiflist .dt-notif__text { color: inherit; text-decoration: none; }
+.dt-notiflist .dt-notif__text:hover { text-decoration: underline; }
+.dt-notiflist .dt-notif__actions, .dt-notiflist .dt-notif__state { padding: var(--mat-space-2) 0 0; }
+.dt-notiflist .dt-notif__dot { margin-top: .6rem; }

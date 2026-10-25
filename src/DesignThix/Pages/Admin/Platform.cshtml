@@ -1,0 +1,33 @@
+@page
+@model DesignThix.Pages.Admin.PlatformModel
+
+<form class="mat-form" method="post" novalidate>
+    <dt-summary title="Bitte prüfe die Angaben." />
+
+    <dt-card title="Registrierung" icon="user">
+        <div class="mat-form__grid">
+            <dt-radios for="Input.Registration" label="Wer darf sich registrieren?" items="Model.RegistrationItems" full="true" />
+            <dt-textarea for="Input.AllowedDomains" label="Erlaubte E-Mail-Domains" rows="3" full="true" show-if="Input.Registration" show-value="open,approval"
+                         hint="Eine Domain pro Zeile oder durch Komma getrennt, zum Beispiel example.com. Leer: jede Adresse darf sich registrieren. Wer eingeladen wurde, braucht diese Liste nicht." />
+        </div>
+        <p class="mat-hint">Mit einer Einladung kann sich jede Person registrieren, auch wenn die Registrierung aus ist.</p>
+    </dt-card>
+
+    <dt-card title="Was Mitglieder dürfen" icon="users">
+        <div class="mat-form__grid">
+            <dt-switch for="Input.MembersMayInvite" label="Mitglieder dürfen Leute zur Plattform einladen" full="true" hint="Teams laden ihre Mitglieder unabhängig davon ein: das dürfen Inhaber und Admins des Teams." />
+            <dt-switch for="Input.MembersMayCreateTeams" label="Mitglieder dürfen Teams anlegen" full="true" hint="Administratoren dürfen immer." />
+            <dt-switch for="Input.PublicLinks" label="Öffentliche Links erlauben" full="true" hint="Mit einem öffentlichen Link sieht jeder ein Design, auch ohne Konto. Schaltest du es aus, funktionieren die bestehenden öffentlichen Links nicht mehr." />
+        </div>
+    </dt-card>
+
+    <dt-card title="Speicherplatz und Papierkorb" icon="hard-drive">
+        <div class="mat-form__grid">
+            <dt-input for="Input.PersonalQuotaMb" label="Speicherplatz pro Person (MB)" type="number" min="1" max="10000000" step="1" inputmode="numeric" hint="Bilder und Schriften im persönlichen Bereich. Pro Person änderst du es bei den Benutzern." />
+            <dt-input for="Input.TeamQuotaMb" label="Speicherplatz pro Team (MB)" type="number" min="1" max="10000000" step="1" inputmode="numeric" hint="Pro Team änderst du es bei den Teams." />
+            <dt-input for="Input.TrashDays" label="Papierkorb (Tage)" type="number" min="1" max="365" step="1" inputmode="numeric" hint="So lange bleibt Gelöschtes im Papierkorb, dann wird es endgültig entfernt." />
+        </div>
+    </dt-card>
+
+    <dt-buttons back-href="/Admin/System" back-text="Zum System" />
+</form>

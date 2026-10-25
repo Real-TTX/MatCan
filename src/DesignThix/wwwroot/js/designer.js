@@ -15,6 +15,9 @@
     presets: [],
   };
 
+  // where "Marke bearbeiten" leads: the brand page of the team of the design, else the personal one (data-brand-href)
+  D.brandHref = rootEl.getAttribute('data-brand-href') || '/Brand';
+
   var app = D.createApp(config);
   D.app = app;
   var $ = D.$;

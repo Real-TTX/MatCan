@@ -7,9 +7,18 @@
 <link rel="stylesheet" href="~/css/designs.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/dt-menu.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/browser.css" asp-append-version="true" />
+@if (Model.Tabs is not null)
+{
+    <link rel="stylesheet" href="~/css/teams.css" asp-append-version="true" />
+}
 @if (!Model.Compact)
 {
     <header class="dt-bhead">
+        <div class="@(Model.TeamColor is null ? "dt-bhead__id dt-bhead__id--plain" : "dt-bhead__id")">
+        @if (Model.TeamColor is not null)
+        {
+            <span class="dt-teambadge" data-colour="@Model.TeamColor" data-tone="@Ui.ToneOf(Model.TeamColor)" aria-hidden="true">@Ui.Initials(Model.TeamName)</span>
+        }
         <div class="dt-bhead__main">
             <nav class="dt-bcrumbs" aria-label="Pfad">
                 <ol>
@@ -37,6 +46,7 @@
                 <p class="dt-bhead__sub">Was du hier siehst, wird nach @Model.TrashDays Tagen automatisch gelöscht. Ein gelöschter Ordner bringt beim Zurückholen seinen Inhalt mit.</p>
             }
         </div>
+        </div>
         <div class="dt-bhead__side">
             @if (Model.Mode == "trash")
             {
@@ -52,6 +62,10 @@
             }
         </div>
     </header>
+    @if (Model.Tabs is not null)
+    {
+        <partial name="_LinkTabs" model="Model.Tabs" />
+    }
 }
 <section class="dt-browser @(Model.Compact ? "dt-browser--compact" : "")" id="@Model.Id" data-browser
          data-mode="@Model.Mode" data-scope="@Model.Scope" data-space-id="@Model.SpaceId" data-folder-id="@Model.FolderId" data-folder-name="@Model.FolderName"

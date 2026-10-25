@@ -1,0 +1,86 @@
+@page
+@model DesignThix.Pages.Account.InvitationsModel
+@{
+    ViewData["Styles"] = new[] { "/css/teams.css" };
+}
+
+@if (!Model.Allowed)
+{
+    <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Der Administrator hat das Einladen durch Mitglieder ausgeschaltet. Leute in ein Team einladen kannst du trotzdem, wenn du dort Inhaber oder Admin bist: auf der Seite des Teams unter „Mitglieder“.</div></div>
+}
+else
+{
+    @if (Model.NewLinks.Count > 0)
+    {
+        <section class="mat-alert mat-alert--success dt-invite-links" role="status" data-invite-links aria-label="Neue Einladungen">
+            @Ui.Icon("check")
+            <div class="mat-alert__body">
+                <strong>@(Model.NewLinks.Count == 1 ? "Die Einladung ist bereit." : "Die Einladungen sind bereit.")</strong>
+                @if (!Model.MailReady)
+                {
+                    <span> Der Mailversand ist nicht eingerichtet: kopiere den Link und schicke ihn selbst.</span>
+                }
+                <ul class="dt-invite-links__list">
+                    @foreach (var link in Model.NewLinks)
+                    {
+                        <li>
+                            <span class="dt-invite-links__label">@link.Label</span>
+                            <input class="mat-input mat-mono dt-invite-links__url" readonly value="@link.Url" aria-label="Link für @link.Label" />
+                            <button type="button" class="mat-btn mat-btn--secondary mat-btn--sm" data-copy="@link.Url">@Ui.Icon("copy")<span>Link kopieren</span></button>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </section>
+    }
+
+    <form class="mat-form" method="post" novalidate>
+        <dt-summary title="Die Einladung hat nicht geklappt." />
+        <dt-card title="Einladen" icon="mail">
+            <p class="mat-hint">Die eingeladene Person kann sich mit dem Link registrieren, auch wenn die Registrierung sonst ausgeschaltet ist. Wenn du eine Adresse angibst, gilt der Link nur für diese Adresse.</p>
+            <div class="mat-form__grid">
+                <dt-radios for="Input.Mode" label="Wie möchtest du einladen?" items="Model.ModeItems" full="true" />
+                <dt-textarea for="Input.Addresses" label="E-Mail-Adressen" rows="3" full="true" show-if="Input.Mode" show-value="email" hint="Eine oder mehrere Adressen, getrennt durch Komma oder Zeilenumbruch." />
+                <dt-select for="Input.Days" label="Gültig für" items="Model.DaysItems" />
+                <dt-input for="Input.MaxUses" label="Wie oft darf der Link benutzt werden?" type="number" min="1" max="100" inputmode="numeric" show-if="Input.Mode" show-value="link" />
+            </div>
+        </dt-card>
+        <dt-buttons save-text="Einladen" save-icon="mail" back-href="/Teams" />
+    </form>
+
+    <dt-card title="Offene Einladungen" icon="mail" sub="@Model.Invitations.Count.ToString()">
+        @if (Model.Invitations.Count == 0)
+        {
+            <p class="mat-hint">Keine offenen Einladungen.</p>
+        }
+        else
+        {
+            <div class="mat-table-wrap">
+                <table class="mat-table dt-invites" id="platform-invitations">
+                    <caption class="mat-sr-only">Offene Einladungen</caption>
+                    <thead><tr><th scope="col">Einladung</th><th scope="col" class="mat-hide-sm">Gültig bis</th><th scope="col">Status</th><th scope="col"><span class="mat-sr-only">Aktionen</span></th></tr></thead>
+                    <tbody>
+                        @foreach (var i in Model.Invitations)
+                        {
+                            <tr data-invitation="@i.Id">
+                                <td data-label="Einladung"><span class="dt-invite__who">@(i.Email ?? "Einladungslink")</span><small class="mat-muted dt-sub">@(i.Email is null ? $"{i.Uses} von {i.MaxUses} benutzt" : $"von {i.InviterName}")</small></td>
+                                <td data-label="Gültig bis" class="mat-hide-sm">@Fmt.Date(i.Expires)</td>
+                                <td data-label="Status">@(i.Status == InviteStatus.Valid ? Ui.Pill(InviteLogic.Words(i.Status), "ok") : Ui.Pill(InviteLogic.Words(i.Status), "warn"))</td>
+                                <td class="mat-table__cell-actions">
+                                    <div class="mat-table__actions dt-invite__actions">
+                                        <button type="button" class="mat-btn mat-btn--ghost mat-btn--sm" data-copy="@Model.LinkOf(i)">@Ui.Icon("copy")<span>Link kopieren</span></button>
+                                        @if (i.Email is not null)
+                                        {
+                                            <form method="post" asp-page-handler="Resend"><input type="hidden" name="id" value="@i.Id" /><button type="submit" class="mat-btn mat-btn--ghost mat-btn--sm">@Ui.Icon("refresh")<span>Erneut senden</span></button></form>
+                                        }
+                                        <form method="post" asp-page-handler="Revoke"><input type="hidden" name="id" value="@i.Id" /><button type="submit" class="mat-btn mat-btn--ghost mat-btn--sm" data-confirm="Diese Einladung zurückziehen? Der Link funktioniert dann nicht mehr." data-confirm-ok="Zurückziehen" data-confirm-danger>@Ui.Icon("x")<span>Zurückziehen</span></button></form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </dt-card>
+}

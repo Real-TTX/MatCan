@@ -2,10 +2,18 @@
 @model DesignThix.Pages.Admin.Users.IndexModel
 
 <div class="mat-list">
+    @if (Model.Pending > 0)
+    {
+        <div class="mat-alert mat-alert--warning" role="status" data-pending-hint>
+            @Ui.Icon("clock")
+            <div class="mat-alert__body"><strong>@Ui.Plural(Model.Pending, "Konto wartet", "Konten warten") auf Freigabe.</strong> <a href="/Admin/Users?status=pending">Anzeigen</a></div>
+        </div>
+    }
     <partial name="_Toolbar" model="Model.Toolbar" />
     <partial name="_Table" model="Model.Table" />
     <partial name="_Pager" model="Model.Pager" />
     <div class="mat-actions">
         <a class="mat-btn mat-btn--primary" href="/Admin/Users/Edit">@Ui.Icon("plus")<span>Neuer Benutzer</span></a>
+        <a class="mat-btn mat-btn--secondary" href="/Account/Invitations">@Ui.Icon("mail")<span>Zu DesignThix einladen</span></a>
     </div>
 </div>

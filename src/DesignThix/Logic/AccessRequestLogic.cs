@@ -10,7 +10,7 @@ public sealed record AccessRequestRow(long Id, long UserId, string Name, string?
 /// "Zugriff anfordern" (docs/PLAN-PLATFORM.md section 1.9). A signed-in person who opens something they may not see asks for access (View or Edit, with a message); the people who manage the item see the
 /// request in the "Teilen" dialog and grant it (which makes a share with the person) or decline it. <b>Nothing here tells a person whether an item exists</b>: asking for an id that is not there is answered
 /// like any other request and writes nothing, so the page cannot be used to probe ids.
-/// <para>P4 hook: notifications to the managers belong after <see cref="CreateAsync"/> writes a request, and to the requester after <see cref="DecideAsync"/>.</para>
+/// <para>Notifications (<see cref="NotificationLogic"/>): a new request goes to the people who manage the item (with the request in the data, so the bell offers "Gewähren" and "Ablehnen"), the decision to the requester.</para>
 /// </summary>
 public static class AccessRequestLogic
 {
@@ -81,10 +81,19 @@ public static class AccessRequestLogic
             db.AccessRequest.Add(open);
         }
 
+        var isNew = open.Id == 0;
         open.Permission = permission;
         open.Message = CleanMessage(message);
         await db.SaveChangesAsync();
         await biz.Log.LogAsync("Zugriff angefordert", kind.ToString(), itemId, permission.ToString());
+        if (isNew)
+        {
+            // the people who manage the item hear about it; the notification carries the request, so "Gewähren" and "Ablehnen" are one click away
+            var by = await NotificationLogic.ActorNameAsync(biz);
+            var itemName = await NotificationLogic.ItemNameAsync(db, kind, itemId);
+            await NotificationLogic.NotifyAsync(biz, await NotificationLogic.ManagersOfAsync(db, kind, itemId), NotificationKinds.AccessRequest,
+                new { by, byId = uid, itemKind = kind.ToString(), itemId, itemName, permission = permission.ToString(), message = open.Message, requestId = open.Id }, NotificationLogic.ItemUrl(kind, itemId));
+        }
     }
 
     /// <summary>The request the person has open for the item (what the page "Zugriff anfordern" shows after sending), or null.</summary>
@@ -129,7 +138,7 @@ public static class AccessRequestLogic
             var hasShare = await db.Share.AnyAsync(s => s.ItemKind == request.ItemKind && s.ItemId == request.ItemId && s.UserId == request.UserId);
             if (!(hasEdit || (hasShare && wanted == SharePermission.View)))
             {
-                await ShareLogic.AddAsync(biz, request.ItemKind, request.ItemId, false, request.UserId, wanted);
+                await ShareLogic.AddAsync(biz, request.ItemKind, request.ItemId, false, request.UserId, wanted, null, notify: false);
             }
         }
 
@@ -138,5 +147,10 @@ public static class AccessRequestLogic
         request.DecidedDate = biz.Now;
         await db.SaveChangesAsync();
         await biz.Log.LogAsync(grant ? "Zugriff gewährt" : "Zugriff abgelehnt", request.ItemKind.ToString(), request.ItemId, $"Person {request.UserId}");
+        var decidedBy = await NotificationLogic.ActorNameAsync(biz);
+        var name = await NotificationLogic.ItemNameAsync(db, request.ItemKind, request.ItemId);
+        var granted = grant ? await db.Share.AsNoTracking().Where(s => s.ItemKind == request.ItemKind && s.ItemId == request.ItemId && s.UserId == request.UserId).Select(s => (SharePermission?)s.Permission).FirstOrDefaultAsync() ?? permission ?? request.Permission : request.Permission;
+        await NotificationLogic.NotifyAsync(biz, [request.UserId], grant ? NotificationKinds.AccessGranted : NotificationKinds.AccessDeclined,
+            new { by = decidedBy, itemKind = request.ItemKind.ToString(), itemId = request.ItemId, itemName = name, permission = granted.ToString() }, grant ? NotificationLogic.ItemUrl(request.ItemKind, request.ItemId) : null);
     }
 }

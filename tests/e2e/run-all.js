@@ -1,7 +1,7 @@
 'use strict';
 // Runs the browser checks one after the other against a running stack and reports one line per check. The exit code is 0 only when all of them passed.
 //
-//   node run-all.js [base url, default http://localhost:3043] [--only engine,pwa,demo,home,projects,templates,designer,canva,content,output,share,ai] [--quiet] [--fake-host h] [--fake-port p]
+//   node run-all.js [base url, default http://localhost:3043] [--only engine,pwa,demo,home,projects,templates,designer,canva,content,output,share,teams,ai] [--quiet] [--fake-host h] [--fake-port p]
 //   (--fake-host / --fake-port go to the AI check: with the app started by dotnet run on 3053 the default 127.0.0.1 is right, with Docker host.docker.internal is chosen for port 3043)
 //
 // The checks make their own accounts (see lib.js): start from an empty database (./scripts/redeploy.ps1 -Clean) or put the accounts into tests/e2e/test-account.json.
@@ -29,6 +29,7 @@ const checks = [
   { name: 'content', file: 'content-check.js', takesBase: true, what: 'editor content: elements, icons, text combinations, toolbars per kind, crop, colour picker and gradients, brand, templates, resize, media browser everywhere, phone' },
   { name: 'output', file: 'output-check.js', takesBase: true, what: 'output jobs: print pages, sheets, PNG-ZIP, single print, export/import' },
   { name: 'share', file: 'share-check.js', takesBase: true, what: 'sharing: the Teilen dialog, read-only editor and copy, links, public view, access requests, presence' },
+  { name: 'teams', file: 'teams-check.js', takesBase: true, what: 'teams, invitations, registration, administration, the bell and the notifications, mail settings, the phone' },
   { name: 'ai', file: 'ai-check.js', takesBase: true, extra: [...passOn('--fake-host'), ...passOn('--fake-port')], what: 'AI actions against a fake provider' },
 ];
 

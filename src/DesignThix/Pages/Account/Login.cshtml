@@ -12,4 +12,8 @@
     </div>
 
     <partial name="_LoginForm" model="Model" />
+    @if (Model.RegistrationOpen)
+    {
+        <p class="mat-hint dt-auth__alt">Noch kein Konto? <a href="/Account/Register" data-register-link>Konto erstellen</a></p>
+    }
 </div>

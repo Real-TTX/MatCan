@@ -8,14 +8,7 @@
     <partial name="_Table" model="Model.Table" />
     <partial name="_Pager" model="Model.Pager" />
     <div class="mat-actions">
-        @if (Model.CanEdit)
-        {
-            <a class="mat-btn mat-btn--primary" href="/Outputs/Create">@Ui.Icon("plus")<span>Neue Serienausgabe</span></a>
-        }
-        else
-        {
-            <span class="mat-hint">Anlegen dürfen Gestalter und Administratoren. Du kannst vorhandene Serienausgaben ausführen.</span>
-        }
+        <a class="mat-btn mat-btn--primary" href="/Outputs/Create">@Ui.Icon("plus")<span>Neue Serienausgabe</span></a>
     </div>
 </div>
 

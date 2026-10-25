@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DesignThix.Pages.Account;
 
 [AllowAnonymous]
-public sealed class LoginModel(SignInService signIn, TwoFactorTicket ticket, ActivityLogger log) : PageModelBase
+public sealed class LoginModel(SignInService signIn, TwoFactorTicket ticket, ActivityLogger log, Logic.Biz biz) : PageModelBase
 {
     public sealed class InputModel
     {
@@ -26,6 +26,9 @@ public sealed class LoginModel(SignInService signIn, TwoFactorTicket ticket, Act
 
     [BindProperty(SupportsGet = true)]
     public string? ReturnUrl { get; set; }
+
+    /// <summary>Whether the page "Konto erstellen" is offered (the administrator allows registration).</summary>
+    public bool RegistrationOpen => Logic.RegistrationLogic.IsOpen(biz);
 
     public IActionResult OnGet()
     {
@@ -69,9 +72,13 @@ public sealed class LoginModel(SignInService signIn, TwoFactorTicket ticket, Act
                 return Page();
 
             case SignInOutcome.NotApproved:
-                ModelState.AddModelError(string.Empty, result.User!.ApprovalState == Data.Entities.ApprovalState.Declined
-                    ? "Dieses Konto wurde nicht freigegeben. Bitte wende dich an die Administration."
-                    : "Dein Konto wartet noch auf die Freigabe durch die Administration. Du bekommst Bescheid, sobald es soweit ist.");
+                // the password was right: a waiting account gets the page that says so, a declined one a message
+                if (result.User!.ApprovalState != Data.Entities.ApprovalState.Declined)
+                {
+                    return RedirectToPage("/Account/Pending");
+                }
+
+                ModelState.AddModelError(string.Empty, "Dieses Konto wurde nicht freigegeben. Bitte wende dich an die Administration.");
                 return Page();
 
             default:

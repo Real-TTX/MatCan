@@ -147,3 +147,7 @@ a.dt-note__title:hover { color: var(--mat-accent-text); }
 .dt-maptable th .mat-select { width: 100%; }
 .dt-maptable { min-width: 40rem; }
 .mat-table-wrap + .mat-form__grid { margin-top: var(--mat-space-4); }
+
+/* a small form inside a table cell (approve or decline an account in the list of users) */
+.dt-status-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mat-space-2); }
+.dt-inline-form { display: inline-flex; margin: 0; }

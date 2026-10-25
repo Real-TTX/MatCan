@@ -12,7 +12,7 @@
 @* The frame of the editor. Everything inside (rail, panels, toolbar, page strip, canvas) is built by designer*.js with DOM APIs; the document comes from /api/designs/{id}.
    Top bar | rail + panel | toolbar above the canvas, canvas, page strip and zoom below. Phones: the rail becomes the tab bar at the bottom and the panel a bottom sheet. *@
 <div class="dt-ds is-loading" id="dt-ds" data-design-id="@d.Id" data-can-edit="@(edit ? "true" : "false")" data-back-href="@back" data-ai="@(Model.AiVisible ? "true" : "false")"
-     data-output-href="/Outputs/Create?designId=@d.Id" data-name="@d.Name">
+     data-output-href="/Outputs/Create?designId=@d.Id" data-name="@d.Name" data-brand-href="@Model.BrandHref">
 
     <header class="dt-top" role="banner">
         <a class="mat-btn mat-btn--ghost mat-btn--icon dt-top__back" href="/" id="dt-back" aria-label="Zurück zur Startseite" title="Zurück zur Startseite" data-leave>@Ui.ToolIcon("arrow-left")</a>

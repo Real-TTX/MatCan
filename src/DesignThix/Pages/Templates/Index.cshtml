@@ -32,16 +32,9 @@
     }
     <partial name="_Pager" model="Model.Pager" />
     <div class="mat-actions">
-        @if (Model.CanEdit)
-        {
-            <a class="mat-btn mat-btn--primary" href="/Designs/Create">@Ui.Icon("plus")<span>Design erstellen</span></a>
-            <a class="mat-btn mat-btn--secondary" href="/Designs">@Ui.Icon("layers")<span>Meine Designs</span></a>
-            <span class="mat-hint">Eigene Vorlagen entstehen, wenn du ein Design in seinen Eigenschaften als Vorlage anbietest.</span>
-        }
-        else
-        {
-            <span class="mat-hint">Neue Designs legen Gestalter und Administratoren an. Als Betrachter kannst du die Vorlagen ansehen.</span>
-        }
+        <a class="mat-btn mat-btn--primary" href="/Designs/Create">@Ui.Icon("plus")<span>Design erstellen</span></a>
+        <a class="mat-btn mat-btn--secondary" href="/Designs">@Ui.Icon("layers")<span>Meine Designs</span></a>
+        <span class="mat-hint">Eigene Vorlagen entstehen, wenn du ein Design in seinen Eigenschaften als Vorlage anbietest.</span>
     </div>
 </div>
 

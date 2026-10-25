@@ -72,6 +72,16 @@ public sealed record BrowserView
     public int TrashDays { get; init; } = 30;
 
     public string Id { get; init; } = "dt-browser";
+
+    /// <summary>A team area: its tabs (Projekte, Mitglieder ...) are drawn under the header, and its colour and members next to the name.</summary>
+    public LinkTabsModel? Tabs { get; init; }
+
+    public string? TeamColor { get; init; }
+
+    /// <summary>The name of the team (the badge shows its initials); the title may be the name of a folder inside it.</summary>
+    public string TeamName { get; init; } = "";
+
+    public IReadOnlyList<string> TeamMembers { get; init; } = [];
 }
 
 /// <summary>Builds the <see cref="BrowserView"/> of each page that holds a browser.</summary>
@@ -120,10 +130,16 @@ public static class BrowserViews
             crumbs.Add(new BrowserCrumb(title, null, space.Id, null));
         }
 
+        var team = space.Kind == SpaceKind.Team;
         return new BrowserView
         {
             Mode = "space",
             Scope = "space",
+            Tabs = team ? TeamTabs.For(space, TeamTabs.Projects) : null,
+            TeamColor = team ? space.Color : null,
+            TeamName = team ? space.Name : "",
+            TeamMembers = team ? await SpaceLogic.MemberNamesAsync(biz, space.Id, 5) : [],
+            Sub = team ? TeamTabs.Sub(space) : null,
             SpaceId = space.Id,
             FolderId = folderId,
             Title = title,

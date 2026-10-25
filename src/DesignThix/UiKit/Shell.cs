@@ -59,10 +59,10 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
         var theme = principal?.FindFirst(AppClaims.Theme)?.Value;
         IReadOnlyList<SpaceRow> spaces = user.UserId is not null ? await SpaceLogic.MySpacesAsync(biz) : [];
 
-        var menus = new List<NavSet> { WorkMenu(spaces) };
+        var menus = new List<NavSet> { WorkMenu(spaces, user.UserId is not null && SpaceLogic.MayCreateTeam(biz)) };
         if (user.IsAdmin)
         {
-            menus.Add(AdminMenu());
+            menus.Add(AdminMenu(await UserLogic.PendingCountAsync(biz)));
         }
 
         return new ShellModel
@@ -72,7 +72,7 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
             UserName = user.Name ?? "Gast",
             UserRole = user.Role is { } role ? Labels.Of(role) : "",
             UserLine = principal?.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "",
-            UserMenu = UserMenu(),
+            UserMenu = UserMenu(user.UserId is not null && (user.IsAdmin || biz.Platform.MembersMayInvite)),
             CanCreate = user.UserId is not null,
             Version = $"DesignThix {AppVersion.Current}",
             Theme = theme,
@@ -92,7 +92,7 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
     /// Projekte, Freigegeben, Mit Stern; the group Teams (one entry per team of the person, then "Alle Teams"); Gestalten (Vorlagen, Designs); Bibliothek; the group "Serien (Zusatz)" with the
     /// features that fill a design from data; and at the end the Papierkorb.
     /// </summary>
-    private static NavSet WorkMenu(IReadOnlyList<SpaceRow> spaces)
+    private static NavSet WorkMenu(IReadOnlyList<SpaceRow> spaces, bool mayCreateTeam)
     {
         var start = new List<NavItem>
         {
@@ -104,6 +104,11 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
             new("Mit Stern", "/Mit-Stern", "star"),
         };
         var teams = spaces.Where(s => s.Kind == SpaceKind.Team && !string.IsNullOrEmpty(s.Slug)).Select(s => new NavItem(s.Name, $"/Teams/{s.Slug}/Projekte", "users")).ToList();
+        if (mayCreateTeam)
+        {
+            teams.Add(new NavItem("Team erstellen", "/Teams/Create", "plus"));
+        }
+
         teams.Add(new NavItem("Alle Teams", "/Teams", "dt:users-round"));
         return new NavSet("main", "Gestalten", "palette",
         [
@@ -133,11 +138,17 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
         ]);
     }
 
-    private static NavSet AdminMenu() => new("admin", "Verwaltung", "settings",
+    private static NavSet AdminMenu(int pendingAccounts) => new("admin", "Verwaltung", "settings",
     [
         new(null,
         [
-            new("Benutzer", "/Admin/Users", "users"),
+            new("Benutzer", "/Admin/Users", "users", pendingAccounts > 0 ? NavBadge.Count(pendingAccounts, "warn", "warten auf Freigabe") : null),
+            new("Teams", "/Admin/Teams", "dt:users-round"),
+        ]),
+        new("Einstellungen",
+        [
+            new("Plattform", "/Admin/Platform", "sliders"),
+            new("E-Mail", "/Admin/Mail", "mail"),
         ]),
         new("KI",
         [
@@ -152,10 +163,20 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
         ]),
     ]);
 
-    private static List<UserMenuItem> UserMenu() =>
-    [
-        new("Profil", "/Account/Profile", "user"),
-        new("Sicherheit", "/Account/Security", "shield"),
-        new("Abmelden", "/Account/Logout", "logout", Danger: true, SeparatorBefore: true, Post: true),
-    ];
+    private static List<UserMenuItem> UserMenu(bool mayInvite)
+    {
+        var items = new List<UserMenuItem>
+        {
+            new("Profil", "/Account/Profile", "user"),
+            new("Benachrichtigungen", "/Account/Notifications", "bell"),
+        };
+        if (mayInvite)
+        {
+            items.Add(new UserMenuItem("Einladungen", "/Account/Invitations", "mail"));
+        }
+
+        items.Add(new UserMenuItem("Sicherheit", "/Account/Security", "shield"));
+        items.Add(new UserMenuItem("Abmelden", "/Account/Logout", "logout", Danger: true, SeparatorBefore: true, Post: true));
+        return items;
+    }
 }

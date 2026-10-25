@@ -23,13 +23,6 @@
     <partial name="_Table" model="Model.Table" />
     <partial name="_Pager" model="Model.Pager" />
     <div class="mat-actions">
-        @if (Model.CanEdit)
-        {
-            <a class="mat-btn mat-btn--primary" href="/Assets/Upload">@Ui.Icon("upload")<span>Hochladen</span></a>
-        }
-        else
-        {
-            <span class="mat-hint">Hochladen dürfen Gestalter und Administratoren.</span>
-        }
+        <a class="mat-btn mat-btn--primary" href="/Assets/Upload">@Ui.Icon("upload")<span>Hochladen</span></a>
     </div>
 </div>

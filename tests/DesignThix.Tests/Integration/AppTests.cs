@@ -104,6 +104,9 @@ public sealed class AppTests
     [InlineData("/llms.txt")]
     [InlineData("/Account/Setup")]
     [InlineData("/Account/Login")]
+    [InlineData("/Account/Register")]
+    [InlineData("/Account/Pending")]
+    [InlineData("/Einladung/6f9619ff-8b86-d011-b42d-00c04fc964ff")]
     [InlineData("/Offline")]
     [InlineData("/sw.js")]
     [InlineData("/manifest.webmanifest")]
@@ -138,6 +141,15 @@ public sealed class AppTests
     [InlineData("/fonts.css")]
     [InlineData("/Designs")]
     [InlineData("/Admin/Users")]
+    [InlineData("/Admin/Teams")]
+    [InlineData("/Admin/Platform")]
+    [InlineData("/Admin/Mail")]
+    [InlineData("/Teams")]
+    [InlineData("/Teams/Create")]
+    [InlineData("/Account/Notifications")]
+    [InlineData("/Account/Invitations")]
+    [InlineData("/api/notifications")]
+    [InlineData("/api/notifications/count")]
     public async Task Nothing_of_the_library_is_served_to_a_visitor_who_is_not_signed_in(string path)
     {
         if (AppFactory.Connection is null)
@@ -152,6 +164,8 @@ public sealed class AppTests
 
     [Theory]
     [InlineData("/api/theme")]
+    [InlineData("/api/notifications/read-all")]
+    [InlineData("/api/notifications/1/read")]
     [InlineData("/api/designs/1")]
     [InlineData("/api/designs/1/thumbnail")]
     [InlineData("/api/datalists/1/rows")]

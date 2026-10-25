@@ -1,0 +1,21 @@
+@model TeamHeaderModel
+@*
+    The head of a team page that is not the file browser (the browser draws the same head itself): the colour badge, the name, members and role, the storage, and the tabs.
+    Every tab is a page of its own, so the address says which one is open.
+*@
+<link rel="stylesheet" href="~/css/browser.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/teams.css" asp-append-version="true" />
+<header class="dt-bhead dt-teamhead">
+    <div class="dt-bhead__id">
+        <span class="dt-teambadge" data-colour="@Model.Team.Color" data-tone="@Ui.ToneOf(Model.Team.Color)" aria-hidden="true">@Ui.Initials(Model.Team.Name)</span>
+        <div class="dt-bhead__main">
+            <h1 class="dt-bcrumbs__current dt-teamhead__name">@Model.Team.Name</h1>
+            <p class="dt-bhead__sub">@TeamTabs.Sub(Model.Team)</p>
+        </div>
+    </div>
+    @if (Model.Storage is not null)
+    {
+        <div class="dt-bhead__side"><partial name="_Storage" model="(Model.Storage, Model.Team.Name)" /></div>
+    }
+</header>
+<partial name="_LinkTabs" model="TeamTabs.For(Model.Team, Model.Active)" />

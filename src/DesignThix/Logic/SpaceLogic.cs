@@ -1,6 +1,7 @@
 using DesignThix.Core.Text;
 using DesignThix.Data;
 using DesignThix.Data.Entities;
+using DesignThix.UiKit;
 using Microsoft.EntityFrameworkCore;
 
 namespace DesignThix.Logic;
@@ -118,7 +119,7 @@ public static class SpaceLogic
         return await (from m in biz.Db.SpaceMember.AsNoTracking()
                       where m.SpaceId == spaceId
                       join u in biz.Db.User.AsNoTracking() on m.UserId equals u.Id
-                      orderby m.Role, u.DisplayName
+                      orderby (m.Role == SpaceRole.Owner ? 0 : m.Role == SpaceRole.Admin ? 1 : m.Role == SpaceRole.Editor ? 2 : 3), u.DisplayName
                       select new MemberRow(u.Id, u.DisplayName, u.Email, m.Role, m.CreateDate, u.IsActive)).ToListAsync();
     }
 
@@ -147,6 +148,12 @@ public static class SpaceLogic
         if (baseSlug.Length == 0)
         {
             baseSlug = "team";
+        }
+
+        // /Teams/Create is the page that makes a team: no team may take its address
+        if (baseSlug == "create")
+        {
+            baseSlug = "create-team";
         }
 
         var taken = (await db.Space.Where(s => s.Slug != null && (s.Slug == baseSlug || s.Slug.StartsWith(baseSlug + "-")) && s.Id != except).Select(s => s.Slug!).ToListAsync()).ToHashSet(StringComparer.Ordinal);
@@ -264,6 +271,7 @@ public static class SpaceLogic
         biz.Db.SpaceMember.Add(new SpaceMember { SpaceId = spaceId, UserId = userId, Role = role });
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync(userId == biz.UserId ? "Administrator ist einem Team beigetreten" : "Mitglied hinzugefügt", nameof(Space), spaceId, $"{space.Name}: {user.DisplayName} ({role})");
+        await NotificationLogic.NotifyAsync(biz, [userId], NotificationKinds.TeamAdded, new { by = await NotificationLogic.ActorNameAsync(biz), teamName = space.Name, role = Labels.Of(role), spaceId }, TeamUrl(space));
     }
 
     private static async Task<Space> TeamForMembersAsync(Biz biz, long spaceId, long userId, SpaceRole role)
@@ -304,6 +312,7 @@ public static class SpaceLogic
         member.Role = role;
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync("Rolle im Team geändert", nameof(Space), spaceId, $"{space.Name}: Benutzer {userId} ist {role}");
+        await NotificationLogic.NotifyAsync(biz, [userId], NotificationKinds.TeamRole, new { by = await NotificationLogic.ActorNameAsync(biz), teamName = space.Name, role = Labels.Of(role), spaceId }, TeamUrl(space));
     }
 
     /// <summary>Takes a member out of a team (Owner and Admin; an Admin cannot remove an Owner). The last Owner stays.</summary>
@@ -325,6 +334,7 @@ public static class SpaceLogic
         biz.Db.SpaceMember.Remove(member);
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync("Mitglied entfernt", nameof(Space), spaceId, $"{space.Name}: Benutzer {userId}");
+        await NotificationLogic.NotifyAsync(biz, [userId], NotificationKinds.TeamRemoved, new { by = await NotificationLogic.ActorNameAsync(biz), teamName = space.Name, spaceId }, "/Teams");
     }
 
     /// <summary>The person leaves a team. The last Owner cannot leave (transfer the ownership first).</summary>
@@ -359,5 +369,136 @@ public static class SpaceLogic
         me.Role = SpaceRole.Admin;
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync("Inhaberschaft übertragen", nameof(Space), spaceId, $"{space.Name}: an Benutzer {newOwnerUserId}");
+        await NotificationLogic.NotifyAsync(biz, [newOwnerUserId], NotificationKinds.TeamRole, new { by = await NotificationLogic.ActorNameAsync(biz), teamName = space.Name, role = Labels.Of(SpaceRole.Owner), spaceId }, TeamUrl(space));
+    }
+
+    // ------------------------------------------------------------------------------------------------ pages of the teams
+
+    /// <summary>The address of the team's pages (its Projekte tab).</summary>
+    internal static string TeamUrl(Space team) => $"/Teams/{team.Slug}/Projekte";
+
+    /// <summary>A team as the overview shows it: its row, the first members (names, for the avatars) and the storage.</summary>
+    public sealed record TeamTile(SpaceRow Team, IReadOnlyList<string> MemberNames, StorageUsage Storage);
+
+    /// <summary>The teams of the person as tiles: name, colour, member avatars (at most five names), storage bar.</summary>
+    public static async Task<List<TeamTile>> MyTeamTilesAsync(Biz biz)
+    {
+        var teams = await MyTeamsAsync(biz);
+        var ids = teams.Select(t => t.Id).ToList();
+        var members = await (from m in biz.Db.SpaceMember.AsNoTracking()
+                             where ids.Contains(m.SpaceId)
+                             join u in biz.Db.User.AsNoTracking() on m.UserId equals u.Id
+                             orderby (m.Role == SpaceRole.Owner ? 0 : m.Role == SpaceRole.Admin ? 1 : m.Role == SpaceRole.Editor ? 2 : 3), m.CreateDate, u.DisplayName
+                             select new { m.SpaceId, u.DisplayName }).ToListAsync();
+        var tiles = new List<TeamTile>();
+        foreach (var team in teams)
+        {
+            var names = members.Where(m => m.SpaceId == team.Id).Select(m => m.DisplayName).Take(5).ToList();
+            tiles.Add(new TeamTile(team, names, new StorageUsage(await StorageLogic.UsedBytesAsync(biz.Db, team.Id), await StorageLogic.QuotaBytesAsync(biz.Db, biz.Platform, team.Id))));
+        }
+
+        return tiles;
+    }
+
+    /// <summary>The names of the first members of an area (the avatars of a header or a tile): owners first.</summary>
+    public static async Task<List<string>> MemberNamesAsync(Biz biz, long spaceId, int take)
+    {
+        await Access.RequireSpaceRole(biz, spaceId, SpaceRole.Viewer);
+        return await (from m in biz.Db.SpaceMember.AsNoTracking()
+                      where m.SpaceId == spaceId
+                      join u in biz.Db.User.AsNoTracking() on m.UserId equals u.Id
+                      orderby (m.Role == SpaceRole.Owner ? 0 : m.Role == SpaceRole.Admin ? 1 : m.Role == SpaceRole.Editor ? 2 : 3), m.CreateDate, u.DisplayName
+                      select u.DisplayName).Take(take).ToListAsync();
+    }
+
+    /// <summary>Whether the person may make a team (everybody unless the administrator switched it off).</summary>
+    public static bool MayCreateTeam(Biz biz) => biz.IsAdmin || biz.Platform.MembersMayCreateTeams;
+
+    /// <summary>Whether the person is the only Owner of the team (the page then offers "Inhaberschaft übergeben" instead of "Team verlassen").</summary>
+    public static async Task<bool> IsLastOwnerAsync(Biz biz, long spaceId, long userId)
+        => await OwnerCountAsync(biz.Db, spaceId) <= 1 && await biz.Db.SpaceMember.AnyAsync(m => m.SpaceId == spaceId && m.UserId == userId && m.Role == SpaceRole.Owner);
+
+    // ------------------------------------------------------------------------------------------------ administration of the teams (platform administrators)
+
+    /// <summary>A team as the administrator sees it in the list: size and storage, no content.</summary>
+    public sealed record AdminTeamRow
+    {
+        public long Id { get; init; }
+
+        public string Name { get; init; } = "";
+
+        public string? Slug { get; init; }
+
+        public string Color { get; init; } = "#1fb3d6";
+
+        public int MemberCount { get; init; }
+
+        public long UsedBytes { get; init; }
+
+        public long? StorageQuotaBytes { get; init; }
+
+        public DateTime Created { get; init; }
+    }
+
+    /// <summary>Every team (administrators): for the list with search and sort. The administrator sees members and storage, never the content.</summary>
+    public static IQueryable<AdminTeamRow> AdminTeams(Biz biz)
+    {
+        biz.RequireAdmin();
+        var db = biz.Db;
+        return db.Space.AsNoTracking().Where(s => s.Kind == SpaceKind.Team).Select(s => new AdminTeamRow
+        {
+            Id = s.Id,
+            Name = s.Name,
+            Slug = s.Slug,
+            Color = s.Color,
+            Created = s.CreateDate,
+            StorageQuotaBytes = s.StorageQuotaBytes,
+            MemberCount = db.SpaceMember.Count(m => m.SpaceId == s.Id),
+            UsedBytes = (db.Asset.Where(a => a.SpaceId == s.Id).Sum(a => (long?)a.SizeBytes) ?? 0) + (db.Font.Where(f => f.SpaceId == s.Id).Sum(f => (long?)f.SizeBytes) ?? 0),
+        });
+    }
+
+    /// <summary>One team for the administrator's detail page: the row, its members with roles, and whether the administrator is a member already.</summary>
+    public sealed record AdminTeamDetails(AdminTeamRow Team, string? Description, IReadOnlyList<MemberRow> Members, StorageUsage Storage, bool IAmMember);
+
+    public static async Task<AdminTeamDetails?> AdminTeamAsync(Biz biz, long id)
+    {
+        var team = await AdminTeams(biz).FirstOrDefaultAsync(t => t.Id == id);
+        if (team is null)
+        {
+            return null;
+        }
+
+        var members = await (from m in biz.Db.SpaceMember.AsNoTracking()
+                             where m.SpaceId == id
+                             join u in biz.Db.User.AsNoTracking() on m.UserId equals u.Id
+                             orderby (m.Role == SpaceRole.Owner ? 0 : m.Role == SpaceRole.Admin ? 1 : m.Role == SpaceRole.Editor ? 2 : 3), u.DisplayName
+                             select new MemberRow(u.Id, u.DisplayName, u.Email, m.Role, m.CreateDate, u.IsActive)).ToListAsync();
+        var description = await biz.Db.Space.AsNoTracking().Where(s => s.Id == id).Select(s => s.Description).FirstOrDefaultAsync();
+        var uid = biz.UserId;
+        var storage = new StorageUsage(team.UsedBytes, await StorageLogic.QuotaBytesAsync(biz.Db, biz.Platform, id));
+        return new AdminTeamDetails(team, description, members, storage, members.Any(m => m.UserId == uid));
+    }
+
+    /// <summary>
+    /// "Mir beitreten (Support)": the administrator becomes an Admin of the team to help (the team sees it in its member list; the activity log says who did it). Nothing else of the administrator's role reaches
+    /// the content of a team.
+    /// </summary>
+    public static async Task JoinAsSupportAsync(Biz biz, long teamId)
+    {
+        biz.RequireAdmin();
+        if (!await biz.Db.Space.AnyAsync(s => s.Id == teamId && s.Kind == SpaceKind.Team))
+        {
+            throw new NotFoundException();
+        }
+
+        await AddMemberAsync(biz, teamId, biz.UserId, SpaceRole.Admin);
+    }
+
+    /// <summary>The templates of a team: the designs of its area that are marked as templates (members only).</summary>
+    public static IQueryable<DesignRow> TeamTemplates(Biz biz, long spaceId)
+    {
+        biz.RequireSignedIn();
+        return DesignLogic.TemplateQuery(biz).Where(d => d.SpaceId == spaceId);
     }
 }

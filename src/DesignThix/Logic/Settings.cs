@@ -63,6 +63,29 @@ public sealed class PlatformSettings
     public int TrashDays { get; set; } = 30;
 }
 
+/// <summary>Mail over SMTP (invitations, shares, access requests, mentions). Without a host nothing is sent (and nothing breaks). The password is kept through the <c>SecretProtector</c>.</summary>
+public sealed class MailSettings
+{
+    public bool Enabled { get; set; }
+
+    public string Host { get; set; } = "";
+
+    public int Port { get; set; } = 587;
+
+    /// <summary>"starttls", "ssl" or "none".</summary>
+    public string Security { get; set; } = "starttls";
+
+    public string UserName { get; set; } = "";
+
+    public string PasswordProtected { get; set; } = "";
+
+    public string FromAddress { get; set; } = "";
+
+    public string FromName { get; set; } = "DesignThix";
+
+    public bool IsUsable => Enabled && Host.Length > 0 && FromAddress.Contains('@');
+}
+
 /// <summary>What the app says about itself and who runs it (llms.txt, the footer).</summary>
 public sealed class SiteSettings
 {
@@ -85,6 +108,7 @@ public sealed class SettingStore(IServiceScopeFactory scopes)
     public const string Site = "Site";
     public const string Brand = "Brand";
     public const string Platform = "Platform";
+    public const string Mail = "Mail";
     public const string VisitorSalt = "Ai.VisitorSalt";
 
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);

@@ -1,6 +1,6 @@
 /* DesignThix: the page of the brand kit "Marke" (/Brand).
    <div id="dt-brand" data-brand='{"colors":[],"fonts":{...},"logos":[{key,name,url}],"maxColors":40,"maxLogos":20}' data-can-edit="true">
-   The server renders the frame; this script draws the colours and the logos from the state, keeps the fonts and saves everything with POST /api/brand (the antiforgery token is
+   The server renders the frame; this script draws the colours and the logos from the state, keeps the fonts and saves everything with POST /api/brand?space={id} (the area of the kit: data-space-id; the antiforgery token is
    in <meta name="dt-csrf">). Nothing here builds markup from text (createElement, createElementNS, textContent); the colour of a swatch and the font of a preview are set
    through the CSSOM (a custom property on the element, a rule in a constructed style sheet).
    Logos are chosen with the media browser (wwwroot/js/dt-media.js): pickLogo() uses window.DtMedia.pick({ category: 'Logos', title }, callback) and falls back to the
@@ -13,6 +13,9 @@
   if (!root) { return; }
 
   var canEdit = root.getAttribute('data-can-edit') === 'true';
+  var spaceId = root.getAttribute('data-space-id') || '';
+  // a logo uploaded from the media browser of a team's brand lands in that team's area
+  if (spaceId && window.DtMedia) { window.DtMedia.preferSpace = Number(spaceId); }
   var state = { colors: [], fonts: { heading: null, subheading: null, body: null }, logos: [] };
   var limits = { colors: 40, logos: 20 };
   var dirty = false;
@@ -270,7 +273,7 @@
     ui.save.disabled = true;
     setState('Wird gespeichert ...');
     var body = { colors: state.colors, fonts: state.fonts, logos: state.logos.map(function (l) { return l.key; }) };
-    fetch('/api/brand', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', RequestVerificationToken: csrf() }, body: JSON.stringify(body) })
+    fetch('/api/brand' + (spaceId ? '?space=' + encodeURIComponent(spaceId) : ''), { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', RequestVerificationToken: csrf() }, body: JSON.stringify(body) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (a) { return { ok: r.ok, status: r.status, body: a }; }); })
       .then(function (r) {
         if (!r.ok) { throw new Error(r.body && r.body.error ? r.body.error : 'Die Marke konnte nicht gespeichert werden (Fehler ' + r.status + ').'); }

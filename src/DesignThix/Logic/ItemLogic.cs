@@ -941,6 +941,54 @@ public static class ItemLogic
     }
 
     /// <summary>
+    /// Hands everything of one area to another (an account is deleted and the administrator chose where its content goes): the folders with their content and everything that lay loose go into a new
+    /// folder <paramref name="wrapperName"/> at the top of the target area; fonts and sheet layouts follow. No permission check (the caller is the administrator's deletion of an account).
+    /// </summary>
+    internal static async Task TransferSpaceContentAsync(DtDbContext db, long fromSpaceId, long toSpaceId, string wrapperName)
+    {
+        var any = await db.Folder.AnyAsync(f => f.SpaceId == fromSpaceId) || await db.Design.AnyAsync(d => d.SpaceId == fromSpaceId) || await db.DataList.AnyAsync(d => d.SpaceId == fromSpaceId)
+            || await db.OutputJob.AnyAsync(d => d.SpaceId == fromSpaceId) || await db.Asset.AnyAsync(d => d.SpaceId == fromSpaceId) || await db.Font.AnyAsync(d => d.SpaceId == fromSpaceId)
+            || await db.SheetLayout.AnyAsync(d => d.SpaceId == fromSpaceId);
+        if (!any)
+        {
+            return;
+        }
+
+        var name = wrapperName.Length > FolderLogic.MaxNameLength ? wrapperName[..FolderLogic.MaxNameLength] : wrapperName;
+        var wrapper = new Folder { SpaceId = toSpaceId, Name = name, Path = "/" };
+        db.Folder.Add(wrapper);
+        await db.SaveChangesAsync();
+        wrapper.Path = $"/{wrapper.Id}/";
+        await db.SaveChangesAsync();
+
+        foreach (var root in await db.Folder.Where(f => f.SpaceId == fromSpaceId && f.ParentId == null).Select(f => f.Id).ToListAsync())
+        {
+            try
+            {
+                await FolderLogic.MoveCoreAsync(db, root, toSpaceId, wrapper.Id);
+            }
+            catch (BizException)
+            {
+                // a tree that is too deep to sit one level lower stays at the top of the target
+                await FolderLogic.MoveCoreAsync(db, root, toSpaceId, null);
+            }
+        }
+
+        var wrapperId = wrapper.Id;
+        await db.Design.Where(d => d.SpaceId == fromSpaceId && d.FolderId == null).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, toSpaceId).SetProperty(d => d.FolderId, wrapperId));
+        await db.DataList.Where(d => d.SpaceId == fromSpaceId && d.FolderId == null).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, toSpaceId).SetProperty(d => d.FolderId, wrapperId));
+        await db.OutputJob.Where(d => d.SpaceId == fromSpaceId && d.FolderId == null).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, toSpaceId).SetProperty(d => d.FolderId, wrapperId));
+        await db.Asset.Where(d => d.SpaceId == fromSpaceId && d.FolderId == null).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, toSpaceId).SetProperty(d => d.FolderId, wrapperId));
+        await db.Font.Where(d => d.SpaceId == fromSpaceId).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, toSpaceId));
+        await db.SheetLayout.Where(d => d.SpaceId == fromSpaceId).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, toSpaceId));
+        // what still names the old area (an item whose folder is gone) goes along without a folder
+        await db.Design.Where(d => d.SpaceId == fromSpaceId).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, toSpaceId).SetProperty(d => d.FolderId, wrapperId));
+        await db.DataList.Where(d => d.SpaceId == fromSpaceId).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, toSpaceId).SetProperty(d => d.FolderId, wrapperId));
+        await db.OutputJob.Where(d => d.SpaceId == fromSpaceId).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, toSpaceId).SetProperty(d => d.FolderId, wrapperId));
+        await db.Asset.Where(d => d.SpaceId == fromSpaceId).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, toSpaceId).SetProperty(d => d.FolderId, wrapperId));
+    }
+
+    /// <summary>
     /// Deletes for good what has been in the trash since before <paramref name="olderThan"/>, in every area (nobody is acting: the trash purger calls it). Returns how many items went.
     /// </summary>
     public static async Task<int> PurgeOlderAsync(DtDbContext db, DateTime olderThan)

@@ -19,6 +19,9 @@ public sealed class DesignerModel(Biz biz) : PageModelBase
 
     public bool CanManage { get; private set; }
 
+    /// <summary>Where "Marke bearbeiten" leads: the brand page of the team when the design lies in a team of the person, else the personal one.</summary>
+    public string BrandHref { get; private set; } = "/Brand";
+
     /// <summary>The button "Mit KI formulieren" is offered to people who may change the design, when the AI is switched on.</summary>
     public bool AiVisible => CanEdit && AiLogic.IsEnabled(biz);
 
@@ -35,6 +38,11 @@ public sealed class DesignerModel(Biz biz) : PageModelBase
         var place = await DesignLogic.PlaceAsync(biz, Id);
         CanEdit = place.CanEdit;
         CanManage = place.CanManage;
+        if (design.SpaceId is { } space && (await SpaceLogic.MySpacesAsync(biz)).FirstOrDefault(s => s.Id == space && s.Slug != null) is { } team)
+        {
+            BrandHref = $"/Teams/{team.Slug}/Marke";
+        }
+
         await ItemLogic.VisitAsync(biz, Data.Entities.ItemKind.Design, Id);
         ViewData["FontsHref"] = $"/fonts.css?design={Id}";
         Head(design.Name, null, ("Designs", "/Designs"), (design.Name, $"/Designs/{design.Id}"), ("Designer", null));
