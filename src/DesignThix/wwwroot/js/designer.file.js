@@ -30,7 +30,7 @@
   /** Builds the chooser into `host`: a list of the formats and the fields of a custom size. Returns { value() -> {width, height, unit, key} | null, onChange }. */
   function formatChooser(host, initial, list) {
     var state = { key: initial.key || 'custom', width: initial.width, height: initial.height, unit: initial.unit };
-    var listbox = D.el('div', { class: 'dt-formats', role: 'radiogroup', 'aria-label': 'Format' });
+    var listbox = D.el('div', { class: 'dt-fmtlist', role: 'radiogroup', 'aria-label': 'Format' });
     var width = D.ui.number({ value: state.width, min: 0.1, max: 100000, step: 1, digits: 2, label: 'Breite', onInput: function (v) { state.width = v; state.key = 'custom'; mark(); changed(); } });
     var height = D.ui.number({ value: state.height, min: 0.1, max: 100000, step: 1, digits: 2, label: 'Höhe', onInput: function (v) { state.height = v; state.key = 'custom'; mark(); changed(); } });
     var unit = D.ui.select({ label: 'Einheit', value: state.unit, items: [['mm', 'Millimeter (mm)'], ['px', 'Pixel (px)']], onChange: function (v) { state.unit = v; state.key = 'custom'; mark(); changed(); } });
@@ -48,8 +48,8 @@
       groups.get(g).push(f);
     });
     groups.forEach(function (items, name) {
-      listbox.appendChild(D.el('h4', { class: 'dt-formats__group', text: name }));
-      var row = D.el('div', { class: 'dt-formats__row' });
+      listbox.appendChild(D.el('h4', { class: 'dt-fmtlist__group', text: name }));
+      var row = D.el('div', { class: 'dt-fmtlist__row' });
       items.forEach(function (f) {
         var b = D.el('button', { type: 'button', class: 'dt-format', role: 'radio', 'aria-checked': 'false', 'data-key': f.key, title: f.name });
         b.appendChild(D.icon(String(f.icon || 'square').replace(/^dt:/, ''), 'dt-format__icon'));
@@ -66,7 +66,7 @@
       listbox.appendChild(row);
     });
     host.appendChild(listbox);
-    host.appendChild(D.el('h4', { class: 'dt-formats__group', text: 'Eigene Größe' }));
+    host.appendChild(D.el('h4', { class: 'dt-fmtlist__group', text: 'Eigene Größe' }));
     host.appendChild(D.el('div', { class: 'dt-grid3' }, [D.ui.field('Breite', width.el), D.ui.field('Höhe', height.el), D.ui.field('Einheit', unit.el)]));
     mark();
     return {

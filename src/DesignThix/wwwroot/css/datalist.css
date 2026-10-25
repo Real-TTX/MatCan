@@ -130,30 +130,9 @@
   .dt-grid input[type="checkbox"] { width: 22px; height: 22px; }
   .dt-grid__td--active, .dt-grid__td--select { padding: 0; }
   .dt-grid__rowtools .mat-btn { min-width: 44px; min-height: 44px; }
-  .dt-pick__item { min-height: 44px; }
 }
 @media (max-width: 599px) {
-  .dt-grid .dt-cell, .dt-pick .mat-input, .dt-pick .mat-select { font-size: 16px; }
+  .dt-grid .dt-cell { font-size: 16px; }
   .dt-grid__filter { max-width: none; flex-basis: 100%; }
   .dt-grid__scroll { max-height: 68vh; }
 }
-
-/* ---- The picker dialog for image cells ---- */
-.dt-pick__tools { flex: none; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--mat-space-2); margin-bottom: var(--mat-space-3); }
-@media (min-width: 600px) { .dt-pick__tools { grid-template-columns: minmax(0, 1fr) 14rem; } }
-.dt-pick__grid { flex: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); gap: var(--mat-space-2); min-height: 6rem; }
-@media (min-width: 600px) { .dt-pick__grid { max-height: 52vh; overflow: auto; padding: 2px; } }
-.dt-pick__item {
-  display: flex; flex-direction: column; gap: 2px; align-items: stretch; text-align: left;
-  padding: var(--mat-space-2); font: inherit; color: var(--mat-text); cursor: pointer;
-  background: var(--mat-surface); border: 1px solid var(--mat-border); border-radius: var(--mat-radius);
-  min-width: 0;
-}
-.dt-pick__item:hover { border-color: var(--mat-border-strong); background: var(--mat-surface-2); }
-.dt-pick__item:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); border-color: var(--mat-accent); }
-.dt-pick__item.is-current { border-color: var(--mat-accent); background: var(--mat-accent-soft); }
-.dt-pick__thumb { display: grid; place-items: center; aspect-ratio: 3 / 2; background: var(--mat-surface-3); border-radius: var(--mat-radius-xs); overflow: hidden; }
-.dt-pick__thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
-.dt-pick__name { font-size: var(--mat-fs-sm); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dt-pick__key { font-family: var(--mat-mono); font-size: var(--mat-fs-xs); color: var(--mat-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dt-pick__status { flex: none; margin: var(--mat-space-3) 0 0; }

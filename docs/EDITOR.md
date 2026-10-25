@@ -26,11 +26,19 @@ a 44 px hit area. A viewer (`canEdit=false`) gets the same page with `is-readonl
 | `designer.canvas.js` | Drawing (`renderInto`, `mode: 'editor'`), the overlay (hover, selection, 8 handles, rotate handle below, marquee, guides, distance markers, size/angle tooltip), pointer gestures (move, resize, rotate, marquee, pan, pinch, long press), hit testing, snapping (edges, centres, equal spacing), zoom, inline text editing, drop targets. `D.canvas.*`. |
 | `designer.menu.js` | `D.menu.open(items, {x,y} \| {anchor})` (context menus, Datei, ⋯: `mat-menu` classes, submenus, shortcuts at the right, disabled with a reason, keyboard), `D.popover.open(anchor, build)`, `D.dialog.show(opts)` (MatUi dialogs from DOM APIs). |
 | `designer.ui.js` | Form blocks that return handles `{ el, set(v) }`: `D.ui.number/select/segmented/switchBox/slider/field/section/iconButton/textButton`. |
-| `designer.colors.js` | The colour popover `D.colors.open` with an extension point `D.colors.sections` (document colours, brand colours, palette; K4 adds gradients). |
-| `designer.commands.js` | `D.cmd.*` (copy, cut, paste, group, order, replaceImage, setAsBackground, bindField …) and the menus: `D.contextItems(node)`, `D.pageMenuItems()`, `D.pageThumbItems(i)`. |
-| `designer.toolbar.js` | The contextual toolbar (kinds: page, text, image, strip, shape, line, icon, qr, barcode, group, multi). `D.toolbar.register/extend`. |
-| `designer.panels.js` | The rail and panel framework `D.panels.register(def)`, plus the panels Elemente, Text, Vorlagen, Marke. |
+| `designer.colors.js` | The colour popover `D.colors.open(anchor, { title, get(), onChange(value, final), allowNone, noneLabel, allowGradient })`: tabs **Farbe** (sections `D.colors.sections`: Dokumentfarben, Markenfarben, Standardfarben; native picker, hex field with validation (`aria-invalid`), pipette where `window.EyeDropper` exists) and, with `allowGradient`, the tabs of `D.colors.tabs`. A value is `'#rrggbb'`, `null` (none) or a gradient. |
+| `designer.gradient.js` | The **Verlauf** tab (`D.colors.tabs`): bar with draggable stops (click adds, Entf removes, arrows move, 2 to 5 stops), angle (CSS: 0 = to top), colour and position of the stop, ten presets; `D.gradient.css(angle, stops)`. |
+| `designer.commands.js` | `D.cmd.*` (copy, cut, paste, group, order, replaceImage, setAsBackground, crop, bindField …) and the menus: `D.contextItems(node)`, `D.pageMenuItems()`, `D.pageThumbItems(i)`. |
+| `designer.toolbar-parts.js` | The bigger controls of the toolbar as functions of the toolbar context (`D.tbp.mask/corners/borderColour/borderWidth/flip/shapeKind/lineEnds/list/effects/adjust/iconReplace`) and the small outlines `D.glyph(kind)` (shapes and masks). |
+| `designer.crop.js` | Crop mode `D.crop = { start(id), active(), finish(apply), state(), zoomTo(f) }` (see "Crop mode" below). |
+| `designer.toolbar.js` | The contextual toolbar (kinds: page, text, image, strip, shape, line, icon, qr, barcode, group, multi). `D.toolbar.register/extend/setOverride`. Several nodes of one kind keep the toolbar of the kind and get Gruppieren, Ausrichten, Verteilen in front. When the controls do not fit the toolbar adds `is-compact` (words next to icons go; `dt-tb--keeptext` buttons keep theirs). |
+| `designer.panels.js` | The rail and panel framework `D.panels.register(def)`, `D.addByKind(kind)`, `D.tilePreview`, and the panel Marke. |
+| `designer.icons-de.js` | `D.iconWordsDe` (about 360 German search words → icon names, because Lucide has no cheese or cow), `D.fold` (umlauts and ß folded), `D.iconSearch(library, query)`. |
+| `designer.panel-elements.js` | The panel **Elemente** (sections, "Alle anzeigen", one search field over everything), `D.iconSvg(name)`, `D.iconGrid(options)` (icons in batches of 60 through an IntersectionObserver) and `D.iconPicker.open(anchor, { current, onPick })`. |
+| `designer.panel-text.js` | The panel **Text**: three add buttons (brand fonts) and the ten **Schriftkombinationen** (`D.textCombos = { list, insert(app, combo, at), build }`). |
+| `designer.panel-templates.js` | The panel **Vorlagen** (previews drawn by the engine, category chips, search, the dialog "Aktuelle Seite ersetzen" / "Als neue Seite hinzufügen"); `D.templates = { list(), apply(t, mode), dialog(t) }`. |
 | `designer.panel-uploads.js`, `-layers.js`, `-data.js`, `-position.js` | Uploads, Ebenen (tree), Daten (Zusatz) (+ `D.data`, the preview state), Position (context page). |
+| `designer.effects.js` | The context pages **Effekte** (text: presets and the properties shadow, outline, background, curve) and **Anpassen** (image: looks and filters); both have `reselect: true`, so they follow the selection. |
 | `designer.pages.js` | The bottom bar: page strip (thumbnails drawn by the engine, drag to reorder, menu) and the zoom controls. |
 | `designer.io.js` | `D.dnd.attach` (tiles to the canvas), uploads of images and fonts, **paste** and **drop** of files. |
 | `designer.save.js` | Autosave, revision check (409 dialog), local draft, offline, keepalive on `pagehide`, thumbnail. `D.save`. |
@@ -64,6 +72,21 @@ A click selects the top-level node (the whole group); a double click or a click 
 
 During a drag the document is changed live but the engine does not run: the node's `<g>` gets a transform (move, rotate), a resize renders once per frame; on release the engine draws.
 
+## Crop mode (`designer.crop.js`)
+
+`D.crop.start(id)` (double click on an image, the toolbar button, the context menu) works for an image whose source is an asset of the library (not a field, not an empty frame). It draws a layer `.dt-cropui`
+(an SVG with the transforms of the element and of its groups) over the sheet, hides the engine's node and replaces the toolbar (`D.toolbar.setOverride`): slider 100 to 600 %, Zurücksetzen, Abbrechen, Fertig.
+Geometry is kept in the content frame of the element (origin = top left of its box, no rotation or flip): `I` = the whole natural picture, `W` = the window. At the start the crop region is placed into the box with
+`fit` exactly like the engine does and `W` = box ∩ that region. Dragging inside moves `I` (clamped so that it covers `W`), the 8 handles move the edges of `W` (clamped into `I`), the slider scales `I` around the centre of `W`.
+Nothing is written before the end. **Fertig / Enter / a click beside the picture** write ONE undo step: the box becomes `W` (the centre is moved through the rotation and the flip of the element, so the window stays exactly where it was on
+the page) and `crop = { x: (W.x - I.x) / I.w, y, w: W.w / I.w, h }`. **Escape / Abbrechen** throw the changes away. `D.crop.state()` gives `{ id, I, W, zoom }` (the browser checks use it); `D.canvas.setModal` keeps the canvas from starting gestures.
+
+## The pages Effekte and Anpassen
+
+Opened by the toolbar (`D.panels.openPage('effects' | 'adjust')`, back arrow). **Effekte** (text): presets Keine, Schatten, Anheben, Kontur, Hohl, Hintergrund, Gebogen (previews drawn by the engine; each preset first resets shadow, outline, background and curve,
+then writes its own; *Hohl* = outline in the old text colour and the text filled with the page colour, because `color` is hex only) and below them the single properties (`shadow`, `outline`, `background`, `curve`). **Anpassen** (image): looks
+and the sliders of `filters` (brightness, contrast, saturation, blur, grayscale, sepia), "Zurücksetzen". Both follow the selection (`reselect`) and undo.
+
 ## How to extend
 
 * **A toolbar control** for a kind: `D.toolbar.extend('text', function (ctx, controls) { controls.splice(3, 0, ctx.button({ icon, label, pressed: function () {…}, onClick: function () {…} })); })`.
@@ -75,7 +98,9 @@ During a drag the document is changed live but the engine does not run: the node
 * **A context-menu entry**: add to `D.contextItems` (`{ label, icon, shortcut, run, disabled: true | 'reason', danger, checked, submenu, hidden }`).
 * **A shortcut**: `designer.shortcuts.js` (and the list `D.shortcuts.list` for the dialog).
 * **A colour section** (gradients, eyedropper): push `{ id, title, order, build(host, ctx) }` to `D.colors.sections`.
-* **The crop UI** (K4): define `D.crop = { start(id) }`; the toolbar and the context menu then offer "Zuschneiden" and a double click on an image calls it.
+* **A colour tab** (like Verlauf): push `{ id, title, build(host, ctx) }` to `D.colors.tabs`; it is shown for pickers opened with `allowGradient`. `ctx.value()` / `ctx.set(value, final)` as for sections.
+* **A colour field in a panel**: `D.ui.colour({ label, get, apply(value, final), allowNone, allowGradient })` (a button with a swatch that opens the picker).
+* **The toolbar replaced for a mode** (crop mode): `D.toolbar.setOverride(function (ctx) { return [controls]; })` until `setOverride(null)`; `D.canvas.setModal({ onDown(ev), hideOverlay: true })` keeps the canvas from starting gestures and from drawing the selection.
 
 ## Server contracts used
 
@@ -85,6 +110,8 @@ During a drag the document is changed live but the engine does not run: the node
 
 ## Checks
 
-`tests/e2e/designer-check.js` (mechanics: pointer, keyboard, snapping, undo, layers, fields, preview data, autosave/draft/offline, conflict, viewer, demo label, tablet, phone) and
-`tests/e2e/canva-check.js` (rail and panels, toolbar, context menu, paste/drop, media browser, pages, groups, interaction, autosave, 409, Herunterladen, viewer, tablet, drawer, phone).
+`tests/e2e/designer-check.js` (mechanics: pointer, keyboard, snapping, undo, layers, fields, preview data, autosave/draft/offline, conflict, viewer, demo label, tablet, phone),
+`tests/e2e/canva-check.js` (rail and panels, toolbar, context menu, paste/drop, media browser, pages, groups, interaction, autosave, 409, Herunterladen, viewer, tablet, drawer, phone) and
+`tests/e2e/content-check.js` (K4: Elemente sections and search, icons in batches, Schriftkombinationen, the toolbar of every kind, Effekte, Anpassen, masks, crop mode incl. rotation, colour picker and gradients, Marke, Vorlagen,
+Größe ändern, media browser in the data list grid and the single print, viewer, phone; `--only elements,text,...` runs sections).
 Shared helpers: `tests/e2e/editor-lib.js` (state, gestures, PNG files in memory, synthetic paste/drop events, downloads, touch).

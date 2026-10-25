@@ -388,7 +388,6 @@
     var designId = int(form.getAttribute('data-design-id'), 0);
     var sheets = [];
     try { sheets = JSON.parse(form.getAttribute('data-sheets') || '[]'); } catch (e) { sheets = []; }
-    var assetsUrl = form.getAttribute('data-assets-url') || '/api/assets';
     var mediaUrl = form.getAttribute('data-media-url') || '/media/';
     var previewHost = $('[data-dt-print-preview]', form);
     var previewWarn = $('[data-dt-print-warn]', form);
@@ -455,9 +454,8 @@
       if (clearBtn) { clearBtn.addEventListener('click', function () { input.value = ''; syncImageField(box); drawPreview(); input.focus(); }); }
       if (pickBtn) {
         pickBtn.addEventListener('click', function () {
-          var grid = window.DtDataListGrid;
-          if (!grid || !grid.pickMedia) { toast('Die Medienauswahl ist nicht verfügbar. Tippe den Schlüssel ein.'); return; }
-          grid.pickMedia({ assetsUrl: assetsUrl, mediaUrl: mediaUrl }, { label: box.getAttribute('data-label') || 'Bild', category: box.getAttribute('data-category') || '' }, input.value.trim(), function (picked) {
+          if (!window.DtMedia || !window.DtMedia.pick) { toast('Die Medienauswahl ist nicht verfügbar. Tippe den Schlüssel ein.'); return; }
+          window.DtMedia.pick({ title: 'Bild wählen: ' + (box.getAttribute('data-label') || 'Bild'), category: box.getAttribute('data-category') || '', current: input.value.trim(), allowNone: true }, function (picked) {
             input.value = picked || '';
             syncImageField(box);
             drawPreview();

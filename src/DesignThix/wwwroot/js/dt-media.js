@@ -5,6 +5,8 @@
    drop zone (files dropped anywhere in the dialog) and paste (Ctrl+V while it is open). A click (or Enter on the focused thumbnail) chooses; the grid is keyboard navigable (arrows,
    Home, End). callback(key, asset) runs with the asset key (lower case, as designs hold it) and the asset { key, name, category, url, width, height, contentType }; it is not called when
    the dialog is cancelled. options.tab: 'uploads' | 'flags' | 'seals' | 'logos' | 'all'; options.category (a library category such as 'Logos' or 'Flaggen') picks the tab.
+   options.allowNone adds a button "Kein Bild" (options.noneLabel): the callback then gets ('', null), so a caller that only wants a picture checks the asset. A category that has no tab of its own
+   (a column of a data list asks for "Fotos") gets one.
    window.DtMedia.upload(files, category) uploads files (POST /api/assets/upload) and resolves { uploaded, errors }. Nothing here builds HTML from data. */
 (function () {
   'use strict';
@@ -77,32 +79,41 @@
     });
   }
 
-  function tabFor(options) {
-    if (options.tab && TABS.some(function (t) { return t.id === options.tab; })) { return options.tab; }
-    var c = String(options.category || '').toLowerCase();
+  /** The tabs of one dialog: the standard ones, plus one for a category the standard tabs do not know (a column of a data list that wants "Fotos"). */
+  function tabsFor(options) {
+    var c = String(options.category || '').trim();
+    if (!c || CATEGORY_TAB[c.toLowerCase()]) { return TABS; }
+    return TABS.concat([{ id: 'category', label: c, query: 'category=' + encodeURIComponent(c) + '&sort=new', empty: 'In der Kategorie „' + c + '“ gibt es noch nichts.' }]);
+  }
+
+  function tabFor(options, list) {
+    if (options.tab && list.some(function (t) { return t.id === options.tab; })) { return options.tab; }
+    var c = String(options.category || '').trim().toLowerCase();
+    if (c && !CATEGORY_TAB[c] && list.some(function (t) { return t.id === 'category'; })) { return 'category'; }
     return CATEGORY_TAB[c] || 'uploads';
   }
 
   function pick(options, callback) {
     var o = options || {};
     var id = 'dt-media-' + (++counter);
-    var state = { tab: tabFor(o), q: '', token: 0, items: [], loading: true, failed: false, uploading: false, done: false };
+    var TABLIST = tabsFor(o);
+    var state = { tab: tabFor(o, TABLIST), q: '', token: 0, items: [], loading: true, failed: false, uploading: false, done: false };
     var dlg = el('dialog', { class: 'mat-dialog mat-dialog--xl dt-media', 'data-static': '', 'aria-labelledby': id + '-t' });
     var close = el('button', { type: 'button', class: 'mat-btn mat-btn--ghost mat-btn--icon mat-dialog__close', 'aria-label': 'Schließen', 'data-dialog-close': '' }, icon('x'));
     var head = el('div', { class: 'mat-dialog__head' }, [icon('images'), el('h2', { class: 'mat-dialog__title', id: id + '-t', text: o.title || 'Bild wählen' }), close]);
 
     var tabs = el('div', { class: 'dt-media__tabs', role: 'tablist', 'aria-label': 'Bereiche der Bilder' });
-    var tabButtons = TABS.map(function (t) {
+    var tabButtons = TABLIST.map(function (t) {
       var b = el('button', { type: 'button', class: 'dt-media__tab', role: 'tab', id: id + '-tab-' + t.id, 'data-tab': t.id, 'aria-selected': 'false', text: t.label, tabindex: '-1' });
       b.addEventListener('click', function () { setTab(t.id, true); });
       b.addEventListener('keydown', function (ev) {
-        var i = TABS.indexOf(t);
+        var i = TABLIST.indexOf(t);
         var to = ev.key === 'ArrowRight' ? i + 1 : (ev.key === 'ArrowLeft' ? i - 1 : null);
         if (to === null) { return; }
         ev.preventDefault();
-        var next = TABS[(to + TABS.length) % TABS.length];
+        var next = TABLIST[(to + TABLIST.length) % TABLIST.length];
         setTab(next.id, false);
-        tabButtons[TABS.indexOf(next)].focus();
+        tabButtons[TABLIST.indexOf(next)].focus();
       });
       tabs.appendChild(b);
       return b;
@@ -118,7 +129,8 @@
     var body = el('div', { class: 'mat-dialog__body dt-media__body' }, [tabs, tools, area]);
     var cancel = el('button', { type: 'button', class: 'mat-btn mat-btn--secondary', 'data-dialog-close': '', text: 'Abbrechen' });
     var hint = el('span', { class: 'dt-media__hint', text: 'Klick wählt das Bild. Auch Ziehen und Strg+V laden hoch.' });
-    var foot = el('div', { class: 'mat-dialog__foot' }, el('div', { class: 'mat-btn-row mat-btn-row--plain' }, [cancel, hint]));
+    var none = o.allowNone ? el('button', { type: 'button', class: 'mat-btn mat-btn--ghost dt-media__none' }, [icon('x'), el('span', { text: o.noneLabel || 'Kein Bild' })]) : null;
+    var foot = el('div', { class: 'mat-dialog__foot' }, el('div', { class: 'mat-btn-row mat-btn-row--plain' }, [cancel, none, hint]));
     var form = el('div', { class: 'mat-dialog__form' }, [head, body, foot]);
     dlg.appendChild(form);
     document.body.appendChild(dlg);
@@ -130,9 +142,18 @@
       if (asset && typeof callback === 'function') { setTimeout(function () { callback(String(asset.key).toLowerCase(), asset); }, 0); }
     };
 
+    if (none) {
+      none.addEventListener('click', function () {
+        if (state.done) { return; }
+        state.done = true;
+        window.MatUi.dialog.close(dlg, 'none');
+        if (typeof callback === 'function') { setTimeout(function () { callback('', null); }, 0); }
+      });
+    }
+
     function draw() {
       grid.textContent = '';
-      var t = TABS.find(function (x) { return x.id === state.tab; });
+      var t = TABLIST.find(function (x) { return x.id === state.tab; });
       status.hidden = !(state.loading || state.failed || !state.items.length);
       status.textContent = state.loading ? 'Bilder werden geladen …' : (state.failed ? 'Die Bilder konnten nicht geladen werden.' : (state.q ? 'Nichts gefunden.' : t.empty));
       if (state.uploading) { status.hidden = false; }
@@ -149,7 +170,7 @@
     }
 
     function load() {
-      var t = TABS.find(function (x) { return x.id === state.tab; });
+      var t = TABLIST.find(function (x) { return x.id === state.tab; });
       var token = ++state.token;
       state.loading = true;
       state.failed = false;

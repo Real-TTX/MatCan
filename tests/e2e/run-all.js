@@ -1,7 +1,7 @@
 'use strict';
 // Runs the browser checks one after the other against a running stack and reports one line per check. The exit code is 0 only when all of them passed.
 //
-//   node run-all.js [base url, default http://localhost:3043] [--only engine,pwa,demo,home,templates,designer,canva,output,ai] [--quiet]
+//   node run-all.js [base url, default http://localhost:3043] [--only engine,pwa,demo,home,templates,designer,canva,content,output,ai] [--quiet]
 //
 // The checks make their own accounts (see lib.js): start from an empty database (./scripts/redeploy.ps1 -Clean) or put the accounts into tests/e2e/test-account.json.
 // They leave test designs, lists and jobs behind: for the screenshots of the README use screens.js on a clean stack, not after this.
@@ -22,6 +22,7 @@ const checks = [
   { name: 'templates', file: 'templates-check.js', takesBase: true, what: 'gallery of templates, use, filter, every template draws without a warning' },
   { name: 'designer', file: 'designer-check.js', takesBase: true, what: 'the editor mechanics: pointer, keyboard, snapping, undo, layers, fields, preview data, autosave, conflicts, viewer, tablet, phone' },
   { name: 'canva', file: 'canva-check.js', takesBase: true, what: 'the Canva-style editor: rail and panels, toolbar, context menu, paste and drop, media browser, pages, groups, download, phone' },
+  { name: 'content', file: 'content-check.js', takesBase: true, what: 'editor content: elements, icons, text combinations, toolbars per kind, crop, colour picker and gradients, brand, templates, resize, media browser everywhere, phone' },
   { name: 'output', file: 'output-check.js', takesBase: true, what: 'output jobs: print pages, sheets, PNG-ZIP, single print, export/import' },
   { name: 'ai', file: 'ai-check.js', takesBase: true, what: 'AI actions against a fake provider' },
 ];

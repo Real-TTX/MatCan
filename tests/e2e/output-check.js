@@ -415,8 +415,9 @@ const runFacts = page => page.evaluate(() => {
   await page.waitForFunction(() => document.querySelector('[data-dt-print-preview]').textContent.includes('Bergkäse Spezial'));
   check('the preview follows the typed values (price formatted: 4,50)', (await page.textContent('[data-dt-print-preview]')).includes('4,50'));
   await page.click('[data-dt-imagefield] [data-dt-pick] >> nth=0');
-  await page.waitForSelector('.dt-pick__item');
-  await page.click('.dt-pick__item[data-key="flag-ch"]');
+  await page.waitForSelector('.dt-media__tile');
+  await page.click('.dt-media__tab[data-tab="flags"]'); await page.click('.dt-media__tile[data-key="flag-ch"]');
+  await page.waitForFunction(() => document.querySelector('[data-dt-field="Land"]').value === 'flag-ch', null, { timeout: 5000 }).catch(() => {});
   check('the picker puts the key of the chosen medium into the field', (await page.inputValue('[data-dt-field="Land"]')) === 'flag-ch');
   await page.fill('[data-dt-field="Ort"]', 'Schüpfheim');
   await Promise.all([page.waitForNavigation(), page.click('[data-dt-run="print"]')]);

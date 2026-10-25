@@ -208,6 +208,7 @@
       return D.save.offerDraft(serverDoc, design.data.revision).then(function (restored) {
         applyRole();
         app.setDocument(restored ? restored.doc : serverDoc);
+        D.crop.init(app);
         D.toolbar.init(app, $('#dt-ctx'));
         D.panels.init(app, { root: rootEl, rail: $('#dt-rail'), panel: $('#dt-panel'), body: $('#dt-panel-body'), title: $('#dt-panel-title'), back: $('#dt-panel-back'), close: $('#dt-panel-close') });
         D.pages.init(app, { strip: $('#dt-pages'), zoom: $('#dt-zoombar'), toggle: $('#dt-pages-toggle'), root: rootEl });

@@ -118,6 +118,31 @@
     return { el: el, set: function (v) { if (document.activeElement !== range) { range.value = String(v); } number.set(v); } };
   };
 
+  /**
+   * A colour field: a button with a swatch and the hex value that opens the colour picker. options: label (aria and title), get() -> '#rrggbb' | gradient | null, apply(value, final),
+   * allowNone, noneLabel, allowGradient, disabled. Handle: el, set() (draws the swatch from get()).
+   */
+  ui.colour = function (o) {
+    var b = D.el('button', { type: 'button', class: 'dt-colourfield', title: o.label, 'aria-label': o.label, 'aria-haspopup': 'dialog', 'aria-expanded': 'false', disabled: o.disabled });
+    var chip = D.el('span', { class: 'dt-colourfield__chip' });
+    var text = D.el('span', { class: 'dt-colourfield__text' });
+    b.appendChild(chip);
+    b.appendChild(text);
+    var set = function () {
+      var v = o.get();
+      var none = v === null || v === undefined;
+      chip.classList.toggle('is-none', none);
+      if (typeof v === 'string') { chip.style.setProperty('--dt-swatch', v); chip.style.removeProperty('background-image'); text.textContent = v; }
+      else if (v && typeof v === 'object' && v.stops && D.gradient) { chip.style.setProperty('--dt-swatch', 'transparent'); chip.style.setProperty('background-image', D.gradient.css(v.angle, v.stops)); text.textContent = 'Verlauf'; }
+      else { chip.style.setProperty('--dt-swatch', 'transparent'); chip.style.removeProperty('background-image'); text.textContent = o.noneLabel || 'Keine'; }
+    };
+    set();
+    b.addEventListener('click', function () {
+      D.colors.open(b, { title: o.label, get: o.get, allowNone: o.allowNone, noneLabel: o.noneLabel, allowGradient: o.allowGradient, onChange: function (v, final) { o.apply(v, final); set(); } });
+    });
+    return { el: b, set: set };
+  };
+
   /** A section of a panel: a title and a body. */
   ui.section = function (title, kids, cls) {
     return D.el('section', { class: 'dt-sec' + (cls ? ' ' + cls : '') }, [title ? D.el('h3', { class: 'dt-sec__title', text: title }) : null, D.el('div', { class: 'dt-sec__body' }, kids)]);

@@ -43,6 +43,7 @@
   var lastWarnings = '';
   var pageSignature = '';
   var engineWarnings = [];
+  var modal = null;           // a mode that owns the pointer (crop mode): { onDown(ev), hideOverlay }
 
   // ================================================================================================ sizes, zoom, pan
 
@@ -310,7 +311,7 @@
 
   function drawOverlayNow() {
     D.empty(overlay);
-    if (!app.doc) { return; }
+    if (!app.doc || (modal && modal.hideOverlay)) { return; }
     var k = app.scale();
     var editable = app.editable();
     var sel = app.selected();
@@ -674,6 +675,7 @@
 
   function onDown(ev) {
     if (!app.doc) { return; }
+    if (modal) { if (modal.onDown) { modal.onDown(ev); } return; }
     if (textEdit && ev.target === textEdit.el) { return; }
     if (textEdit) { endTextEdit(true); }
     if (ev.target.closest && ev.target.closest('.dt-warnbar, .dt-canvas-tools')) { return; }
@@ -1039,7 +1041,7 @@
   }
 
   function onDblClick(ev) {
-    if (!app.doc || !app.editable() || ev.target.closest('.dt-canvas-tools')) { return; }
+    if (!app.doc || modal || !app.editable() || ev.target.closest('.dt-canvas-tools')) { return; }
     var h = hitDeep(pointerToDoc(ev), {});
     var node = h ? pick(h, false) : null;
     if (node) { editNode(node, pointerToDoc(ev)); }
@@ -1048,7 +1050,7 @@
   function onContextMenu(ev) {
     if (!app.doc) { return; }
     ev.preventDefault();
-    if (gesture && gesture.started) { return; }
+    if (modal || (gesture && gesture.started)) { return; }
     if (Date.now() - lastMenuAt < 800) { return; }
     if (ev.target.closest && ev.target.closest('.dt-canvas-tools, .dt-textedit')) { return; }
     openContextMenuAt(ev.clientX, ev.clientY, ev.ctrlKey || ev.metaKey);
@@ -1358,6 +1360,8 @@
     setSpace: function (down) { spaceDown = down; viewport.classList.toggle('is-space', down); },
     cancelGesture: function () { if (gesture) { var g = gesture; gesture = null; if (g.tx && g.tx.started()) { render(); } marquee = null; guides = []; badge = null; drawOverlay(); } },
     hasGesture: function () { return !!gesture; },
+    /** A mode that owns the pointer (crop mode): m = { onDown(ev), hideOverlay } or null. While it is set the canvas draws no selection and starts no gesture. */
+    setModal: function (m) { modal = m || null; if (modal) { hover = null; } drawOverlay(); },
     /** Opens the context menu event for a point (the keyboard: Shift+F10 / the menu key). */
     contextMenuAt: function (x, y) { openContextMenuAt(x, y, false); },
     pageElement: function () { return page; },

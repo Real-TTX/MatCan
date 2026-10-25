@@ -333,6 +333,8 @@
       return D.icons.load().then(function (data) { var i = data && data.icons[name]; return i ? i.b : null; });
     },
     ready: function () { return !!iconLib.data; },
+    /** The library when it is loaded (else null): { categories, icons: { name: { b, t, c } } }. */
+    library: function () { return iconLib.data; },
   };
 
   // ================================================================================================ the document (pages, groups)
@@ -888,7 +890,7 @@
         var lw = w * 0.4;
         e = Object.assign(common, { type: 'shape', shape: 'line', x: (w - lw) / 2, y: h / 2, w: lw, h: 0, fill: null, stroke: '#000000', strokeWidth: Math.max(1, D.round(pt / 8, 1)) });
       } else if (kind.indexOf('frame') === 0) {
-        var mask = { frame: 'none', 'frame-rounded': 'rounded', 'frame-circle': 'circle', 'frame-heart': 'heart', 'frame-star': 'star', 'frame-hexagon': 'hexagon' }[kind] || 'none';
+        var mask = { frame: 'none', 'frame-rounded': 'rounded', 'frame-circle': 'circle', 'frame-heart': 'heart', 'frame-star': 'star', 'frame-hexagon': 'hexagon', 'frame-triangle': 'triangle' }[kind] || 'none';
         var side = Math.min(w, h) * 0.4;
         e = Object.assign(common, { type: 'image', x: (w - side) / 2, y: (h - side) / 2, w: mask === 'none' || mask === 'rounded' ? side * 1.2 : side, h: side, source: null, fit: 'cover', mask: mask });
         if (mask === 'rounded') { e.radius = D.round(side * 0.12, 2); }

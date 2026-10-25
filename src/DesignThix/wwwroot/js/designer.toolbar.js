@@ -15,6 +15,7 @@
   var signature = '';
   var builders = {};
   var extensions = {};
+  var override = null;      // a function (ctx) -> controls that replaces the toolbar (crop mode)
   var SIZES = [6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 96, 120, 144, 200];
 
   // ================================================================================================ the context of one build
@@ -66,7 +67,7 @@
 
     /** A colour button: the swatch shows the value; get(el) and set(el...) are by the caller. options: label, get(), apply(value, final), allowNone, glyph ('A' for text), icon. */
     c.colourButton = function (o) {
-      var b = D.el('button', { type: 'button', class: 'dt-tb dt-tb--colour' + (o.text ? ' dt-tb--text' : ''), title: o.label, 'aria-label': o.label, 'aria-haspopup': 'dialog', 'aria-expanded': 'false', disabled: c.disabled });
+      var b = D.el('button', { type: 'button', class: 'dt-tb dt-tb--colour' + (o.text ? ' dt-tb--text' : '') + (o.cls ? ' ' + o.cls : ''), title: o.label, 'aria-label': o.label, 'aria-haspopup': 'dialog', 'aria-expanded': 'false', disabled: c.disabled });
       var chip = D.el('span', { class: 'dt-tb__swatch' });
       var iconWrap = D.el('span', { class: 'dt-tb__ic' });
       if (o.icon) { iconWrap.appendChild(D.icon(o.icon)); }
@@ -85,7 +86,7 @@
       sync();
       c.refresh(sync);
       b.addEventListener('click', function () {
-        D.colors.open(b, { title: o.label, get: o.get, allowNone: o.allowNone, noneLabel: o.noneLabel, onChange: function (v, final) { o.apply(v, final); } });
+        D.colors.open(b, { title: o.label, get: o.get, allowNone: o.allowNone, noneLabel: o.noneLabel, allowGradient: o.allowGradient, onChange: function (v, final) { o.apply(v, final); } });
       });
       return b;
     };
@@ -133,7 +134,7 @@
   }
 
   function positionButton(ctx0) {
-    return ctx0.button({ icon: 'move', text: 'Position', label: 'Position', title: 'Position, Ausrichtung und Ebenen', always: false, onClick: function () { D.panels.openPage('position'); } });
+    return ctx0.button({ icon: 'move', text: 'Position', label: 'Position', title: 'Position, Ausrichtung und Ebenen', cls: 'dt-tb--keeptext', always: false, onClick: function () { D.panels.openPage('position'); } });
   }
 
   function moreButton(ctx0) {
@@ -289,6 +290,7 @@
     out.push(c.button({ icon: 'bold', label: 'Fett', title: 'Fett (' + D.modKey + '+B)', pressed: function () { var e = c.first(); return e && e.fontWeight >= 600; }, onClick: function () { toggleBold(c.ids); } }));
     out.push(c.button({ icon: 'italic', label: 'Kursiv', title: 'Kursiv (' + D.modKey + '+I)', pressed: function () { var e = c.first(); return e && e.italic; }, onClick: function () { app.setProps(c.ids, textPatch(function (e) { return { italic: !c.first().italic }; }), { merge: false }); } }));
     out.push(c.button({ icon: 'underline', label: 'Unterstrichen', title: 'Unterstrichen (' + D.modKey + '+U)', pressed: function () { var e = c.first(); return e && e.underline; }, onClick: function () { var on = !c.first().underline; applyProps(c.ids, { underline: on }, false); } }));
+    out.push(c.button({ icon: 'strikethrough', label: 'Durchgestrichen', title: 'Durchgestrichen', pressed: function () { var e = c.first(); return e && e.strike; }, onClick: function () { var on = !c.first().strike; applyProps(c.ids, { strike: on }, false); } }));
     out.push('sep');
     var alignIcons = { left: 'text-align-start', center: 'text-align-center', right: 'text-align-end' };
     var alignNames = { left: 'Linksbündig', center: 'Zentriert', right: 'Rechtsbündig' };
@@ -305,8 +307,11 @@
       alignBtn.title = alignNames[e.align] + ' (klicken zum Wechseln)';
     });
     out.push(alignBtn);
-    out.push(c.button({ icon: 'case-upper', label: 'Großbuchstaben', title: 'Großbuchstaben', pressed: function () { var e = c.first(); return e && e.uppercase; }, onClick: function () { var on = !c.first().uppercase; app.setProps(c.ids, textPatch(function () { return { uppercase: on }; }), { merge: false }); } }));
+    out.push(c.button({ icon: 'case-upper', label: 'Großbuchstaben', title: 'Großbuchstaben (aA)', pressed: function () { var e = c.first(); return e && e.uppercase; }, onClick: function () { var on = !c.first().uppercase; app.setProps(c.ids, textPatch(function () { return { uppercase: on }; }), { merge: false }); } }));
+    out.push(D.tbp.list(c));
     out.push(textSpacingPopover(c));
+    out.push('sep');
+    out.push(D.tbp.effects(c));
     out.push('sep');
     return out.concat(tail(c));
   };
@@ -315,12 +320,11 @@
 
   function fitPopover(c) {
     return c.popoverButton({
-      icon: 'expand', text: 'Einpassen', label: 'Einpassen und Ecken', width: 280,
+      icon: 'expand', text: 'Einpassen', label: 'Einpassen', title: 'Wie das Bild in den Rahmen passt', width: 280,
       build: function (el) {
         var e0 = c.first();
         var fit = D.ui.segmented({ label: 'Einpassen', value: e0.fit, options: [{ value: 'contain', label: 'Ganz zeigen' }, { value: 'cover', label: 'Füllen' }, { value: 'fill', label: 'Strecken' }], onChange: function (v) { applyProps(c.ids, { fit: v }, false); fit.set(v); } });
-        var radius = D.ui.number({ value: e0.radius, min: 0, step: app.unit() === 'px' ? 1 : 0.5, digits: 2, suffix: D.unitLabel(app.unit()), label: 'Eckenradius', onInput: function (v) { applyProps(c.ids, { radius: D.round(v, 2), mask: 'rounded' }, 'radius'); } });
-        el.appendChild(D.el('div', { class: 'dt-pop' }, [D.el('h4', { class: 'dt-pop__title', text: 'Einpassen und Ecken' }), D.ui.field('Einpassen', fit.el), D.ui.field('Eckenradius', radius.el)]));
+        el.appendChild(D.el('div', { class: 'dt-pop' }, [D.el('h4', { class: 'dt-pop__title', text: 'Einpassen' }), D.ui.field('Das Bild im Rahmen', fit.el)]));
       },
     });
   }
@@ -331,16 +335,33 @@
     var multi = c.els.length > 1;
     if (!multi) {
       out.push(c.button({ icon: 'replace', text: e0.source ? 'Ersetzen' : 'Bild wählen', label: e0.source ? 'Bild ersetzen' : 'Bild wählen', title: e0.source ? 'Bild ersetzen' : 'Ein Bild aus den Uploads wählen', cls: e0.source ? '' : 'dt-tb--accent', onClick: function () { D.cmd.replaceImage(); } }));
-      if (D.cmd.canCrop() && e0.source) { out.push(c.button({ icon: 'crop', text: 'Zuschneiden', label: 'Zuschneiden', onClick: function () { D.cmd.crop(); } })); }
+      if (D.cmd.canCrop() && e0.source) { out.push(c.button({ icon: 'crop', text: 'Zuschneiden', label: 'Zuschneiden', title: 'Zuschneiden (Doppelklick)', cls: 'dt-tb--keeptext', onClick: function () { D.cmd.crop(); } })); }
       out.push('sep');
     }
+    out.push(D.tbp.flip(c));
+    if (c.els.every(function (e) { return !!e.source; })) { out.push(D.tbp.adjust(c)); }
+    out.push(D.tbp.mask(c));
     out.push(fitPopover(c));
-    out.push(c.button({ icon: 'arrow-left-right', label: 'Spiegeln', title: 'Horizontal spiegeln', onClick: function () { app.flip('x'); } }));
+    out.push('sep');
+    out.push(D.tbp.borderColour(c));
+    out.push(D.tbp.borderWidth(c));
+    out.push(D.tbp.corners(c));
+    if (!multi && e0.source && e0.source.asset) {
+      out.push(c.button({ icon: 'image-down', text: 'Als Hintergrund', label: 'Als Hintergrund festlegen', title: 'Das Bild wird der Hintergrund der Seite', onClick: function () { D.cmd.setAsBackground(); } }));
+    }
     out.push('sep');
     return out.concat(tail(c));
   };
 
   // ================================================================================================ image strip
+
+  function moveSlot(id, from, to) {
+    var list = app.element(id).items.slice();
+    if (to < 0 || to >= list.length) { return; }
+    var it = list.splice(from, 1)[0];
+    list.splice(to, 0, it);
+    app.setProps([id], { items: list }, { merge: false });
+  }
 
   function slotMenu(c, e, index) {
     var items = [{ label: 'Bild wählen …', icon: 'replace', run: function () { D.cmd.replaceImage(index); } }];
@@ -349,6 +370,9 @@
     if (bind.length) { bind.push({ type: 'separator' }); }
     bind.push({ label: 'Neues Bildfeld …', icon: 'plus', run: function () { D.cmd.bindField(e.id, null, index); } });
     items.push({ label: 'An Feld binden (Zusatz)', icon: 'braces', submenu: bind });
+    items.push({ type: 'separator' });
+    items.push({ label: 'Nach links', icon: 'arrow-left', disabled: index < 1 ? 'Der Platz ist schon der erste.' : false, run: function () { moveSlot(e.id, index, index - 1); } });
+    items.push({ label: 'Nach rechts', icon: 'arrow-right', disabled: index >= e.items.length - 1 ? 'Der Platz ist schon der letzte.' : false, run: function () { moveSlot(e.id, index, index + 1); } });
     items.push({ type: 'separator' });
     items.push({ label: 'Platz leeren', icon: 'x', disabled: e.items[index] ? false : 'Der Platz ist schon leer.', run: function () { var list = app.element(e.id).items.slice(); list[index] = null; app.setProps([e.id], { items: list }, { merge: false }); } });
     items.push({ label: 'Platz entfernen', icon: 'trash', danger: true, disabled: e.items.length < 2 ? 'Eine Bildleiste braucht mindestens einen Platz.' : false, run: function () { var list = app.element(e.id).items.slice(); list.splice(index, 1); app.setProps([e.id], { items: list }, { merge: false }); } });
@@ -384,6 +408,9 @@
         el.appendChild(D.el('div', { class: 'dt-pop' }, [D.el('h4', { class: 'dt-pop__title', text: 'Abstand und Ausrichtung' }), D.ui.field('Abstand', gap.el), D.ui.field('Ausrichtung', align.el), D.el('p', { class: 'dt-hint', text: 'Leere Plätze rücken auf: die übrigen Bilder wandern nach links (oder zur Mitte, zum rechten Rand).' })]));
       },
     }));
+    out.push(D.tbp.mask(c));
+    out.push(D.tbp.borderColour(c));
+    out.push(D.tbp.borderWidth(c));
     out.push('sep');
     return out.concat(tail(c));
   };
@@ -403,21 +430,21 @@
   }
 
   builders.shape = function (c) {
-    var e0 = c.first();
     var out = [];
-    out.push(c.colourButton({ icon: 'paint-bucket', label: 'Füllung', allowNone: true, noneLabel: 'Keine Füllung', get: function () { var e = c.first(); return e ? e.fill : null; }, apply: function (v, final) { applyProps(c.ids, { fill: v }, final ? false : 'fill', 1500); } }));
+    out.push(c.colourButton({ icon: 'paint-bucket', text: 'Füllung', label: 'Füllung', cls: 'dt-tb--keeptext', allowNone: true, allowGradient: true, noneLabel: 'Keine Füllung', get: function () { var e = c.first(); return e ? e.fill : null; }, apply: function (v, final) { applyProps(c.ids, { fill: v }, final ? false : 'fill', 1500); } }));
     out.push(c.colourButton({ icon: 'square-dashed', label: 'Randfarbe', allowNone: true, noneLabel: 'Kein Rand', get: function () { var e = c.first(); return e ? e.stroke : null; }, apply: function (v, final) { if (v === null || typeof v === 'string') { applyProps(c.ids, v === null ? { stroke: null } : { stroke: v, strokeWidth: Math.max(c.first().strokeWidth, 0.5) }, final ? false : 'stroke', 1500); } } }));
     out.push(strokePopover(c, false));
     if (c.els.every(function (e) { return e.shape === 'rect'; })) {
       out.push(c.popoverButton({
         icon: 'square-round-corner', label: 'Ecken', title: 'Eckenradius', width: 260,
         build: function (el) {
-          var max = D.round(Math.min(e0.w, e0.h) / 2, 2);
+          var max = D.round(Math.min(c.first().w, c.first().h) / 2, 2);
           var slider = D.ui.slider({ min: 0, max: Math.max(max, 1), step: 0.5, digits: 1, value: c.first().radius, suffix: D.unitLabel(app.unit()), label: 'Eckenradius', onInput: function (v) { applyProps(c.ids, { radius: D.round(v, 2) }, 'radius'); } });
           el.appendChild(D.el('div', { class: 'dt-pop' }, [D.el('h4', { class: 'dt-pop__title', text: 'Ecken' }), slider.el]));
         },
       }));
     }
+    out.push(D.tbp.shapeKind(c));
     out.push(c.button({ icon: 'arrow-left-right', label: 'Spiegeln', title: 'Horizontal spiegeln', onClick: function () { app.flip('x'); } }));
     out.push('sep');
     return out.concat(tail(c));
@@ -427,6 +454,7 @@
     var out = [];
     out.push(c.colourButton({ icon: 'paintbrush', label: 'Linienfarbe', get: function () { var e = c.first(); return e ? e.stroke : '#000000'; }, apply: function (v, final) { if (typeof v === 'string') { applyProps(c.ids, { stroke: v }, final ? false : 'stroke', 1500); } } }));
     out.push(strokePopover(c, true));
+    out.push(D.tbp.lineEnds(c));
     out.push('sep');
     return out.concat(tail(c, ['opacity']));
   };
@@ -441,6 +469,7 @@
         el.appendChild(D.el('div', { class: 'dt-pop' }, [D.el('h4', { class: 'dt-pop__title', text: 'Strichstärke' }), slider.el]));
       },
     }));
+    if (c.els.length === 1) { out.push(D.tbp.iconReplace(c)); }
     out.push('sep');
     return out.concat(tail(c));
   };
@@ -489,6 +518,7 @@
       out.push(c.button({ icon: 'shapes', text: 'Fehlerkorrektur', label: 'Fehlerkorrektur', chevron: true, onClick: function (b) {
         D.menu.open(eccs.map(function (f) { return { label: f[1], checked: c.first().ecc === f[0], run: function () { applyProps(c.ids, { ecc: f[0] }, false); } }; }), { anchor: b });
       } }));
+      out.push(c.button({ icon: 'square-dashed', text: 'Rand', label: 'Freier Rand um den Code', title: 'Ruhezone: ein freier Rand um den Code (macht ihn besser lesbar)', pressed: function () { var e = c.first(); return e && e.quiet; }, onClick: function () { applyProps(c.ids, { quiet: !c.first().quiet }, false); } }));
     }
     out.push(c.colourButton({ icon: 'paintbrush', label: 'Farbe', get: function () { var e = c.first(); return e ? e.color : '#000000'; }, apply: function (v, final) { if (typeof v === 'string') { applyProps(c.ids, { color: v }, final ? false : 'colour', 1500); } } }));
     out.push(c.colourButton({ icon: 'paint-bucket', label: 'Hintergrund des Codes', allowNone: true, noneLabel: 'Transparent', get: function () { var e = c.first(); return e ? e.background : '#ffffff'; }, apply: function (v, final) { if (v === null || typeof v === 'string') { applyProps(c.ids, { background: v }, final ? false : 'codebg', 1500); } } }));
@@ -503,18 +533,19 @@
 
   builders.group = function (c) { return builders.multi(c); };
 
-  builders.multi = function (c) {
+  /** Gruppieren / aufheben, Ausrichten, Verteilen: for several nodes of any kind (the head of the toolbar of two texts or two shapes, the whole toolbar of mixed nodes). */
+  function multiControls(c, compact) {
     var out = [];
     var canGroup = app.canGroup();
     var hasGroup = app.canUngroup();
     if (hasGroup && c.els.length === 1) {
       out.push(c.button({ icon: 'ungroup', text: 'Gruppierung aufheben', label: 'Gruppierung aufheben', title: 'Gruppierung aufheben (' + D.modKey + '+⇧+G)', onClick: function () { D.cmd.ungroup(); } }));
     } else {
-      out.push(c.button({ icon: 'group', text: 'Gruppieren', label: 'Gruppieren', title: 'Gruppieren (' + D.modKey + '+G)', disabled: !canGroup, onClick: function () { D.cmd.group(); } }));
+      out.push(c.button({ icon: 'group', text: compact ? null : 'Gruppieren', label: 'Gruppieren', title: 'Gruppieren (' + D.modKey + '+G)', disabled: !canGroup, onClick: function () { D.cmd.group(); } }));
       if (hasGroup) { out.push(c.button({ icon: 'ungroup', label: 'Gruppierung aufheben', title: 'Gruppierung aufheben (' + D.modKey + '+⇧+G)', onClick: function () { D.cmd.ungroup(); } })); }
     }
     out.push('sep');
-    out.push(c.button({ icon: 'align-center-vertical', text: 'Ausrichten', label: 'Ausrichten', chevron: true, onClick: function (b) {
+    out.push(c.button({ icon: 'align-center-vertical', text: compact ? null : 'Ausrichten', label: 'Ausrichten', chevron: true, onClick: function (b) {
       var alignAt = function (mode) { return function () { app.align(mode, c.els.length === 1); }; };
       var items = [
         { label: c.els.length > 1 ? 'Links (aneinander)' : 'Links', icon: 'align-start-vertical', run: alignAt('left') },
@@ -531,9 +562,18 @@
       }
       D.menu.open(items, { anchor: b });
     } }));
-    out.push('sep');
-    return out.concat(tail(c));
-  };
+    if (c.els.length > 1) {
+      out.push(c.button({ icon: 'align-horizontal-space-between', text: compact ? null : 'Verteilen', label: 'Verteilen', chevron: true, disabled: c.els.length < 3, title: c.els.length < 3 ? 'Verteilen geht ab drei Elementen.' : 'Gleiche Abstände', onClick: function (b) {
+        D.menu.open([
+          { label: 'Horizontal verteilen', icon: 'align-horizontal-space-between', run: function () { app.distribute('x'); } },
+          { label: 'Vertikal verteilen', icon: 'align-vertical-space-between', run: function () { app.distribute('y'); } },
+        ], { anchor: b });
+      } }));
+    }
+    return out;
+  }
+
+  builders.multi = function (c) { return multiControls(c, false).concat(['sep'], tail(c)); };
 
   // ================================================================================================ the page
 
@@ -542,7 +582,7 @@
   builders.page = function (c) {
     var out = [];
     if (c.ro) { out.push(D.el('span', { class: 'dt-tb__note', text: 'Du darfst dieses Design nur ansehen.' })); return out; }
-    pageBgButton = c.colourButton({ icon: 'palette', text: 'Hintergrund', label: 'Hintergrundfarbe', get: function () { var bg = app.page().background; return bg.gradient || bg.color; }, apply: function (v, final) {
+    pageBgButton = c.colourButton({ icon: 'palette', text: 'Hintergrund', label: 'Hintergrundfarbe', allowGradient: true, get: function () { var bg = app.page().background; return bg.gradient || bg.color; }, apply: function (v, final) {
       if (typeof v === 'string') { app.setBackground({ color: v, gradient: null }, { merge: final ? false : 'bgcolor' }); }
       else if (v && typeof v === 'object') { app.setBackground({ gradient: v }, { merge: final ? false : 'bggradient' }); }
     } });
@@ -571,14 +611,20 @@
     }), app.doc.fields.length, !!app.page().background.asset, app.canGroup(), app.canUngroup(), D.cmd.canCrop()]);
   }
 
-  function build() {
+  function build(keepPopover) {
     var els = app.selected();
     signature = sigOf(els);
-    D.popover.close();
+    if (keepPopover !== true) { D.popover.close(); }
     ctx = makeContext(els);
     D.empty(inner);
-    var controls = (builders[ctx.kind] || builders.multi)(ctx);
-    (extensions[ctx.kind] || []).forEach(function (fn) { controls = fn(ctx, controls) || controls; });
+    var controls;
+    if (override) { controls = override(ctx); }
+    else {
+      controls = (builders[ctx.kind] || builders.multi)(ctx);
+      (extensions[ctx.kind] || []).forEach(function (fn) { controls = fn(ctx, controls) || controls; });
+      // several nodes of one kind (two texts, three shapes) keep the controls of the kind and get Gruppieren, Ausrichten, Verteilen in front
+      if (ctx.els.length > 1 && ctx.kind !== 'multi' && ctx.kind !== 'group') { controls = multiControls(ctx, true).concat(['sep'], controls); }
+    }
     var group = D.el('div', { class: 'dt-ctx__group' });
     controls.forEach(function (c) {
       if (c === 'sep') { if (group.lastChild && !group.lastChild.classList.contains('dt-ctx__sep')) { group.appendChild(D.el('span', { class: 'dt-ctx__sep', role: 'separator' })); } return; }
@@ -588,6 +634,14 @@
     inner.appendChild(group);
     host.setAttribute('data-kind', ctx.kind);
     ctx.refreshers.forEach(function (fn) { fn(); });
+    fitCompact();
+  }
+
+  /** Words next to the icons only while all controls fit into the width of the toolbar. */
+  function fitCompact() {
+    host.classList.remove('is-compact', 'is-tight');
+    if (inner.scrollWidth > inner.clientWidth + 1) { host.classList.add('is-compact'); }
+    if (inner.scrollWidth > inner.clientWidth + 1) { host.classList.add('is-tight'); }
   }
 
   function refresh() {
@@ -597,8 +651,10 @@
 
   function update(ev) {
     if (!app.doc) { return; }
+    if (override) { return; }
     var els = app.selected();
-    if (sigOf(els) !== signature) { build(); return; }
+    // the same nodes of the same kind with another look (a shape became a star): the toolbar is drawn again, a popover that is open stays
+    if (sigOf(els) !== signature) { build(!!ctx && els.length === ctx.ids.length && els.every(function (e, i) { return e.id === ctx.ids[i]; }) && kindOf(els) === ctx.kind); return; }
     refresh();
   }
 
@@ -613,8 +669,10 @@
     var sizes = D.el('datalist', { id: 'dt-sizes' });
     SIZES.forEach(function (s) { sizes.appendChild(D.el('option', { value: String(s) })); });
     document.body.appendChild(sizes);
-    app.on('selection', build);
-    app.on('page', build);
+    if (window.ResizeObserver) { var last = 0; new ResizeObserver(function () { var w = host.clientWidth; if (w !== last) { last = w; fitCompact(); } }).observe(host); }
+    app.on('panel', fitCompact);
+    app.on('selection', function () { if (!override) { build(); } });
+    app.on('page', function () { if (!override) { build(); } });
     app.on('readonly', build);
     app.on('doc', update);
     app.on('fonts', build);
@@ -640,6 +698,8 @@
     register: function (kind, fn) { builders[kind] = fn; },
     /** Adds or changes controls of a kind: fn(ctx, controls) returns the new list (or nothing when it changed the array). */
     extend: function (kind, fn) { (extensions[kind] = extensions[kind] || []).push(fn); },
+    /** Replaces the toolbar by fn(ctx) -> controls (crop mode) until it is called with null. */
+    setOverride: function (fn) { override = fn || null; if (app && app.doc) { build(); } },
     openBackgroundColour: function () { if (pageBgButton && document.contains(pageBgButton)) { pageBgButton.click(); } else { app.select([]); setTimeout(function () { if (pageBgButton) { pageBgButton.click(); } }, 30); } },
     kindOf: kindOf,
     helpers: { applyProps: applyProps, textPatch: textPatch, toggleBold: toggleBold, opacityPopover: opacityPopover, tail: tail },
