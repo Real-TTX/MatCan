@@ -142,6 +142,7 @@ var settings = app.Services.GetRequiredService<SettingStore>();
 await settings.LoadAsync();
 await LibrarySeeder.SeedAsync(app.Services, app.Environment.WebRootPath, logger);
 await DemoSeeder.SeedAsync(app.Services, logger);
+await StartupFixes.RunAsync(app.Services, logger);
 
 app.UseForwardedHeaders();
 app.UseRequestLocalization();
@@ -314,6 +315,7 @@ app.MapGet("/api/admin/ai/profiles/{id:long}/chatgpt", async (long id, Biz biz) 
 }).RequireAuthorization("Admin");
 
 app.MapLibraryEndpoints();
+app.MapStudioEndpoints();
 app.MapOutputEndpoints();
 app.MapAiEndpoints();
 

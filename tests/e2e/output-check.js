@@ -475,7 +475,7 @@ const runFacts = page => page.evaluate(() => {
   const [exp] = await Promise.all([page.waitForEvent('download'), page.click('a:has-text("Exportieren")')]);
   const exportBytes = fs.readFileSync(await exp.path());
   const exported = JSON.parse(exportBytes.toString('utf8'));
-  check('the export file has the frame of the format', exported.format === 'designthix-design' && exported.version === 1 && exported.name === 'Export-Quelle ' + stamp && exported.document && exported.document.width === 150, exp.suggestedFilename());
+  check('the export file has the frame of the format', exported.format === 'designthix-design' && exported.version === 2 && exported.document.schema === 2 && Array.isArray(exported.document.pages) && exported.name === 'Export-Quelle ' + stamp && exported.document && exported.document.width === 150, exp.suggestedFilename());
   check('the file is named *.dtx.json', /\.dtx\.json$/.test(exp.suggestedFilename()), exp.suggestedFilename());
   const keys = exported.assets.map(a => a.key).sort();
   check('assets: only what the document uses (flags, seals, our logo) with base64 and type', keys.includes(logoKey) && keys.includes('flag-de') && keys.includes('icon-bio') && !keys.includes('flag-fr') && exported.assets.every(a => a.base64 && a.contentType && a.name && a.category), keys.join(','));

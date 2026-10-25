@@ -429,10 +429,10 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             Assert.Equal((1, 1), (clash.AssetsAdded, clash.AssetsReused));
             Assert.Equal([(key, key + "-2")], clash.AssetsRenamed);
             var imported = DocumentValidator.Parse(clash.Design.DocumentJson)!;
-            Assert.Equal(key + "-2", imported.Background.Asset);
+            Assert.Equal(key + "-2", imported.Pages[0].Background.Asset);
             Assert.Equal(key + "-2", imported.Fields.Single().Sample);
-            Assert.Equal(key + "-2", ((ImageElement)imported.Elements[0]).Source!.Asset);
-            var strip = (ImageStripElement)imported.Elements[1];
+            Assert.Equal(key + "-2", ((ImageElement)imported.Pages[0].Elements[0]).Source!.Asset);
+            var strip = (ImageStripElement)imported.Pages[0].Elements[1];
             Assert.Equal(("flag-de", "Land", key + "-2"), (strip.Items[0]!.Asset, strip.Items[1]!.Field, strip.Items[2]!.Asset));
             var added = await AssetLogic.GetByKeyAsync(biz, key + "-2");
             Assert.Equal(AssetLogic.Sha256Hex(Png()), added!.ContentHash);

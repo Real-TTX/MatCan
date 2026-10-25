@@ -58,6 +58,7 @@ public sealed class SettingStore(IServiceScopeFactory scopes)
 {
     public const string Ai = "Ai";
     public const string Site = "Site";
+    public const string Brand = "Brand";
     public const string VisitorSalt = "Ai.VisitorSalt";
 
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);

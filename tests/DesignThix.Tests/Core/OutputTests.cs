@@ -111,7 +111,7 @@ public sealed class DesignPackageTests
         using var json = JsonDocument.Parse(DesignPackageFormat.Write(Package()));
         var root = json.RootElement;
         Assert.Equal("designthix-design", root.GetProperty("format").GetString());
-        Assert.Equal(1, root.GetProperty("version").GetInt32());
+        Assert.Equal(2, root.GetProperty("version").GetInt32());
         Assert.Equal(JsonValueKind.Object, root.GetProperty("document").ValueKind);
         var asset = root.GetProperty("assets")[0];
         Assert.Equal(["base64", "category", "contentType", "key", "name"], asset.EnumerateObject().Select(p => p.Name).Order());
@@ -142,7 +142,8 @@ public sealed class DesignPackageTests
     [Fact]
     public void A_newer_version_is_refused_and_a_byte_order_mark_is_fine()
     {
-        Assert.Contains("Version 2", DesignPackageFormat.Read(Encoding.UTF8.GetBytes(Frame(version: "2"))).Error);
+        Assert.Contains("Version 3", DesignPackageFormat.Read(Encoding.UTF8.GetBytes(Frame(version: "3"))).Error);
+        Assert.True(DesignPackageFormat.Read(Encoding.UTF8.GetBytes(Frame(version: "2"))).Ok);
         var withBom = new byte[] { 0xEF, 0xBB, 0xBF }.Concat(Encoding.UTF8.GetBytes(Frame())).ToArray();
         Assert.True(DesignPackageFormat.Read(withBom).Ok);
     }
@@ -210,12 +211,12 @@ public sealed class DesignPackageTests
     {
         var doc = DocumentValidator.Parse(DocumentJson())!;
         var rewritten = DesignPackageFormat.RewriteAssetKeys(doc, new Dictionary<string, string> { ["logo"] = "logo-2", ["flag-de"] = "flag-de-2", ["back-ground"] = "bg-2" });
-        Assert.Equal("bg-2", rewritten.Background.Asset);
+        Assert.Equal("bg-2", rewritten.Pages[0].Background.Asset);
         Assert.Equal("flag-de-2", rewritten.Fields.Single(f => f.Key == "Land").Sample);
         Assert.Equal("Gouda", rewritten.Fields.Single(f => f.Key == "Name").Sample);
-        Assert.Equal("logo-2", ((ImageElement)rewritten.Elements.Single(e => e.Id == "d")).Source!.Asset);
-        Assert.Equal("Land", ((ImageElement)rewritten.Elements.Single(e => e.Id == "e")).Source!.Field);
-        var strip = (ImageStripElement)rewritten.Elements.Single(e => e.Id == "f");
+        Assert.Equal("logo-2", ((ImageElement)rewritten.Pages[0].Elements.Single(e => e.Id == "d")).Source!.Asset);
+        Assert.Equal("Land", ((ImageElement)rewritten.Pages[0].Elements.Single(e => e.Id == "e")).Source!.Field);
+        var strip = (ImageStripElement)rewritten.Pages[0].Elements.Single(e => e.Id == "f");
         Assert.Equal("flag-de-2", strip.Items[0]!.Asset);
         Assert.Equal("Land", strip.Items[1]!.Field);
         Assert.Null(strip.Items[2]);

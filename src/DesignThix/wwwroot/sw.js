@@ -1,5 +1,5 @@
 /* DesignThix service worker: makes the app installable and usable without a connection, as far as that makes sense for a designer.
-   - The files of the app (toolkit, styles, scripts, icons) come from the cache first: their addresses carry a version, so a new build loads new files.
+   - The files of the app (toolkit, styles, scripts, icons, the icon library lib/icons.json) come from the cache first: their addresses carry a version, so a new build loads new files.
    - Pages come from the network first; a page that loaded is kept, so the last state of a list or a design can be read offline. Such a copy is marked
      (data-offline-copy on <html>), and app.js says so and reloads it as soon as the connection is back: nothing stale stays on the screen.
    - Nothing that changes data is ever answered from the cache (POST, /api), nor sign-in (the one /api address that is kept is the payload of an output, see the library below). Without a copy the offline page explains it.
@@ -21,7 +21,7 @@ self.addEventListener('install', function (event) {
     caches.open(STATIC)
       // One file that is missing (a logo that is not made yet) must not stop the worker from installing: each is kept on its own.
       .then(function (cache) {
-        return Promise.all([OFFLINE, '/favicon.svg', '/logo.svg', '/logo-mark.svg', '/img/icon-192.png', '/manifest.webmanifest'].map(function (url) {
+        return Promise.all([OFFLINE, '/favicon.svg', '/logo.svg', '/logo-mark.svg', '/img/icon-192.png', '/manifest.webmanifest', '/lib/icons.json'].map(function (url) {
           return cache.add(url).catch(function () { /* not available: fetched when it is needed */ });
         }));
       })
@@ -45,7 +45,7 @@ self.addEventListener('message', function (event) {
 });
 
 function isStatic(url) {
-  return /^\/(ui|css|js|img|fonts|builtin)\//.test(url.pathname) || /\.(svg|png|woff2?|ttf|otf)$/.test(url.pathname) || url.pathname === '/manifest.webmanifest';
+  return /^\/(ui|css|js|img|fonts|builtin|lib)\//.test(url.pathname) || /\.(svg|png|woff2?|ttf|otf)$/.test(url.pathname) || url.pathname === '/manifest.webmanifest';
 }
 
 function isPrivateOrLive(url) {
@@ -65,7 +65,8 @@ self.addEventListener('fetch', function (event) {
 
   if (isStatic(url)) {
     event.respondWith(caches.open(STATIC).then(function (cache) {
-      return cache.match(request).then(function (hit) {
+      // The icon library (lib/icons.json, about 600 KB) is kept per version of the app, whatever query the page adds: a new build is a new cache.
+      return cache.match(request, { ignoreSearch: /^\/lib\//.test(url.pathname) }).then(function (hit) {
         return hit || fetch(request).then(function (response) {
           if (response.ok) { cache.put(request, response.clone()); }
           return response;

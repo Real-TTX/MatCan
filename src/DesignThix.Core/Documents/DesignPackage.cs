@@ -19,14 +19,15 @@ public sealed record DesignPackage(string Name, string? Category, string? Descri
 public sealed record PackageResult(bool Ok, string? Error, DesignPackage? Package);
 
 /// <summary>
-/// The export format of a design: <c>{ "format": "designthix-design", "version": 1, "name", "category", "description", "document", "assets": [{ key, name, category,
+/// The export format of a design: <c>{ "format": "designthix-design", "version": 2, "name", "category", "description", "document", "assets": [{ key, name, category,
 /// contentType, base64 }], "fonts": [{ family, weight, style, format, base64 }] }</c>. Reading is strict about the frame (format, version, sizes, keys, base64) and
 /// lets <see cref="DocumentValidator"/> judge the document; what the files are (image, font, SVG) is checked by the caller with <c>FileSniffer</c> and <c>SvgSafe</c>.
 /// </summary>
 public static partial class DesignPackageFormat
 {
     public const string FormatName = "designthix-design";
-    public const int Version = 1;
+    /// <summary>2 since designs have pages (document schema 2); files of version 1 (a document of schema 1) are read and upgraded.</summary>
+    public const int Version = 2;
 
     /// <summary>The largest file the import accepts.</summary>
     public const long MaxFileBytes = 50L * 1024 * 1024;
@@ -227,7 +228,7 @@ public static partial class DesignPackageFormat
                 }
 
                 var assetName = TryString(entry, "name", out var rawAssetName) && rawAssetName.Trim().Length > 0 ? Clip(rawAssetName.Trim(), 200) : key;
-                var assetCategory = TryString(entry, "category", out var rawAssetCategory) && rawAssetCategory.Trim().Length > 0 ? Clip(rawAssetCategory.Trim(), 60) : "Sonstiges";
+                var assetCategory = TryString(entry, "category", out var rawAssetCategory) && rawAssetCategory.Trim().Length > 0 ? Clip(rawAssetCategory.Trim(), 60) : "Uploads";
                 var contentType = TryString(entry, "contentType", out var rawType) ? Clip(rawType.Trim(), 100) : "";
                 assets.Add(new PackageAsset(key, assetName, assetCategory, contentType, bytes));
             }
@@ -326,8 +327,8 @@ public static partial class DesignPackageFormat
     // ------------------------------------------------------------------------------------------------ keys
 
     /// <summary>
-    /// The document with the asset keys replaced as <paramref name="map"/> says (old key, case-insensitive, to new key): the background, image sources, the slots of
-    /// image strips and the sample values of image fields. Field keys and texts stay as they are. Run the result through <see cref="DocumentValidator.Normalize"/>.
+    /// The document with the asset keys replaced as <paramref name="map"/> says (old key, case-insensitive, to new key): the backgrounds of all pages, image sources, the slots of
+    /// image strips (also inside groups) and the sample values of image fields. Field keys and texts stay as they are. Run the result through <see cref="DocumentValidator.Normalize"/>.
     /// </summary>
     public static DesignDocument RewriteAssetKeys(DesignDocument document, IReadOnlyDictionary<string, string> map)
     {
@@ -340,15 +341,17 @@ public static partial class DesignPackageFormat
         string? Key(string? key) => key is not null && lookup.TryGetValue(key.Trim(), out var replacement) ? replacement : key;
         SourceDef? Source(SourceDef? source) => source?.Asset is { } asset ? source with { Asset = Key(asset) } : source;
 
-        var elements = document.Elements.Select(element => element switch
+        DesignElement Element(DesignElement element) => element switch
         {
             ImageElement image => image with { Source = Source(image.Source) },
             ImageStripElement strip => strip with { Items = [.. strip.Items.Select(Source)] },
+            GroupElement group => group with { Children = [.. group.Children.Select(Element)] },
             _ => element,
-        }).ToList();
+        };
 
+        var pages = document.Pages.Select(page => page with { Background = page.Background with { Asset = Key(page.Background.Asset) }, Elements = [.. page.Elements.Select(Element)] }).ToList();
         var fields = document.Fields.Select(field => field.Type == "image" ? field with { Sample = Key(field.Sample) ?? "" } : field).ToList();
-        return document with { Background = document.Background with { Asset = Key(document.Background.Asset) }, Elements = elements, Fields = fields };
+        return document with { Pages = pages, Fields = fields };
     }
 
     /// <summary>The name of the file an export is saved as: the name of the design made safe, with the ending <c>.dtx.json</c>.</summary>

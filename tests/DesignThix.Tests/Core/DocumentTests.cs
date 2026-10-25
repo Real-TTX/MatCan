@@ -30,8 +30,8 @@ public sealed class DocumentValidatorTests
         var doc = result.Document!;
         Assert.Equal(("mm", 100d, 100d, 300), (doc.Unit, doc.Width, doc.Height, doc.Dpi));
         Assert.Equal("de-DE", doc.Locale);
-        Assert.Equal("#ffffff", doc.Background.Color);
-        Assert.Empty(doc.Elements);
+        Assert.Equal("#ffffff", doc.Pages[0].Background.Color);
+        Assert.Empty(doc.Pages[0].Elements);
         Assert.Empty(result.Warnings);
     }
 
@@ -47,7 +47,7 @@ public sealed class DocumentValidatorTests
     {
         var result = DocumentValidator.Validate(Elements(501));
         Assert.True(result.Ok);
-        Assert.Equal(500, result.Document!.Elements.Count);
+        Assert.Equal(500, result.Document!.Pages[0].Elements.Count);
         Assert.Contains(result.Warnings, w => w.Contains("500 Elemente"));
     }
 
@@ -55,7 +55,7 @@ public sealed class DocumentValidatorTests
     public void Exactly_500_elements_are_fine()
     {
         var result = DocumentValidator.Validate(Elements(500));
-        Assert.Equal(500, result.Document!.Elements.Count);
+        Assert.Equal(500, result.Document!.Pages[0].Elements.Count);
         Assert.Empty(result.Warnings);
     }
 
@@ -69,19 +69,19 @@ public sealed class DocumentValidatorTests
     }
 
     [Fact]
-    public void A_document_over_2_megabytes_is_refused()
+    public void A_document_over_4_megabytes_is_refused()
     {
         var big = "{\"elements\":[{\"type\":\"text\",\"text\":\"" + new string('x', DocumentValidator.MaxJsonBytes) + "\"}]}";
         var result = DocumentValidator.Validate(big);
         Assert.False(result.Ok);
-        Assert.Contains("2 MB", result.Error);
+        Assert.Contains("4 MB", result.Error);
     }
 
     [Fact]
     public void Multi_byte_characters_count_as_bytes()
     {
-        // 700,000 euro signs are 2.1 MB in UTF-8 but only 0.7 million characters.
-        var text = "{\"background\":{\"asset\":\"" + new string('€', 700_000) + "\"}}";
+        // 1.5 million euro signs are 4.5 MB in UTF-8 but only 1.5 million characters.
+        var text = "{\"background\":{\"asset\":\"" + new string((char)0x20AC, 1_500_000) + "\"}}";
         Assert.False(DocumentValidator.Validate(text).Ok);
     }
 
@@ -117,7 +117,7 @@ public sealed class DocumentValidatorTests
         var json = "{\"width\":-5,\"height\":1e9,\"dpi\":5000,\"elements\":[{\"type\":\"text\",\"fontSize\":5000,\"opacity\":7,\"rotation\":999,\"lineHeight\":0,\"letterSpacing\":-9,\"fontWeight\":1,\"x\":-1e9,\"w\":-4}]}";
         var result = DocumentValidator.Validate(json);
         var doc = result.Document!;
-        var text = Assert.IsType<TextElement>(doc.Elements[0]);
+        var text = Assert.IsType<TextElement>(doc.Pages[0].Elements[0]);
         Assert.Equal(0.1, doc.Width);
         Assert.Equal(100000, doc.Height);
         Assert.Equal(1200, doc.Dpi);
@@ -138,7 +138,7 @@ public sealed class DocumentValidatorTests
         var doc = DocumentValidator.Parse("{\"width\":\"150\",\"height\":\"abc\",\"elements\":[{\"type\":\"shape\",\"x\":true,\"y\":\" 3.5 \"}]}")!;
         Assert.Equal(150, doc.Width);
         Assert.Equal(100, doc.Height);
-        Assert.Equal((0d, 3.5), (doc.Elements[0].X, doc.Elements[0].Y));
+        Assert.Equal((0d, 3.5), (doc.Pages[0].Elements[0].X, doc.Pages[0].Elements[0].Y));
     }
 
     [Theory]
@@ -151,9 +151,9 @@ public sealed class DocumentValidatorTests
     public void Invalid_colours_are_replaced(string colour)
     {
         var doc = DocumentValidator.Parse("{\"background\":{\"color\":\"" + colour + "\"},\"elements\":[{\"type\":\"text\",\"color\":\"" + colour + "\"},{\"type\":\"shape\",\"shape\":\"line\",\"stroke\":\"" + colour + "\",\"fill\":\"" + colour + "\"}]}")!;
-        Assert.Equal("#ffffff", doc.Background.Color);
-        Assert.Equal("#000000", ((TextElement)doc.Elements[0]).Color);
-        var line = (ShapeElement)doc.Elements[1];
+        Assert.Equal("#ffffff", doc.Pages[0].Background.Color);
+        Assert.Equal("#000000", ((TextElement)doc.Pages[0].Elements[0]).Color);
+        var line = (ShapeElement)doc.Pages[0].Elements[1];
         Assert.Equal("#000000", line.Stroke);
         Assert.Null(line.Fill);
     }
@@ -162,23 +162,23 @@ public sealed class DocumentValidatorTests
     public void Colours_are_lower_cased_and_the_short_form_is_kept()
     {
         var doc = DocumentValidator.Parse("{\"background\":{\"color\":\" #ABC \"},\"elements\":[{\"type\":\"text\",\"color\":\"#AABBCC\"}]}")!;
-        Assert.Equal("#abc", doc.Background.Color);
-        Assert.Equal("#aabbcc", ((TextElement)doc.Elements[0]).Color);
+        Assert.Equal("#abc", doc.Pages[0].Background.Color);
+        Assert.Equal("#aabbcc", ((TextElement)doc.Pages[0].Elements[0]).Color);
     }
 
     [Fact]
     public void An_explicit_null_stroke_stays_null_even_for_a_line()
     {
         var doc = DocumentValidator.Parse("{\"elements\":[{\"type\":\"shape\",\"shape\":\"line\",\"stroke\":null},{\"type\":\"shape\",\"shape\":\"line\"}]}")!;
-        Assert.Null(((ShapeElement)doc.Elements[0]).Stroke);
-        Assert.Equal("#000000", ((ShapeElement)doc.Elements[1]).Stroke);
+        Assert.Null(((ShapeElement)doc.Pages[0].Elements[0]).Stroke);
+        Assert.Equal("#000000", ((ShapeElement)doc.Pages[0].Elements[1]).Stroke);
     }
 
     [Fact]
     public void Duplicate_element_ids_are_renamed_and_missing_ones_made_up()
     {
         var result = DocumentValidator.Validate("{\"elements\":[{\"id\":\"a\",\"type\":\"shape\"},{\"id\":\"a\",\"type\":\"shape\"},{\"type\":\"shape\"},{\"id\":\"e3\",\"type\":\"shape\"}]}");
-        var ids = result.Document!.Elements.Select(e => e.Id).ToList();
+        var ids = result.Document!.Pages[0].Elements.Select(e => e.Id).ToList();
         Assert.Equal(4, ids.Distinct().Count());
         Assert.Equal("a", ids[0]);
         Assert.Equal("e2", ids[1]);
@@ -190,7 +190,7 @@ public sealed class DocumentValidatorTests
     public void Long_ids_are_cut_to_24_characters()
     {
         var doc = DocumentValidator.Parse("{\"elements\":[{\"id\":\"" + new string('i', 60) + "\",\"type\":\"shape\"}]}")!;
-        Assert.Equal(24, doc.Elements[0].Id.Length);
+        Assert.Equal(24, doc.Pages[0].Elements[0].Id.Length);
     }
 
     [Fact]
@@ -226,7 +226,7 @@ public sealed class DocumentValidatorTests
     public void Unknown_element_types_and_non_objects_are_dropped()
     {
         var result = DocumentValidator.Validate("{\"elements\":[{\"type\":\"script\"},5,null,\"x\",{\"type\":\"text\"},{\"type\":\"TEXT\"}]}");
-        Assert.IsType<TextElement>(Assert.Single(result.Document!.Elements));
+        Assert.IsType<TextElement>(Assert.Single(result.Document!.Pages[0].Elements));
         Assert.Contains(result.Warnings, w => w.Contains("unbekanntem Typ"));
     }
 
@@ -247,7 +247,7 @@ public sealed class DocumentValidatorTests
     {
         var items = string.Join(",", Enumerable.Range(0, 13).Select(i => i == 3 ? "{\"asset\":\"\"}" : $"{{\"asset\":\"a{i}\"}}"));
         var result = DocumentValidator.Validate("{\"elements\":[{\"type\":\"imageStrip\",\"items\":[" + items + "]}]}");
-        var strip = Assert.IsType<ImageStripElement>(result.Document!.Elements[0]);
+        var strip = Assert.IsType<ImageStripElement>(result.Document!.Pages[0].Elements[0]);
         Assert.Equal(12, strip.Items.Count);
         Assert.Null(strip.Items[3]);
         Assert.Contains(result.Warnings, w => w.Contains("12 Bilder"));
@@ -257,8 +257,8 @@ public sealed class DocumentValidatorTests
     public void A_source_with_asset_and_field_prefers_the_asset()
     {
         var doc = DocumentValidator.Parse("{\"elements\":[{\"type\":\"image\",\"source\":{\"asset\":\" flag-de \",\"field\":\"Land\"}},{\"type\":\"image\",\"source\":{\"field\":\"9x\"}}]}")!;
-        Assert.Equal(new SourceDef("flag-de", null), ((ImageElement)doc.Elements[0]).Source);
-        Assert.Null(((ImageElement)doc.Elements[1]).Source);
+        Assert.Equal(new SourceDef("flag-de", null), ((ImageElement)doc.Pages[0].Elements[0]).Source);
+        Assert.Null(((ImageElement)doc.Pages[0].Elements[1]).Source);
     }
 
     [Fact]
@@ -267,8 +267,8 @@ public sealed class DocumentValidatorTests
         var doc = DocumentValidator.Parse("{\"fields\":[{\"key\":\"A\",\"label\":\"" + new string('l', 200) + "\",\"sample\":\"" + new string('s', 3000) + "\"}],\"elements\":[{\"type\":\"text\",\"name\":\"" + new string('n', 200) + "\",\"text\":\"" + new string('t', 6000) + "\"}]}")!;
         Assert.Equal(80, doc.Fields[0].Label.Length);
         Assert.Equal(2000, doc.Fields[0].Sample.Length);
-        Assert.Equal(80, doc.Elements[0].Name.Length);
-        Assert.Equal(5000, ((TextElement)doc.Elements[0]).Text.Length);
+        Assert.Equal(80, doc.Pages[0].Elements[0].Name.Length);
+        Assert.Equal(5000, ((TextElement)doc.Pages[0].Elements[0]).Text.Length);
     }
 
     [Fact]
@@ -283,7 +283,7 @@ public sealed class DocumentValidatorTests
     [Fact]
     public void Validation_is_idempotent()
     {
-        var first = DocumentValidator.Validate(EngineAgreementData.HostileInput);
+        var first = DocumentValidator.Validate(EngineAgreementData.HostileOneInput);
         var second = DocumentValidator.Validate(first.Json);
         Assert.Equal(first.Json, second.Json);
         Assert.Empty(second.Warnings);
@@ -302,7 +302,8 @@ public sealed class DocumentValidatorTests
     public void Create_makes_an_empty_document()
     {
         var doc = DocumentValidator.Create(85, 55);
-        Assert.Equal(("mm", 85d, 55d, 300, 1), (doc.Unit, doc.Width, doc.Height, doc.Dpi, doc.Schema));
+        Assert.Equal(("mm", 85d, 55d, 300, 2), (doc.Unit, doc.Width, doc.Height, doc.Dpi, doc.Schema));
+        Assert.Equal("p1", Assert.Single(doc.Pages).Id);
         Assert.Equal("px", DocumentValidator.Create(10, 10, "px").Unit);
         Assert.Equal("mm", DocumentValidator.Create(10, 10, "cm").Unit);
     }
@@ -315,18 +316,18 @@ public sealed class DocumentValidatorTests
         Assert.Empty(result.Warnings);
         var doc = result.Document!;
         Assert.Equal(4, doc.Fields.Count);
-        Assert.Equal(4, doc.Elements.Count);
-        var strip = Assert.IsType<ImageStripElement>(doc.Elements[0]);
+        Assert.Equal(4, doc.Pages[0].Elements.Count);
+        var strip = Assert.IsType<ImageStripElement>(doc.Pages[0].Elements[0]);
         Assert.Equal(3, strip.Items.Count);
-        var name = Assert.IsType<TextElement>(doc.Elements[1]);
+        var name = Assert.IsType<TextElement>(doc.Pages[0].Elements[1]);
         Assert.Equal("shrink", name.Fit);
         Assert.Equal("#1b2a49", name.Color);
-        Assert.Equal("Preis", doc.Elements[2].ShowIf);
+        Assert.Equal("Preis", doc.Pages[0].Elements[2].ShowIf);
         Assert.Equal("Holunderblüte", doc.Fields[0].Sample);
         Assert.Contains("Holunderblüte", result.Json);
         var again = DocumentValidator.Parse(result.Json)!;
         Assert.Equal(doc.Fields, again.Fields);
-        Assert.Equal(doc.Elements.Count, again.Elements.Count);
+        Assert.Equal(doc.Pages[0].Elements.Count, again.Pages[0].Elements.Count);
     }
 
     [Fact]
@@ -336,7 +337,7 @@ public sealed class DocumentValidatorTests
         var result = DocumentValidator.Validate(json);
         // The stored text is data; it is never put into markup. The JSON encoder escapes the markup characters anyway.
         Assert.DoesNotContain("<", result.Json);
-        Assert.Equal("</script><img src=x onerror=alert(1)>", ((TextElement)result.Document!.Elements[0]).Text);
+        Assert.Equal("</script><img src=x onerror=alert(1)>", ((TextElement)result.Document!.Pages[0].Elements[0]).Text);
     }
 
     [Fact]
@@ -347,10 +348,10 @@ public sealed class DocumentValidatorTests
     }
 
     // The engine is the reference: documents and the output of DtEngine.normalize are in EngineAgreementData (generated by a node script).
+    public static IEnumerable<object[]> AgreementDocuments => EngineAgreementData.DocumentNames.Select(n => new object[] { n });
+
     [Theory]
-    [InlineData("Hostile")]
-    [InlineData("Demo")]
-    [InlineData("Garbage")]
+    [MemberData(nameof(AgreementDocuments))]
     public void Validator_agrees_with_the_engine(string name)
     {
         var input = (string)typeof(EngineAgreementData).GetField(name + "Input")!.GetRawConstantValue()!;
@@ -472,7 +473,7 @@ public sealed class PlaceholderTests
     }
 
     private static DesignDocument Document(params DesignElement[] elements)
-        => DocumentValidator.Create(100, 100) with { Fields = [new FieldDef("Land", "Land", "image", "flag-de", null, null, false), new FieldDef("Bild", "Bild", "image", " ", null, null, false), new FieldDef("Name", "Name", "text", "x", null, null, false)], Elements = elements };
+        => DocumentValidator.Create(100, 100) with { Fields = [new FieldDef("Land", "Land", "image", "flag-de", null, null, false), new FieldDef("Bild", "Bild", "image", " ", null, null, false), new FieldDef("Name", "Name", "text", "x", null, null, false)], Pages = [DocumentValidator.EmptyPage("p1") with { Elements = elements }] };
 
     [Fact]
     public void FieldsUsed_reports_text_image_strip_and_showIf_uses_like_the_engine()
@@ -512,10 +513,8 @@ public sealed class PlaceholderTests
         var document = Document(
             new ImageElement { Id = "i1", Source = new SourceDef("Logo", null) },
             new ImageElement { Id = "i2", Source = new SourceDef(null, "Land") },
-            new ImageStripElement { Id = "s1", Items = [new SourceDef("logo", null), null, new SourceDef("icon-bio", null)] }) with
-        {
-            Background = new BackgroundDef("#ffffff", "bg-paper", "cover"),
-        };
+            new ImageStripElement { Id = "s1", Items = [new SourceDef("logo", null), null, new SourceDef("icon-bio", null)] });
+        document = document with { Pages = [document.Pages[0] with { Background = new BackgroundDef("#ffffff", null, "bg-paper", "cover") }] };
 
         Assert.Equal(["bg-paper", "Logo", "icon-bio", "flag-de"], Placeholders.AssetKeys(document));
     }

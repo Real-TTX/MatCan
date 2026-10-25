@@ -79,7 +79,7 @@ public sealed class DemoTests(AppTests.AppFactory factory)
         using (keep)
         {
             var document = DocumentValidator.Parse(root.GetProperty("document").GetRawText())!;
-            T Find<T>(string name) where T : DesignElement => document.Elements.OfType<T>().Single(e => e.Name == name);
+            T Find<T>(string name) where T : DesignElement => document.Pages[0].Elements.OfType<T>().Single(e => e.Name == name);
             var name = Find<TextElement>("Name");
             Assert.True(name.X >= 4 && document.Width - (name.X + name.W) >= 4, "the name box needs 4 mm on both sides");
             Assert.Equal("bottom", name.Valign);

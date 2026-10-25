@@ -4,14 +4,17 @@
      print / PDF  every label is placed in mm on a page (one label per page at the size of the design, or labels on sheets of paper with optional crop marks); the paper
                   size is an @page rule inserted into output.css through the CSSOM; "Drucken" calls window.print() and the browser's "Als PDF speichern" makes the PDF
      PNG          every label is rasterised at the DPI of the job (DtEngine.rasterize), the files are packed into a ZIP (DtEngine.zip) that is offered as an object URL
+   A design can have several pages (document schema 2): every label (record, every copy) draws ALL pages in order with DtEngine.render(doc, values, { page: i, ... }).
+   Single mode: one sheet of paper (or one PNG) per page; sheet mode: every page is one cell of the sheet. The pieces are numbered label by label: label 1 page 1, label 1
+   page 2, label 2 page 1 ... (OutputPlan.UnitIndex on the server). The engine's page option and DtEngine.pageCount(doc) come with engine 2; without them page 0 is drawn.
    Contract (GET /api/outputs/{id}/payload, POST /api/outputs/adhoc, see OutputLogic):
      { id, name, designName, mode: 'single'|'sheet', format: 'print'|'png', dpi, cropMarks, scale: 'fit'|'none', startPosition, fileNamePattern, document,
        sheet: { name, paperWidth, paperHeight, marginTop, marginLeft, columns, rows, cellWidth, cellHeight, gapX, gapY } | null,
-       labels: [{ rowId, copies, values }], labelCount, fonts: [{ family, weight, style, url }], assets: { key: url }, warnings: [] }
+       labels: [{ rowId, copies, values }], labelCount, pages, unitCount, fonts: [{ family, weight, style, url }], assets: { key: url }, warnings: [] }
    A single print has no id: its request waits in the sessionStorage under the token of the address (?adhoc=token) and is posted to /api/outputs/adhoc.
    After the printing was offered (window.print() returned, or the browser says afterprint) or the ZIP was downloaded, POST /api/outputs/{id}/ran notes the run.
    Everything is built with DOM APIs; no inline styles or scripts: sizes and places are custom properties set through the CSSOM. The page carries
-   data-state (loading, rendering, ready, error) and data-labels / data-pages for the browser checks. */
+   data-state (loading, rendering, ready, error) and data-labels / data-pages (pages of paper) / data-doc-pages (pages of the design) / data-units for the browser checks. */
 (function () {
   'use strict';
 
@@ -163,6 +166,16 @@
     return { w: document_.width * unit, h: document_.height * unit };
   }
 
+  /** How many pages the design has: the engine knows (DtEngine.pageCount), else the pages of the document, else one. */
+  function pageCountOf(document_) {
+    var engine = window.DtEngine;
+    var n = engine && typeof engine.pageCount === 'function' ? Number(engine.pageCount(document_)) : (document_ && Array.isArray(document_.pages) ? document_.pages.length : 1);
+    return Math.max(1, Math.min(50, isFinite(n) ? Math.floor(n) : 1));
+  }
+
+  /** The options of one page of a label: the engine draws page <index> (an engine without pages draws its only page). */
+  function pageOptions(options, index) { return Object.assign({}, options, { page: index }); }
+
   /** Where each label goes. The design in mm; a sheet: the cell of the label, the label centred in it (shrunk to fit when the scale says so). */
   function makeLayout(payload, design, count) {
     var sheet = payload.mode === 'sheet' && payload.sheet ? payload.sheet : null;
@@ -306,8 +319,8 @@
     pages[spot.page].appendChild(box);
   }
 
-  /** Renders the distinct entries (rows), places every copy. Three at a time, then a breath for the browser. */
-  function renderPrint(payload, engineDoc, options, labels, layout, pages) {
+  /** Renders the distinct entries (rows) with all their pages, places every copy of every page. Three entries at a time, then a breath for the browser. */
+  function renderPrint(payload, engineDoc, options, labels, layout, pages, pageCount) {
     var entries = [];
     var seen = new Map();
     labels.forEach(function (label) {
@@ -321,20 +334,29 @@
     var failed = 0;
 
     // The pictures are drawn a few at a time and finish in any order; they are put on the pages in the order of the labels (the order of the document is the order
-    // of reading, of the tab key and of the text in a PDF).
+    // of reading, of the tab key and of the text in a PDF). Piece number = label * pages of the design + page of the design.
     function flush() {
       while (flushed < entries.length && entries[flushed].finished) {
         var ready = entries[flushed++];
-        if (ready.svg) {
-          ready.labels.forEach(function (label, k) { place(pages, layout.place(label.index), k === 0 ? ready.svg : cloneLabel(ready.svg, label.index)); });
-        }
+        ready.labels.forEach(function (label, k) {
+          (ready.svgs || []).forEach(function (svg, p) {
+            if (svg) { place(pages, layout.place(label.index * pageCount + p), k === 0 ? svg : cloneLabel(svg, label.index + '-' + p)); }
+          });
+        });
       }
     }
 
     function one(item) {
-      return window.DtEngine.render(engineDoc, item.entry.values, options).then(function (svg) {
-        item.svg = svg;
-      }).catch(function (e) {
+      item.svgs = [];
+      var chain = Promise.resolve();
+      for (var p = 0; p < pageCount; p++) {
+        (function (pageIndex) {
+          chain = chain.then(function () {
+            return window.DtEngine.render(engineDoc, item.entry.values, pageOptions(options, pageIndex)).then(function (svg) { item.svgs[pageIndex] = svg; });
+          });
+        })(p);
+      }
+      return chain.catch(function (e) {
         failed++;
         if (failed === 1) { addWarnings(['Ein Etikett konnte nicht gezeichnet werden: ' + (e && e.message ? e.message : 'unbekannter Fehler') + '.']); }
       }).then(function () {
@@ -372,16 +394,21 @@
 
   function runPrint(payload, engineDoc, options, labels) {
     var design = designSizeMm(engineDoc);
-    var layout = makeLayout(payload, design, labels.length);
+    var pageCount = pageCountOf(engineDoc);
+    var units = labels.length * pageCount;
+    var layout = makeLayout(payload, design, units);
     paperMm = layout.paper;
     setPageRule(layout.paper.w, layout.paper.h);
     sheetWarnings(payload, design, layout);
     var pages = buildPages(layout, payload.cropMarks && layout.sheet);
     fitZoom();
     root.setAttribute('data-pages', String(layout.pages));
-    ui.meta.textContent = payload.designName + ' · ' + plural(labels.length, 'Etikett', 'Etiketten') + (layout.sheet ? ' auf ' + plural(layout.pages, 'Bogen', 'Bögen') : ' auf ' + plural(layout.pages, 'Seite', 'Seiten'))
+    root.setAttribute('data-doc-pages', String(pageCount));
+    root.setAttribute('data-units', String(units));
+    ui.meta.textContent = payload.designName + ' · ' + plural(labels.length, 'Etikett', 'Etiketten') + (pageCount > 1 ? ' mit je ' + plural(pageCount, 'Seite', 'Seiten') : '')
+      + (layout.sheet ? ' auf ' + plural(layout.pages, 'Bogen', 'Bögen') : ' auf ' + plural(layout.pages, 'Seite', 'Seiten'))
       + ' · ' + german(layout.paper.w, 1) + ' × ' + german(layout.paper.h, 1) + ' mm';
-    return renderPrint(payload, engineDoc, options, labels, layout, pages).then(function () {
+    return renderPrint(payload, engineDoc, options, labels, layout, pages, pageCount).then(function () {
       ui.print.hidden = false;
       ui.print.disabled = labels.length === 0;
       ui.print.addEventListener('click', function () {
@@ -399,8 +426,9 @@
     return String(text).replace(/[\\\/:*?"<>|\u0000-\u001f]/g, '-').replace(/\s+/g, ' ').replace(/^[\s.]+|[\s.\-_]+$/g, '').slice(0, 120);
   }
 
-  /** The name of the file of a label from the pattern: {Design}, {Nr} (running number), {Kopie} and the keys of the fields. Characters a file system dislikes become dashes. */
-  function fileNameFor(pattern, payload, engineDoc, label, total) {
+  /** The name of the file of a label from the pattern: {Design}, {Nr} (running number), {Kopie}, {Seite} (page of the design) and the keys of the fields. Characters a file system
+   *  dislikes become dashes. A design of several pages (pageCount > 1) gets "-<page>" at the end when the pattern has no {Seite}. */
+  function fileNameFor(pattern, payload, engineDoc, label, total, page, pageCount) {
     var width = String(total).length;
     var fields = {};
     (engineDoc.fields || []).forEach(function (f) { fields[f.key.toLowerCase()] = f; });
@@ -411,10 +439,13 @@
       if (k === 'design') { return payload.designName; }
       if (k === 'nr') { return String(label.index + 1).padStart(width, '0'); }
       if (k === 'kopie') { return String(label.copy); }
+      if (k === 'seite') { return String((page || 0) + 1); }
       return k in values ? window.DtEngine.formatValue(fields[k] || null, values[k], engineDoc.locale) : '';
     });
+    var many = pageCount > 1;
+    if (many && !/\{\s*seite\s*\}/i.test(String(pattern || '{Design}-{Nr}'))) { text += '-' + String((page || 0) + 1).padStart(String(pageCount).length, '0'); }
     var name = safeName(text);
-    return (name === '' ? 'Etikett-' + (label.index + 1) : name) + '.png';
+    return (name === '' ? 'Etikett-' + (label.index + 1) + (many ? '-' + ((page || 0) + 1) : '') : name) + '.png';
   }
 
   function runPng(payload, engineDoc, options, labels) {
@@ -423,28 +454,36 @@
     var done = 0;
     var failed = 0;
     var bytes = 0;
+    var pageCount = pageCountOf(engineDoc);
+    var units = labels.length * pageCount;
     var rasterOptions = Object.assign({}, options, { dpi: payload.dpi });
     var perEntry = new Map();
-    ui.meta.textContent = payload.designName + ' · ' + plural(labels.length, 'PNG-Bild', 'PNG-Bilder') + ' · ' + german(payload.dpi, 0) + ' dpi';
+    root.setAttribute('data-doc-pages', String(pageCount));
+    root.setAttribute('data-units', String(units));
+    ui.meta.textContent = payload.designName + ' · ' + plural(units, 'PNG-Bild', 'PNG-Bilder') + (pageCount > 1 ? ' (' + plural(labels.length, 'Etikett', 'Etiketten') + ' mit je ' + plural(pageCount, 'Seite', 'Seiten') + ')' : '') + ' · ' + german(payload.dpi, 0) + ' dpi';
 
+    // the pieces in order: label 1 page 1, label 1 page 2, label 2 page 1 ...
     function step(i) {
-      if (i >= labels.length) { return Promise.resolve(); }
-      var label = labels[i];
-      var cached = perEntry.get(label.entry);
-      var blobPromise = cached || window.DtEngine.rasterize(engineDoc, label.values, rasterOptions);
-      perEntry.set(label.entry, blobPromise);
+      if (i >= units) { return Promise.resolve(); }
+      var label = labels[Math.floor(i / pageCount)];
+      var page = i % pageCount;
+      var cache = perEntry.get(label.entry);
+      if (!cache) { cache = []; perEntry.set(label.entry, cache); }
+      var cached = cache[page];
+      var blobPromise = cached || window.DtEngine.rasterize(engineDoc, label.values, pageOptions(rasterOptions, page));
+      cache[page] = blobPromise;
       return blobPromise.then(function (blob) {
-        var name = fileNameFor(payload.fileNamePattern, payload, engineDoc, label, labels.length);
+        var name = fileNameFor(payload.fileNamePattern, payload, engineDoc, label, labels.length, page, pageCount);
         files.push({ name: name, blob: blob });
         bytes += blob.size;
         if (!cached && thumbs.length < MAX_THUMBS) { thumbs.push({ name: name, blob: blob }); }
       }).catch(function (e) {
         failed++;
-        if (failed <= 3) { addWarnings(['Das Etikett ' + (i + 1) + ' konnte nicht als Bild erstellt werden: ' + (e && e.message ? e.message : 'unbekannter Fehler') + '.']); }
+        if (failed <= 3) { addWarnings(['Das Etikett ' + (label.index + 1) + (pageCount > 1 ? ' (Seite ' + (page + 1) + ')' : '') + ' konnte nicht als Bild erstellt werden: ' + (e && e.message ? e.message : 'unbekannter Fehler') + '.']); }
       }).then(function () {
         done++;
-        setProgress(done, labels.length);
-        setStatus('Bild ' + german(done, 0) + ' von ' + german(labels.length, 0) + ' wird erstellt ...');
+        setProgress(done, units);
+        setStatus('Bild ' + german(done, 0) + ' von ' + german(units, 0) + ' wird erstellt ...');
         return maybeYield();
       }).then(function () { return step(i + 1); });
     }

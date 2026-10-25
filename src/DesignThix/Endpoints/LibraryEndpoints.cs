@@ -17,7 +17,7 @@ public static partial class LibraryEndpoints
 {
     private const string Immutable = "private, max-age=31536000, immutable";
     private const string Revalidate = "private, no-cache";
-    private const int MaxDesignBody = 3 * 1024 * 1024;
+    private const int MaxDesignBody = 5 * 1024 * 1024;
     private const int MaxRowsBody = 40 * 1024 * 1024;
 
     private static readonly JsonSerializerOptions Web = new(JsonSerializerDefaults.Web);
@@ -94,8 +94,9 @@ public static partial class LibraryEndpoints
             Results.Json((await FontLogic.AllAsync(biz)).Select(f => new { id = f.Id, family = f.Family, weight = f.Weight, style = f.Style, format = f.Format, url = f.Url, license = f.License, isBuiltIn = f.IsBuiltIn }), Web))
             .RequireAuthorization("SignedIn");
 
-        app.MapGet("/api/assets", async (string? q, string? category, int? take, Biz biz) =>
-            Results.Json((await AssetLogic.SearchAsync(biz, q, category, take ?? 60)).Select(a => new { key = a.Key, name = a.Name, category = a.Category, tags = a.Tags, url = a.Url, width = a.Width, height = a.Height, contentType = a.ContentType }), Web))
+        // q, category ("uploads" finds the category Uploads, case does not matter), sort ("new" = newest first, else by name), take (at most 500)
+        app.MapGet("/api/assets", async (string? q, string? category, string? sort, int? take, Biz biz) =>
+            Results.Json((await AssetLogic.SearchAsync(biz, q, category, take ?? 60, sort)).Select(a => new { key = a.Key, name = a.Name, category = a.Category, tags = a.Tags, url = a.Url, width = a.Width, height = a.Height, contentType = a.ContentType }), Web))
             .RequireAuthorization("SignedIn");
 
         // ---------------------------------------------------------------------------------------- designs
@@ -129,7 +130,7 @@ public static partial class LibraryEndpoints
         {
             if (http.Request.ContentLength > MaxDesignBody)
             {
-                return Results.Json(new { error = "Das Dokument ist zu groß (höchstens 2 MB)." }, statusCode: StatusCodes.Status413PayloadTooLarge);
+                return Results.Json(new { error = "Das Dokument ist zu groß (höchstens 4 MB)." }, statusCode: StatusCodes.Status413PayloadTooLarge);
             }
 
             var body = await http.Request.ReadFromJsonAsync<DesignBody>(Web, http.RequestAborted);
@@ -155,7 +156,7 @@ public static partial class LibraryEndpoints
         {
             if (http.Request.ContentLength > MaxDesignBody)
             {
-                return Results.Json(new { error = "Das Dokument ist zu groß (höchstens 2 MB)." }, statusCode: StatusCodes.Status413PayloadTooLarge);
+                return Results.Json(new { error = "Das Dokument ist zu groß (höchstens 4 MB)." }, statusCode: StatusCodes.Status413PayloadTooLarge);
             }
 
             var body = await http.Request.ReadFromJsonAsync<CopyBody>(Web, http.RequestAborted);

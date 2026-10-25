@@ -100,7 +100,8 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
             ]),
             new("Bibliothek",
             [
-                new("Medien", "/Assets", "image"),
+                new("Uploads & Medien", "/Assets", "image"),
+                new("Marke", "/Brand", "palette"),
                 new("Schriften", "/Fonts", "type"),
             ]),
             new("Ausgabe",

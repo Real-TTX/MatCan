@@ -56,7 +56,7 @@ public sealed record PayloadFont(string Family, string Weight, string Style, str
 
 /// <summary>
 /// Everything the run page needs to render a job in the browser: the document, the labels, the sheet, the fonts, the media (key in lower case → address with a hash)
-/// and the warnings that are known before anything is drawn. <see cref="Id"/> is null for a single print (no job is saved, no run is recorded).
+/// and the warnings that are known before anything is drawn. A design of several pages makes every label once per page: <see cref="Pages"/> pages, <see cref="UnitCount"/> = labels x pages pieces. <see cref="Id"/> is null for a single print (no job is saved, no run is recorded).
 /// </summary>
 public sealed record OutputPayload(
     long? Id,
@@ -73,6 +73,8 @@ public sealed record OutputPayload(
     PayloadSheet? Sheet,
     IReadOnlyList<PayloadLabel> Labels,
     long LabelCount,
+    int Pages,
+    long UnitCount,
     IReadOnlyList<PayloadFont> Fonts,
     IReadOnlyDictionary<string, string> Assets,
     IReadOnlyList<string> Warnings);
@@ -303,6 +305,12 @@ public static class OutputLogic
             throw new BizException($"Das wären {Services.Fmt.Integer(count)} Etiketten: eine Ausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxLabels)}. Teile die Auswahl auf mehrere Ausgaben auf.", "Input.Copies");
         }
 
+        var pageCount = DocumentValidator.Parse(design.DocumentJson)?.Pages.Count ?? 1;
+        if (OutputPlan.Units(count, pageCount) > OutputPlan.MaxUnits)
+        {
+            throw new BizException($"Das Design hat {pageCount} Seiten: {Services.Fmt.Integer(count)} Etiketten wären {Services.Fmt.Integer(OutputPlan.Units(count, pageCount))} Seiten, eine Ausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxUnits)}. Teile die Auswahl auf mehrere Ausgaben auf.", "Input.Copies");
+        }
+
         OutputJob job;
         if (id is null)
         {
@@ -419,7 +427,7 @@ public static class OutputLogic
         }
 
         var sheet = job.Mode == OutputMode.Sheet && job.Format == OutputFormat.Print ? await SheetOfAsync(biz, job.SheetLayoutId) : null;
-        return await BuildAsync(biz, job.Id, job.Name, design.Name, design.DocumentJson, document, labels, warnings, ModeName(sheet is null ? OutputMode.Single : OutputMode.Sheet),
+        return await BuildAsync(biz, job.Id, job.Name, design.Name, document, labels, warnings, ModeName(sheet is null ? OutputMode.Single : OutputMode.Sheet),
             FormatName(job.Format), job.Dpi, job.CropMarks, ScaleName(job.Scale), job.StartPosition, job.FileNamePattern, sheet);
     }
 
@@ -446,7 +454,7 @@ public static class OutputLogic
         var dpi = Math.Clamp(request.Dpi ?? document.Dpi, 72, 600);
         var pattern = string.IsNullOrWhiteSpace(request.FileNamePattern) ? DefaultFileNamePattern : Clip(request.FileNamePattern.Trim(), 200);
         var scale = string.Equals(request.Scale, "none", StringComparison.OrdinalIgnoreCase) ? "none" : "fit";
-        return await BuildAsync(biz, null, design.Name, design.Name, design.DocumentJson, document, [new PayloadLabel(null, copies, values)], [], sheet is null ? "single" : "sheet",
+        return await BuildAsync(biz, null, design.Name, design.Name, document, [new PayloadLabel(null, copies, values)], [], sheet is null ? "single" : "sheet",
             FormatName(format), dpi, sheet is not null && request.CropMarks, scale, request.StartPosition, pattern, sheet);
     }
 
@@ -456,13 +464,19 @@ public static class OutputLogic
         return new PayloadSheet(s.Name, s.PaperWidth, s.PaperHeight, s.MarginTop, s.MarginLeft, s.Columns, s.Rows, s.CellWidth, s.CellHeight, s.GapX, s.GapY);
     }
 
-    private static async Task<OutputPayload> BuildAsync(Biz biz, long? id, string name, string designName, string documentJson, DesignDocument document, List<PayloadLabel> labels,
+    private static async Task<OutputPayload> BuildAsync(Biz biz, long? id, string name, string designName, DesignDocument document, List<PayloadLabel> labels,
         List<string> warnings, string mode, string format, int dpi, bool cropMarks, string scale, int startPosition, string? pattern, PayloadSheet? sheet)
     {
         long count = labels.Sum(l => (long)l.Copies);
         if (count > OutputPlan.MaxLabels)
         {
             throw new BizException($"Das wären {Services.Fmt.Integer(count)} Etiketten: eine Ausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxLabels)}.");
+        }
+
+        var pages = document.Pages.Count;
+        if (OutputPlan.Units(count, pages) > OutputPlan.MaxUnits)
+        {
+            throw new BizException($"Das Design hat {pages} Seiten: {Services.Fmt.Integer(count)} Etiketten wären {Services.Fmt.Integer(OutputPlan.Units(count, pages))} Seiten, eine Ausgabe macht höchstens {Services.Fmt.Integer(OutputPlan.MaxUnits)}.");
         }
 
         var cells = sheet is null ? 1 : sheet.Columns * sheet.Rows;
@@ -518,7 +532,7 @@ public static class OutputLogic
         }
 
         return new OutputPayload(id, name, designName, mode, format, dpi, cropMarks, scale, startPosition, string.IsNullOrWhiteSpace(pattern) ? DefaultFileNamePattern : pattern,
-            documentJson, sheet, labels, count, fonts, assets, warnings);
+            DocumentValidator.ToJson(document), sheet, labels, count, pages, OutputPlan.Units(count, pages), fonts, assets, warnings);
     }
 
     // ------------------------------------------------------------------------------------------------ small helpers

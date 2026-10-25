@@ -3,7 +3,7 @@ using DesignThix.Core.Data;
 
 namespace DesignThix.Core.Documents;
 
-/// <summary>Where a field is used: the element, and how (<c>text</c> placeholder, <c>image</c> source, <c>strip</c> slot, <c>showIf</c> condition).</summary>
+/// <summary>Where a field is used: the element, and how (<c>text</c>, <c>qr</c> or <c>barcode</c> placeholder, <c>image</c> source, <c>strip</c> slot, <c>showIf</c> condition).</summary>
 public sealed record FieldUse(string ElementId, string ElementName, string Kind);
 
 /// <summary>A key used in a document, whether the document defines a field for it, and where it is used.</summary>
@@ -71,7 +71,10 @@ public static partial class Placeholders
         });
     }
 
-    /// <summary>The keys a document uses (placeholders, image sources, strip slots, showIf), each once, in order of first use, with the places.</summary>
+    /// <summary>
+    /// The keys a document uses (placeholders in texts, QR codes and barcodes, image sources, strip slots, showIf) on every page and in every group, each once, in order of
+    /// first use, with the places.
+    /// </summary>
     public static IReadOnlyList<FieldUsage> FieldsUsed(DesignDocument document)
     {
         var byKey = new Dictionary<string, FieldDef>(StringComparer.OrdinalIgnoreCase);
@@ -100,7 +103,7 @@ public static partial class Placeholders
             }
         }
 
-        foreach (var element in document.Elements)
+        foreach (var element in document.AllElements)
         {
             if (element.ShowIf is { } showIf)
             {
@@ -113,6 +116,20 @@ public static partial class Placeholders
                     foreach (Match match in Token().Matches(text.Text))
                     {
                         Add(match.Groups[1].Value, element, "text");
+                    }
+
+                    break;
+                case QrElement qr:
+                    foreach (Match match in Token().Matches(qr.Value))
+                    {
+                        Add(match.Groups[1].Value, element, "qr");
+                    }
+
+                    break;
+                case BarcodeElement barcode:
+                    foreach (Match match in Token().Matches(barcode.Value))
+                    {
+                        Add(match.Groups[1].Value, element, "barcode");
                     }
 
                     break;
@@ -141,16 +158,15 @@ public static partial class Placeholders
     };
 
     /// <summary>
-    /// The font families the text elements use, each once (case-insensitive), as the engine reads them: the name without quotes, semicolons or commas.
+    /// The font families the texts (and the labels of barcodes) use on every page and in every group, each once (case-insensitive), as the engine reads them: the name without quotes, semicolons or commas.
     /// The generic families (sans-serif ...) are not listed: they need no file.
     /// </summary>
     public static IReadOnlyList<string> FontFamilies(DesignDocument document)
     {
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var families = new List<string>();
-        foreach (var text in document.Elements.OfType<TextElement>())
+        foreach (var family in document.AllElements.Select(FamilyOf))
         {
-            var family = CleanFamily(text.FontFamily);
             if (family.Length > 0 && !GenericFamilies.Contains(family) && seen.Add(family))
             {
                 families.Add(family);
@@ -159,6 +175,14 @@ public static partial class Placeholders
 
         return families;
     }
+
+    /// <summary>The family a text or a barcode is set in (cleaned); empty for the other elements.</summary>
+    private static string FamilyOf(DesignElement element) => element switch
+    {
+        TextElement text => CleanFamily(text.FontFamily),
+        BarcodeElement barcode => CleanFamily(barcode.FontFamily),
+        _ => "",
+    };
 
     /// <summary>The family name the way the engine cleans it (<c>cleanFamily</c>): control characters, quotes, backslashes, semicolons, braces, angle brackets and commas become spaces.</summary>
     public static string CleanFamily(string? family)
@@ -173,7 +197,7 @@ public static partial class Placeholders
         return cleaned.Length > 100 ? cleaned[..100] : cleaned;
     }
 
-    /// <summary>The asset keys a document refers to: the background, image sources, strip slots and the sample values of image fields. Distinct without regard to case.</summary>
+    /// <summary>The asset keys a document refers to: the backgrounds of all pages, image sources and strip slots (also inside groups) and the sample values of image fields. Distinct without regard to case.</summary>
     public static IReadOnlyList<string> AssetKeys(DesignDocument document)
     {
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -187,21 +211,24 @@ public static partial class Placeholders
             }
         }
 
-        Add(document.Background.Asset);
-        foreach (var element in document.Elements)
+        foreach (var page in document.Pages)
         {
-            switch (element)
+            Add(page.Background.Asset);
+            foreach (var element in page.Elements.SelectMany(DesignDocument.Flatten))
             {
-                case ImageElement image:
-                    Add(image.Source?.Asset);
-                    break;
-                case ImageStripElement strip:
-                    foreach (var item in strip.Items)
-                    {
-                        Add(item?.Asset);
-                    }
+                switch (element)
+                {
+                    case ImageElement image:
+                        Add(image.Source?.Asset);
+                        break;
+                    case ImageStripElement strip:
+                        foreach (var item in strip.Items)
+                        {
+                            Add(item?.Asset);
+                        }
 
-                    break;
+                        break;
+                }
             }
         }
 

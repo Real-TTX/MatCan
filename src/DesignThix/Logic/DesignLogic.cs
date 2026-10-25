@@ -135,7 +135,7 @@ public static class DesignLogic
         else
         {
             var unit = input.Unit is "px" ? "px" : "mm";
-            var (min, max) = unit == "px" ? (16d, 20000d) : (5d, 5000d);
+            var (min, max) = SizeLimits(unit);
             if (input.Width is not { } w || w < min || w > max)
             {
                 throw new BizException($"Die Breite liegt zwischen {min} und {max} {unit}.", "Input.Width");
@@ -165,6 +165,99 @@ public static class DesignLogic
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync("Design angelegt", nameof(Design), design.Id, design.Name);
         return design;
+    }
+
+    /// <summary>The name of a design that was started from a tile or a size and has not been named yet.</summary>
+    public const string UnnamedDesign = "Unbenanntes Design";
+
+    /// <summary>
+    /// Starts a design with one click: from a format preset (<paramref name="presetKey"/>, e.g. "business-card") or from a custom size, with an empty white page.
+    /// Without a name it is called "Unbenannt – &lt;format&gt;" ("Unbenanntes Design" for a custom size). Designers and administrators.
+    /// </summary>
+    public static async Task<Design> CreateFromFormatAsync(Biz biz, string? presetKey, double? width, double? height, string? unit, string? name)
+    {
+        biz.RequireDesigner();
+        var preset = FormatPresets.Find(presetKey);
+        if (preset is null && !string.IsNullOrWhiteSpace(presetKey) && !string.Equals(presetKey, FormatPresets.CustomKey, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new BizException("Dieses Format kenne ich nicht.", "Input.PresetKey");
+        }
+
+        var title = Clean(name, 200) ?? (preset is null ? UnnamedDesign : "Unbenannt – " + preset.ShortName);
+        return await CreateAsync(biz, new NewDesign(title, null, preset?.Key, width, height, unit, null));
+    }
+
+    /// <summary>
+    /// A copy of a template as a new design (the template stays): the document with everything in it, name, category and description, the thumbnail. The copy is not a template.
+    /// Designers and administrators.
+    /// </summary>
+    public static async Task<Design> UseTemplateAsync(Biz biz, long templateId)
+    {
+        biz.RequireDesigner();
+        var template = await biz.Db.Design.AsNoTracking().FirstOrDefaultAsync(d => d.Id == templateId) ?? throw new BizException("Die Vorlage gibt es nicht mehr.");
+        if (!template.IsTemplate)
+        {
+            throw new BizException("Dieses Design ist keine Vorlage.");
+        }
+
+        var document = DocumentValidator.Parse(template.DocumentJson) ?? DocumentValidator.Create(template.Width, template.Height, template.Unit);
+        var json = DocumentValidator.ToJson(document);
+        var copy = new Design
+        {
+            Name = template.Name,
+            Category = template.Category,
+            Description = template.Description,
+            IsTemplate = false,
+            DocumentJson = json,
+            Revision = 1,
+            Width = document.Width,
+            Height = document.Height,
+            Unit = document.Unit,
+            ThumbnailPng = template.ThumbnailPng,
+            ThumbnailHash = template.ThumbnailHash,
+        };
+        copy.Revisions.Add(new DesignRevision { Revision = 1, DocumentJson = json });
+        biz.Db.Design.Add(copy);
+        await biz.Db.SaveChangesAsync();
+        await biz.Log.LogAsync("Design aus Vorlage angelegt", nameof(Design), copy.Id, $"{copy.Name} (Vorlage {templateId})");
+        return copy;
+    }
+
+    /// <summary>The templates (designs marked as Vorlage), by category and name, for the start page and the gallery of templates.</summary>
+    public static async Task<List<DesignRow>> TemplatesAsync(Biz biz)
+    {
+        biz.RequireSignedIn();
+        return await Query(biz).Where(d => d.IsTemplate).OrderBy(d => d.Category).ThenBy(d => d.Name).ThenBy(d => d.Id).ToListAsync();
+    }
+
+    /// <summary>The limits of a page size per unit: 5 to 5000 mm, 16 to 20000 px.</summary>
+    public static (double Min, double Max) SizeLimits(string unit) => unit == "px" ? (16d, 20000d) : (5d, 5000d);
+
+    /// <summary>
+    /// "Größe ändern": a new page size (and unit) for every page of the design. With <paramref name="scale"/> the content of all pages grows or shrinks with the page and is centred
+    /// (<see cref="DocumentResize"/>), otherwise it keeps its place. Saved as a new revision (so the old state stays in the history). Designers and administrators.
+    /// </summary>
+    public static async Task<DesignSaved> ResizeAsync(Biz biz, long id, double width, double height, string? unit, bool scale)
+    {
+        biz.RequireDesigner();
+        var kind = unit == "px" ? "px" : "mm";
+        var (min, max) = SizeLimits(kind);
+        if (!double.IsFinite(width) || width < min || width > max)
+        {
+            throw new BizException($"Die Breite liegt zwischen {min} und {max} {kind}.", "Input.Width");
+        }
+
+        if (!double.IsFinite(height) || height < min || height > max)
+        {
+            throw new BizException($"Die Höhe liegt zwischen {min} und {max} {kind}.", "Input.Height");
+        }
+
+        var design = await biz.Db.Design.AsNoTracking().Where(d => d.Id == id).Select(d => new { d.Revision, d.DocumentJson }).FirstOrDefaultAsync() ?? throw new BizException("Das Design gibt es nicht mehr.");
+        var document = DocumentValidator.Parse(design.DocumentJson) ?? throw new BizException("Das Design ist beschädigt.");
+        var resized = DocumentResize.Resize(document, width, height, kind, scale);
+        var saved = await SaveDocumentAsync(biz, id, design.Revision, DocumentValidator.ToJson(resized));
+        await biz.Log.LogAsync("Design: Größe geändert", nameof(Design), id, $"{Services.Fmt.Number((decimal)width, 1)} × {Services.Fmt.Number((decimal)height, 1)} {kind}{(scale ? ", Inhalt skaliert" : "")}");
+        return saved;
     }
 
     public sealed record DesignInput(string Name, string? Category, string? Description, bool IsTemplate);
@@ -300,7 +393,7 @@ public static class DesignLogic
     {
         biz.RequireSignedIn();
         var design = await biz.Db.Design.AsNoTracking().Where(d => d.Id == id).Select(d => new { d.Id, d.Name, d.Revision, d.DocumentJson }).FirstOrDefaultAsync();
-        return design is null ? null : new DesignLoaded(design.Id, design.Name, design.Revision, design.DocumentJson, biz.IsDesigner);
+        return design is null ? null : new DesignLoaded(design.Id, design.Name, design.Revision, DocumentValidator.Current(design.DocumentJson), biz.IsDesigner);
     }
 
     /// <summary>

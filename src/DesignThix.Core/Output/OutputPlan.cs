@@ -14,6 +14,12 @@ public static class OutputPlan
 
     public const int MaxCopies = 999;
 
+    /// <summary>
+    /// The most pages one output draws (labels times the pages of the design): a design of several pages makes every label once per page, and all of it lives in the memory
+    /// of the browser.
+    /// </summary>
+    public const int MaxUnits = 4000;
+
     public const string SelectAll = "All";
     public const string SelectActive = "Active";
     public const string SelectSelected = "Selected";
@@ -39,6 +45,17 @@ public static class OutputPlan
 
         return total;
     }
+
+    /// <summary>
+    /// The pieces an output draws: every label gives all pages of the design, in order (label 1 page 1, label 1 page 2, label 2 page 1 ...). In the single mode each piece is a page of
+    /// paper, in the sheet mode each piece fills one cell of a sheet.
+    /// </summary>
+    public static long Units(long labels, int pages) => labels * Math.Clamp(pages, 1, DocumentPageLimit);
+
+    /// <summary>The zero-based number of the piece of label <paramref name="labelIndex"/>, page <paramref name="pageIndex"/> (both zero-based) of a design with <paramref name="pages"/> pages.</summary>
+    public static int UnitIndex(int labelIndex, int pageIndex, int pages) => (labelIndex * Math.Clamp(pages, 1, DocumentPageLimit)) + pageIndex;
+
+    private const int DocumentPageLimit = 50;
 
     /// <summary>How many sheets the labels need when the first <paramref name="startPosition"/> - 1 cells of the first sheet stay empty. 0 labels need no sheet.</summary>
     public static int Sheets(long labels, int startPosition, int cellsPerSheet)

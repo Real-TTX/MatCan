@@ -9,13 +9,13 @@ namespace DesignThix.Pages.Assets;
 [RequestFormLimits(MultipartBodyLengthLimit = 250_000_000)]
 public sealed class UploadModel(Biz biz) : PageModelBase
 {
-    private const long MaxFileBytes = 12 * 1024 * 1024;
+    private const long MaxFileBytes = AssetLogic.MaxUploadFileBytes;
 
     [BindProperty]
     public List<IFormFile> Files { get; set; } = [];
 
     [BindProperty]
-    public string Category { get; set; } = "Sonstiges";
+    public string Category { get; set; } = AssetLogic.UploadsCategory;
 
     public IReadOnlyList<AssetUploadResult> Results { get; private set; } = [];
 
@@ -67,7 +67,7 @@ public sealed class UploadModel(Biz biz) : PageModelBase
 
     private async Task PrepareAsync()
     {
-        Head("Medien hochladen", "PNG, JPEG, WebP, GIF und SVG. Der Schlüssel entsteht aus dem Dateinamen; du kannst ihn danach ändern.", ("Bibliothek", null), ("Medien", "/Assets"), ("Hochladen", null));
+        Head("Medien hochladen", "PNG, JPEG, WebP, GIF und SVG. Der Schlüssel entsteht aus dem Dateinamen; du kannst ihn danach ändern.", ("Bibliothek", null), ("Uploads & Medien", "/Assets"), ("Hochladen", null));
         ViewData["Width"] = "narrow";
         ViewData["ActiveHref"] = "/Assets";
         var categories = AssetLogic.Categories.Union(await AssetLogic.UsedCategoriesAsync(biz));

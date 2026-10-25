@@ -36,6 +36,8 @@ public sealed record AssetRow
 
     public DateTime UpdateDate { get; init; }
 
+    public DateTime CreateDate { get; init; }
+
     /// <summary>The address of the file; the hash makes it immutable for the browser.</summary>
     public string Url => AssetLogic.Url(Key, ContentHash);
 }
@@ -52,7 +54,16 @@ public sealed record AssetUploadResult(string FileName, AssetRow? Asset, string?
 /// <summary>Media (images): the library of flags, seals, logos and photos that designs and data lists refer to by key.</summary>
 public static class AssetLogic
 {
-    public static readonly IReadOnlyList<string> Categories = ["Flaggen", "Siegel", "Icons", "Logos", "Fotos", "Hintergründe", "Sonstiges"];
+    /// <summary>The category the files of people go to unless they choose another; the built-in flags and seals keep Flaggen and Siegel.</summary>
+    public const string UploadsCategory = "Uploads";
+
+    public static readonly IReadOnlyList<string> Categories = [UploadsCategory, "Flaggen", "Siegel", "Icons", "Logos", "Fotos", "Hintergründe", "Sonstiges"];
+
+    /// <summary>The most files one upload request takes.</summary>
+    public const int MaxUploadFiles = 40;
+
+    /// <summary>The largest file of an upload request (the page and the API); after the checks an image is limited to 10 MB and an SVG to 2 MB.</summary>
+    public const long MaxUploadFileBytes = 12 * 1024 * 1024;
 
     public const long MaxImageBytes = 10 * 1024 * 1024;
 
@@ -83,7 +94,7 @@ public static class AssetLogic
     public static IQueryable<AssetRow> Query(Biz biz)
     {
         biz.RequireSignedIn();
-        return biz.Db.Asset.AsNoTracking().Select(a => new AssetRow { Id = a.Id, Key = a.Key, Name = a.Name, Category = a.Category, Tags = a.Tags, ContentType = a.ContentType, Extension = a.Extension, Width = a.Width, Height = a.Height, SizeBytes = a.SizeBytes, ContentHash = a.ContentHash, IsBuiltIn = a.IsBuiltIn, UpdateDate = a.UpdateDate });
+        return biz.Db.Asset.AsNoTracking().Select(a => new AssetRow { Id = a.Id, Key = a.Key, Name = a.Name, Category = a.Category, Tags = a.Tags, ContentType = a.ContentType, Extension = a.Extension, Width = a.Width, Height = a.Height, SizeBytes = a.SizeBytes, ContentHash = a.ContentHash, IsBuiltIn = a.IsBuiltIn, UpdateDate = a.UpdateDate, CreateDate = a.CreateDate });
     }
 
     public static async Task<AssetRow?> GetAsync(Biz biz, long id)
@@ -95,14 +106,17 @@ public static class AssetLogic
         return await Query(biz).FirstOrDefaultAsync(a => a.Key == normalized);
     }
 
-    /// <summary>The pickers' search: by name, key, tag or category; ordered by name.</summary>
-    public static async Task<List<AssetRow>> SearchAsync(Biz biz, string? q, string? category, int take)
+    /// <summary>
+    /// The pickers' search: by name, key, tag or category (the category without regard to case: <c>uploads</c> finds "Uploads"); ordered by name, or with
+    /// <paramref name="sort"/> <c>new</c> newest first (the media browser's uploads).
+    /// </summary>
+    public static async Task<List<AssetRow>> SearchAsync(Biz biz, string? q, string? category, int take, string? sort = null)
     {
         var query = Query(biz);
         if (!string.IsNullOrWhiteSpace(category))
         {
-            var c = category.Trim();
-            query = query.Where(a => a.Category == c);
+            var c = category.Trim().ToLowerInvariant();
+            query = query.Where(a => a.Category.ToLower() == c);
         }
 
         if (!string.IsNullOrWhiteSpace(q))
@@ -111,7 +125,10 @@ public static class AssetLogic
             query = query.Where(a => EF.Functions.ILike(a.Name, like) || EF.Functions.ILike(a.Key, like) || EF.Functions.ILike(a.Tags, like));
         }
 
-        return await query.OrderBy(a => a.Name).ThenBy(a => a.Key).Take(Math.Clamp(take, 1, 500)).ToListAsync();
+        var ordered = string.Equals(sort, "new", StringComparison.OrdinalIgnoreCase)
+            ? query.OrderByDescending(a => a.CreateDate).ThenByDescending(a => a.Id)
+            : query.OrderBy(a => a.Name).ThenBy(a => a.Key);
+        return await ordered.Take(Math.Clamp(take, 1, 500)).ToListAsync();
     }
 
     /// <summary>The bytes of an asset by key. When <paramref name="knownHash"/> is the current version the bytes are not even read.</summary>
@@ -232,6 +249,36 @@ public static class AssetLogic
         }
     }
 
+    /// <summary>Is this a person (administrator or designer) who may upload? Endpoints ask before they read a body.</summary>
+    public static void RequireUploader(Biz biz) => biz.RequireDesigner();
+
+    /// <summary>
+    /// The category of an upload: the one that was asked for when it is a known category (without regard to case) or a plain name of at most 60 characters,
+    /// else <see cref="UploadsCategory"/>.
+    /// </summary>
+    public static string UploadCategory(string? category)
+    {
+        var c = (category ?? "").Trim();
+        if (c.Length == 0)
+        {
+            return UploadsCategory;
+        }
+
+        if (Categories.FirstOrDefault(x => string.Equals(x, c, StringComparison.OrdinalIgnoreCase)) is { } known)
+        {
+            return known;
+        }
+
+        return c.Length <= 60 && c.All(ch => char.IsLetterOrDigit(ch) || ch is ' ' or '-' or '_' or '.' or '&') ? c : UploadsCategory;
+    }
+
+    /// <summary>A pasted image has no name of its own: the browser calls it "image.png" or "blob", or sends none.</summary>
+    public static bool IsGenericName(string? fileName)
+    {
+        var name = Path.GetFileNameWithoutExtension((fileName ?? "").Trim()).ToLowerInvariant();
+        return name is "" or "image" or "blob";
+    }
+
     /// <summary>Uploads one file; the key comes from the file name, a taken key gets a suffix. A refused file is reported in the result, not thrown.</summary>
     public static async Task<AssetUploadResult> UploadAsync(Biz biz, string fileName, byte[] bytes, string? category)
     {
@@ -246,12 +293,16 @@ public static class AssetLogic
             return new AssetUploadResult(fileName, null, ex.Message, []);
         }
 
-        var key = await FreeKeyAsync(biz.Db, KeyFromFileName(fileName));
+        // A pasted image has no name: it is called after the moment it came in, "bild-20261025-143005".
+        var moment = Services.Fmt.Local(biz.Now);
+        var pasted = IsGenericName(fileName);
+        var wish = pasted ? "bild-" + moment.ToString("yyyyMMdd-HHmmss", System.Globalization.CultureInfo.InvariantCulture) : KeyFromFileName(fileName);
+        var key = await FreeKeyAsync(biz.Db, wish);
         var asset = new Asset
         {
             Key = key,
-            Name = DisplayName(fileName),
-            Category = CleanCategory(category),
+            Name = pasted ? "Bild vom " + moment.ToString("dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) : DisplayName(fileName),
+            Category = UploadCategory(category),
             Tags = "",
             ContentType = prepared.ContentType,
             Extension = prepared.Extension,

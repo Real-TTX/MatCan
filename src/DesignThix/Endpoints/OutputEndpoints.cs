@@ -72,6 +72,8 @@ public static class OutputEndpoints
             sheet = p.Sheet,
             labels = p.Labels.Select(l => new { rowId = l.RowId, copies = l.Copies, values = l.Values }),
             labelCount = p.LabelCount,
+            pages = p.Pages,
+            unitCount = p.UnitCount,
             fonts = p.Fonts,
             assets = p.Assets,
             warnings = p.Warnings,

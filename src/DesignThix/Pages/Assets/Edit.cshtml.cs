@@ -122,7 +122,7 @@ public sealed class EditModel(Biz biz) : PageModelBase
         Usage = await AssetLogic.UsageAsync(biz, asset.Key);
         var categories = AssetLogic.Categories.Union(await AssetLogic.UsedCategoriesAsync(biz));
         CategoryItems = [.. categories.Select(c => new SelectListItem(c, c))];
-        Head(asset.Name, null, ("Bibliothek", null), ("Medien", "/Assets"), (asset.Name, null));
+        Head(asset.Name, null, ("Bibliothek", null), ("Uploads & Medien", "/Assets"), (asset.Name, null));
         ViewData["Width"] = "narrow";
         ViewData["ActiveHref"] = "/Assets";
         return true;

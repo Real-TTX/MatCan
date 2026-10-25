@@ -178,7 +178,8 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
         await As(UserRole.Designer, async biz =>
         {
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign("Nutzt " + key, null, "label-150x100", null, null, null, null));
-            var document = DocumentValidator.Create(150, 100) with { Background = new BackgroundDef("#ffffff", key, "cover") };
+            var base_ = DocumentValidator.Create(150, 100);
+            var document = base_ with { Pages = [base_.Pages[0] with { Background = new BackgroundDef("#ffffff", null, key, "cover") }] };
             await DesignLogic.SaveDocumentAsync(biz, design.Id, 1, DocumentValidator.ToJson(document));
 
             var list = await DataListLogic.SaveGeneralAsync(biz, null, new DataListLogic.ListInput("Nutzt " + key, null, false));
@@ -296,8 +297,8 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             Assert.DoesNotContain("bogus", saved.DocumentJson);
             Assert.DoesNotContain("extra", saved.DocumentJson);
             var document = DocumentValidator.Parse(saved.DocumentJson)!;
-            Assert.Equal(1000, ((TextElement)document.Elements[0]).FontSize);
-            Assert.Equal("#000000", ((TextElement)document.Elements[0]).Color);
+            Assert.Equal(1000, ((TextElement)document.Pages[0].Elements[0]).FontSize);
+            Assert.Equal("#000000", ((TextElement)document.Pages[0].Elements[0]).Color);
 
             var conflict = await Assert.ThrowsAsync<RevisionConflictException>(() => DesignLogic.SaveDocumentAsync(biz, design.Id, 1, dirty));
             Assert.Equal(2, conflict.CurrentRevision);
@@ -348,8 +349,8 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             Assert.False(copy.IsTemplate);
             var copied = (await DesignLogic.DocumentAsync(biz, copy.Id));
             Assert.Equal("Name", copied.Fields.Single().Key);
-            Assert.Single(copied.Elements);
-            Assert.Empty((await DesignLogic.DocumentAsync(biz, design.Id)).Elements);
+            Assert.Single(copied.Pages[0].Elements);
+            Assert.Empty((await DesignLogic.DocumentAsync(biz, design.Id)).Pages[0].Elements);
             await Assert.ThrowsAsync<BizException>(() => DesignLogic.CopyWithDocumentAsync(biz, design.Id, "not json"));
             await Assert.ThrowsAsync<BizException>(() => DesignLogic.CopyWithDocumentAsync(biz, long.MaxValue, mine));
         });

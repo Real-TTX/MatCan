@@ -160,6 +160,8 @@ public sealed class EditModel(Biz biz) : PageModelBase
         "image" => "Bild",
         "strip" => "Bildleiste",
         "showIf" => "Anzeigen, wenn gefüllt",
+        "qr" => "QR-Code",
+        "barcode" => "Strichcode",
         _ => "Text",
     };
 

@@ -1,0 +1,81 @@
+@page
+@model DesignThix.Pages.Brand.IndexModel
+@{
+    ViewData["Styles"] = new[] { "/css/datalist.css", "/css/brand.css" };
+    var kit = Model.Brand.Kit;
+    var ro = !Model.CanEdit;
+    var roles = new[] { ("heading", "Überschrift", "Für große Titel", "Frisch vom Markt", kit.Fonts.Heading), ("subheading", "Zwischenüberschrift", "Für Untertitel und Hervorhebungen", "Aus der Region, mit Liebe gemacht", kit.Fonts.Subheading), ("body", "Fließtext", "Für alles, was gelesen wird", "Unser Käse reift mindestens sechs Monate im Keller und wird jeden Tag von Hand gepflegt.", kit.Fonts.Body) };
+}
+
+<div class="dt-brand" id="dt-brand" data-brand="@Model.StateJson" data-can-edit="@(ro ? "false" : "true")">
+    @if (ro)
+    {
+        <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst die Marke nur ansehen. Ändern können Gestalter und Administratoren.</div></div>
+    }
+
+    <dt-card title="Farben" icon="palette" sub="bis zu @BrandLogic.MaxColors">
+        <p class="mat-hint">Die Farben deiner Marke. Im Farbwähler des Designers stehen sie ganz oben.</p>
+        <ul class="dt-brand__swatches" id="dt-brand-colors" aria-label="Farben der Marke"></ul>
+        <p class="mat-hint" id="dt-brand-colors-empty" hidden>Noch keine Farben.</p>
+        @if (!ro)
+        {
+            <div class="dt-brand__add">
+                <div class="mat-field">
+                    <label class="mat-label" for="dt-brand-newcolor">Farbe hinzufügen</label>
+                    <div class="mat-picker" data-picker="colour" data-placeholder="Farbe wählen">
+                        <input class="mat-picker__input" id="dt-brand-newcolor" autocomplete="off" />
+                    </div>
+                </div>
+                <button type="button" class="mat-btn mat-btn--secondary" id="dt-brand-addcolor">@Ui.Icon("plus")<span>Hinzufügen</span></button>
+            </div>
+        }
+    </dt-card>
+
+    <dt-card title="Schriften" icon="type" sub="aus deinen Schriften">
+        <p class="mat-hint">Diese Schriften setzt der Designer für „Überschrift hinzufügen“, „Zwischenüberschrift hinzufügen“ und „Fließtext hinzufügen“ ein.</p>
+        <div class="dt-brand__fonts">
+            @foreach (var (role, label, hint, sample, current) in roles)
+            {
+                <div class="dt-brand__font">
+                    <div class="mat-field">
+                        <label class="mat-label" for="dt-brand-font-@role">@label</label>
+                        <select class="mat-select" id="dt-brand-font-@role" data-role="@role" disabled="@ro">
+                            <option value="">Keine festgelegt</option>
+                            @foreach (var family in Model.Families)
+                            {
+                                <option value="@family" selected="@string.Equals(family, current, StringComparison.OrdinalIgnoreCase)" data-family="@family">@family</option>
+                            }
+                        </select>
+                        <span class="mat-hint">@hint</span>
+                    </div>
+                    <p class="dt-brand__preview dt-brand__preview--@role" id="dt-brand-preview-@role" data-sample="@sample">@sample</p>
+                </div>
+            }
+        </div>
+    </dt-card>
+
+    <dt-card title="Logos" icon="image" sub="bis zu @BrandLogic.MaxLogos">
+        <p class="mat-hint">Deine Logos. Sie kommen aus den Uploads (am besten in der Kategorie „Logos“) und stehen im Designer unter „Marke“ bereit.</p>
+        <ul class="dt-brand__logos" id="dt-brand-logos" aria-label="Logos der Marke"></ul>
+        <p class="mat-hint" id="dt-brand-logos-empty" hidden>Noch keine Logos.</p>
+        @if (!ro)
+        {
+            <div class="mat-btn-row mat-btn-row--plain">
+                <button type="button" class="mat-btn mat-btn--secondary" id="dt-brand-addlogo">@Ui.Icon("plus")<span>Logo hinzufügen</span></button>
+                <a class="mat-btn mat-btn--ghost" href="/Assets/Upload">@Ui.Icon("upload")<span>Bild hochladen</span></a>
+            </div>
+        }
+    </dt-card>
+
+    <div class="mat-btn-row">
+        @if (!ro)
+        {
+            <button type="button" class="mat-btn mat-btn--primary" id="dt-brand-save">@Ui.Icon("save")<span>Speichern</span></button>
+        }
+        <a class="mat-btn mat-btn--secondary" href="/">@Ui.Icon("back")<span>Zurück</span></a>
+        <span class="dt-brand__state mat-hint" id="dt-brand-state" role="status" aria-live="polite"></span>
+    </div>
+</div>
+
+<script src="~/js/datalist.js" asp-append-version="true"></script>
+<script src="~/js/brand.js" asp-append-version="true"></script>

@@ -20,7 +20,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public async Task OnGetAsync()
     {
-        Head("Medien", "Bilder für deine Designs: Flaggen, Siegel, Logos und Fotos. Sie werden über ihren Schlüssel angesprochen.", ("Bibliothek", null), ("Medien", null));
+        Head("Uploads & Medien", "Deine hochgeladenen Bilder und die mitgelieferten: Flaggen, Siegel, Logos und Fotos. Sie werden über ihren Schlüssel angesprochen.", ("Bibliothek", null), ("Uploads & Medien", null));
 
         var categories = AssetLogic.Categories.Union(await AssetLogic.UsedCategoriesAsync(biz)).Select(c => new FilterOption(c, c)).ToList();
         var spec = new ListSpec<AssetRow>
