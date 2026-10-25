@@ -182,6 +182,10 @@
       { label: locked ? 'Entsperren' : 'Sperren', icon: locked ? 'lock-open' : 'lock', run: cmd.lock, disabled: dis('', false) },
       { label: 'Ausblenden', icon: 'eye-off', run: cmd.hide, disabled: dis('', false) },
     ];
+    // comments are the one thing somebody who may only look can write
+    if (D.comments && D.comments.canComment()) {
+      items.push({ type: 'separator' }, { label: 'Kommentieren', icon: 'message-square-plus', shortcut: 'K', run: function () { D.comments.compose(single ? { elementId: single.id } : {}); } });
+    }
     if (single && !ro) {
       var extra = [];
       if (single.type === 'image') {
@@ -228,7 +232,7 @@
   D.fieldBindingMenu = fieldBindingMenu;
 
   /** The menu of the empty page (right click on the page). */
-  D.pageMenuItems = function () {
+  D.pageMenuItems = function (point) {
     var a = app();
     var ro = !a.editable();
     var hasBg = !!a.page().background.asset;
@@ -244,7 +248,7 @@
       { label: 'Seite hinzufügen', icon: 'file-plus', run: cmd.addPage, disabled: dis('', false) },
       { label: 'Seite duplizieren', icon: 'copy-plus', run: function () { cmd.duplicatePage(); }, disabled: dis('', false) },
       { label: 'Seite löschen', icon: 'trash', danger: true, run: function () { cmd.deletePage(); }, disabled: dis('Das Design braucht mindestens eine Seite.', a.doc.pages.length < 2) },
-    ];
+    ].concat(D.comments && D.comments.canComment() ? [{ type: 'separator' }, { label: 'Kommentar hier schreiben', icon: 'message-square-plus', shortcut: 'K', run: function () { D.comments.compose(point ? { point: point } : {}); } }] : []);
   };
 
   /** The menu of a thumbnail in the page strip. */

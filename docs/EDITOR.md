@@ -9,7 +9,7 @@ Styles: `wwwroot/css/designer.css` (+ `dt-media.css` for the media browser), Mat
 
 ```
 .dt-top      back | Datei ▾ | undo redo | save state | name (click to rename) | people (avatars, presence) | Serie | Herunterladen | Drucken | Teilen (or "Kopie erstellen" when read-only)
-.dt-rail     Vorlagen Elemente Text Uploads Marke Ebenen Daten (Zusatz)        .dt-panel (≈ 340 px, collapsible; context pages with a back arrow)
+.dt-rail     Vorlagen Elemente Text Uploads Marke Ebenen Kommentare Daten (Zusatz)        .dt-panel (≈ 340 px, collapsible; context pages with a back arrow)
 .dt-ds__center  .dt-ctx (contextual toolbar) / canvas (#dt-viewport > #dt-sheet > #dt-page + #dt-overlay) / .dt-bottom (page strip, zoom)
 .dt-tabbar   phones only: Elemente Text Uploads Ebenen Mehr
 ```
@@ -38,6 +38,7 @@ a 44 px hit area. A person with View only (`canEdit=false`) gets the same page w
 | `designer.panel-text.js` | The panel **Text**: three add buttons (brand fonts) and the ten **Schriftkombinationen** (`D.textCombos = { list, insert(app, combo, at), build }`). |
 | `designer.panel-templates.js` | The panel **Vorlagen** (previews drawn by the engine, category chips, search, the dialog "Aktuelle Seite ersetzen" / "Als neue Seite hinzufügen"); `D.templates = { list(), apply(t, mode), dialog(t) }`. |
 | `designer.panel-uploads.js`, `-layers.js`, `-data.js`, `-position.js` | Uploads, Ebenen (tree), Daten (Zusatz) (+ `D.data`, the preview state), Position (context page). |
+| `designer.panel-comments.js` (+ `css/designer-comments.css`) | `D.comments` (P5): the rail entry **Kommentare** (badge = open threads), the panel (filter, "Nur diese Seite", threads with replies, composer with `@` mentions) and the **pins** on the canvas: buttons in the layer `#dt-pins` inside `#dt-sheet` (outside `#dt-page`, so never in a download, print or thumbnail). See "Comments" below. |
 | `designer.effects.js` | The context pages **Effekte** (text: presets and the properties shadow, outline, background, curve) and **Anpassen** (image: looks and filters); both have `reselect: true`, so they follow the selection. |
 | `designer.pages.js` | The bottom bar: page strip (thumbnails drawn by the engine, drag to reorder, menu) and the zoom controls. |
 | `designer.io.js` | `D.dnd.attach` (tiles to the canvas), uploads of images and fonts, **paste** and **drop** of files. |
@@ -45,7 +46,7 @@ a 44 px hit area. A person with View only (`canEdit=false`) gets the same page w
 | `designer.file.js` | Datei menu, Größe ändern, Neues Design, Herunterladen (PNG/JPG/SVG/ZIP, PDF → print view), Drucken. `D.file`. |
 | `share.js` (+ `css/share.css`) | Not an editor module: the Teilen dialog `window.DtShare.open({ kind, id, name })` that the whole app uses (loaded before `designer.share.js`). |
 | `designer.share.js` | `D.share` (P3): the top bar's **Teilen** button (`DtShare.open`) or **Kopie erstellen** for read-only people (`DtMove.pick`, else a plain area select, `POST /api/items/copy`), the avatars of the people with access (max 4 + "+N") and **presence**: `POST /api/designs/{id}/presence` every 15 s while visible, `{ leave: true }` on `pagehide`; a dot on the avatar of everybody who has the design open, the toast "Anna bearbeitet dieses Design gerade.". `D.share.beat()` for the checks. |
-| `designer.shortcuts.js` | Keyboard, clipboard events (copy/cut), the Tastenkürzel dialog. |
+| `designer.shortcuts.js` | Keyboard, clipboard events (copy/cut), the Tastenkürzel dialog. **K** opens the composer of the comments (C adds a circle). |
 | `designer.js` | Boot: loads design, fonts, assets, brand, formats; starts the modules in order; top bar; phone tab bar. |
 | `dt-media.js` + `css/dt-media.css` | The media browser `window.DtMedia.pick(options, callback(key, asset))`, standalone (also used by `/Brand`). |
 
@@ -89,6 +90,18 @@ Opened by the toolbar (`D.panels.openPage('effects' | 'adjust')`, back arrow). *
 then writes its own; *Hohl* = outline in the old text colour and the text filled with the page colour, because `color` is hex only) and below them the single properties (`shadow`, `outline`, `background`, `curve`). **Anpassen** (image): looks
 and the sliders of `filters` (brightness, contrast, saturation, blur, grayscale, sepia), "Zurücksetzen". Both follow the selection (`reselect`) and undo.
 
+## Comments (`designer.panel-comments.js`)
+
+Registered like any rail panel (`id: 'comments'`, `order: 65`, `badge()` = the open threads; `D.panels.refreshBadges()` redraws the badge after a refresh of the list). `D.comments.init(app, config)` is called by `designer.js` after the panels and the page strip; the panel can be built BEFORE that (a panel that was open at the last visit is built by `D.panels.init`), so `build` takes `app` from its api.
+The module keeps all state (threads, filter, drafts of the composer, of the reply boxes and of an edit, the pin of the comment being written) itself, so the panel can be rebuilt at any time (`D.panels.open` always rebuilds) and the list can be redrawn after every refresh without losing what somebody typed, or the focus.
+
+* **Server**: `GET /api/designs/{id}/comments` (threads, `open`, `total`, `canComment`; every row has `canEdit/canDelete/canResolve`), `GET .../comments/mentions?q=`, `POST .../comments` (`{ text, pageId?, elementId?, x?, y?, parentId?, mentions? }`), `POST /api/comments/{id}/edit|resolve|reopen|delete`. A viewer (read-only editor) may comment, reply, edit and delete the own, resolve the own thread. The list is fetched at start, every 30 s while the tab is visible, on `visibilitychange` and after an own write.
+* **Pins**: `drawPins()` (one rAF; on `doc`, `page`, `pages`, `zoom`, `rendered`, `readonly`) keeps one `button.dt-pin` per visible pin in `#dt-pins` (keyed by thread, reused) and sets `--dt-pin-x/-y` in screen px (`document unit x app.scale()`). A pin with an element follows `D.toWorld(chain, centre)` of the element as long as it exists on the page, else the stored point. Only the pins of the current page; resolved ones only for the filters Erledigt/Alle; the pin being written is the dashed `is-draft`. A pin stops `pointerdown` (the canvas would start a gesture under it) and opens its thread (`openThread(id)`: panel, filter that shows it, page, selects the element, scrolls the pin into view, marks card and pin `is-active`).
+* **Setting a pin**: `startPlacing()` uses `D.canvas.setModal({ onDown })` (crosshair through `.is-commenting`, the banner `.dt-cm-hint`; Esc cancels). The panel is opened one tick after the pin was placed, because `designer.js` closes a drawer or sheet on `pointerdown` of the canvas.
+* **Entries**: the key **K** (`designer.shortcuts.js`), the context menu "Kommentieren" (`D.contextItems`; the empty page: "Kommentar hier schreiben" with the clicked point, `D.pageMenuItems(point)`), the phone's Mehr menu. `D.comments.compose({ elementId } | { point })` opens the composer; without options a single selected element is used. `?comment=<id>` opens the panel on that thread.
+* **Mentions** (`attachMentions(textarea, wrap, { picked, onChange })`): `@` and the start of a name asks `/comments/mentions?q=` (150 ms debounce, the people who can see the design), arrows/Enter/Tab/Esc; the text gets `@Name `, the object `picked` (id -> name) is what the request sends as `mentions` (only those whose `@Name` is still in the text). The server checks all of it again.
+* **Rules for changes**: text only through `textContent` (a mention is highlighted by splitting the text and building `span.dt-cm-mention` nodes); no `innerHTML`, no style attributes (pin places are custom properties); a new write path must refresh through `load()`.
+
 ## How to extend
 
 * **A toolbar control** for a kind: `D.toolbar.extend('text', function (ctx, controls) { controls.splice(3, 0, ctx.button({ icon, label, pressed: function () {…}, onClick: function () {…} })); })`.
@@ -108,7 +121,7 @@ and the sliders of `filters` (brightness, contrast, saturation, blur, grayscale,
 
 `GET/POST /api/designs/{id}` (`{ revision, document, autosave }`; 409 → dialog; autosaves of one person within 10 minutes share one history entry, Ctrl+S makes a new one),
 `/rename`, `/copy`, `/thumbnail`, `/resize`; `POST /api/designs` (one-click create); `GET /api/formats`, `/api/templates`, `/api/brand`, `/api/fonts`, `/api/assets?q&category&sort&take`,
-`POST /api/assets/upload`, `POST /api/fonts/upload`, `GET /api/datalists`, `/api/datalists/{id}/rows`, `/lib/icons.json`; sharing (P3): `GET /api/share/design/{id}` (the people with access), `POST /api/designs/{id}/presence`, `POST /api/items/copy`. Every POST carries `RequestVerificationToken`.
+`POST /api/assets/upload`, `POST /api/fonts/upload`, `GET /api/datalists`, `/api/datalists/{id}/rows`, `/lib/icons.json`; sharing (P3): `GET /api/share/design/{id}` (the people with access), `POST /api/designs/{id}/presence`, `POST /api/items/copy`; comments (P5): see "Comments". Every POST carries `RequestVerificationToken`.
 
 ## Checks
 
@@ -116,4 +129,5 @@ and the sliders of `filters` (brightness, contrast, saturation, blur, grayscale,
 `tests/e2e/canva-check.js` (rail and panels, toolbar, context menu, paste/drop, media browser, pages, groups, interaction, autosave, 409, Herunterladen, viewer, tablet, drawer, phone) and
 `tests/e2e/content-check.js` (K4: Elemente sections and search, icons in batches, Schriftkombinationen, the toolbar of every kind, Effekte, Anpassen, masks, crop mode incl. rotation, colour picker and gradients, Marke, Vorlagen,
 Größe ändern, media browser in the data list grid and the single print, viewer, phone; `--only elements,text,...` runs sections).
+`tests/e2e/comments-check.js` (P5: panel, pins, replies, resolve, mentions and notifications, the read-only editor, pins not in a download, the deep link, phone).
 Shared helpers: `tests/e2e/editor-lib.js` (state, gestures, PNG files in memory, synthetic paste/drop events, downloads, touch).

@@ -171,6 +171,9 @@ public static class NotificationLogic
         _ => $"/Freigegeben/Ordner/{id}",
     };
 
+    /// <summary>The address that opens a design in the editor with the thread of a comment open (mentions and replies lead here).</summary>
+    public static string CommentUrl(long designId, long commentId) => $"/Designs/{designId}/Designer?comment={commentId}";
+
     /// <summary>The name of an item for a text ("Sommerfest Plakat"); a quiet fallback when it is gone.</summary>
     internal static async Task<string> ItemNameAsync(Data.DtDbContext db, ItemKind kind, long id)
     {

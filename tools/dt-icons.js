@@ -21,6 +21,8 @@ const NAMES = [
   'folder-plus', 'folder-input', 'share-2', 'star-off', 'inbox', 'file-up', 'table-2', 'users-round', 'folder-closed', 'check-check', 'search-x',
   // sharing (P3)
   'user-plus', 'globe', 'link', 'users', 'user', 'circle-user-round', 'mail-plus',
+  // comments (P5)
+  'map-pin', 'send', 'circle-check', 'message-square-plus', 'message-square-dashed',
 ];
 
 const source = process.argv[2] || path.join(__dirname, '..', '..', 'MatDesign', 'src', 'MatUi', 'wwwroot', 'iconlib', 'matui-iconlib.svg');

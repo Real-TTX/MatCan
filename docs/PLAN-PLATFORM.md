@@ -301,3 +301,14 @@ per-item audit trail beyond the existing activity log and design history.
 - Deleting an account with a transfer puts everything into a new folder "Übernommen von {Name}" in the target area; a team the person owns alone passes to its first Admin (without an Admin the deletion is refused with the reason).
 - Teams, registration and invitations are rate limited with the one `PublicRateLimiter` (the keys differ: `register:`, `register-mail:`, `invite:`).
 - Extra endpoints: `POST /api/spaces/{id}` (update), `/delete`, `/transfer`; `/api/notifications*`.
+
+## P5 status (what the result does differently)
+
+- The key for a comment is **K**, not `C` as the brief said: `C` already adds a circle (documented in the dialog "Tastenkürzel" and used by the checks). The same entry is in the context menu ("Kommentieren"; on the empty page "Kommentar hier schreiben") and, on a phone, in the Mehr menu ("Kommentare (n)").
+- `Comment` got two columns (migration `Comments`): `MentionsJson` (ids of the people the text mentions) and `EditedDate` (an edit; `UpdateDate` also moves with a resolve, which is no edit). A mention is the name in the text (`@Name`) plus the id the client sends; the server keeps an id only when the person can see the design and the name is really in the text, so nobody is pinged without a visible sign. Who can see the design is worked out by `CommentLogic.AudienceAsync` (area members, shares on the item or a folder above, directly or through a team, people who opened a live sign-in link); a public link gives nobody anything.
+- The platform's own templates (no area) cannot be commented: every signed-in person could see them, so every person could write on them.
+- The e-mail address of a candidate is only given to somebody who manages the design (and only they can search by address); everybody else finds people by the start of the name.
+- Avatars are not coloured by the server: the script colours them from the name (as the Teilen dialog does).
+- Pins sit in their own layer `#dt-pins` inside the sheet, not in the SVG overlay: they need to be clickable buttons, and they must never reach a download, a print or a thumbnail. An element pin is drawn at the current centre of the element, as the brief said; the stored point of the comment is the fallback when the element is gone.
+- The list is fetched every 30 s while the tab is visible (also with the panel closed, because of the badge), not only while the panel is open.
+- On a phone the sheet gets bottom padding while it shows comments (`is-comments-open`), so a pin can be scrolled into the part of the page above it.

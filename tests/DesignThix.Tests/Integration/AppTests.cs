@@ -150,6 +150,8 @@ public sealed class AppTests
     [InlineData("/Account/Invitations")]
     [InlineData("/api/notifications")]
     [InlineData("/api/notifications/count")]
+    [InlineData("/api/designs/1/comments")]
+    [InlineData("/api/designs/1/comments/mentions?q=a")]
     public async Task Nothing_of_the_library_is_served_to_a_visitor_who_is_not_signed_in(string path)
     {
         if (AppFactory.Connection is null)
@@ -166,6 +168,11 @@ public sealed class AppTests
     [InlineData("/api/theme")]
     [InlineData("/api/notifications/read-all")]
     [InlineData("/api/notifications/1/read")]
+    [InlineData("/api/designs/1/comments")]
+    [InlineData("/api/comments/1/edit")]
+    [InlineData("/api/comments/1/resolve")]
+    [InlineData("/api/comments/1/reopen")]
+    [InlineData("/api/comments/1/delete")]
     [InlineData("/api/designs/1")]
     [InlineData("/api/designs/1/thumbnail")]
     [InlineData("/api/datalists/1/rows")]

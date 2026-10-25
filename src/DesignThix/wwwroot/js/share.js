@@ -470,7 +470,8 @@
           linkBox.appendChild(downloadField);
         }
         dateInput = el('input', { type: 'date', class: 'mat-input mat-input--sm dt-sh-date', id: 'dt-sh-exp-' + uid, value: expiresValue || null, 'aria-label': 'Gültig bis' });
-        dateInput.addEventListener('change', function () { saveLink(current === 'public' ? 'Public' : 'SignedIn', current === 'public' ? 'view' : permValue, downloadOn, dateInput.value); });
+        // the values are read from the controls now: a change made a moment ago has not come back through reload() yet
+        dateInput.addEventListener('change', function () { saveLink(current === 'public' ? 'Public' : 'SignedIn', current === 'public' ? 'view' : (permField ? permField.value : permValue), current === 'public' && sw ? sw.checked : downloadOn, dateInput.value); });
         linkBox.appendChild(el('div', { class: 'dt-sh-opt' }, [el('label', { class: 'dt-sh-opt__label', for: 'dt-sh-exp-' + uid, text: 'Gültig bis (optional)' }), dateInput]));
         if (link.expired) {
           linkBox.appendChild(el('div', { class: 'mat-alert mat-alert--warning dt-sh-expired', role: 'status' }, [icon('alert'), el('div', { class: 'mat-alert__body', text: 'Dieser Link ist abgelaufen. Wähle ein neues Datum oder lösche das Datum.' })]));

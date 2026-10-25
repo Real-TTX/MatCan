@@ -94,7 +94,7 @@
 
   function initMenus() {
     app.on('contextmenu', function (ev) {
-      var items = ev.node ? D.contextItems(ev.node) : D.pageMenuItems();
+      var items = ev.node ? D.contextItems(ev.node) : D.pageMenuItems(ev.point);
       D.menu.open(items, { x: ev.x, y: ev.y });
     });
     app.on('node:dblclick', function (ev) {
@@ -138,6 +138,7 @@
       var items = [
         { label: 'Vorlagen', icon: 'layout-template', run: function () { D.panels.open('templates'); } },
         { label: 'Marke', icon: 'badge-check', run: function () { D.panels.open('brand'); } },
+        { label: 'Kommentare' + (D.comments && D.comments.openCount() ? ' (' + D.comments.openCount() + ')' : ''), icon: 'message-square', run: function () { D.panels.open('comments'); } },
         { label: 'Daten (Zusatz)', icon: 'database', run: function () { D.panels.open('data'); } },
         { type: 'separator' },
         { label: 'Herunterladen …', icon: 'download', run: D.file.downloadDialog },
@@ -224,6 +225,7 @@
         D.toolbar.init(app, $('#dt-ctx'));
         D.panels.init(app, { root: rootEl, rail: $('#dt-rail'), panel: $('#dt-panel'), body: $('#dt-panel-body'), title: $('#dt-panel-title'), back: $('#dt-panel-back'), close: $('#dt-panel-close') });
         D.pages.init(app, { strip: $('#dt-pages'), zoom: $('#dt-zoombar'), toggle: $('#dt-pages-toggle'), root: rootEl });
+        if (D.comments) { D.comments.init(app, config); }
         initResponsive();
         if (restored) { app.baseRevision = restored.revision; app.markDirty(); }
         rootEl.classList.remove('is-loading');

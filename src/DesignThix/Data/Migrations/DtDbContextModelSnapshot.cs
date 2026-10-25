@@ -17,7 +17,7 @@ namespace DesignThix.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.13")
+                .HasAnnotation("ProductVersion", "10.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -498,8 +498,15 @@ namespace DesignThix.Data.Migrations
                     b.Property<long>("DesignId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime?>("EditedDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("ElementId")
                         .HasColumnType("text");
+
+                    b.Property<string>("MentionsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
 
                     b.Property<string>("PageId")
                         .HasColumnType("text");

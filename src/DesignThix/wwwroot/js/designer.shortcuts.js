@@ -25,6 +25,7 @@
       ['Alt + Ziehen', 'Kopie ziehen'], ['⇧ + Ziehen', 'Nur waagerecht oder senkrecht verschieben'], ['Alt beim Ziehen', 'Einrasten ausschalten'],
     ]],
     ['Text', [[M + '+B', 'Fett'], [M + '+I', 'Kursiv'], [M + '+U', 'Unterstrichen']]],
+    ['Kommentare', [['K', 'Kommentar zur Auswahl schreiben (ohne Auswahl: zur Seite)'], ['@', 'Im Kommentar jemanden erwähnen'], [M + '+Enter', 'Kommentar absenden'], ['Esc', 'Pin setzen abbrechen']]],
     ['Ansicht', [
       [M + '+0', 'Seite einpassen'], [M + '+1', '100 %'], [M + ' + Mausrad', 'Zoomen (auch Pinch auf dem Touchscreen)'], ['+  /  −', 'Vergrößern / verkleinern'],
       ['Leertaste + Ziehen', 'Ansicht verschieben (auch mittlere Maustaste, zwei Finger)'],
@@ -105,6 +106,7 @@
       if (key === '+' || key === '=') { D.canvas.stepZoom(1); return; }
       if (key === '-') { D.canvas.stepZoom(-1); return; }
       if (key === '?') { ev.preventDefault(); dialog(); return; }
+      if (lower === 'k' && D.comments) { ev.preventDefault(); D.comments.compose(); return; }
       if (key === 'ContextMenu' || (key === 'F10' && ev.shiftKey)) {
         ev.preventDefault();
         var one = app.single();

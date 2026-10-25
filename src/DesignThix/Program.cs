@@ -332,6 +332,7 @@ app.MapStudioEndpoints();
 app.MapPlatformEndpoints();
 app.MapShareEndpoints();
 app.MapNotificationEndpoints();
+app.MapCommentEndpoints();
 app.MapOutputEndpoints();
 app.MapAiEndpoints();
 

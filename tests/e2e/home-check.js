@@ -116,7 +116,7 @@ const stamp = String(Date.now()).slice(-6);
   id = designIdOf(page.url());
   created.push(id);
   d = await apiDesign(page, id);
-  check('"Eigene Größe" opens the dialog; 120 × 80 mm creates exactly that', d.document && d.document.width === 120 && d.document.height === 80 && d.document.unit === 'mm', JSON.stringify(d).slice(0, 120));
+  check('"Eigene Größe" opens the dialog; 120 × 80 mm creates exactly that', d.document && d.document.width === 120 && d.document.height === 80 && d.document.unit === 'mm', JSON.stringify(d.document ? { w: d.document.width, h: d.document.height, u: d.document.unit } : d));
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   await page.click('[data-format-custom]');
   await page.waitForSelector('#dt-create[open]');

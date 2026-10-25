@@ -75,7 +75,7 @@ async function fresh(page, body) {
 
   current = 'layout: ';
   const railLabels = await page.$$eval('.dt-rail__btn', b => b.map(x => x.textContent.trim()));
-  check('the rail has Vorlagen, Elemente, Text, Uploads, Marke, Ebenen and Daten (Zusatz)', railLabels.join('|') === 'Vorlagen|Elemente|Text|Uploads|Marke|Ebenen|Daten (Zusatz)', railLabels.join('|'));
+  check('the rail has Vorlagen, Elemente, Text, Uploads, Marke, Ebenen, Kommentare and Daten (Zusatz)', railLabels.join('|') === 'Vorlagen|Elemente|Text|Uploads|Marke|Ebenen|Kommentare|Daten (Zusatz)', railLabels.join('|'));
   const titles = { templates: 'Vorlagen', elements: 'Elemente', text: 'Text', uploads: 'Uploads', brand: 'Marke', layers: 'Ebenen', data: 'Daten (Zusatz)' };
   for (const id of Object.keys(titles)) {
     await openPanel(page, id);
@@ -1102,7 +1102,7 @@ async function fresh(page, body) {
   await viewer.mouse.click(vg.cx, vg.cy, { button: 'right' });
   await viewer.waitForSelector('.dt-menu');
   const enabledEntries = await viewer.$$eval('.dt-menu__item:not(.is-disabled) .dt-menu__label', l => l.map(x => x.textContent));
-  check('the context menu of a viewer only has Kopieren and Stil kopieren', enabledEntries.every(l => ['Kopieren', 'Stil kopieren'].includes(l)) && enabledEntries.includes('Kopieren'), enabledEntries.join('|'));
+  check('the context menu of a viewer only has Kopieren, Stil kopieren and Kommentieren (comments are the one thing a viewer writes)', enabledEntries.every(l => ['Kopieren', 'Stil kopieren', 'Kommentieren'].includes(l)) && enabledEntries.includes('Kopieren') && enabledEntries.includes('Kommentieren'), enabledEntries.join('|'));
   await viewer.keyboard.press('Escape');
   const vSave = await viewer.evaluate(async id => { const r = await fetch('/api/designs/' + id, { method: 'POST', headers: { 'Content-Type': 'application/json', RequestVerificationToken: document.querySelector('meta[name=dt-csrf]').content }, body: JSON.stringify({ revision: 1, document: {} }) }); return r.status; }, dlDesign);
   check('the server refuses a save of a viewer (403)', vSave === 403, String(vSave));

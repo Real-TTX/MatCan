@@ -1,6 +1,6 @@
 /* DesignThix editor, part 8: the left side. A vertical rail of icons (Vorlagen, Elemente, Text, Uploads, Marke, Ebenen, Daten) opens a wide panel (about 340 px, collapsible);
    context pages (Position, later Effekte, Anpassen, Farbe) open in the same panel with a back arrow. Framework: D.panels.register(def) with
-     { id, title, label, icon, order, build(host, api), page: true for a context page, badge() }
+     { id, title, label, icon, order, build(host, api), page: true for a context page, badge() (a number; D.panels.refreshBadges() redraws it), badgeClass }
    build fills `host` each time the panel is shown; api = { app, host, on(event, fn) (removed when the panel is hidden), rebuild(), setTitle(text) }.
    This file also holds the simple panels Elemente, Text, Vorlagen and Marke; Uploads, Ebenen, Daten and Position are in their own files (designer.panel-*.js).
    Phones: the same panel is a bottom sheet (CSS) opened from the tab bar; 768-1023 px: an overlay drawer next to the rail. */
@@ -122,7 +122,7 @@
       var btn = D.el('button', { type: 'button', class: 'dt-rail__btn', 'data-panel': id, 'aria-pressed': 'false', title: d.title, 'aria-label': d.title });
       btn.appendChild(D.icon(d.icon));
       btn.appendChild(D.el('span', { class: 'dt-rail__label', text: d.label || d.title }));
-      if (d.badge) { var badge = D.el('b', { class: 'dt-rail__badge', hidden: true }); btn.appendChild(badge); d._badge = badge; }
+      if (d.badge) { var badge = D.el('b', { class: 'dt-rail__badge' + (d.badgeClass ? ' ' + d.badgeClass : ''), hidden: true }); btn.appendChild(badge); d._badge = badge; }
       btn.addEventListener('click', function () { toggle(id); });
       refs.rail.appendChild(btn);
     });
@@ -133,6 +133,8 @@
     app.on('doc', updateBadges);
     app.on('page', updateBadges);
     app.on('warnings', updateBadges);
+    D.panels.refreshBadges = updateBadges;
+    updateBadges();
     // a context page that depends on the selection goes back when nothing is selected
     app.on('selection', function () {
       if (state.open && state.id && def(state.id).page && def(state.id).needsSelection && !app.sel.length) { back(); }

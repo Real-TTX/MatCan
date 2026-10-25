@@ -266,6 +266,12 @@ public class Comment : AuditedEntity, ISoftDeletable
 
     public string Text { get; set; } = "";
 
+    /// <summary>The ids of the people the text mentions with <c>@Name</c> (a JSON array of numbers; only people who could see the design when the comment was written).</summary>
+    public string MentionsJson { get; set; } = "[]";
+
+    /// <summary>When the author last changed the text (null = never): the UpdateDate also moves with a resolve, which is no edit.</summary>
+    public DateTime? EditedDate { get; set; }
+
     public DateTime? ResolvedDate { get; set; }
 
     public long? ResolvedUserId { get; set; }

@@ -52,7 +52,7 @@ public static class ShareLogic
     }) ?? "";
 
     /// <summary>The folder ids on the way from the top to the item (the folder itself included for a folder); empty for an item at the top of an area.</summary>
-    private static async Task<List<long>> FolderChainAsync(DtDbContext db, ItemKind kind, long id)
+    internal static async Task<List<long>> FolderChainAsync(DtDbContext db, ItemKind kind, long id)
     {
         var (_, folder) = await Access.RawPlaceAsync(db, kind, id);
         long? start = kind == ItemKind.Folder ? id : folder;
