@@ -1434,6 +1434,13 @@
     // ---------------------------------------------------------------------------------------- assets
     app.assetByKey = function (key) { return app.assetMap.get(D.lower(key)) || null; };
 
+    /** The asset keys a document names: image sources, strip items, page backgrounds and the samples of image fields. */
+    app.assetKeysOf = function (doc) {
+      var keys = window.DtEngine.assetKeysUsed(doc);
+      (doc.fields || []).forEach(function (f) { if (f.type === 'image' && f.sample) { keys.push(f.sample); } });
+      return keys;
+    };
+
     /** asset key -> url for the engine: null for a key the library does not have (the editor warns), else the hashed address. */
     app.assetUrl = function (key) {
       var a = app.assetByKey(key);
@@ -1447,6 +1454,29 @@
       list.forEach(function (a) { app.assetMap.set(D.lower(a.key), a); });
       app.assetsComplete = complete;
       app.emit('assets');
+    };
+
+    /**
+     * Asks the server for the addresses (with their hashes) of images that an item uses and that the person may not find in their own library (a design that was shared with them, the cells of
+     * a data list): context is "design:12" or "datalist:3". What comes back is only put into the lookup of the engine, not into the lists of the media browser. Resolves when it is done.
+     */
+    app.resolveAssets = function (context, keys) {
+      var wanted = [];
+      (keys || []).forEach(function (k) {
+        var lower = D.lower(k);
+        if (lower && !app.assetMap.has(lower) && wanted.indexOf(lower) < 0) { wanted.push(lower); }
+      });
+      if (!wanted.length) { return Promise.resolve(false); }
+      return D.request('GET', '/api/assets/resolve?context=' + encodeURIComponent(context) + '&keys=' + encodeURIComponent(wanted.join(','))).then(function (res) {
+        if (!res.ok || !res.data) { return false; }
+        var learned = false;
+        Object.keys(res.data).forEach(function (k) {
+          var a = res.data[k];
+          if (a && a.key && a.url) { app.assetMap.set(D.lower(a.key), a); learned = true; }
+        });
+        if (learned) { app.emit('assets'); }
+        return learned;
+      }, function () { return false; });
     };
 
     /** Adds or updates assets the editor just learned about (an upload): the engine can draw them at once. */

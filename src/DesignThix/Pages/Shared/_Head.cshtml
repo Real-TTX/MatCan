@@ -42,6 +42,6 @@
     @* The fonts of the library (one @font-face per font, served by the app): previews, specimens and the designer need the families. Not for the sign-in pages. *@
     @if (Context.User.Identity?.IsAuthenticated == true)
     {
-        <link rel="stylesheet" href="/fonts.css" />
+        <link rel="stylesheet" href="@(ViewContext.ViewData["FontsHref"] ?? "/fonts.css")" />
     }
 </head>

@@ -30,6 +30,10 @@ public sealed record DataListRow
 
     public bool ContainsPersonalData { get; init; }
 
+    public long? SpaceId { get; init; }
+
+    public long? FolderId { get; init; }
+
     public DateTime UpdateDate { get; init; }
 
     public string ColumnsJson { get; init; } = "[]";
@@ -39,7 +43,7 @@ public sealed record DataListRow
 public sealed record GridRow(long? Id, Dictionary<string, string> Values, int Copies, bool IsActive);
 
 /// <summary>Everything the grid needs to start.</summary>
-public sealed record GridData(long Id, string Name, int Revision, bool CanEdit, IReadOnlyList<ColumnDef> Columns, IReadOnlyList<GridRow> Rows);
+public sealed record GridData(long Id, string Name, int Revision, bool CanEdit, bool CanManage, IReadOnlyList<ColumnDef> Columns, IReadOnlyList<GridRow> Rows);
 
 /// <summary>What a pasted or uploaded CSV looks like: shown before anything is imported, with a mapping of its columns to the columns of the list.</summary>
 public sealed record ImportPreview(char Delimiter, IReadOnlyList<string> Headers, IReadOnlyList<IReadOnlyList<string>> SampleRows, int RowCount, IReadOnlyList<string> SuggestedMapping);
@@ -58,43 +62,63 @@ public static class DataListLogic
     public const string MapCopies = "@copies";
     public const string MapActive = "@active";
 
+    /// <summary>The data lists the person may see: their own, those of their teams and what was shared with them.</summary>
     public static IQueryable<DataListRow> Query(Biz biz)
     {
         biz.RequireSignedIn();
-        return biz.Db.DataList.AsNoTracking().Select(l => new DataListRow { Id = l.Id, Name = l.Name, Description = l.Description, Revision = l.Revision, RowCount = l.Rows.Count, ContainsPersonalData = l.ContainsPersonalData, UpdateDate = l.UpdateDate, ColumnsJson = l.ColumnsJson });
+        return Access.Visible<DataList>(biz).AsNoTracking().Select(l => new DataListRow { Id = l.Id, Name = l.Name, Description = l.Description, Revision = l.Revision, RowCount = l.Rows.Count, ContainsPersonalData = l.ContainsPersonalData, SpaceId = l.SpaceId, FolderId = l.FolderId, UpdateDate = l.UpdateDate, ColumnsJson = l.ColumnsJson });
     }
 
     public static async Task<int> RowCountAsync(Biz biz, long id)
     {
-        biz.RequireSignedIn();
+        await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.View);
         return await biz.Db.DataRow.CountAsync(r => r.DataListId == id);
     }
 
+    /// <summary>The list as a record, or null when it does not exist or the person may not see it.</summary>
     public static async Task<DataList?> GetAsync(Biz biz, long id)
     {
-        biz.RequireSignedIn();
+        if (await Access.LevelAsync(biz, ItemKind.DataList, id) == AccessLevel.None)
+        {
+            return null;
+        }
+
         return await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id);
     }
+
+    /// <summary>Where the list is and what the person may do with it (the flags of the pages).</summary>
+    public static Task<ItemPlace> PlaceAsync(Biz biz, long id) => Access.PlaceAsync(biz, ItemKind.DataList, id);
 
     public static async Task<List<Choice>> ChoicesAsync(Biz biz)
     {
         biz.RequireSignedIn();
-        return await biz.Db.DataList.AsNoTracking().OrderBy(l => l.Name).Select(l => new Choice(l.Id, l.Name, null)).ToListAsync();
+        return await Access.Visible<DataList>(biz).AsNoTracking().OrderBy(l => l.Name).Select(l => new Choice(l.Id, l.Name, null)).ToListAsync();
     }
 
     public static async Task<int> CountAsync(Biz biz)
     {
         biz.RequireSignedIn();
-        return await biz.Db.DataList.CountAsync();
+        return await Access.Visible<DataList>(biz).CountAsync();
     }
 
     // ------------------------------------------------------------------------------------------------ the list itself
 
     public sealed record ListInput(string Name, string? Description, bool ContainsPersonalData);
 
-    public static async Task<DataList> SaveGeneralAsync(Biz biz, long? id, ListInput input)
+    /// <summary>Creates a list (in the area asked for, by default the personal area) or changes the name, description and personal-data flag of one (Edit).</summary>
+    public static async Task<DataList> SaveGeneralAsync(Biz biz, long? id, ListInput input, long? spaceId = null, long? folderId = null)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
+        (long Space, long? Folder)? target = null;
+        if (id is null)
+        {
+            target = await Access.PlacementAsync(biz, spaceId, folderId);
+        }
+        else
+        {
+            await Access.RequireAsync(biz, ItemKind.DataList, id.Value, AccessLevel.Edit);
+        }
+
         var name = (input.Name ?? "").Trim();
         if (name.Length == 0)
         {
@@ -104,12 +128,12 @@ public static class DataListLogic
         DataList list;
         if (id is null)
         {
-            list = new DataList { ColumnsJson = "[]" };
+            list = new DataList { ColumnsJson = "[]", SpaceId = target!.Value.Space, FolderId = target.Value.Folder };
             biz.Db.DataList.Add(list);
         }
         else
         {
-            list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
+            list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new NotFoundException();
         }
 
         list.Name = name.Length > 200 ? name[..200] : name;
@@ -120,22 +144,30 @@ public static class DataListLogic
         return list;
     }
 
+    /// <summary>Deletes a list: it goes to the trash (its rows stay until it is purged). Needs Manage.</summary>
     public static async Task DeleteAsync(Biz biz, long id)
     {
-        biz.RequireDesigner();
-        var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
-        await biz.Db.DataRow.Where(r => r.DataListId == id).ExecuteDeleteAsync();
-        biz.Db.DataList.Remove(list);
-        await biz.Db.SaveChangesAsync();
+        await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.Manage);
+        var list = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id) ?? throw new NotFoundException();
+        await ItemLogic.TrashAsync(biz, [new ItemRef(ItemKind.DataList, id)]);
         await biz.Log.LogAsync("Datenliste gelöscht", nameof(DataList), id, list.Name);
     }
 
-    /// <summary>Copies a list with its columns and rows ("Duplizieren").</summary>
+    /// <summary>Copies a list with its columns and rows ("Duplizieren"); viewing it is enough. The copy goes next to the original when the person may write there, else into their personal area.</summary>
     public static async Task<DataList> DuplicateAsync(Biz biz, long id)
     {
-        biz.RequireDesigner();
-        var source = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
-        var copy = new DataList { Name = Clip(source.Name + " (Kopie)", 200), Description = source.Description, ColumnsJson = source.ColumnsJson, ContainsPersonalData = source.ContainsPersonalData };
+        await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.View);
+        var source = await biz.Db.DataList.AsNoTracking().Where(l => l.Id == id).Select(l => new { l.SpaceId, l.FolderId }).FirstOrDefaultAsync() ?? throw new NotFoundException();
+        var (space, folder) = await Access.CopyTargetAsync(biz, source.SpaceId, source.FolderId);
+        return await DuplicateToAsync(biz, id, space, folder, true);
+    }
+
+    /// <summary>A copy of a list in a given place the caller checked (viewing the original is enough).</summary>
+    internal static async Task<DataList> DuplicateToAsync(Biz biz, long id, long space, long? folder, bool markAsCopy)
+    {
+        await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.View);
+        var source = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id) ?? throw new NotFoundException();
+        var copy = new DataList { Name = Clip(markAsCopy ? source.Name + " (Kopie)" : source.Name, 200), Description = source.Description, ColumnsJson = source.ColumnsJson, ContainsPersonalData = source.ContainsPersonalData, SpaceId = space, FolderId = folder };
         biz.Db.DataList.Add(copy);
         await biz.Db.SaveChangesAsync();
         var rows = await biz.Db.DataRow.AsNoTracking().Where(r => r.DataListId == id).OrderBy(r => r.Position).ToListAsync();
@@ -144,6 +176,8 @@ public static class DataListLogic
             biz.Db.DataRow.Add(new DataRow { DataListId = copy.Id, Position = r.Position, ValuesJson = r.ValuesJson, Copies = r.Copies, IsActive = r.IsActive });
         }
 
+        await biz.Db.SaveChangesAsync();
+        await AssetRefs.CopyAsync(biz.Db, ItemKind.DataList, id, copy.Id);
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync("Datenliste dupliziert", nameof(DataList), copy.Id, copy.Name);
         return copy;
@@ -158,8 +192,8 @@ public static class DataListLogic
     /// <summary>Saves the columns (key, label, type, decimals, category). Values of a column that is removed stay in the rows until the grid is saved.</summary>
     public static async Task SaveColumnsAsync(Biz biz, long id, IReadOnlyList<ColumnDef> columns)
     {
-        biz.RequireDesigner();
-        var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
+        await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.Edit);
+        var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new NotFoundException();
         if (ColumnDefs.Check(columns) is { } problem)
         {
             throw new BizException(problem, "Columns");
@@ -174,9 +208,10 @@ public static class DataListLogic
     /// <summary>"Spalten aus Design übernehmen": the fields of the design are added as columns (a key that is there stays as it is).</summary>
     public static async Task<int> AddColumnsFromDesignAsync(Biz biz, long id, long designId)
     {
-        biz.RequireDesigner();
-        var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
-        var json = await biz.Db.Design.AsNoTracking().Where(d => d.Id == designId).Select(d => d.DocumentJson).FirstOrDefaultAsync() ?? throw new BizException("Das Design gibt es nicht mehr.");
+        await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.Edit);
+        var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new NotFoundException();
+        // the design is an input of the call, not the thing asked for: one the person may not see is "not there" for them
+        var json = await Access.Visible<Design>(biz).AsNoTracking().Where(d => d.Id == designId).Select(d => d.DocumentJson).FirstOrDefaultAsync() ?? throw new BizException("Das Design gibt es nicht mehr.");
         var document = DocumentValidator.Parse(json);
         var current = ColumnDefs.Parse(list.ColumnsJson).ToList();
         var known = current.Select(c => c.Key.ToLowerInvariant()).ToHashSet();
@@ -194,11 +229,19 @@ public static class DataListLogic
         {
             list.ColumnsJson = ColumnDefs.ToJson(current);
             list.Revision++;
+            await RebuildRefsAsync(biz.Db, list);
             await SaveWithRevisionAsync(biz, list);
             await biz.Log.LogAsync("Spalten aus Design übernommen", nameof(DataList), id, $"{list.Name}: {added} neu");
         }
 
         return added;
+    }
+
+    /// <summary>Stores the image keys that the cells of the list use (the changes are tracked; the caller saves). The rows are read from the database, so call it before the rows are replaced only for column changes.</summary>
+    internal static async Task RebuildRefsAsync(Data.DtDbContext db, DataList list)
+    {
+        var rows = await db.DataRow.AsNoTracking().Where(r => r.DataListId == list.Id).Select(r => r.ValuesJson).ToListAsync();
+        await AssetRefs.SyncAsync(db, ItemKind.DataList, list.Id, AssetRefs.KeysOf(list.ColumnsJson, rows.Select(ParseValues)));
     }
 
     private static async Task SaveWithRevisionAsync(Biz biz, DataList list)
@@ -269,18 +312,18 @@ public static class DataListLogic
 
     public static async Task<GridData> GridAsync(Biz biz, long id)
     {
-        biz.RequireSignedIn();
-        var list = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
+        var level = await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.View);
+        var list = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id) ?? throw new NotFoundException();
         var rows = await biz.Db.DataRow.AsNoTracking().Where(r => r.DataListId == id).OrderBy(r => r.Position).ThenBy(r => r.Id).ToListAsync();
-        return new GridData(list.Id, list.Name, list.Revision, biz.IsDesigner, ColumnsOf(list),
+        return new GridData(list.Id, list.Name, list.Revision, level >= AccessLevel.Edit, level >= AccessLevel.Manage, ColumnsOf(list),
             [.. rows.Select(r => new GridRow(r.Id, ParseValues(r.ValuesJson), r.Copies, r.IsActive))]);
     }
 
     /// <summary>Saves the whole grid in its order. A stale revision throws <see cref="RevisionConflictException"/>; rows that are not in the set are deleted.</summary>
     public static async Task<(int Revision, List<long> RowIds)> SaveRowsAsync(Biz biz, long id, int revision, IReadOnlyList<GridRow> rows)
     {
-        biz.RequireDesigner();
-        var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
+        await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.Edit);
+        var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new NotFoundException();
         if (list.Revision != revision)
         {
             throw new RevisionConflictException(list.Revision);
@@ -323,6 +366,9 @@ public static class DataListLogic
         }
 
         biz.Db.DataRow.RemoveRange(existing.Values.Where(r => !keep.Contains(r.Id)));
+        var keys = AssetRefs.KeysOf(list.ColumnsJson, ordered.Select(r => (IReadOnlyDictionary<string, string>)ParseValues(r.ValuesJson)));
+        await AssetRefs.RequireUsableAsync(biz, keys, await AssetRefs.StoredAsync(biz.Db, ItemKind.DataList, id));
+        await AssetRefs.SyncAsync(biz.Db, ItemKind.DataList, id, keys);
         list.Revision++;
         try
         {
@@ -342,8 +388,8 @@ public static class DataListLogic
 
     public static async Task<(byte[] Bytes, string FileName)> ExportCsvAsync(Biz biz, long id)
     {
-        biz.RequireSignedIn();
-        var list = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
+        await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.View);
+        var list = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id) ?? throw new NotFoundException();
         var columns = ColumnsOf(list);
         var rows = await biz.Db.DataRow.AsNoTracking().Where(r => r.DataListId == id).OrderBy(r => r.Position).ThenBy(r => r.Id).ToListAsync();
         var table = new List<IReadOnlyList<string>>(rows.Count + 1);
@@ -364,8 +410,8 @@ public static class DataListLogic
     /// <summary>Reads a CSV text and proposes what each of its columns means for this list.</summary>
     public static async Task<ImportPreview> PreviewImportAsync(Biz biz, long id, string text, bool hasHeader)
     {
-        biz.RequireDesigner();
-        var list = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
+        await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.Edit);
+        var list = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id) ?? throw new NotFoundException();
         var table = ReadTable(text);
         var width = table.Rows.Max(r => r.Count);
         var headers = hasHeader ? Pad(table.Rows[0], width) : [.. Enumerable.Range(1, width).Select(n => $"Spalte {n}")];
@@ -448,8 +494,8 @@ public static class DataListLogic
     /// <summary>Imports the rows: the mapping says, per CSV column, which column of the list it fills (or a new one, or copies/active, or nothing).</summary>
     public static async Task<int> ImportAsync(Biz biz, long id, ImportRequest request)
     {
-        biz.RequireDesigner();
-        var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
+        await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.Edit);
+        var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new NotFoundException();
         var table = ReadTable(request.Text);
         var width = table.Rows.Max(r => r.Count);
         var headers = request.HasHeader ? Pad(table.Rows[0], width) : [.. Enumerable.Range(1, width).Select(n => $"Spalte {n}")];
@@ -490,12 +536,8 @@ public static class DataListLogic
             throw new BizException($"Eine Datenliste hat höchstens {Services.Fmt.Integer(MaxRows)} Zeilen: {Services.Fmt.Integer(existingCount)} sind da, {Services.Fmt.Integer(body.Count)} kämen dazu.");
         }
 
-        if (request.Replace)
-        {
-            await biz.Db.DataRow.Where(r => r.DataListId == id).ExecuteDeleteAsync();
-        }
-
         var position = existingCount == 0 ? 0 : await biz.Db.DataRow.Where(r => r.DataListId == id).MaxAsync(r => r.Position) + 1;
+        var newRows = new List<DataRow>();
         foreach (var cells in body)
         {
             var values = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -524,7 +566,7 @@ public static class DataListLogic
                 }
             }
 
-            biz.Db.DataRow.Add(new DataRow { DataListId = id, Position = position++, ValuesJson = ToJson(values), Copies = copies, IsActive = active });
+            newRows.Add(new DataRow { DataListId = id, Position = position++, ValuesJson = ToJson(values), Copies = copies, IsActive = active });
         }
 
         if (added.Count > 0)
@@ -532,8 +574,18 @@ public static class DataListLogic
             list.ColumnsJson = ColumnDefs.ToJson(columns);
         }
 
+        var keys = AssetRefs.KeysOf(list.ColumnsJson, newRows.Select(r => (IReadOnlyDictionary<string, string>)ParseValues(r.ValuesJson)));
+        await AssetRefs.RequireUsableAsync(biz, keys, await AssetRefs.StoredAsync(biz.Db, ItemKind.DataList, id));
+        if (request.Replace)
+        {
+            await biz.Db.DataRow.Where(r => r.DataListId == id).ExecuteDeleteAsync();
+        }
+
+        biz.Db.DataRow.AddRange(newRows);
         list.Revision++;
         await SaveWithRevisionAsync(biz, list);
+        await RebuildRefsAsync(biz.Db, list);
+        await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync("Zeilen importiert", nameof(DataList), id, $"{list.Name}: {body.Count} Zeilen{(request.Replace ? " (ersetzt)" : "")}");
         return body.Count;
     }

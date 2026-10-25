@@ -22,9 +22,13 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public bool IsAdmin => biz.IsAdmin;
 
-    public bool CanEdit => biz.IsDesigner;
+    /// <summary>Everybody who is signed in makes designs (in their own area), so the tiles and buttons that make one are always there.</summary>
+    public bool CanEdit => true;
 
-    public UserRole Role => biz.User.Role ?? UserRole.Viewer;
+    public UserRole Role => biz.User.Role ?? UserRole.Member;
+
+    /// <summary>The designs shown that the person manages (the tile offers duplicate, rename and delete only for these).</summary>
+    public IReadOnlySet<long> Manageable { get; private set; } = new HashSet<long>();
 
     public SystemLogic.Facts? Facts { get; private set; }
 
@@ -51,11 +55,13 @@ public sealed class IndexModel(Biz biz) : PageModelBase
         if (!string.IsNullOrWhiteSpace(Q))
         {
             Search = await DesignLogic.SearchAsync(biz, Q);
+            Manageable = await DesignLogic.ManageableAsync(biz, Search.Designs.Concat(Search.Templates).Select(d => d.Id));
         }
         else
         {
             Recent = await DesignLogic.RecentAsync(biz, RecentShown);
             Templates = await DesignLogic.FeaturedTemplatesAsync(biz, TemplatesShown);
+            Manageable = await DesignLogic.ManageableAsync(biz, Recent.Concat(Templates).Select(d => d.Id));
             RecentOutputs = await OutputLogic.RecentAsync(biz, 3);
         }
 

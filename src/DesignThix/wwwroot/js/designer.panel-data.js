@@ -48,6 +48,9 @@
       }
       return D.request('GET', '/api/datalists/' + listId + '/rows').then(function (res) {
         if (!res.ok) { D.toast('Die Datenliste konnte nicht geladen werden.', 'danger'); return; }
+        // images in the cells that the person may load only because they may view the list: the server hands out their addresses with the rows
+        var learned = res.data.assets || {};
+        Object.keys(learned).forEach(function (k) { if (!app.assetByKey(k)) { app.assetMap.set(D.lower(k), { key: k, name: k, url: learned[k] }); } });
         app.preview = { listId: listId, list: res.data, rows: res.data.rows || [], index: D.clamp(index || 0, 0, Math.max(0, (res.data.rows || []).length - 1)) };
         savePreview();
         app.emit('preview');

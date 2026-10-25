@@ -12,7 +12,7 @@ const lib = require('./lib.js');
 const E = require('./editor-lib.js');
 
 const args = process.argv.slice(2);
-const { base, problems, dialogs, watch, launch, newContext, login, ensureAccounts, postJson } = lib(args, { ignore: /status of (403|409)|Failed to load resource: the server responded with a status of 4\d\d/ });
+const { base, problems, dialogs, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignore: /status of (403|409)|Failed to load resource: the server responded with a status of 4\d\d/ });
 const outIndex = args.indexOf('--out');
 const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(require('os').tmpdir(), 'designthix-canva-check'));
 
@@ -1084,6 +1084,7 @@ async function fresh(page, body) {
   await viewerContext.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: base });
   const viewer = await viewerContext.newPage();
   watch(viewer, 'viewer');
+  await shareWith(page, 'design', dlDesign, accounts.viewer.email, 'View');
   await login(viewer, accounts.viewer);
   await openDesigner(viewer, base, dlDesign);
   check('the editor opens read-only: everything visible', await viewer.evaluate(() => document.getElementById('dt-ds').classList.contains('is-readonly')) && (await state(viewer)).pages[0].elements.length === 1);
@@ -1106,7 +1107,7 @@ async function fresh(page, body) {
   const vSave = await viewer.evaluate(async id => { const r = await fetch('/api/designs/' + id, { method: 'POST', headers: { 'Content-Type': 'application/json', RequestVerificationToken: document.querySelector('meta[name=dt-csrf]').content }, body: JSON.stringify({ revision: 1, document: {} }) }); return r.status; }, dlDesign);
   check('the server refuses a save of a viewer (403)', vSave === 403, String(vSave));
   const vUpload = await viewer.evaluate(async () => { const f = new FormData(); f.append('files', new File([new Uint8Array([1, 2, 3])], 'x.png', { type: 'image/png' })); const r = await fetch('/api/assets/upload', { method: 'POST', headers: { RequestVerificationToken: document.querySelector('meta[name=dt-csrf]').content }, body: f }); return r.status; });
-  check('and an upload of a viewer (403)', vUpload === 403, String(vUpload));
+  check('an upload of bytes that are no image is refused (400); every member may upload', vUpload === 400, String(vUpload));
   await viewer.click('#dt-download');
   await viewer.waitForSelector('dialog.dt-downloaddlg[open]');
   [download] = await Promise.all([viewer.waitForEvent('download'), viewer.click('dialog.dt-downloaddlg button[data-value="go"]')]);

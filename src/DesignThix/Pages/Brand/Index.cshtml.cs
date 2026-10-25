@@ -12,7 +12,8 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public IReadOnlyList<string> Families { get; private set; } = [];
 
-    public bool CanEdit => biz.IsDesigner;
+    /// <summary>Everybody who is signed in may make things (in their own area), so the buttons that make something new are always there; what a person may do with one item is decided on its page.</summary>
+    public bool CanEdit => true;
 
     /// <summary>The state the script starts from (attribute <c>data-brand</c>): colours, fonts, logos with their addresses.</summary>
     public string StateJson { get; private set; } = "{}";
@@ -21,7 +22,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
     {
         Head("Marke", "Farben, Schriften und Logos deiner Marke: Sie stehen im Designer bereit, damit jedes Design gleich aussieht.", ("Bibliothek", null), ("Marke", null));
         Brand = await BrandLogic.GetAsync(biz);
-        Families = await BrandLogic.FamiliesAsync(biz);
+        Families = await BrandLogic.FamiliesAsync(biz, Brand.SpaceId);
         StateJson = JsonSerializer.Serialize(new
         {
             colors = Brand.Kit.Colors,

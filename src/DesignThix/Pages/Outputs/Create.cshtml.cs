@@ -25,7 +25,6 @@ public sealed class CreateModel(Biz biz) : OutputFormPage(biz)
 
     public async Task<IActionResult> OnPostAsync()
     {
-        Biz.RequireDesigner();
         await PrepareAsync("Neue Serienausgabe", "Neue Serienausgabe");
         if (!ModelState.IsValid)
         {

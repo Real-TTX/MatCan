@@ -35,7 +35,8 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public List<SelectListItem> Styles { get; } = [new("Normal", "normal"), new("Kursiv", "italic")];
 
-    public bool CanEdit => biz.IsDesigner;
+    /// <summary>The person manages the font (their area; for a built-in font an administrator).</summary>
+    public bool CanEdit { get; private set; }
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -50,7 +51,6 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostAsync()
     {
-        biz.RequireDesigner();
         if (!await LoadAsync())
         {
             return NotFound();
@@ -98,6 +98,7 @@ public sealed class EditModel(Biz biz) : PageModelBase
         }
 
         Font = font;
+        CanEdit = await FontLogic.CanManageAsync(biz, font.Id);
         Head(font.Family, null, ("Bibliothek", null), ("Schriften", "/Fonts"), (font.Family, null));
         ViewData["Width"] = "narrow";
         ViewData["ActiveHref"] = "/Fonts";

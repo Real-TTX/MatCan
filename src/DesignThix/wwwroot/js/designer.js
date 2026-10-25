@@ -179,9 +179,12 @@
     app.on('warnings', updateWarnBar);
 
     var loadDesign = D.request('GET', '/api/designs/' + config.id);
-    var loadFonts = D.request('GET', '/api/fonts').catch(function () { return { ok: false, data: [] }; });
+    var loadFonts = D.request('GET', '/api/fonts?design=' + encodeURIComponent(config.id)).catch(function () { return { ok: false, data: [] }; });
     var loadAssets = D.request('GET', '/api/assets?take=500').catch(function () { return { ok: false, data: [] }; });
-    var loadBrand = D.request('GET', '/api/brand').catch(function () { return { ok: false, data: null }; });
+    // the brand kit of the design's area (a design that was only shared with the person gets their own kit)
+    var loadBrand = loadDesign.then(function (d) {
+      return D.request('GET', '/api/brand' + (d.ok && d.data.spaceId ? '?space=' + encodeURIComponent(d.data.spaceId) : ''));
+    }).catch(function () { return { ok: false, data: null }; });
     var loadFormats = D.file.loadFormats();
 
     Promise.all([loadDesign, loadFonts, loadAssets, loadBrand, loadFormats]).then(function (results) {
@@ -207,6 +210,11 @@
       refs.name.value = design.data.name;
       return D.save.offerDraft(serverDoc, design.data.revision).then(function (restored) {
         applyRole();
+        app.spaceId = design.data.spaceId || null;
+        if (window.DtMedia) { window.DtMedia.preferSpace = app.spaceId; }
+        // the images of the design: the ones it uses are loadable for whoever may view it, wherever they live
+        return app.resolveAssets('design:' + config.id, app.assetKeysOf(restored ? restored.doc : serverDoc)).then(function () { return restored; });
+      }).then(function (restored) {
         app.setDocument(restored ? restored.doc : serverDoc);
         D.crop.init(app);
         D.toolbar.init(app, $('#dt-ctx'));

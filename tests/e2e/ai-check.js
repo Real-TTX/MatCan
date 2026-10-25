@@ -19,7 +19,7 @@ const { demoDocument } = require('./demo-label.js');
 
 const args = process.argv.slice(2);
 const argValue = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
-const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson } = lib(args, { ignoreUrl: /\/api\/ai\//, ignore: /status of (400|401|403|409|422)/ });
+const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignoreUrl: /\/api\/ai\//, ignore: /status of (400|401|403|409|422)/ });
 const outDir = path.resolve(argValue('--out', path.join(os.tmpdir(), 'designthix-ai-check')));
 const fakePort = Number(argValue('--fake-port', '3066'));
 const fakeHost = argValue('--fake-host', /localhost:3043|127\.0\.0\.1:3043/.test(base) ? 'host.docker.internal' : '127.0.0.1');
@@ -293,6 +293,8 @@ const IMPORT_TEXT = 'Lieferschein Käse Herbst\nGouda jung, 2,50 € pro 100 g, 
   const viewerContext = await newContext(browser);
   const viewer = await viewerContext.newPage();
   watch(viewer, 'viewer');
+  await shareWith(page, 'datalist', listId, accounts.viewer.email, 'View');
+  await shareWith(page, 'design', designId, accounts.viewer.email, 'View');
   if (!await login(viewer, accounts.viewer)) { throw new Error('Anmeldung des Betrachters fehlgeschlagen.'); }
   await viewer.goto(`${base}/DataLists/Edit/${listId}?tab=import`);
   await gridReady(viewer);
@@ -419,6 +421,7 @@ const IMPORT_TEXT = 'Lieferschein Käse Herbst\nGouda jung, 2,50 € pro 100 g, 
   const stuck = await postJson(page, `/api/ai/datalists/${listId}/import`, { text: IMPORT_TEXT });
   check('an announcement is nudged twice, then the run is stuck', stuck.status === 422 && stuck.body.status === 'Stuck' && /zweimal angestoßen/.test(stuck.body.error), JSON.stringify(stuck));
   fake.mode = 'ok';
+  await shareWith(page, 'datalist', listId, accounts.admin.email, 'Edit');
   await admin.goto(base + '/Admin/Ai/Runs');
   check('the failed runs are in the list with their end', await admin.locator('.mat-pill', { hasText: 'Hängt' }).count() >= 1 && await admin.locator('.mat-pill', { hasText: 'Fehler' }).count() >= 1);
   await admin.goto(base + '/Admin/Ai/Runs/Details?id=' + stuck.body.runId);

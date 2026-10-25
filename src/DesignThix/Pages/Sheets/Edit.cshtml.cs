@@ -55,7 +55,8 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public SheetLayout? Sheet { get; private set; }
 
-    public bool CanEdit => biz.IsDesigner;
+    /// <summary>The person manages the layout (their area; for a built-in layout an administrator); a new one is always theirs to make.</summary>
+    public bool CanEdit { get; private set; } = true;
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -78,7 +79,6 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostAsync()
     {
-        biz.RequireDesigner();
         if (!await LoadAsync())
         {
             return NotFound();
@@ -127,6 +127,8 @@ public sealed class EditModel(Biz biz) : PageModelBase
             {
                 return false;
             }
+
+            CanEdit = await SheetLogic.CanManageAsync(biz, id);
         }
 
         var title = Sheet?.Name ?? "Neuer Druckbogen";

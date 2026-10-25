@@ -17,6 +17,9 @@ public enum SignInOutcome
     Invalid,
     LockedOut,
     Inactive,
+
+    /// <summary>The account was made by registration and waits for an administrator (or was declined): it cannot sign in yet.</summary>
+    NotApproved,
 }
 
 public sealed record SignInResult(SignInOutcome Outcome, User? User = null, DateTime? LockedUntil = null);
@@ -67,6 +70,11 @@ public sealed class SignInService(DtDbContext db, ConfigStore config, TimeProvid
         if (!user.IsActive)
         {
             return new SignInResult(SignInOutcome.Inactive, user);
+        }
+
+        if (user.ApprovalState != ApprovalState.Approved)
+        {
+            return new SignInResult(SignInOutcome.NotApproved, user);
         }
 
         if (PasswordHasher.NeedsRehash(user.PasswordHash!))

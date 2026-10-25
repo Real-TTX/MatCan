@@ -8,10 +8,30 @@ public static class SheetLogic
 {
     public const int MaxCells = 200;
 
+    /// <summary>The layouts the person may use: the built-in ones and those of their areas.</summary>
     public static IQueryable<SheetLayout> Query(Biz biz)
     {
         biz.RequireSignedIn();
-        return biz.Db.SheetLayout.AsNoTracking();
+        return Access.VisibleInSpaces<SheetLayout>(biz).AsNoTracking();
+    }
+
+    /// <summary>Whether the person may change or delete the layout (their own area; a built-in layout an administrator).</summary>
+    public static async Task<bool> CanManageAsync(Biz biz, long id) => await Access.VisibleInSpaces<SheetLayout>(biz, AccessLevel.Manage).AnyAsync(s => s.Id == id);
+
+    /// <summary>The layout as a tracked record when the person may manage it (their area; a built-in layout an administrator).</summary>
+    private static async Task<SheetLayout> ManagedAsync(Biz biz, long id)
+    {
+        if (!await Query(biz).AnyAsync(s => s.Id == id))
+        {
+            throw new NotFoundException();
+        }
+
+        if (!await Access.VisibleInSpaces<SheetLayout>(biz, AccessLevel.Manage).AnyAsync(s => s.Id == id))
+        {
+            throw new ForbiddenException("Diesen Druckbogen darfst du nicht ändern.");
+        }
+
+        return await biz.Db.SheetLayout.FirstOrDefaultAsync(s => s.Id == id) ?? throw new NotFoundException();
     }
 
     public static async Task<SheetLayout?> GetAsync(Biz biz, long id) => await Query(biz).FirstOrDefaultAsync(s => s.Id == id);
@@ -72,9 +92,20 @@ public static class SheetLogic
 
     private static string Round(double value) => Math.Round(value, 1).ToString("0.##", Services.Fmt.Culture);
 
-    public static async Task<SheetLayout> SaveAsync(Biz biz, long? id, SheetInput input)
+    /// <summary>Saves a layout. A new one goes into the area asked for (the person must be allowed to write there; by default their personal area); a change needs Manage.</summary>
+    public static async Task<SheetLayout> SaveAsync(Biz biz, long? id, SheetInput input, long? spaceId = null)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
+        long? newSpace = null;
+        if (id is null)
+        {
+            newSpace = await Access.WritableSpaceAsync(biz, spaceId);
+        }
+        else
+        {
+            await ManagedAsync(biz, id.Value);
+        }
+
         if (Check(input) is ({ } message, var field))
         {
             throw new BizException(message, field);
@@ -83,12 +114,12 @@ public static class SheetLogic
         SheetLayout sheet;
         if (id is null)
         {
-            sheet = new SheetLayout();
+            sheet = new SheetLayout { SpaceId = newSpace };
             biz.Db.SheetLayout.Add(sheet);
         }
         else
         {
-            sheet = await biz.Db.SheetLayout.FirstOrDefaultAsync(s => s.Id == id) ?? throw new BizException("Den Druckbogen gibt es nicht mehr.");
+            sheet = await ManagedAsync(biz, id.Value);
         }
 
         sheet.Name = input.Name.Trim().Length > 200 ? input.Name.Trim()[..200] : input.Name.Trim();
@@ -110,8 +141,7 @@ public static class SheetLogic
 
     public static async Task DeleteAsync(Biz biz, long id)
     {
-        biz.RequireDesigner();
-        var sheet = await biz.Db.SheetLayout.FirstOrDefaultAsync(s => s.Id == id) ?? throw new BizException("Den Druckbogen gibt es nicht mehr.");
+        var sheet = await ManagedAsync(biz, id);
         biz.Db.SheetLayout.Remove(sheet);
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync("Druckbogen gelöscht", nameof(SheetLayout), id, sheet.Name);

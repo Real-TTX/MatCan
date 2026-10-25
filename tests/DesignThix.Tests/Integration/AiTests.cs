@@ -15,31 +15,50 @@ namespace DesignThix.Tests.Integration;
 /// (checked before the model is called); the roles; the nudges, the empty answer and the exact instruction. Runs when DESIGNTHIX_TEST_DB names a server; returns at once otherwise.
 /// </summary>
 [Collection("app")]
-public sealed class AiIntegrationTests(AppTests.AppFactory factory)
+public sealed class AiIntegrationTests(AppTests.AppFactory factory) : PlatformTestBase(factory)
 {
-    private static bool Enabled => AppTests.AppFactory.Connection is not null;
+    private AiTestSeam Seam => Factory.Services.GetRequiredService<AiTestSeam>();
 
-    private AiTestSeam Seam => factory.Services.GetRequiredService<AiTestSeam>();
+    // The numbers the tests use for people (5, 6, 71 ...) are made real accounts on first use. They all work in one team of the test (the first is its Owner, the others Editors, the viewer a Viewer),
+    // so what one of them makes is theirs to change, and the viewer only looks.
+    private long? _team;
+    private readonly Dictionary<long, long> _real = [];
 
-    private async Task<T> As<T>(UserRole role, long userId, Func<Biz, Task<T>> action)
+    private async Task<long> RealAsync(Role role, long logical)
     {
-        using var client = factory.CreateClient();
-        using var scope = factory.Services.CreateScope();
-        var user = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
-        using var acting = user.RunAs(userId, "Test " + userId, role);
-        return await action(scope.ServiceProvider.GetRequiredService<Biz>());
+        if (_real.TryGetValue(logical, out var known))
+        {
+            return known;
+        }
+
+        var id = await NewUserAsync(Factory, "ai" + logical);
+        if (_team is null)
+        {
+            _team = (await AsUser(id, biz => SpaceLogic.CreateTeamAsync(biz, "KI-Team " + Guid.NewGuid().ToString("N")[..6]))).Id;
+        }
+        else
+        {
+            var owner = _real.Values.First();
+            await AsUser(owner, biz => SpaceLogic.AddMemberAsync(biz, _team.Value, id, role == Role.Viewer ? SpaceRole.Viewer : SpaceRole.Editor));
+        }
+
+        _real[logical] = id;
+        return id;
     }
 
-    private Task<T> As<T>(UserRole role, Func<Biz, Task<T>> action) => As(role, 1, action);
+    private async Task<T> As<T>(Role role, long userId, Func<Biz, Task<T>> action)
+        => await AsUser(await RealAsync(role, userId), action, role == Role.Admin ? UserRole.Admin : UserRole.Member);
 
-    private async Task As(UserRole role, long userId, Func<Biz, Task> action)
+    private new Task<T> As<T>(Role role, Func<Biz, Task<T>> action) => As(role, 1, action);
+
+    private async Task As(Role role, long userId, Func<Biz, Task> action)
         => await As(role, userId, async biz =>
         {
             await action(biz);
             return 0;
         });
 
-    private Task As(UserRole role, Func<Biz, Task> action) => As(role, 1, action);
+    private new Task As(Role role, Func<Biz, Task> action) => As(role, 1, action);
 
     private static string Unique(string prefix) => prefix + Guid.NewGuid().ToString("N")[..8];
 
@@ -56,7 +75,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         var settings = new AiSettings { PerMinutePerAddress = 0, UserDailyTokens = 0, UserMonthlyTokens = 0, MonthlyTokens = 0, AddressDailyRuns = 0 };
         change?.Invoke(settings);
-        await As(UserRole.Admin, biz => SettingLogic.SaveAsync(biz, SettingStore.Ai, settings, "Test"));
+        await As(Role.Admin, biz => SettingLogic.SaveAsync(biz, SettingStore.Ai, settings, "Test"));
     }
 
     /// <summary>The model answers with <paramref name="text"/>; the calls are counted.</summary>
@@ -72,9 +91,9 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
         return (() => calls, t => answer = t);
     }
 
-    private static async Task<(DataList List, List<long> Ids)> ListAsync(Biz biz, bool personal = false, params (string Name, string Region)[] rows)
+    private async Task<(DataList List, List<long> Ids)> ListAsync(Biz biz, bool personal = false, params (string Name, string Region)[] rows)
     {
-        var list = await DataListLogic.SaveGeneralAsync(biz, null, new DataListLogic.ListInput(Unique("KI-Liste "), null, personal));
+        var list = await DataListLogic.SaveGeneralAsync(biz, null, new DataListLogic.ListInput(Unique("KI-Liste "), null, personal), _team);
         await DataListLogic.SaveColumnsAsync(biz, list.Id, [new("Name", "Name", "text", null, null), new("Region", "Region", "text", null, null), new("Preis", "Preis", "price", 2, null), new("Land", "Land", "image", null, "Flaggen")]);
         var revision = (await DataListLogic.GetAsync(biz, list.Id))!.Revision;
         var (_, ids) = await DataListLogic.SaveRowsAsync(biz, list.Id, revision, [.. rows.Select(r => new GridRow(null, new Dictionary<string, string> { ["Name"] = r.Name, ["Region"] = r.Region }, 1, true))]);
@@ -105,7 +124,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
             ], "notes": "Drei Käse."}
             """, 120, 80);
 
-        var (list, existing, propose) = await As(UserRole.Designer, 5, async biz =>
+        var (list, existing, propose) = await As(Role.Designer, 5, async biz =>
         {
             var (l, ids) = await ListAsync(biz, false, ("Alt", "x"));
             var result = await AiDataLogic.ProposeImportAsync(biz, l.Id, new AiDataLogic.ImportInput("Gouda 2,50 Niederlande\nBrie ...", "Preise pro 100 g"));
@@ -129,12 +148,12 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
         Assert.Contains(proposal.GetProperty("warnings").EnumerateArray(), w => w.GetString()!.Contains("Passwort"));
 
         // nothing is written before "Übernehmen"
-        await As(UserRole.Designer, 5, async biz => Assert.Single(await ValuesAsync(biz, list.Id)));
+        await As(Role.Designer, 5, async biz => Assert.Single(await ValuesAsync(biz, list.Id)));
 
-        var revisionBefore = await As(UserRole.Designer, 5, biz => RevisionAsync(biz, list.Id));
-        var applied = await As(UserRole.Designer, 5, biz => AiDataLogic.ApplyAsync(biz, propose.RunId, [0, 2]));
+        var revisionBefore = await As(Role.Designer, 5, biz => RevisionAsync(biz, list.Id));
+        var applied = await As(Role.Designer, 5, biz => AiDataLogic.ApplyAsync(biz, propose.RunId, [0, 2]));
         Assert.Equal(2, applied.Count);
-        await As(UserRole.Designer, 5, async biz =>
+        await As(Role.Designer, 5, async biz =>
         {
             var values = await ValuesAsync(biz, list.Id);
             Assert.Equal(3, values.Count);
@@ -144,7 +163,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
             var run = await biz.Db.AiRun.AsNoTracking().Include(r => r.Steps).FirstAsync(r => r.Id == propose.RunId);
             Assert.Equal(AiRunStatus.Done, run.Status);
             Assert.Equal(200, run.TotalTokens);
-            Assert.Equal(5, run.UserId);
+            Assert.Equal(await RealAsync(Role.Designer, 5), run.UserId);
             Assert.Equal(list.Id, run.SubjectId);
             Assert.Equal(2, await biz.Db.AiJournalEntry.CountAsync(j => j.AiRunId == run.Id && j.EntityType == "DataRow"));
             Assert.Contains(run.Steps, s => s.Kind == AiStepKind.Message && s.Text.Contains("Gouda 2,50 Niederlande") && s.Text.Contains("Preise pro 100 g") && s.Text.Contains("flag-nl"));
@@ -154,7 +173,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
         });
 
         // somebody edits one of the imported rows by hand: the undo takes back the other one and says so
-        await As(UserRole.Designer, 6, async biz =>
+        await As(Role.Designer, 6, async biz =>
         {
             var grid = await DataListLogic.GridAsync(biz, list.Id);
             var brie = grid.Rows.First(r => r.Values.GetValueOrDefault("Name") == "Brie");
@@ -162,9 +181,9 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
             await DataListLogic.SaveRowsAsync(biz, list.Id, grid.Revision, edited);
         });
 
-        var message = await As(UserRole.Designer, 5, biz => AiLogic.UndoAsync(biz, propose.RunId));
+        var message = await As(Role.Designer, 5, biz => AiLogic.UndoAsync(biz, propose.RunId));
         Assert.Contains("von Hand geändert", message);
-        await As(UserRole.Designer, 5, async biz =>
+        await As(Role.Designer, 5, async biz =>
         {
             var values = (await ValuesAsync(biz, list.Id)).Values.Select(v => v["Name"]).Order().ToList();
             Assert.Equal(["Alt", "Brie de Meaux"], values);
@@ -182,7 +201,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync();
         Fake("""{"rows": [{"Name": "A"}, {"Name": "B"}]}""");
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (list, _) = await ListAsync(biz, false, ("Alt", ""));
             var first = await AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A\nB", null));
@@ -210,12 +229,12 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync();
         var (calls, _) = Fake("""{"rows": []}""");
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (list, _) = await ListAsync(biz);
             await Assert.ThrowsAsync<BizException>(() => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("   ", null)));
             await Assert.ThrowsAsync<BizException>(() => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput(new string('x', AiDataLogic.MaxImportChars + 1), null)));
-            await Assert.ThrowsAsync<BizException>(() => AiDataLogic.ProposeImportAsync(biz, 99999999, new AiDataLogic.ImportInput("x", null)));
+            await Assert.ThrowsAsync<NotFoundException>(() => AiDataLogic.ProposeImportAsync(biz, 99999999, new AiDataLogic.ImportInput("x", null)));
             var empty = await DataListLogic.SaveGeneralAsync(biz, null, new DataListLogic.ListInput(Unique("Ohne Spalten "), null, false));
             await Assert.ThrowsAsync<BizException>(() => AiDataLogic.ProposeImportAsync(biz, empty.Id, new AiDataLogic.ImportInput("x", null)));
         });
@@ -234,12 +253,12 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync();
         var (_, say) = Fake("{}");
-        var (list, ids) = await As(UserRole.Designer, 5, biz => ListAsync(biz, false, ("Gouda", ""), ("Brie", "alt"), ("Edamer", "")));
+        var (list, ids) = await As(Role.Designer, 5, biz => ListAsync(biz, false, ("Gouda", ""), ("Brie", "alt"), ("Edamer", "")));
         var input = (long[] rows) => new AiDataLogic.FillInput(rows, "Region", ["Name"], "Schreibe die Region passend zum Namen");
 
         // the model also answers for a row that was not selected and for one with a script: both are dropped
         say($$"""{"values": [{"row": {{ids[0]}}, "value": "Südholland"}, {"row": {{ids[1]}}, "value": "<script>x</script>"}, {"row": {{ids[2]}}, "value": "Edam-Volendam"}]}""");
-        var propose = await As(UserRole.Designer, 5, biz => AiDataLogic.ProposeFillAsync(biz, list.Id, input([ids[0], ids[1]])));
+        var propose = await As(Role.Designer, 5, biz => AiDataLogic.ProposeFillAsync(biz, list.Id, input([ids[0], ids[1]])));
         Assert.True(propose.Ok);
         var proposal = Json(propose.Json);
         var values = proposal.GetProperty("values").EnumerateArray().ToList();
@@ -251,10 +270,10 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
         Assert.Contains(proposal.GetProperty("warnings").EnumerateArray(), w => w.GetString()!.Contains("nicht ausgewählt"));
         Assert.Contains(proposal.GetProperty("warnings").EnumerateArray(), w => w.GetString()!.Contains("Skript"));
 
-        var revision = await As(UserRole.Designer, 5, biz => RevisionAsync(biz, list.Id));
-        var applied = await As(UserRole.Designer, 5, biz => AiDataLogic.ApplyAsync(biz, propose.RunId, [ids[0]]));
+        var revision = await As(Role.Designer, 5, biz => RevisionAsync(biz, list.Id));
+        var applied = await As(Role.Designer, 5, biz => AiDataLogic.ApplyAsync(biz, propose.RunId, [ids[0]]));
         Assert.Equal(1, applied.Count);
-        await As(UserRole.Designer, 5, async biz =>
+        await As(Role.Designer, 5, async biz =>
         {
             var now = await ValuesAsync(biz, list.Id);
             Assert.Equal("Südholland", now[ids[0]]["Region"]);
@@ -265,20 +284,20 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
             Assert.Equal(("DataRow", ids[0], "Region", "", "Südholland"), (entry.EntityType, entry.EntityId, entry.Field, entry.OldValue ?? "", entry.NewValue));
         });
 
-        await As(UserRole.Designer, 5, biz => AiLogic.UndoAsync(biz, propose.RunId));
-        await As(UserRole.Designer, 5, async biz => Assert.False((await ValuesAsync(biz, list.Id))[ids[0]].ContainsKey("Region")));
+        await As(Role.Designer, 5, biz => AiLogic.UndoAsync(biz, propose.RunId));
+        await As(Role.Designer, 5, async biz => Assert.False((await ValuesAsync(biz, list.Id))[ids[0]].ContainsKey("Region")));
 
         // a proposal whose list changed meanwhile is refused (the revision check), nothing is written
         say($$"""{"values": [{"row": {{ids[0]}}, "value": "Nochmal"}]}""");
-        var stale = await As(UserRole.Designer, 5, biz => AiDataLogic.ProposeFillAsync(biz, list.Id, input([ids[0]])));
-        await As(UserRole.Designer, 6, async biz =>
+        var stale = await As(Role.Designer, 5, biz => AiDataLogic.ProposeFillAsync(biz, list.Id, input([ids[0]])));
+        await As(Role.Designer, 6, async biz =>
         {
             var grid = await DataListLogic.GridAsync(biz, list.Id);
             await DataListLogic.SaveRowsAsync(biz, list.Id, grid.Revision, [.. grid.Rows]);
         });
-        var conflict = await Assert.ThrowsAsync<RevisionConflictException>(() => As(UserRole.Designer, 5, biz => AiDataLogic.ApplyAsync(biz, stale.RunId, null)));
+        var conflict = await Assert.ThrowsAsync<RevisionConflictException>(() => As(Role.Designer, 5, biz => AiDataLogic.ApplyAsync(biz, stale.RunId, null)));
         Assert.True(conflict.CurrentRevision > revision);
-        await As(UserRole.Designer, 5, async biz => Assert.False((await ValuesAsync(biz, list.Id))[ids[0]].ContainsKey("Region")));
+        await As(Role.Designer, 5, async biz => Assert.False((await ValuesAsync(biz, list.Id))[ids[0]].ContainsKey("Region")));
     }
 
     [Fact]
@@ -291,13 +310,13 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync();
         var (_, say) = Fake("{}");
-        var (list, ids) = await As(UserRole.Designer, biz => ListAsync(biz, false, ("Gouda", "Ausgang")));
+        var (list, ids) = await As(Role.Designer, biz => ListAsync(biz, false, ("Gouda", "Ausgang")));
         var input = new AiDataLogic.FillInput([ids[0]], "Region", null, "Region");
 
         async Task<AiActionResult> FillAsync(string value)
         {
             say($$"""{"values": [{"row": {{ids[0]}}, "value": "{{value}}"}]}""");
-            return await As(UserRole.Designer, async biz =>
+            return await As(Role.Designer, async biz =>
             {
                 var result = await AiDataLogic.ProposeFillAsync(biz, list.Id, input);
                 await AiDataLogic.ApplyAsync(biz, result.RunId, null);
@@ -308,17 +327,17 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
         var first = await FillAsync("Eins");
         var second = await FillAsync("Zwei");
 
-        var blocked = await As(UserRole.Designer, async biz => await Assert.ThrowsAsync<BizException>(() => AiLogic.UndoAsync(biz, first.RunId)));
+        var blocked = await As(Role.Designer, async biz => await Assert.ThrowsAsync<BizException>(() => AiLogic.UndoAsync(biz, first.RunId)));
         Assert.Contains($"#{second.RunId}", blocked.Message);
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             Assert.Equal("Rückgängig gemacht.", await AiLogic.UndoAsync(biz, second.RunId));
             Assert.Equal("Eins", (await ValuesAsync(biz, list.Id))[ids[0]]["Region"]);
         });
 
         // changed by hand since: the undo leaves it and says so
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var grid = await DataListLogic.GridAsync(biz, list.Id);
             await DataListLogic.SaveRowsAsync(biz, list.Id, grid.Revision, [.. grid.Rows.Select(r => r with { Values = new Dictionary<string, string>(r.Values) { ["Region"] = "Von Hand" } })]);
@@ -338,7 +357,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync();
         var (calls, _) = Fake("""{"values": []}""");
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (list, ids) = await ListAsync(biz, false, ("A", ""));
             Task<AiActionResult> Go(AiDataLogic.FillInput i) => AiDataLogic.ProposeFillAsync(biz, list.Id, i);
@@ -364,14 +383,14 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync();
         var (calls, _) = Fake("""{"rows": [{"Name": "Max"}]}""");
-        var (list, ids) = await As(UserRole.Designer, biz => ListAsync(biz, true, ("Max Mustermann", "")));
+        var (list, ids) = await As(Role.Designer, biz => ListAsync(biz, true, ("Max Mustermann", "")));
 
-        var refused = await As(UserRole.Designer, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("Max", null)));
+        var refused = await As(Role.Designer, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("Max", null)));
         Assert.False(refused.Ok);
         Assert.Equal("refused", refused.Code);
         Assert.Contains("personenbezogene Daten", refused.Error);
         Assert.Equal(0, calls());
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var run = await biz.Db.AiRun.AsNoTracking().Include(r => r.Steps).FirstAsync(r => r.Id == refused.RunId);
             Assert.Equal(AiRunStatus.Cancelled, run.Status);
@@ -381,15 +400,15 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
             Assert.NotNull(AiDataLogic.BlockedReason(biz, (await DataListLogic.GetAsync(biz, list.Id))!));
         });
 
-        var refusedFill = await As(UserRole.Designer, biz => AiDataLogic.ProposeFillAsync(biz, list.Id, new AiDataLogic.FillInput(ids, "Region", null, "x")));
+        var refusedFill = await As(Role.Designer, biz => AiDataLogic.ProposeFillAsync(biz, list.Id, new AiDataLogic.FillInput(ids, "Region", null, "x")));
         Assert.Equal("refused", refusedFill.Code);
         Assert.Equal(0, calls());
 
         await ResetAsync(s => s.SendPersonalData = true);
         Fake("""{"rows": [{"Name": "Max"}]}""");
-        var allowed = await As(UserRole.Designer, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("Max", null)));
+        var allowed = await As(Role.Designer, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("Max", null)));
         Assert.True(allowed.Ok);
-        await As(UserRole.Designer, async biz => Assert.Null(AiDataLogic.BlockedReason(biz, (await DataListLogic.GetAsync(biz, list.Id))!)));
+        await As(Role.Designer, async biz => Assert.Null(AiDataLogic.BlockedReason(biz, (await DataListLogic.GetAsync(biz, list.Id))!)));
     }
 
     // ------------------------------------------------------------------------------------------------ limits, before the model is called
@@ -404,8 +423,8 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync(s => s.UserDailyTokens = 150);
         var (calls, _) = Fake("""{"rows": [{"Name": "A"}]}""", 100, 100);
-        var (list, _) = await As(UserRole.Designer, 71, biz => ListAsync(biz));
-        Task<AiActionResult> Go(long user) => As(UserRole.Designer, user, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
+        var (list, _) = await As(Role.Designer, 71, biz => ListAsync(biz));
+        Task<AiActionResult> Go(long user) => As(Role.Designer, user, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
 
         Assert.True((await Go(71)).Ok);
         Assert.Equal(1, calls());
@@ -446,7 +465,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync(s => s.AddressDailyRuns = 1);
         var dayCalls = 0;
-        await As(UserRole.Designer, 77, async biz =>
+        await As(Role.Designer, 77, async biz =>
         {
             AiLogic.Call Call() => new(AiAction.Test, "Hallo", null, null, null, biz.UserId, "203.0.113.7");
             Seam.Handler = (_, _) => { dayCalls++; return Task.FromResult(new AiResponse { Ok = true, Text = """{"ok": true, "message": "da"}""", PromptTokens = 1, CompletionTokens = 1 }); };
@@ -470,7 +489,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync();
         Fake("""{"rows": [{"Name": "A"}]}""");
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (list, _) = await ListAsync(biz);
             var result = await AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null));
@@ -493,26 +512,26 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
         }
 
         await ResetAsync();
-        var (list, _) = await As(UserRole.Designer, biz => ListAsync(biz));
-        var designer = await As(UserRole.Designer, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
+        var (list, _) = await As(Role.Designer, biz => ListAsync(biz));
+        var designer = await As(Role.Designer, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
         Assert.False(designer.Ok);
         Assert.Equal("not-configured", designer.Code);
         Assert.Contains("Administrator", designer.Error);
         Assert.DoesNotContain("Verwaltung", designer.Error);
         Assert.Null(designer.SettingsHref);
 
-        var admin = await As(UserRole.Admin, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
+        var admin = await As(Role.Admin, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
         Assert.Equal("not-configured", admin.Code);
         Assert.Contains("Verwaltung → KI → Profile", admin.Error);
         Assert.Equal("/Admin/Ai/Profiles", admin.SettingsHref);
         Assert.Equal(AiRunStatus.Error, admin.Status);
 
-        await As(UserRole.Admin, async biz => Assert.False(await AiLogic.IsAvailableAsync(biz)));
+        await As(Role.Admin, async biz => Assert.False(await AiLogic.IsAvailableAsync(biz)));
         await ResetAsync(s => s.Enabled = false);
-        var off = await As(UserRole.Admin, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
+        var off = await As(Role.Admin, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
         Assert.Equal("disabled", off.Code);
         Assert.Equal("/Admin/Ai", off.SettingsHref);
-        await As(UserRole.Designer, biz =>
+        await As(Role.Designer, biz =>
         {
             Assert.False(AiLogic.IsEnabled(biz));
             return Task.CompletedTask;
@@ -528,10 +547,10 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
         }
 
         await ResetAsync();
-        var (list, _) = await As(UserRole.Designer, biz => ListAsync(biz));
+        var (list, _) = await As(Role.Designer, biz => ListAsync(biz));
 
         Seam.Handler = (_, _) => Task.FromResult(new AiResponse { Ok = false, Error = "Die KI hat eine leere Antwort geliefert." });
-        var empty = await As(UserRole.Designer, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
+        var empty = await As(Role.Designer, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
         Assert.False(empty.Ok);
         Assert.Equal(AiRunStatus.Error, empty.Status);
         Assert.Equal("Die KI hat eine leere Antwort geliefert.", empty.Error);
@@ -542,11 +561,11 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
             calls++;
             return Task.FromResult(new AiResponse { Ok = true, Text = "Ich schaue mir das gleich an und melde mich." });
         };
-        var stuck = await As(UserRole.Designer, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
+        var stuck = await As(Role.Designer, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
         Assert.False(stuck.Ok);
         Assert.Equal(AiRunStatus.Stuck, stuck.Status);
         Assert.Equal(3, calls);
-        await As(UserRole.Admin, async biz =>
+        await As(Role.Admin, async biz =>
         {
             var details = (await AiLogic.RunDetailsAsync(biz, stuck.RunId))!;
             Assert.Equal(2, details.Run.Nudges);
@@ -563,10 +582,10 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         // "Weitermachen": the same request again as a new run
         Fake("""{"rows": [{"Name": "Neu"}]}""");
-        var (message, newRun) = await As(UserRole.Admin, biz => AiLogic.ContinueAsync(biz, stuck.RunId, null));
+        var (message, newRun) = await As(Role.Admin, biz => AiLogic.ContinueAsync(biz, stuck.RunId, null));
         Assert.NotNull(newRun);
         Assert.Contains("Vorschlag liegt bereit", message);
-        await As(UserRole.Admin, async biz => Assert.Equal(AiRunStatus.Waiting, (await biz.Db.AiRun.AsNoTracking().FirstAsync(r => r.Id == newRun)).Status));
+        await As(Role.Admin, async biz => Assert.Equal(AiRunStatus.Waiting, (await biz.Db.AiRun.AsNoTracking().FirstAsync(r => r.Id == newRun)).Status));
     }
 
     [Fact]
@@ -579,7 +598,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync();
         Fake("Klar, hier ist die Tabelle:\n```json\n{\"rows\": [{\"Name\": \"Fenced\",}],}\n```");
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (list, _) = await ListAsync(biz);
             var result = await AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("Fenced", null));
@@ -604,7 +623,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
             s.ActionInstructions = new Dictionary<string, string> { ["DataFill"] = "ERGAENZUNG-FUER-FUELLEN", ["DataImport"] = "ERGAENZUNG-FUER-IMPORT" };
         });
         Fake("""{"values": []}""");
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (list, ids) = await ListAsync(biz, false, ("Gouda", "x"));
             var input = new AiDataLogic.FillInput(ids, "Region", ["Name"], "Schreibe die Region");
@@ -642,7 +661,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync();
         Fake("""{"values": []}""");
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (list, ids) = await ListAsync(biz, false, ("Gouda", "Holland"), ("Geheim", "Nicht gewaehlt"));
             var fill = await AiDataLogic.FillPromptAsync(biz, list.Id, new AiDataLogic.FillInput([ids[0]], "Region", ["Name"], "x"));
@@ -670,7 +689,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync();
         Fake("""{"suggestions": ["Heute frisch: {{Name}} für {{Preis}} €", "{{Name}} ohne Preis", "<script>x</script> {{Name}} {{Preis}}", "Genau {{ Name }} zu {{Preis}} €", "Nur Text"]}""", 50, 20);
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("KI-Design "), null, "label-150x100", null, null, null, null));
             var revision = design.Revision;
@@ -699,7 +718,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
             await Assert.ThrowsAsync<BizException>(() => AiTextLogic.SuggestAsync(biz, design.Id, input with { Text = "", Instruction = "" }));
             await Assert.ThrowsAsync<BizException>(() => AiTextLogic.SuggestAsync(biz, design.Id, input with { Text = new string('x', 5001) }));
-            await Assert.ThrowsAsync<BizException>(() => AiTextLogic.SuggestAsync(biz, 99999999, input));
+            await Assert.ThrowsAsync<NotFoundException>(() => AiTextLogic.SuggestAsync(biz, 99999999, input));
             var shown = await AiTextLogic.PromptAsync(biz, design.Id, input);
             Assert.Contains("{{Name}}, {{Preis}}", shown);
         });
@@ -717,10 +736,10 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
 
         await ResetAsync();
         Fake("""{"rows": [{"Name": "A"}]}""");
-        var (list, ids) = await As(UserRole.Designer, 5, biz => ListAsync(biz, false, ("X", "")));
-        var run = await As(UserRole.Designer, 5, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
+        var (list, ids) = await As(Role.Designer, 5, biz => ListAsync(biz, false, ("X", "")));
+        var run = await As(Role.Designer, 5, biz => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
 
-        await As(UserRole.Viewer, 9, async biz =>
+        await As(Role.Viewer, 9, async biz =>
         {
             await Assert.ThrowsAsync<ForbiddenException>(() => AiDataLogic.ProposeImportAsync(biz, list.Id, new AiDataLogic.ImportInput("A", null)));
             await Assert.ThrowsAsync<ForbiddenException>(() => AiDataLogic.ProposeFillAsync(biz, list.Id, new AiDataLogic.FillInput(ids, "Region", null, "x")));
@@ -739,7 +758,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
         });
 
         // another designer cannot open, apply or undo a run that is not theirs; an administrator can
-        await As(UserRole.Designer, 6, async biz =>
+        await As(Role.Designer, 6, async biz =>
         {
             await Assert.ThrowsAsync<ForbiddenException>(() => AiDataLogic.ProposalAsync(biz, run.RunId));
             await Assert.ThrowsAsync<ForbiddenException>(() => AiDataLogic.ApplyAsync(biz, run.RunId, null));
@@ -749,8 +768,8 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
             await Assert.ThrowsAsync<ForbiddenException>(() => AiLogic.UsageAsync(biz));
         });
 
-        await As(UserRole.Designer, 5, async biz => Assert.Contains(await AiLogic.RunsOfAsync(biz, nameof(DataList), list.Id), l => l.Id == run.RunId && l.Status == AiRunStatus.Waiting));
-        await As(UserRole.Admin, 1, async biz =>
+        await As(Role.Designer, 5, async biz => Assert.Contains(await AiLogic.RunsOfAsync(biz, nameof(DataList), list.Id), l => l.Id == run.RunId && l.Status == AiRunStatus.Waiting));
+        await As(Role.Admin, 1, async biz =>
         {
             Assert.Contains(await AiLogic.RunsOfAsync(biz, nameof(DataList), list.Id), l => l.Id == run.RunId);
             var applied = await AiDataLogic.ApplyAsync(biz, run.RunId, null);
@@ -767,7 +786,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        using var scope = factory.Services.CreateScope();
+        using var scope = Factory.Services.CreateScope();
         var biz = scope.ServiceProvider.GetRequiredService<Biz>();
         await Assert.ThrowsAsync<ForbiddenException>(() => AiDataLogic.ProposeImportAsync(biz, 1, new AiDataLogic.ImportInput("A", null)));
         await Assert.ThrowsAsync<ForbiddenException>(() => AiTextLogic.SuggestAsync(biz, 1, new AiTextLogic.SuggestInput("x", null, null, null, null, null, null)));
@@ -784,7 +803,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
         }
 
         await ResetAsync(s => s.ActionInstructions = new Dictionary<string, string> { ["TextSuggest"] = "Immer per Du." });
-        await As(UserRole.Admin, async biz =>
+        await As(Role.Admin, async biz =>
         {
             var settings = SettingLogic.Get<AiSettings>(biz, SettingStore.Ai);
             Assert.Equal("Immer per Du.", settings.ActionInstructions["TextSuggest"]);
@@ -795,7 +814,7 @@ public sealed class AiIntegrationTests(AppTests.AppFactory factory)
                 Assert.Contains("Format und Regeln (fest)", AiLogic.FullInstruction(biz, action));
             }
         });
-        await As(UserRole.Designer, biz => Task.FromResult(Assert.Throws<ForbiddenException>(() => AiLogic.FullInstruction(biz, AiAction.Test))));
+        await As(Role.Designer, biz => Task.FromResult(Assert.Throws<ForbiddenException>(() => AiLogic.FullInstruction(biz, AiAction.Test))));
         await ResetAsync();
     }
 }

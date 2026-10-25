@@ -9,13 +9,15 @@ using Microsoft.EntityFrameworkCore;
 namespace DesignThix.Endpoints;
 
 /// <summary>
-/// The endpoints of the library and of the designer: the bytes of media and fonts (immutable for the browser when asked with the hash), the style sheet of all fonts,
-/// the pickers' lists, and the JSON of designs and data list rows. Everything needs a signed-in person; the business layer checks the role again, and every
-/// POST carries the antiforgery token as the header <c>RequestVerificationToken</c>.
+/// The endpoints of the library and of the designer: the bytes of media, fonts and thumbnails, the style sheet of the fonts, the pickers' lists, and the JSON of designs and data list rows.
+/// Media, fonts and thumbnails are <b>capabilities</b>: their address carries a hash (<c>?v=</c>, in the name of a font) that only the APIs hand out after they checked the access, and an address with the hash
+/// is served without a sign-in (the public pages need that), so these routes allow anonymous callers; without the hash a signed-in person gets what they may see and nothing else. Everything else needs a
+/// signed-in person, and the business layer checks the access again. Every POST carries the antiforgery token as the header <c>RequestVerificationToken</c>.
 /// </summary>
 public static partial class LibraryEndpoints
 {
     private const string Immutable = "private, max-age=31536000, immutable";
+    private const string ImmutablePublic = "public, max-age=31536000, immutable";
     private const string Revalidate = "private, no-cache";
     private const int MaxDesignBody = 5 * 1024 * 1024;
     private const int MaxRowsBody = 40 * 1024 * 1024;
@@ -34,15 +36,15 @@ public static partial class LibraryEndpoints
                 known = known[2..].Trim('"');
             }
 
-            var content = await AssetLogic.ContentAsync(biz, key, known.Length == 0 ? null : known);
+            var content = await AssetLogic.ContentAsync(biz, key, known.Length == 0 ? null : known, http.Request.Query["v"].ToString());
             if (content is null)
             {
-                return Results.NotFound();
+                return biz.User.UserId is null ? Results.StatusCode(StatusCodes.Status401Unauthorized) : Results.NotFound();
             }
 
             var headers = http.Response.Headers;
             headers.ETag = $"\"{content.ContentHash}\"";
-            headers.CacheControl = http.Request.Query.ContainsKey("v") ? Immutable : Revalidate;
+            headers.CacheControl = http.Request.Query.ContainsKey("v") ? (content.IsBuiltIn ? ImmutablePublic : Immutable) : Revalidate;
             if (content.Bytes is null)
             {
                 return Results.StatusCode(StatusCodes.Status304NotModified);
@@ -57,7 +59,7 @@ public static partial class LibraryEndpoints
             headers.XContentTypeOptions = "nosniff";
             var download = http.Request.Query.ContainsKey("download") ? $"{key}.{content.Extension}" : null;
             return Results.File(content.Bytes, content.ContentType, download);
-        }).RequireAuthorization("SignedIn");
+        }).AllowAnonymous();
 
         app.MapGet("/fonts/{name}", async (string name, HttpContext http, Biz biz) =>
         {
@@ -67,8 +69,8 @@ public static partial class LibraryEndpoints
                 return Results.NotFound();
             }
 
-            var content = await FontLogic.ContentAsync(biz, long.Parse(match.Groups[1].Value));
-            if (content is not { } font || !font.Hash.StartsWith(match.Groups[2].Value, StringComparison.OrdinalIgnoreCase) || font.Format != match.Groups[3].Value)
+            var content = await FontLogic.ContentAsync(biz, long.Parse(match.Groups[1].Value), match.Groups[2].Value);
+            if (content is not { } font || font.Format != match.Groups[3].Value)
             {
                 return Results.NotFound();
             }
@@ -77,11 +79,12 @@ public static partial class LibraryEndpoints
             http.Response.Headers.CacheControl = Immutable;
             http.Response.Headers.XContentTypeOptions = "nosniff";
             return Results.File(font.Bytes, "font/" + (font.Format == "otf" ? "otf" : font.Format));
-        }).RequireAuthorization("SignedIn");
+        }).AllowAnonymous();
 
-        app.MapGet("/fonts.css", async (HttpContext http, Biz biz) =>
+        // ?design={id}: also the fonts of that design's area (the person must be allowed to view it)
+        app.MapGet("/fonts.css", async (long? design, HttpContext http, Biz biz) =>
         {
-            var css = FontLogic.FontFaceCss(await FontLogic.AllAsync(biz));
+            var css = FontLogic.FontFaceCss(await FontLogic.AllAsync(biz, design));
             var etag = $"\"{AssetLogic.Sha256Hex(Encoding.UTF8.GetBytes(css))[..24]}\"";
             http.Response.Headers.ETag = etag;
             http.Response.Headers.CacheControl = Revalidate;
@@ -90,29 +93,52 @@ public static partial class LibraryEndpoints
                 : Results.Text(css, "text/css; charset=utf-8");
         }).RequireAuthorization("SignedIn");
 
-        app.MapGet("/api/fonts", async (Biz biz) =>
-            Results.Json((await FontLogic.AllAsync(biz)).Select(f => new { id = f.Id, family = f.Family, weight = f.Weight, style = f.Style, format = f.Format, url = f.Url, license = f.License, isBuiltIn = f.IsBuiltIn }), Web))
+        app.MapGet("/api/fonts", async (long? design, Biz biz) =>
+            Results.Json((await FontLogic.AllAsync(biz, design)).Select(f => new { id = f.Id, family = f.Family, weight = f.Weight, style = f.Style, format = f.Format, url = f.Url, license = f.License, isBuiltIn = f.IsBuiltIn, spaceId = f.SpaceId }), Web))
             .RequireAuthorization("SignedIn");
 
         // q, category ("uploads" finds the category Uploads, case does not matter), sort ("new" = newest first, else by name), take (at most 500)
-        app.MapGet("/api/assets", async (string? q, string? category, string? sort, int? take, Biz biz) =>
-            Results.Json((await AssetLogic.SearchAsync(biz, q, category, take ?? 60, sort)).Select(a => new { key = a.Key, name = a.Name, category = a.Category, tags = a.Tags, url = a.Url, width = a.Width, height = a.Height, contentType = a.ContentType }), Web))
+        // space = the images of one area only
+        app.MapGet("/api/assets", async (string? q, string? category, string? sort, int? take, long? space, Biz biz) =>
+            Results.Json((await AssetLogic.SearchAsync(biz, q, category, take ?? 60, sort, space)).Select(a => new { key = a.Key, spaceId = a.SpaceId, isBuiltIn = a.IsBuiltIn, name = a.Name, category = a.Category, tags = a.Tags, url = a.Url, width = a.Width, height = a.Height, contentType = a.ContentType }), Web))
             .RequireAuthorization("SignedIn");
+
+        // context = "design:{id}" | "datalist:{id}" | "output:{id}" (the item the images belong to; the person must be allowed to view it), keys = comma separated asset keys.
+        // -> { "key": { key, url, hash, name, width, height, contentType } }: the address with its hash for the keys the item uses or the person may see; other keys are left out.
+        app.MapGet("/api/assets/resolve", async (string? context, string? keys, Biz biz) =>
+        {
+            var parts = (context ?? "").Split(':', 2);
+            var kind = parts.Length == 2 ? parts[0].ToLowerInvariant() switch
+            {
+                "design" => (Data.Entities.ItemKind?)Data.Entities.ItemKind.Design,
+                "datalist" => Data.Entities.ItemKind.DataList,
+                "output" => Data.Entities.ItemKind.OutputJob,
+                _ => null,
+            } : null;
+            if (kind is null || !long.TryParse(parts[1], out var id))
+            {
+                return Results.Json(new { error = "context ist design:{id}, datalist:{id} oder output:{id}." }, statusCode: StatusCodes.Status400BadRequest);
+            }
+
+            var wanted = (keys ?? "").Split([',', ' ', ';'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Take(500).ToList();
+            var resolved = await AssetRefs.ResolveAsync(biz, kind.Value, id, wanted);
+            return Results.Json(resolved.ToDictionary(p => p.Key, p => new { key = p.Value.Key, url = p.Value.Url, hash = p.Value.Hash, name = p.Value.Name, width = p.Value.Width, height = p.Value.Height, contentType = p.Value.ContentType }), Web);
+        }).RequireAuthorization("SignedIn");
 
         // ---------------------------------------------------------------------------------------- designs
 
         app.MapGet("/designs/{id:long}/thumbnail.png", async (long id, HttpContext http, Biz biz) =>
         {
-            var thumb = await DesignLogic.ThumbnailAsync(biz, id);
+            var thumb = await DesignLogic.ThumbnailAsync(biz, id, http.Request.Query["v"].ToString());
             if (thumb is not { } t)
             {
-                return Results.NotFound();
+                return biz.User.UserId is null ? Results.StatusCode(StatusCodes.Status401Unauthorized) : Results.NotFound();
             }
 
             http.Response.Headers.ETag = $"\"{t.Hash}\"";
             http.Response.Headers.CacheControl = http.Request.Query.ContainsKey("v") ? Immutable : Revalidate;
             return http.Request.Headers.IfNoneMatch.ToString().Trim('"') == t.Hash ? Results.StatusCode(StatusCodes.Status304NotModified) : Results.File(t.Bytes, "image/png");
-        }).RequireAuthorization("SignedIn");
+        }).AllowAnonymous();
 
         app.MapGet("/api/designs/{id:long}", async (long id, Biz biz) =>
         {
@@ -123,7 +149,7 @@ public static partial class LibraryEndpoints
             }
 
             using var document = JsonDocument.Parse(design.DocumentJson);
-            return Results.Json(new { id = design.Id, name = design.Name, revision = design.Revision, document = document.RootElement.Clone(), canEdit = design.CanEdit }, Web);
+            return Results.Json(new { id = design.Id, name = design.Name, revision = design.Revision, document = document.RootElement.Clone(), canEdit = design.CanEdit, canManage = design.CanManage, spaceId = design.SpaceId, folderId = design.FolderId }, Web);
         }).RequireAuthorization("SignedIn");
 
         app.MapPost("/api/designs/{id:long}", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => Guard(http, antiforgery, async () =>
@@ -200,8 +226,13 @@ public static partial class LibraryEndpoints
             try
             {
                 var grid = await DataListLogic.GridAsync(biz, id);
+                // the addresses (with their hashes) of the images in the cells of the image columns: the person may view the list, so they may load what it uses
+                var imageColumns = grid.Columns.Where(c => c.Type == "image").Select(c => c.Key).ToList();
+                var cellKeys = grid.Rows.SelectMany(r => imageColumns.Select(c => r.Values.TryGetValue(c, out var v) ? v : "")).Where(v => !string.IsNullOrWhiteSpace(v)).Select(v => v.Trim().ToLowerInvariant()).Distinct().ToList();
+                var assets = cellKeys.Count == 0 ? [] : await AssetRefs.ResolveAsync(biz, Data.Entities.ItemKind.DataList, id, cellKeys);
                 return Results.Json(new
                 {
+                    assets = assets.ToDictionary(p => p.Key, p => p.Value.Url),
                     id = grid.Id,
                     name = grid.Name,
                     revision = grid.Revision,
@@ -271,6 +302,14 @@ public static partial class LibraryEndpoints
         catch (BizException ex)
         {
             return Results.Json(new { error = ex.Message }, statusCode: StatusCodes.Status400BadRequest);
+        }
+        catch (ForbiddenException ex)
+        {
+            return Results.Json(new { error = ex.Message }, statusCode: StatusCodes.Status403Forbidden);
+        }
+        catch (NotFoundException ex)
+        {
+            return Results.Json(new { error = ex.Message }, statusCode: StatusCodes.Status404NotFound);
         }
         catch (RevisionConflictException ex)
         {

@@ -15,7 +15,7 @@ const E = require('./editor-lib.js');
 const { demoDocument, demoRows } = require('./demo-label.js');
 
 const args = process.argv.slice(2);
-const { base, problems, dialogs, watch, launch, newContext, login, ensureAccounts, postJson } = lib(args, { ignore: /status of (403|409)|ERR_INTERNET_DISCONNECTED/ });
+const { base, problems, dialogs, watch, launch, newContext, login, ensureAccounts, postJson, shareWith, uploadImage, purgeImage } = lib(args, { ignore: /status of (403|409)|ERR_INTERNET_DISCONNECTED/ });
 const outIndex = args.indexOf('--out');
 const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(require('os').tmpdir(), 'designthix-designer-check'));
 
@@ -450,17 +450,20 @@ async function typeInto(page, text) {
   await page.goto(`${base}/DataLists/Edit/${listId}?tab=columns`);
   await page.selectOption('form[action*="FromDesign"] select', String(designId));
   await Promise.all([page.waitForNavigation(), page.click('form[action*="FromDesign"] button[type=submit]')]);
-  const rows = await page.evaluate(async id => {
+  // an image that exists when the row is saved and is gone for good afterwards (a row may only name an image the person may use)
+  const gone = await uploadImage(page, 'flag-xx');
+  const rows = await page.evaluate(async ({ id, goneKey }) => {
     const grid = await (await fetch('/api/datalists/' + id + '/rows')).json();
     const token = document.querySelector('meta[name=dt-csrf]').content;
     const body = { revision: grid.revision, rows: [
       { id: null, values: { Name: 'Gouda', Preis: '3,49', Bild1: 'flag-nl' }, copies: 1, isActive: true },
-      { id: null, values: { Name: 'Bergkäse', Preis: '4.25', Bild1: 'flag-xx' }, copies: 1, isActive: true },
+      { id: null, values: { Name: 'Bergkäse', Preis: '4.25', Bild1: goneKey }, copies: 1, isActive: true },
       { id: null, values: { Name: 'Camembert', Preis: '2.19', Bild1: 'flag-fr' }, copies: 1, isActive: true },
     ] };
     const r = await fetch('/api/datalists/' + id + '/rows', { method: 'POST', headers: { 'Content-Type': 'application/json', RequestVerificationToken: token }, body: JSON.stringify(body) });
     return { status: r.status, columns: grid.columns.map(c => c.key) };
-  }, listId);
+  }, { id: listId, goneKey: gone.key });
+  await purgeImage(page, gone.id);
   check('the list has the columns of the design and three rows', rows.status === 200 && rows.columns.includes('Name') && rows.columns.includes('Preis') && rows.columns.includes('Bild1'), JSON.stringify(rows));
   await openDesigner(page, base, designId);
   await openPanel(page, 'data');
@@ -472,7 +475,7 @@ async function typeInto(page, text) {
   await page.click('#dt-panel button[aria-label="Nächste Zeile"]');
   await idle(page);
   check('next row: Bergkäse', (await svgText(page)).includes('Bergkäse') && /Zeile 2 von 3/.test(await page.textContent('#dt-panel .dt-rowinfo')));
-  check('an unknown image key is reported', await page.isVisible('#dt-warnbar') && (await page.textContent('#dt-warnbar')).includes('flag-xx'), await page.textContent('#dt-warnbar'));
+  check('an unknown image key is reported', await page.isVisible('#dt-warnbar') && (await page.textContent('#dt-warnbar')).includes(gone.key), await page.textContent('#dt-warnbar'));
   await page.click('#dt-panel button[aria-label="Vorherige Zeile"]');
   await page.click('#dt-panel button[aria-label="Vorherige Zeile"]');
   await idle(page);
@@ -548,6 +551,9 @@ async function typeInto(page, text) {
 
   // ---------------------------------------------------------------------------------------- 16. the viewer
   current = 'viewer: ';
+  // the viewer is a member who may look at what the designer shares with them: the design and the list of the preview
+  await shareWith(page, 'design', designId, accounts.viewer.email, 'View');
+  await shareWith(page, 'datalist', listId, accounts.viewer.email, 'View');
   const viewerContext = await newContext(browser);
   const viewer = await viewerContext.newPage();
   watch(viewer, 'viewer');

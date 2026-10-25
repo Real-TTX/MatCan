@@ -13,7 +13,7 @@ const lib = require('./lib.js');
 const E = require('./editor-lib.js');
 
 const args = process.argv.slice(2);
-const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson } = lib(args, { ignore: /status of (403|409)|Failed to load resource: the server responded with a status of 4\d\d/ });
+const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignore: /status of (403|409)|Failed to load resource: the server responded with a status of 4\d\d/ });
 const outIndex = args.indexOf('--out');
 const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(require('os').tmpdir(), 'designthix-content-check'));
 const onlyIndex = args.indexOf('--only');
@@ -1490,6 +1490,7 @@ sections.viewer = async ({ accounts, browser }) => {
   await settle(dp);
   await postJson(dp, '/api/designs/' + id + '/rename', { name: 'K4 Betrachter' });
   await E.waitState(dp, 'saved', 15000);
+  await shareWith(dp, 'design', id, accounts.viewer.email, 'View');
   await designerContext.close();
   const viewerContext = await newContext(browser, { viewport: { width: 1440, height: 900 } });
   const page = await viewerContext.newPage();

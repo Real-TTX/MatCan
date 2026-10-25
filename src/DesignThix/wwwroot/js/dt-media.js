@@ -61,6 +61,8 @@
       var form = new FormData();
       files.forEach(function (f) { form.append('files', f, f.name || ''); });
       if (category) { form.append('category', category); }
+      // the editor says which area the open design lives in: a new image goes there when the person may write in it (else into their own area)
+      if (window.DtMedia && window.DtMedia.preferSpace) { form.append('preferSpace', String(window.DtMedia.preferSpace)); }
       var xhr = new XMLHttpRequest();
       xhr.open('POST', '/api/assets/upload');
       xhr.setRequestHeader('RequestVerificationToken', csrf());
@@ -284,5 +286,5 @@
     return { close: function () { finish(null); } };
   }
 
-  window.DtMedia = { pick: pick, upload: upload, tabs: TABS };
+  window.DtMedia = { pick: pick, upload: upload, tabs: TABS, preferSpace: null };
 })();

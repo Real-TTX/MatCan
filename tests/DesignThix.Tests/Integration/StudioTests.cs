@@ -18,25 +18,8 @@ namespace DesignThix.Tests.Integration;
 /// one-click designs, templates, resizing, the brand kit and outputs of designs with several pages. Runs when DESIGNTHIX_TEST_DB names a server; returns at once otherwise.
 /// </summary>
 [Collection("app")]
-public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
+public sealed class StudioIntegrationTests(AppTests.AppFactory factory) : PlatformTestBase(factory)
 {
-    private static bool Enabled => AppTests.AppFactory.Connection is not null;
-
-    private async Task<T> As<T>(UserRole role, Func<Biz, Task<T>> action)
-    {
-        using var client = factory.CreateClient();
-        using var scope = factory.Services.CreateScope();
-        var user = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
-        using var acting = user.RunAs(1, "Test", role);
-        return await action(scope.ServiceProvider.GetRequiredService<Biz>());
-    }
-
-    private Task As(UserRole role, Func<Biz, Task> action) => As(role, async biz =>
-    {
-        await action(biz);
-        return 0;
-    });
-
     private static string Unique(string prefix) => prefix + Guid.NewGuid().ToString("N")[..8];
 
     private static byte[] Png() => File.ReadAllBytes(Path.Combine(RepoFiles.WwwRoot(), "img", "icon-192.png"));
@@ -55,7 +38,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
 
         var name = Unique("Mein Käse ");
         var key = AssetLogic.KeyFromFileName(name + ".png");
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var first = await AssetLogic.UploadAsync(biz, name + ".png", Png(), null);
             Assert.Null(first.Error);
@@ -85,7 +68,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        var result = await As(UserRole.Designer, biz => AssetLogic.UploadAsync(biz, Unique("kat-") + ".png", Png(), asked));
+        var result = await As(Role.Designer, biz => AssetLogic.UploadAsync(biz, Unique("kat-") + ".png", Png(), asked));
         Assert.Equal(expected, result.Asset!.Category);
     }
 
@@ -97,7 +80,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        var keys = await As(UserRole.Designer, async biz =>
+        var keys = await As(Role.Designer, async biz =>
         {
             var list = new List<string>();
             foreach (var fileName in new[] { "", "image.png", "blob", "IMAGE.PNG" })
@@ -125,7 +108,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
         var bomb = Encoding.UTF8.GetBytes("<?xml version=\"1.0\"?><!DOCTYPE svg [<!ENTITY a \"aaaa\"><!ENTITY b \"&a;&a;&a;&a;\">]><svg xmlns=\"http://www.w3.org/2000/svg\"><text>&b;</text></svg>");
         var hugePng = Png().Concat(new byte[11 * 1024 * 1024]).ToArray();
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var before = await biz.Db.Asset.CountAsync();
             foreach (var (name, bytes) in new (string, byte[])[] { ("a.png", html), ("b.png", exe), ("c.png", Array.Empty<byte>()), ("d.svg", html), ("e.svg", bomb), ("f.png", hugePng) })
@@ -148,7 +131,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
         }
 
         var svg = Encoding.UTF8.GetBytes("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"10\" height=\"10\" onload=\"alert(1)\"><script>alert(1)</script><rect width=\"10\" height=\"10\" fill=\"red\"/></svg>");
-        var (result, content) = await As(UserRole.Designer, async biz =>
+        var (result, content) = await As(Role.Designer, async biz =>
         {
             var r = await AssetLogic.UploadAsync(biz, Unique("sauber-") + ".svg", svg, null);
             return (r, await AssetLogic.ContentAsync(biz, r.Asset!.Key, null));
@@ -162,24 +145,23 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
     }
 
     [Fact]
-    public async Task Only_designers_upload_and_viewers_may_not_even_start()
+    public async Task Everybody_uploads_into_their_own_area_and_only_those_who_may_write_into_a_team()
     {
         if (!Enabled)
         {
             return;
         }
 
-        await As(UserRole.Viewer, async biz =>
+        var team = await TeamAsync(Role.Designer, (Role.Viewer, SpaceRole.Viewer));
+        await As(Role.Viewer, async biz =>
         {
-            Assert.Throws<ForbiddenException>(() => AssetLogic.RequireUploader(biz));
-            await Assert.ThrowsAsync<ForbiddenException>(() => AssetLogic.UploadAsync(biz, "x.png", Png(), null));
-            await Assert.ThrowsAsync<ForbiddenException>(() => FontLogic.UploadAsync(biz, "x.ttf", [0, 1, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8], null));
+            // a team viewer may look, not write into the team; their own area is theirs
+            await Assert.ThrowsAsync<ForbiddenException>(() => AssetLogic.UploadAsync(biz, "x.png", Png(), null, team));
+            await Assert.ThrowsAsync<ForbiddenException>(() => FontLogic.UploadAsync(biz, "x.ttf", [0, 1, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8], null, team));
+            Assert.NotNull((await AssetLogic.UploadAsync(biz, Unique("mein-") + ".png", Png(), null)).Asset);
         });
-        await As(UserRole.Designer, biz =>
-        {
-            AssetLogic.RequireUploader(biz);
-            return Task.CompletedTask;
-        });
+        await As(Role.Stranger, biz => Assert.ThrowsAsync<NotFoundException>(() => AssetLogic.UploadAsync(biz, "x.png", Png(), null, team)));
+        await As(Role.Designer, async biz => Assert.NotNull((await AssetLogic.UploadAsync(biz, Unique("team-") + ".png", Png(), null, team)).Asset));
     }
 
     [Fact]
@@ -190,7 +172,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var notAFont = await FontLogic.UploadAsync(biz, "x.ttf", Encoding.UTF8.GetBytes("<html>nope</html>"), null);
             Assert.Null(notAFont.Font);
@@ -208,7 +190,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        var (older, newer) = await As(UserRole.Designer, async biz =>
+        var (older, newer) = await As(Role.Designer, async biz =>
         {
             var a = await AssetLogic.UploadAsync(biz, Unique("zzz-alt-") + ".png", Png(), null);
             await Task.Delay(20);
@@ -216,7 +198,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return (a.Asset!.Key, b.Asset!.Key);
         });
 
-        await As(UserRole.Viewer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var byNew = (await AssetLogic.SearchAsync(biz, null, "uploads", 500, "new")).Select(a => a.Key).ToList();
             Assert.True(byNew.IndexOf(newer) >= 0 && byNew.IndexOf(older) >= 0);
@@ -243,7 +225,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        var (id, corrupt) = await As(UserRole.Designer, async biz =>
+        var (id, corrupt) = await As(Role.Designer, async biz =>
         {
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Alt "), null, "label-150x100", null, null, null, null));
             await DesignLogic.SaveDocumentAsync(biz, design.Id, 1, "{\"width\":150,\"height\":100,\"elements\":[{\"type\":\"shape\"}]}");
@@ -254,7 +236,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return (design.Id, broken.Id);
         });
 
-        using var scope = factory.Services.CreateScope();
+        using var scope = Factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<DtDbContext>();
         var stamp = await db.Design.AsNoTracking().Where(d => d.Id == id).Select(d => new { d.UpdateDate, d.Revision }).FirstAsync();
         var (designs, revisions) = await StartupFixes.UpgradeDocumentsAsync(db, NullLogger.Instance);
@@ -293,7 +275,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        var key = await As(UserRole.Designer, async biz =>
+        var key = await As(Role.Designer, async biz =>
         {
             var upload = await AssetLogic.UploadAsync(biz, Unique("alt-") + ".png", Png(), "Sonstiges");
             Assert.Equal("Sonstiges", upload.Asset!.Category);
@@ -301,14 +283,14 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return upload.Asset.Key;
         });
 
-        using (var scope = factory.Services.CreateScope())
+        using (var scope = Factory.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<DtDbContext>();
             Assert.True(await StartupFixes.RenameUploadsCategoryAsync(db, NullLogger.Instance) >= 1);
             Assert.Equal(0, await StartupFixes.RenameUploadsCategoryAsync(db, NullLogger.Instance));
         }
 
-        await As(UserRole.Viewer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             Assert.Equal("Uploads", (await AssetLogic.GetByKeyAsync(biz, key))!.Category);
             Assert.Equal("Flaggen", (await AssetLogic.GetByKeyAsync(biz, "flag-de"))!.Category);
@@ -316,13 +298,13 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
         });
 
         // a person who chooses "Sonstiges" afterwards keeps it
-        var later = await As(UserRole.Designer, biz => AssetLogic.UploadAsync(biz, Unique("spaeter-") + ".png", Png(), "Sonstiges"));
-        using (var scope = factory.Services.CreateScope())
+        var later = await As(Role.Designer, biz => AssetLogic.UploadAsync(biz, Unique("spaeter-") + ".png", Png(), "Sonstiges"));
+        using (var scope = Factory.Services.CreateScope())
         {
             await StartupFixes.RenameUploadsCategoryAsync(scope.ServiceProvider.GetRequiredService<DtDbContext>(), NullLogger.Instance);
         }
 
-        Assert.Equal("Sonstiges", (await As(UserRole.Viewer, biz => AssetLogic.GetByKeyAsync(biz, later.Asset!.Key)))!.Category);
+        Assert.Equal("Sonstiges", (await As(Role.Designer, biz => AssetLogic.GetByKeyAsync(biz, later.Asset!.Key)))!.Category);
     }
 
     // ------------------------------------------------------------------------------------------------ designs: tiles, templates, resize
@@ -335,7 +317,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var card = await DesignLogic.CreateFromFormatAsync(biz, "business-card", null, null, null, null);
             Assert.Equal("Unbenannt – Visitenkarte", card.Name);
@@ -364,7 +346,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             Assert.Equal("Input.PresetKey", (await Assert.ThrowsAsync<BizException>(() => DesignLogic.CreateFromFormatAsync(biz, "nope", null, null, null, null))).Field);
             Assert.Equal("Input.Width", (await Assert.ThrowsAsync<BizException>(() => DesignLogic.CreateFromFormatAsync(biz, "custom", 1, 50, "mm", null))).Field);
@@ -372,7 +354,14 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             await Assert.ThrowsAsync<BizException>(() => DesignLogic.CreateFromFormatAsync(biz, null, null, null, null, null));
             await Assert.ThrowsAsync<BizException>(() => DesignLogic.CreateFromFormatAsync(biz, "custom", 10, 10, "px", null));
         });
-        await As(UserRole.Viewer, biz => Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.CreateFromFormatAsync(biz, "a4-portrait", null, null, null, null)));
+        // everybody may make a design in their own area; a team viewer may not write into the team, a stranger does not even know it
+        var team = await TeamAsync(Role.Designer, (Role.Viewer, SpaceRole.Viewer));
+        await As(Role.Viewer, async biz =>
+        {
+            Assert.NotNull(await DesignLogic.CreateFromFormatAsync(biz, "a4-portrait", null, null, null, null));
+            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.CreateFromFormatAsync(biz, "a4-portrait", null, null, null, null, team));
+        });
+        await As(Role.Stranger, biz => Assert.ThrowsAsync<NotFoundException>(() => DesignLogic.CreateFromFormatAsync(biz, "a4-portrait", null, null, null, null, team)));
     }
 
     [Fact]
@@ -384,9 +373,10 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
         }
 
         var name = Unique("Vorlage ");
-        var (template, copy, templateRevision) = await As(UserRole.Designer, async biz =>
+        var team = await TeamAsync(Role.Designer, (Role.Viewer, SpaceRole.Viewer));
+        var (template, copy, templateRevision) = await As(Role.Designer, async biz =>
         {
-            var source = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(name, "Etiketten", "label-100x70", null, null, null, null));
+            var source = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(name, "Etiketten", "label-100x70", null, null, null, null, team));
             await DesignLogic.SaveDocumentAsync(biz, source.Id, 1, "{\"schema\":2,\"width\":100,\"height\":70,\"pages\":[{\"id\":\"a\",\"elements\":[{\"id\":\"t\",\"type\":\"text\",\"text\":\"Hallo\"}]},{\"id\":\"b\"}]}");
             await DesignLogic.UpdatePropertiesAsync(biz, source.Id, new DesignLogic.DesignInput(name, "Etiketten", "Beschreibung", true));
             await DesignLogic.SaveThumbnailAsync(biz, source.Id, Png());
@@ -399,7 +389,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
         Assert.NotNull(copy.ThumbnailHash);
         Assert.Equal(2, DocumentValidator.Parse(copy.DocumentJson)!.Pages.Count);
 
-        await As(UserRole.Viewer, async biz =>
+        await As(Role.Viewer, async biz =>
         {
             var templates = await DesignLogic.TemplatesAsync(biz);
             Assert.Contains(templates, t => t.Id == template);
@@ -409,13 +399,17 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             Assert.Equal((100d, 70d, "mm"), (row.Width, row.Height, row.Unit));
             Assert.NotNull(row.ThumbnailUrl);
             Assert.Equal(templateRevision, (await DesignLogic.GetAsync(biz, template))!.Revision);
-            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.UseTemplateAsync(biz, template));
+            // a team viewer uses it too: the copy is theirs, in their own area
+            var theirs = await DesignLogic.UseTemplateAsync(biz, template);
+            Assert.False(theirs.IsTemplate);
+            Assert.Equal(await biz.PersonalSpaceIdAsync(), theirs.SpaceId);
         });
+        await As(Role.Stranger, async biz => Assert.DoesNotContain(await DesignLogic.TemplatesAsync(biz), t => t.Id == template));
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             await Assert.ThrowsAsync<BizException>(() => DesignLogic.UseTemplateAsync(biz, copy.Id));
-            await Assert.ThrowsAsync<BizException>(() => DesignLogic.UseTemplateAsync(biz, long.MaxValue));
+            await Assert.ThrowsAsync<NotFoundException>(() => DesignLogic.UseTemplateAsync(biz, long.MaxValue));
         });
     }
 
@@ -427,7 +421,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Größe "), null, null, 100, 50, "mm", null));
             await DesignLogic.SaveDocumentAsync(biz, design.Id, 1, "{\"schema\":2,\"width\":100,\"height\":50,\"pages\":[{\"id\":\"a\",\"elements\":[{\"id\":\"t\",\"type\":\"text\",\"x\":10,\"y\":5,\"w\":40,\"h\":10,\"fontSize\":12}]},{\"id\":\"b\",\"elements\":[{\"id\":\"u\",\"type\":\"shape\",\"x\":0,\"y\":0,\"w\":100,\"h\":50}]}]}");
@@ -464,17 +458,18 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        var id = await As(UserRole.Designer, async biz =>
+        var id = await As(Role.Designer, async biz =>
         {
             var design = await DesignLogic.CreateFromFormatAsync(biz, "a4-portrait", null, null, null, null);
             Assert.Equal("Input.Width", (await Assert.ThrowsAsync<BizException>(() => DesignLogic.ResizeAsync(biz, design.Id, 1, 100, "mm", true))).Field);
             Assert.Equal("Input.Height", (await Assert.ThrowsAsync<BizException>(() => DesignLogic.ResizeAsync(biz, design.Id, 100, 5001, "mm", true))).Field);
             Assert.Equal("Input.Width", (await Assert.ThrowsAsync<BizException>(() => DesignLogic.ResizeAsync(biz, design.Id, double.NaN, 100, "mm", true))).Field);
             Assert.Equal("Input.Width", (await Assert.ThrowsAsync<BizException>(() => DesignLogic.ResizeAsync(biz, design.Id, 15, 100, "px", true))).Field);
-            await Assert.ThrowsAsync<BizException>(() => DesignLogic.ResizeAsync(biz, long.MaxValue, 100, 100, "mm", true));
+            await Assert.ThrowsAsync<NotFoundException>(() => DesignLogic.ResizeAsync(biz, long.MaxValue, 100, 100, "mm", true));
             return design.Id;
         });
-        await As(UserRole.Viewer, biz => Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.ResizeAsync(biz, id, 100, 100, "mm", true)));
+        await ShareAsync(Role.Designer, ItemKind.Design, id, Role.Viewer);
+        await As(Role.Viewer, biz => Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.ResizeAsync(biz, id, 100, 100, "mm", true)));
     }
 
     // ------------------------------------------------------------------------------------------------ the brand kit
@@ -487,32 +482,33 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        var logo = await As(UserRole.Designer, async biz => (await AssetLogic.UploadAsync(biz, Unique("marke-") + ".png", Png(), "Logos")).Asset!.Key);
-        var families = await As(UserRole.Viewer, biz => BrandLogic.FamiliesAsync(biz));
+        var team = await TeamAsync(Role.Designer, (Role.Viewer, SpaceRole.Viewer));
+        var logo = await As(Role.Designer, async biz => (await AssetLogic.UploadAsync(biz, Unique("marke-") + ".png", Png(), "Logos", team)).Asset!.Key);
+        var families = await As(Role.Viewer, biz => BrandLogic.FamiliesAsync(biz, team));
         Assert.Contains("Montserrat", families);
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var view = await BrandLogic.SaveAsync(biz, new BrandKit
             {
                 Colors = ["#1FB3D6", "#abc", "#ABC", "#102030", "#1fb3d6"],
                 Fonts = new BrandFonts { Heading = "montserrat", Subheading = "", Body = "Roboto Slab" },
                 Logos = [logo.ToUpperInvariant(), logo],
-            });
+            }, team);
             Assert.Equal(["#1fb3d6", "#aabbcc", "#102030"], view.Kit.Colors);
             Assert.Equal(("Montserrat", null, "Roboto Slab"), (view.Kit.Fonts.Heading, view.Kit.Fonts.Subheading, view.Kit.Fonts.Body));
             Assert.Equal([logo], view.Kit.Logos);
             Assert.Equal(logo, Assert.Single(view.LogoAssets).Key);
         });
 
-        await As(UserRole.Viewer, async biz =>
+        await As(Role.Viewer, async biz =>
         {
-            var view = await BrandLogic.GetAsync(biz);
+            var view = await BrandLogic.GetAsync(biz, team);
             Assert.Equal(["#1fb3d6", "#aabbcc", "#102030"], view.Kit.Colors);
             Assert.Equal("Montserrat", view.Kit.Fonts.Heading);
             Assert.Equal(logo, view.Kit.Logos.Single());
             Assert.StartsWith("/media/" + logo + "?v=", view.LogoAssets.Single().Url);
-            await Assert.ThrowsAsync<ForbiddenException>(() => BrandLogic.SaveAsync(biz, new BrandKit()));
+            await Assert.ThrowsAsync<ForbiddenException>(() => BrandLogic.SaveAsync(biz, new BrandKit(), team));
         });
     }
 
@@ -524,7 +520,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             await BrandLogic.SaveAsync(biz, new BrandKit { Colors = ["#112233"] });
             var tooManyColours = Enumerable.Range(0, 41).Select(i => "#" + i.ToString("x6")).ToList();
@@ -556,13 +552,13 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        var (logoId, logo) = await As(UserRole.Designer, async biz =>
+        var (logoId, logo) = await As(Role.Designer, async biz =>
         {
             var upload = (await AssetLogic.UploadAsync(biz, Unique("weg-") + ".png", Png(), "Logos")).Asset!;
             await BrandLogic.SaveAsync(biz, new BrandKit { Logos = [upload.Key] });
             return (upload.Id, upload.Key);
         });
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             Assert.Contains(logo, (await BrandLogic.GetAsync(biz)).Kit.Logos);
             await AssetLogic.DeleteAsync(biz, logoId);
@@ -592,7 +588,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Zweiseitig "), null, "business-card", null, null, null, null));
             await DesignLogic.SaveDocumentAsync(biz, design.Id, 1, TwoPageDocument);
@@ -621,7 +617,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Alt "), null, "label-150x100", null, null, null, null));
             await biz.Db.Design.Where(d => d.Id == design.Id).ExecuteUpdateAsync(s => s.SetProperty(d => d.DocumentJson, SchemaOneDocument));
@@ -648,7 +644,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
         }
 
         var pages = string.Join(",", Enumerable.Range(0, 50).Select(i => "{\"id\":\"s" + i + "\"}"));
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Fünfzig "), null, "a4-portrait", null, null, null, null));
             await DesignLogic.SaveDocumentAsync(biz, design.Id, 1, "{\"schema\":2,\"width\":210,\"height\":297,\"pages\":[" + pages + "]}");
@@ -674,7 +670,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
         }
 
         var key = Unique("seite2-");
-        var (bytes, design) = await As(UserRole.Designer, async biz =>
+        var (bytes, design) = await As(Role.Designer, async biz =>
         {
             await AssetLogic.UploadAsync(biz, key + ".png", Png(), null);
             var created = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Paket "), null, "business-card", null, null, null, null));
@@ -688,7 +684,7 @@ public sealed class StudioIntegrationTests(AppTests.AppFactory factory)
         Assert.Equal(2, DocumentValidator.Parse(read.Package.DocumentJson)!.Pages.Count);
 
         // another picture under the same key: the import puts the new one under key-2 and the group on page 2 points to it
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var existing = await AssetLogic.GetByKeyAsync(biz, key);
             await AssetLogic.ReplaceFileAsync(biz, existing!.Id, OtherPng());

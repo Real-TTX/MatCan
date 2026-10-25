@@ -33,9 +33,9 @@ public static class AiTextLogic
 
     private static async Task<AiLogic.Call> PrepareAsync(Biz biz, long designId, SuggestInput input)
     {
-        biz.RequireDesigner();
+        await Access.RequireAsync(biz, ItemKind.Design, designId, AccessLevel.Edit);
         var design = await biz.Db.Design.AsNoTracking().Where(d => d.Id == designId).Select(d => new { d.Id, d.Name, d.Width, d.Height, d.Unit }).FirstOrDefaultAsync()
-            ?? throw new BizException("Das Design gibt es nicht mehr.");
+            ?? throw new NotFoundException();
         var text = (input.Text ?? string.Empty).Trim();
         var instruction = (input.Instruction ?? string.Empty).Trim();
         if (text.Length > TextSuggestCheck.MaxTextLength)

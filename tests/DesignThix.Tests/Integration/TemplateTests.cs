@@ -16,25 +16,9 @@ namespace DesignThix.Tests.Integration;
 /// templates). The file tests need no database; the rest runs when DESIGNTHIX_TEST_DB names a server.
 /// </summary>
 [Collection("app")]
-public sealed class TemplateTests(AppTests.AppFactory factory)
+public sealed class TemplateTests(AppTests.AppFactory factory) : PlatformTestBase(factory)
 {
-    private static bool Enabled => AppTests.AppFactory.Connection is not null;
-
     private static string Unique(string prefix) => prefix + Guid.NewGuid().ToString("N")[..8];
-
-    private async Task<T> As<T>(UserRole role, Func<Biz, Task<T>> action)
-    {
-        using var client = factory.CreateClient();
-        using var scope = factory.Services.CreateScope();
-        using var acting = scope.ServiceProvider.GetRequiredService<ICurrentUser>().RunAs(1, "Test", role);
-        return await action(scope.ServiceProvider.GetRequiredService<Biz>());
-    }
-
-    private Task As(UserRole role, Func<Biz, Task> action) => As(role, async biz =>
-    {
-        await action(biz);
-        return 0;
-    });
 
     // ------------------------------------------------------------------------------------------------ the files
 
@@ -257,10 +241,10 @@ public sealed class TemplateTests(AppTests.AppFactory factory)
         var slugs = TemplateSeeder.Slugs();
         var names = slugs.Select(s => { using var f = JsonDocument.Parse(TemplateSeeder.Read(s)!); return f.RootElement.GetProperty("name").GetString()!; }).ToList();
 
-        async Task<int> Count(string name) => await As(UserRole.Viewer, biz => biz.Db.Design.CountAsync(d => d.IsTemplate && d.Name == name));
+        async Task<int> Count(string name) => await As(Role.Viewer, biz => biz.Db.Design.CountAsync(d => d.IsTemplate && d.Name == name));
         async Task<List<string>> Marker()
         {
-            using var scope = factory.Services.CreateScope();
+            using var scope = Factory.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<Data.DtDbContext>();
             var value = await db.Setting.Where(s => s.Key == TemplateSeeder.Marker).Select(s => s.Value).SingleAsync();
             return JsonSerializer.Deserialize<List<string>>(value)!;
@@ -273,7 +257,7 @@ public sealed class TemplateTests(AppTests.AppFactory factory)
         }
 
         Assert.Equal(slugs.OrderBy(s => s), (await Marker()).OrderBy(s => s));
-        await As(UserRole.Viewer, async biz =>
+        await As(Role.Viewer, async biz =>
         {
             var templates = await DesignLogic.TemplatesAsync(biz);
             var found = templates.Single(t => t.Name == "Instagram-Beitrag – SALE −30 %");
@@ -281,7 +265,7 @@ public sealed class TemplateTests(AppTests.AppFactory factory)
         });
 
         // 2. Seeding again adds nothing.
-        Assert.Equal(0, await TemplateSeeder.SeedAsync(factory.Services, NullLogger.Instance));
+        Assert.Equal(0, await TemplateSeeder.SeedAsync(Factory.Services, NullLogger.Instance));
         foreach (var name in names)
         {
             Assert.Equal(1, await Count(name));
@@ -290,13 +274,14 @@ public sealed class TemplateTests(AppTests.AppFactory factory)
         // 3. A person deletes one: it does not come back.
         var deleted = "Grußkarte A6 quer (2 Seiten)";
         Assert.Contains(deleted, names);
-        var id = await As(UserRole.Viewer, biz => biz.Db.Design.Where(d => d.IsTemplate && d.Name == deleted).Select(d => d.Id).SingleAsync());
-        await As(UserRole.Designer, biz => DesignLogic.DeleteAsync(biz, id));
-        Assert.Equal(0, await TemplateSeeder.SeedAsync(factory.Services, NullLogger.Instance));
+        var id = await As(Role.Viewer, biz => biz.Db.Design.Where(d => d.IsTemplate && d.Name == deleted).Select(d => d.Id).SingleAsync());
+        // a system template belongs to the platform: an administrator deletes it
+        await As(Role.Admin, biz => DesignLogic.DeleteAsync(biz, id));
+        Assert.Equal(0, await TemplateSeeder.SeedAsync(Factory.Services, NullLogger.Instance));
         Assert.Equal(0, await Count(deleted));
 
         // 4. A later version brings a template that this database never saw (its slug is not in the list yet): it is added, the others are left alone.
-        using (var scope = factory.Services.CreateScope())
+        using (var scope = Factory.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<Data.DtDbContext>();
             var marker = await db.Setting.SingleAsync(s => s.Key == TemplateSeeder.Marker);
@@ -304,7 +289,7 @@ public sealed class TemplateTests(AppTests.AppFactory factory)
             await db.SaveChangesAsync();
         }
 
-        Assert.Equal(1, await TemplateSeeder.SeedAsync(factory.Services, NullLogger.Instance));
+        Assert.Equal(1, await TemplateSeeder.SeedAsync(Factory.Services, NullLogger.Instance));
         Assert.Equal(1, await Count(deleted));
         foreach (var name in names)
         {
@@ -312,28 +297,34 @@ public sealed class TemplateTests(AppTests.AppFactory factory)
         }
 
         Assert.Equal(slugs.OrderBy(s => s), (await Marker()).OrderBy(s => s));
-        Assert.Equal(0, await TemplateSeeder.SeedAsync(factory.Services, NullLogger.Instance));
+        Assert.Equal(0, await TemplateSeeder.SeedAsync(Factory.Services, NullLogger.Instance));
     }
 
     [Fact]
-    public async Task A_seeded_template_is_stored_as_the_validated_document_and_can_be_used_by_a_designer_but_not_a_viewer()
+    public async Task A_seeded_template_is_stored_as_the_validated_document_and_can_be_used_by_every_member()
     {
         if (!Enabled)
         {
             return;
         }
 
-        var template = await As(UserRole.Viewer, biz => biz.Db.Design.AsNoTracking().SingleAsync(d => d.IsTemplate && d.Name == "Visitenkarte modern (2 Seiten)"));
+        var template = await As(Role.Viewer, biz => biz.Db.Design.AsNoTracking().SingleAsync(d => d.IsTemplate && d.Name == "Visitenkarte modern (2 Seiten)"));
         var stored = DocumentValidator.Parse(template.DocumentJson)!;
         Assert.Equal(2, stored.Pages.Count);
         Assert.Equal((85d, 55d, "mm"), (template.Width, template.Height, template.Unit));
         Assert.Equal(1, template.Revision);
         Assert.Equal("Karten", template.Category);
 
-        var copy = await As(UserRole.Designer, biz => DesignLogic.UseTemplateAsync(biz, template.Id));
+        var copy = await As(Role.Designer, biz => DesignLogic.UseTemplateAsync(biz, template.Id));
         Assert.False(copy.IsTemplate);
         Assert.Equal(2, DocumentValidator.Parse(copy.DocumentJson)!.Pages.Count);
-        await As(UserRole.Viewer, async biz => await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.UseTemplateAsync(biz, template.Id)));
+        // every member uses it: the copy goes into their own area, the template stays what it is
+        await As(Role.Viewer, async biz =>
+        {
+            var theirs = await DesignLogic.UseTemplateAsync(biz, template.Id);
+            Assert.Equal(await biz.PersonalSpaceIdAsync(), theirs.SpaceId);
+            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.RenameAsync(biz, template.Id, "Meine"));
+        });
     }
 
     // ------------------------------------------------------------------------------------------------ the data of the start page
@@ -347,14 +338,14 @@ public sealed class TemplateTests(AppTests.AppFactory factory)
         }
 
         var unique = Unique("Suchwort");
-        var design = await As(UserRole.Designer, async biz =>
+        var design = await As(Role.Designer, async biz =>
         {
             var made = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign($"Mein {unique} Schild", "Bunte Sachen", "a5-portrait", null, null, null, null));
             await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign("100% Prozent_Zeichen " + unique, null, "a5-portrait", null, null, null, null));
             return made;
         });
 
-        await As(UserRole.Viewer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var byName = await DesignLogic.SearchAsync(biz, unique.ToLowerInvariant());
             Assert.Equal(2, byName.Designs.Count);
@@ -394,14 +385,14 @@ public sealed class TemplateTests(AppTests.AppFactory factory)
             return;
         }
 
-        var (first, second) = await As(UserRole.Designer, async biz =>
+        var (first, second) = await As(Role.Designer, async biz =>
         {
             var a = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Zuletzt A "), null, "a4-portrait", null, null, null, null));
             var b = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Zuletzt B "), null, "a4-portrait", null, null, null, null));
             return (a, b);
         });
 
-        await As(UserRole.Viewer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var recent = await DesignLogic.RecentAsync(biz, 5);
             Assert.True(recent.Count > 0 && recent.Count <= 5);
@@ -429,7 +420,7 @@ public sealed class TemplateTests(AppTests.AppFactory factory)
             return;
         }
 
-        var created = await As(UserRole.Designer, async biz =>
+        var created = await As(Role.Designer, async biz =>
         {
             var design = await DesignLogic.CreateFromFormatAsync(biz, "business-card", null, null, null, null);
             Assert.Equal("Unbenannt – Visitenkarte", design.Name);
@@ -441,15 +432,18 @@ public sealed class TemplateTests(AppTests.AppFactory factory)
             return design;
         });
 
-        await As(UserRole.Viewer, async biz =>
+        await ShareAsync(Role.Designer, ItemKind.Design, created.Id, Role.Viewer);
+        await As(Role.Viewer, async biz =>
         {
-            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.CreateFromFormatAsync(biz, "business-card", null, null, null, null));
-            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.DuplicateAsync(biz, created.Id));
+            // everybody makes designs in their own area, and looking at one is enough to copy it; changing and deleting the original is not
+            Assert.NotNull(await DesignLogic.CreateFromFormatAsync(biz, "business-card", null, null, null, null));
+            var theirCopy = await DesignLogic.DuplicateAsync(biz, created.Id);
+            Assert.Equal(await biz.PersonalSpaceIdAsync(), theirCopy.SpaceId);
             await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.RenameAsync(biz, created.Id, "x"));
             await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.DeleteAsync(biz, created.Id));
         });
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             Assert.Equal("Neuer Name", await DesignLogic.RenameAsync(biz, created.Id, "Neuer Name"));
             var copy = await DesignLogic.DuplicateAsync(biz, created.Id);

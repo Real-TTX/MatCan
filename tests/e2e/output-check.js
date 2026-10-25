@@ -16,7 +16,7 @@ const lib = require('./lib.js');
 const { demoDocument, demoRows } = require('./demo-label.js');
 
 const args = process.argv.slice(2);
-const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson } = lib(args, { ignoreUrl: /\/api\/outputs\/99999999\/payload|handler=Export/ });
+const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignoreUrl: /\/api\/outputs\/99999999\/payload|handler=Export/ });
 const outIndex = args.indexOf('--out');
 const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'designthix-output-check'));
 const fontFile = path.resolve(__dirname, '../../src/DesignThix/wwwroot/fonts/BebasNeue-Regular.ttf');
@@ -554,14 +554,15 @@ const runFacts = page => page.evaluate(() => {
   const viewerContext = await newContext(browser, { acceptDownloads: true });
   const viewer = await viewerContext.newPage();
   watch(viewer, 'viewer');
+  for (const [kind, shareId] of [['design', designId], ['design', sourceId], ['datalist', list.id], ['datalist', bigList.id], ['outputjob', sheetJob], ['outputjob', singleJob], ['outputjob', pngJob], ['outputjob', bigJob]]) { await shareWith(page, kind, shareId, accounts.viewer.email, 'View'); }
   if (!await login(viewer, accounts.viewer)) { throw new Error('Anmeldung des Betrachters fehlgeschlagen.'); }
   await viewer.goto(base + '/Outputs?q=' + encodeURIComponent(stamp));
-  check('the viewer sees the outputs, but not "Neue Serienausgabe"', (await viewer.$$('#output-table tbody tr')).length === 4 && !(await viewer.isVisible('a:has-text("Neue Serienausgabe")')));
+  check("the second member sees the four shared outputs, and \"Neue Serienausgabe\" like every member", (await viewer.$$("#output-table tbody tr")).length === 4 && (await viewer.isVisible("a:has-text(\"Neue Serienausgabe\")")));
   await viewer.goto(`${base}/Outputs/Edit/${sheetJob}`);
   check('the edit page is read-only for the viewer (disabled fields, run and back only)', (await viewer.isVisible('fieldset[disabled]')) && !(await viewer.isVisible('button[type=submit].mat-btn--primary')) && (await viewer.isVisible('a:has-text("Ausführen")')));
   check('and says so', /nur ansehen und ausführen/.test(await viewer.textContent('main')));
   const create = await viewer.goto(base + '/Outputs/Create');
-  check('"Neue Serienausgabe" is closed for the viewer', /AccessDenied/.test(viewer.url()) || create.status() === 403, viewer.url() + ' ' + create.status());
+  check('"Neue Serienausgabe" opens for every member', create.status() === 200 && !/AccessDenied/.test(viewer.url()), viewer.url() + ' ' + create.status());
   await viewer.goto(`${base}/Outputs/Edit/${sheetJob}`);
   const post = await viewer.evaluate(async id => {
     const r = await fetch('/Outputs/Edit/' + id, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', RequestVerificationToken: document.querySelector('meta[name=dt-csrf]').content }, body: 'Input.Name=Hacked&Input.DesignId=1', redirect: 'manual' });
@@ -578,10 +579,10 @@ const runFacts = page => page.evaluate(() => {
   await viewer.goto(`${base}/Designs/${designId}/Print`);
   check('the single print page opens for the viewer', await viewer.isVisible('[data-dt-print-form]'));
   const imp403 = await viewer.goto(base + '/Designs/Import');
-  const exp403 = await viewer.goto(`${base}/Designs/Edit/${sourceId}?handler=Export`);
-  check('import and export are closed for the viewer', (/AccessDenied/.test(viewer.url()) || exp403.status() === 403 || exp403.status() === 404) && imp403.status() !== 500, viewer.url() + ' ' + exp403.status());
+  const exp403 = { status: () => 0 }; exp403.status = (s => () => s)(await viewer.evaluate(async url => (await fetch(url)).status, `${base}/Designs/Edit/${sourceId}?handler=Export`));
+  check('import opens for every member, and a shared design can be exported', imp403.status() === 200 && exp403.status() === 200, imp403.status() + ' ' + exp403.status());
   await viewer.goto(`${base}/Designs/Edit/${sourceId}`);
-  check('the viewer sees "Einzeldruck" but not "Exportieren"', (await viewer.isVisible('a:has-text("Einzeldruck")')) && !(await viewer.isVisible('a:has-text("Exportieren")')));
+  check('the second member sees "Einzeldruck" and "Exportieren" on the shared design', (await viewer.isVisible('a:has-text("Einzeldruck")')) && (await viewer.isVisible('a:has-text("Exportieren")')));
   const payload404 = await viewer.evaluate(async () => (await fetch('/api/outputs/99999999/payload')).status);
   check('an unknown output has no payload (404)', payload404 === 404);
   await viewerContext.close();

@@ -1,6 +1,7 @@
 using DesignThix.Core.Security;
 using DesignThix.Data;
 using DesignThix.Data.Entities;
+using DesignThix.Services;
 using DesignThix.Services.Auth;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,7 +38,10 @@ public static class UserLogic
             throw new ForbiddenException("Es gibt schon einen Administrator.");
         }
 
-        return await CreateAsync(biz.Db, email, displayName, UserRole.Admin, password, biz.Now);
+        var admin = await CreateAsync(biz.Db, email, displayName, UserRole.Admin, password, biz.Now);
+        // the demo's data list and output job go into the first administrator's personal area (the demo design is a system template that was seeded at start-up)
+        await DemoSeeder.SeedPersonalAsync(biz.Db, admin, biz.Service<ILoggerFactory>().CreateLogger("Demo"));
+        return admin;
     }
 
     private static async Task<User> CreateAsync(DtDbContext db, string email, string displayName, UserRole role, string? password, DateTime now)
@@ -58,6 +62,7 @@ public static class UserLogic
         };
         db.User.Add(user);
         await db.SaveChangesAsync();
+        await SpaceLogic.EnsurePersonalAsync(db, user);
         return user;
     }
 
@@ -163,11 +168,62 @@ public static class UserLogic
             throw new BizException("Das ist der einzige aktive Administrator.");
         }
 
+        await ReleaseAreasAsync(biz, user);
         await biz.Service<SignInService>().EndAllSessionsAsync(user.Id, null);
         biz.Db.User.Remove(user);
         await biz.Db.SaveChangesAsync();
         biz.Service<SessionCache>().InvalidateUser(user.Id);
         await biz.Log.LogAsync("Benutzer gelöscht", nameof(User), user.Id, user.Email);
+    }
+
+    /// <summary>
+    /// What a deleted account leaves behind: a team the person owns alone and shares with others must be handed over first; a team they were alone in is deleted; the personal area goes to the trash
+    /// (the purger removes it); shares, link grants, stars and visits of the person end.
+    /// </summary>
+    private static async Task ReleaseAreasAsync(Biz biz, User user)
+    {
+        var db = biz.Db;
+        var owned = await db.SpaceMember.Where(m => m.UserId == user.Id && m.Role == SpaceRole.Owner && m.SpaceId != user.PersonalSpaceId).Select(m => m.SpaceId).ToListAsync();
+        foreach (var teamId in owned)
+        {
+            var owners = await db.SpaceMember.CountAsync(m => m.SpaceId == teamId && m.Role == SpaceRole.Owner);
+            var members = await db.SpaceMember.CountAsync(m => m.SpaceId == teamId);
+            if (owners <= 1 && members > 1)
+            {
+                var name = await db.Space.Where(s => s.Id == teamId).Select(s => s.Name).FirstAsync();
+                throw new BizException($"{user.DisplayName} ist der einzige Inhaber des Teams „{name}“. Übertrage zuerst die Inhaberschaft.");
+            }
+        }
+
+        foreach (var teamId in owned)
+        {
+            if (await db.SpaceMember.CountAsync(m => m.SpaceId == teamId) <= 1)
+            {
+                await ItemLogic.TrashSpaceContentAsync(db, teamId, biz.Now);
+                var team = await db.Space.FirstAsync(s => s.Id == teamId);
+                team.DeletedDate = biz.Now;
+                db.Space.Remove(team);
+                await db.Share.Where(s => s.SpaceId == teamId).ExecuteDeleteAsync();
+            }
+        }
+
+        await db.SpaceMember.Where(m => m.UserId == user.Id).ExecuteDeleteAsync();
+        if (user.PersonalSpaceId is { } personal)
+        {
+            await ItemLogic.TrashSpaceContentAsync(db, personal, biz.Now);
+            var space = await db.Space.FirstOrDefaultAsync(s => s.Id == personal);
+            if (space is not null)
+            {
+                space.DeletedDate = biz.Now;
+                db.Space.Remove(space);
+            }
+        }
+
+        await db.Share.Where(s => s.UserId == user.Id).ExecuteDeleteAsync();
+        await db.LinkGrant.Where(g => g.UserId == user.Id).ExecuteDeleteAsync();
+        await db.Star.Where(s => s.UserId == user.Id).ExecuteDeleteAsync();
+        await db.ItemVisit.Where(v => v.UserId == user.Id).ExecuteDeleteAsync();
+        await db.SaveChangesAsync();
     }
 
     public static async Task UnlockAsync(Biz biz, long id)

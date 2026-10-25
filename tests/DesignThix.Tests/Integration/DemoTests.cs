@@ -11,9 +11,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DesignThix.Tests.Integration;
 
-/// <summary>The file of the demo (<c>src/DesignThix/Demo/kaesetheke.json</c>): valid on its own, and seeded once into a new database.</summary>
+/// <summary>The file of the demo (<c>src/DesignThix/Demo/kaesetheke.json</c>): valid on its own; the template is seeded once into a new database as a system template, the list and the job once into the personal area of the first administrator.</summary>
 [Collection("app")]
-public sealed class DemoTests(AppTests.AppFactory factory)
+public sealed class DemoTests(AppTests.AppFactory factory) : PlatformTestBase(factory)
 {
     private static string DemoFile()
     {
@@ -100,48 +100,54 @@ public sealed class DemoTests(AppTests.AppFactory factory)
     }
 
     [Fact]
-    public async Task A_new_database_gets_the_demo_once_and_a_deleted_demo_stays_deleted()
+    public async Task A_new_database_gets_the_demo_template_for_everybody_and_the_list_and_the_job_for_the_first_administrator_once()
     {
-        if (AppTests.AppFactory.Connection is null)
+        if (!Enabled)
         {
             return;
         }
 
-        using var client = factory.CreateClient();
-        async Task<T> As<T>(UserRole role, Func<Biz, Task<T>> action)
-        {
-            using var scope = factory.Services.CreateScope();
-            using var acting = scope.ServiceProvider.GetRequiredService<ICurrentUser>().RunAs(1, "Test", role);
-            return await action(scope.ServiceProvider.GetRequiredService<Biz>());
-        }
-
-        var (design, list, rows, job, sheetKey) = await As(UserRole.Viewer, async biz =>
-        {
-            var d = await biz.Db.Design.SingleAsync(x => x.Name == "Käsetheke – Preisschild");
-            var l = await biz.Db.DataList.Include(x => x.Rows).SingleAsync(x => x.Name == "Käsetheke (Beispiel)");
-            var j = await biz.Db.OutputJob.Include(x => x.SheetLayout).SingleAsync(x => x.Name == "Käsetheke – A4 mit 4 Etiketten");
-            return (d, l, l.Rows.Count, j, j.SheetLayout?.BuiltInKey);
-        });
+        // at start-up: the template is a system template (no area): everybody may view it, nobody owns it
+        var design = await Db(db => db.Design.SingleAsync(x => x.Name == "Käsetheke – Preisschild"));
         Assert.True(design.IsTemplate);
+        Assert.Null(design.SpaceId);
         Assert.Equal("Etiketten", design.Category);
         Assert.Equal((150d, 100d, "mm"), (design.Width, design.Height, design.Unit));
+        Assert.Equal(1, await Db(db => db.Setting.CountAsync(s => s.Key == DemoSeeder.Marker)));
+        await As(Role.Stranger, async biz => Assert.Contains(await DesignLogic.TemplatesAsync(biz), t => t.Id == design.Id));
+
+        // the list and the job are not there before somebody signs up: they come with the first administrator
+        var owner = await NewUserAsync(Factory, "demo-owner");
+        await Db(async db =>
+        {
+            await db.Setting.Where(s => s.Key == DemoSeeder.PersonalMarker).ExecuteDeleteAsync();
+            await DemoSeeder.SeedPersonalAsync(db, await db.User.FirstAsync(u => u.Id == owner), NullLogger.Instance);
+        });
+        var (list, rows, job, sheetKey, personal) = await AsUser(owner, async biz =>
+        {
+            var space = await biz.PersonalSpaceIdAsync();
+            var l = await biz.Db.DataList.Include(x => x.Rows).SingleAsync(x => x.Name == "Käsetheke (Beispiel)" && x.SpaceId == space);
+            var j = await biz.Db.OutputJob.Include(x => x.SheetLayout).SingleAsync(x => x.Name == "Käsetheke – A4 mit 4 Etiketten" && x.SpaceId == space);
+            return (l, l.Rows.Count, j, j.SheetLayout?.BuiltInKey, space);
+        });
+        Assert.Equal(personal, list.SpaceId);
         Assert.Equal(6, rows);
         Assert.Contains(ColumnDefs.Parse(list.ColumnsJson), c => c.Key == "Preis" && c.Type == "price");
         Assert.Equal((OutputMode.Sheet, OutputScale.Fit, "a4-2x2-a6"), (job.Mode, job.Scale, sheetKey));
         Assert.Equal(design.Id, job.DesignId);
         Assert.Equal(list.Id, job.DataListId);
 
-        // The next start adds nothing, and what a person deleted does not come back.
-        await DemoSeeder.SeedAsync(factory.Services, NullLogger.Instance);
-        await As(UserRole.Designer, async biz => { await OutputLogic.DeleteAsync(biz, job.Id); return 0; });
-        await As(UserRole.Designer, async biz => { await DataListLogic.DeleteAsync(biz, list.Id); return 0; });
-        await As(UserRole.Designer, async biz => { await DesignLogic.DeleteAsync(biz, design.Id); return 0; });
-        await DemoSeeder.SeedAsync(factory.Services, NullLogger.Instance);
-        var (designs, lists, jobs, marker) = await As(UserRole.Viewer, async biz => (
-            await biz.Db.Design.CountAsync(x => x.Name == "Käsetheke – Preisschild"),
-            await biz.Db.DataList.CountAsync(x => x.Name == "Käsetheke (Beispiel)"),
-            await biz.Db.OutputJob.CountAsync(x => x.Name == "Käsetheke – A4 mit 4 Etiketten"),
-            await biz.Db.Setting.CountAsync(s => s.Key == DemoSeeder.Marker)));
-        Assert.Equal((0, 0, 0, 1), (designs, lists, jobs, marker));
+        // nobody else sees them, and the output can be run by the owner
+        await As(Role.Stranger, async biz => Assert.DoesNotContain(await DataListLogic.Query(biz).ToListAsync(), l => l.Id == list.Id));
+        var payload = await AsUser(owner, biz => OutputLogic.PayloadAsync(biz, job.Id));
+        Assert.Equal(6, payload.Labels.Count);
+
+        // the next call adds nothing, and what the person deleted does not come back
+        await Db(async db => await DemoSeeder.SeedPersonalAsync(db, await db.User.FirstAsync(u => u.Id == owner), NullLogger.Instance));
+        await AsUser(owner, biz => OutputLogic.DeleteAsync(biz, job.Id));
+        await AsUser(owner, biz => DataListLogic.DeleteAsync(biz, list.Id));
+        await Db(async db => await DemoSeeder.SeedPersonalAsync(db, await db.User.FirstAsync(u => u.Id == owner), NullLogger.Instance));
+        var (lists, jobs) = await AsUser(owner, async biz => (await DataListLogic.Query(biz).CountAsync(x => x.Name == "Käsetheke (Beispiel)"), await OutputLogic.Query(biz).CountAsync(x => x.Name == "Käsetheke – A4 mit 4 Etiketten")));
+        Assert.Equal((0, 0), (lists, jobs));
     }
 }

@@ -25,6 +25,9 @@ public sealed record FontRow
 
     public bool IsBuiltIn { get; init; }
 
+    /// <summary>The area of the font; null for the built-in fonts.</summary>
+    public long? SpaceId { get; init; }
+
     public string License { get; init; } = "";
 
     public string? Source { get; init; }
@@ -53,23 +56,59 @@ public static partial class FontLogic
         _ => "truetype",
     };
 
+    /// <summary>The fonts the person may use: the built-in ones and those of their areas.</summary>
     public static IQueryable<FontRow> Query(Biz biz)
     {
         biz.RequireSignedIn();
-        return biz.Db.Font.AsNoTracking().Select(f => new FontRow { Id = f.Id, Family = f.Family, Weight = f.Weight, Style = f.Style, Format = f.Format, SizeBytes = f.SizeBytes, ContentHash = f.ContentHash, IsBuiltIn = f.IsBuiltIn, License = f.License, Source = f.Source, UpdateDate = f.UpdateDate });
+        return Access.VisibleInSpaces<Font>(biz).AsNoTracking().Select(f => new FontRow { Id = f.Id, Family = f.Family, Weight = f.Weight, Style = f.Style, Format = f.Format, SizeBytes = f.SizeBytes, ContentHash = f.ContentHash, IsBuiltIn = f.IsBuiltIn, SpaceId = f.SpaceId, License = f.License, Source = f.Source, UpdateDate = f.UpdateDate });
     }
 
     public static Task<FontRow?> GetAsync(Biz biz, long id) => Query(biz).FirstOrDefaultAsync(f => f.Id == id);
 
-    public static async Task<List<FontRow>> AllAsync(Biz biz)
-        => await Query(biz).OrderBy(f => f.Family).ThenBy(f => f.Style).ThenBy(f => f.Weight).ToListAsync();
-
-    /// <summary>The bytes of a font file; null when the font is gone.</summary>
-    public static async Task<(byte[] Bytes, string Format, string Hash)?> ContentAsync(Biz biz, long id)
+    /// <summary>
+    /// The fonts the person may use, by family: the built-in ones and those of their areas. With <paramref name="designId"/> (the person must be allowed to view the design) also those of the
+    /// design's area, and where a family of that area has the same weight and style as another, the design's area wins (the editor shows the design as its authors see it).
+    /// </summary>
+    public static async Task<List<FontRow>> AllAsync(Biz biz, long? designId = null)
     {
-        biz.RequireSignedIn();
+        var fonts = await Query(biz).OrderBy(f => f.Family).ThenBy(f => f.Style).ThenBy(f => f.Weight).ToListAsync();
+        if (designId is not { } design)
+        {
+            return fonts;
+        }
+
+        await Access.RequireAsync(biz, ItemKind.Design, design, AccessLevel.View);
+        var spaceId = await biz.Db.Design.AsNoTracking().Where(d => d.Id == design).Select(d => d.SpaceId).FirstOrDefaultAsync();
+        if (spaceId is not { } space || fonts.Any(f => f.SpaceId == space))
+        {
+            return spaceId is { } own ? DesignFirst(fonts, own) : fonts;
+        }
+
+        var extra = await biz.Db.Font.AsNoTracking().Where(f => f.SpaceId == space)
+            .Select(f => new FontRow { Id = f.Id, Family = f.Family, Weight = f.Weight, Style = f.Style, Format = f.Format, SizeBytes = f.SizeBytes, ContentHash = f.ContentHash, IsBuiltIn = f.IsBuiltIn, SpaceId = f.SpaceId, License = f.License, Source = f.Source, UpdateDate = f.UpdateDate })
+            .ToListAsync();
+        return DesignFirst([.. fonts, .. extra], space);
+    }
+
+    private static List<FontRow> DesignFirst(List<FontRow> fonts, long designSpace)
+    {
+        var own = fonts.Where(f => f.SpaceId == designSpace).Select(f => (f.Family.ToLowerInvariant(), f.Weight, f.Style)).ToHashSet();
+        return [.. fonts.Where(f => f.SpaceId == designSpace || !own.Contains((f.Family.ToLowerInvariant(), f.Weight, f.Style))).OrderBy(f => f.Family).ThenBy(f => f.Style).ThenBy(f => f.Weight)];
+    }
+
+    /// <summary>
+    /// The bytes of a font file; null when the font is gone or the hash does not fit. The address with its hash is a capability (it serves signed in or not, it is only handed to people who may
+    /// use the font); without a matching hash nothing is served.
+    /// </summary>
+    public static async Task<(byte[] Bytes, string Format, string Hash)?> ContentAsync(Biz biz, long id, string? hashPrefix)
+    {
         var font = await biz.Db.Font.AsNoTracking().Where(f => f.Id == id).Select(f => new { f.Bytes, f.Format, f.ContentHash }).FirstOrDefaultAsync();
-        return font is null ? null : (font.Bytes, font.Format, font.ContentHash);
+        if (font is null || string.IsNullOrEmpty(hashPrefix) || hashPrefix.Length < 6 || !font.ContentHash.StartsWith(hashPrefix, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        return (font.Bytes, font.Format, font.ContentHash);
     }
 
     // ------------------------------------------------------------------------------------------------ the style sheet
@@ -122,9 +161,11 @@ public static partial class FontLogic
 
     public static bool IsValidWeight(string? weight) => weight is not null && WeightRegex().IsMatch(weight);
 
-    public static async Task<FontUploadResult> UploadAsync(Biz biz, string fileName, byte[] bytes, string? license)
+    /// <summary>Uploads a font into the area asked for (the person must be allowed to write there; by default their personal area); the storage of the area must have room.</summary>
+    public static async Task<FontUploadResult> UploadAsync(Biz biz, string fileName, byte[] bytes, string? license, long? spaceId = null)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
+        var space = await Access.WritableSpaceAsync(biz, spaceId);
         if (bytes.LongLength > MaxFontBytes)
         {
             return new FontUploadResult(fileName, null, $"Die Schrift ist zu groß (höchstens {Services.Fmt.FileSize(MaxFontBytes)}).");
@@ -142,9 +183,18 @@ public static partial class FontLogic
         var weight = info is { Weight: > 0 } ? (info.IsVariable ? "100 900" : info.Weight.ToString()) : guess.Weight;
         var style = info is not null ? (info.Italic ? "italic" : "normal") : guess.Style;
         var hash = AssetLogic.Sha256Hex(bytes);
-        if (await biz.Db.Font.AnyAsync(f => f.ContentHash == hash))
+        if (await biz.Db.Font.AnyAsync(f => f.ContentHash == hash && (f.SpaceId == space || f.SpaceId == null)))
         {
             return new FontUploadResult(fileName, null, "Diese Schriftdatei gibt es schon.");
+        }
+
+        try
+        {
+            await StorageLogic.RequireRoomAsync(biz, space, bytes.LongLength);
+        }
+        catch (BizException ex)
+        {
+            return new FontUploadResult(fileName, null, ex.Message);
         }
 
         var font = new Font
@@ -157,11 +207,31 @@ public static partial class FontLogic
             ContentHash = hash,
             SizeBytes = bytes.LongLength,
             License = Clip(license, 100),
+            SpaceId = space,
         };
         biz.Db.Font.Add(font);
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync("Schrift hochgeladen", nameof(Font), font.Id, $"{font.Family} {font.Weight} {font.Style}");
         return new FontUploadResult(fileName, await GetAsync(biz, font.Id), null);
+    }
+
+    /// <summary>Whether the person may change or delete the font (their own area; a built-in font an administrator).</summary>
+    public static async Task<bool> CanManageAsync(Biz biz, long id) => await Access.VisibleInSpaces<Font>(biz, AccessLevel.Manage).AnyAsync(f => f.Id == id);
+
+    /// <summary>The font, tracked, when the person may manage it (their own area; for a built-in font an administrator): 404 when it is not visible, 403 when it is only usable.</summary>
+    private static async Task<Font> ManagedAsync(Biz biz, long id)
+    {
+        if (!await Query(biz).AnyAsync(f => f.Id == id))
+        {
+            throw new NotFoundException();
+        }
+
+        if (!await Access.VisibleInSpaces<Font>(biz, AccessLevel.Manage).AnyAsync(f => f.Id == id))
+        {
+            throw new ForbiddenException("Diese Schrift darfst du nicht ändern.");
+        }
+
+        return await biz.Db.Font.FirstOrDefaultAsync(f => f.Id == id) ?? throw new NotFoundException();
     }
 
     private static string Clip(string? text, int max)
@@ -174,8 +244,7 @@ public static partial class FontLogic
 
     public static async Task<FontRow> UpdateAsync(Biz biz, long id, FontInput input)
     {
-        biz.RequireDesigner();
-        var font = await biz.Db.Font.FirstOrDefaultAsync(f => f.Id == id) ?? throw new BizException("Die Schrift gibt es nicht mehr.");
+        var font = await ManagedAsync(biz, id);
         var family = CssName(input.Family ?? "");
         if (family.Length == 0)
         {
@@ -204,8 +273,7 @@ public static partial class FontLogic
 
     public static async Task DeleteAsync(Biz biz, long id)
     {
-        biz.RequireDesigner();
-        var font = await biz.Db.Font.FirstOrDefaultAsync(f => f.Id == id) ?? throw new BizException("Die Schrift gibt es nicht mehr.");
+        var font = await ManagedAsync(biz, id);
         font.Bytes = [];
         font.SizeBytes = 0;
         biz.Db.Font.Remove(font);

@@ -20,7 +20,11 @@ public sealed class IndexModel(Biz biz) : PageModelBase
     /// <summary>The items of this page grouped by category, in the order of the list ("Weitere" for a template without category).</summary>
     public IReadOnlyList<IGrouping<string, DesignRow>> Groups => [.. Items.GroupBy(d => string.IsNullOrEmpty(d.Category) ? "Weitere" : d.Category!)];
 
-    public bool CanEdit => biz.IsDesigner;
+    /// <summary>Everybody who is signed in may make things (in their own area), so the buttons that make something new are always there; what a person may do with one item is decided on its page.</summary>
+    public bool CanEdit => true;
+
+    /// <summary>The templates on the page that the person may change (their own area's, for the system templates an administrator).</summary>
+    public IReadOnlySet<long> Manageable { get; private set; } = new HashSet<long>();
 
     public async Task OnGetAsync()
     {
@@ -55,5 +59,6 @@ public sealed class IndexModel(Biz biz) : PageModelBase
         Toolbar = result.Toolbar;
         Pager = result.Pager;
         Items = result.Items;
+        Manageable = await DesignLogic.ManageableAsync(biz, result.Items.Select(d => d.Id));
     }
 }

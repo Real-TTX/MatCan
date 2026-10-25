@@ -1,7 +1,7 @@
 'use strict';
 // Helpers shared by the browser checks (designer-check.js, output-check.js): the base address, the console watcher (errors and CSP violations are problems), a context
 // with the German locale, the sign-in, and the test accounts. Accounts: tests/e2e/test-account.json ({ "designer": {email,password}, "viewer": {...}, "admin": {...} }) is
-// used when it exists. On an empty database the setup assistant creates the administrator (admin@example.com), who creates a designer and a viewer; the file is written.
+// used when it exists. On an empty database the setup assistant creates the administrator (admin@example.com), who creates two members (the "designer" works in an own area, the "viewer" only sees what the designer shares with them: use shareWith); the file is written.
 const fs = require('fs');
 const path = require('path');
 const { chromium } = require('playwright');
@@ -77,8 +77,8 @@ function create(args, options) {
       await Promise.all([page.waitForNavigation(), page.click('button[type=submit].mat-btn--primary')]);
       return { email, password: PASSWORD };
     };
-    accounts.designer = accounts.designer || await make('E2E Gestalter', 'designer@example.com', 'Gestalter');
-    accounts.viewer = accounts.viewer || await make('E2E Betrachter', 'viewer@example.com', 'Betrachter');
+    accounts.designer = accounts.designer || await make('E2E Gestalter', 'designer@example.com', 'Mitglied');
+    accounts.viewer = accounts.viewer || await make('E2E Betrachter', 'viewer@example.com', 'Mitglied');
     fs.writeFileSync(accountFile, JSON.stringify(accounts, null, 2));
     await context.close();
     return accounts;
@@ -94,7 +94,43 @@ function create(args, options) {
     }, { url, body });
   }
 
-  return { base, problems, dialogs, watch, launch, newContext, login, ensureAccounts, postJson, PASSWORD };
+  /**
+   * Shares an item of the signed-in person with another person (by e-mail address) through the API of the Teilen dialog: kind is "design", "datalist", "outputjob" or "folder",
+   * permission "View" or "Edit". The person who looks at things in a check gets what they look at this way: nothing is shared with a member by default.
+   */
+  async function shareWith(page, kind, id, email, permission) {
+    const found = await page.evaluate(async q => (await fetch('/api/share/search?q=' + encodeURIComponent(q))).json(), email);
+    const person = (found || []).find(r => r.type === 'user' && r.email === email);
+    if (!person) { throw new Error('Niemand gefunden für ' + email); }
+    const result = await postJson(page, '/api/share/' + kind + '/' + id, { userId: person.id, permission: permission || 'View' });
+    if (result.status !== 200) { throw new Error('Teilen schlug fehl: ' + result.status + ' ' + JSON.stringify(result.body)); }
+    return result.body;
+  }
+
+  /**
+   * Uploads the icon of the app as an image of the signed-in person through the API (the name gives the key) and returns { key, id }. A key that a data list or a design uses must be one the
+   * person may use, so a check that wants an image that is gone later uploads one first and removes it with purgeImage after the work is saved.
+   */
+  async function uploadImage(page, name) {
+    return page.evaluate(async n => {
+      const token = document.querySelector('meta[name=dt-csrf]').content;
+      const blob = await (await fetch('/img/icon-192.png')).blob();
+      const form = new FormData();
+      form.append('files', new File([blob], n + '.png', { type: 'image/png' }));
+      const up = await (await fetch('/api/assets/upload', { method: 'POST', headers: { RequestVerificationToken: token }, body: form })).json();
+      const key = up.uploaded[0].key;
+      const found = await (await fetch('/api/items?kinds=asset&recursive=true&take=30')).json();
+      return { key, id: found.items.find(i => i.key === key).id };
+    }, name);
+  }
+
+  /** Deletes an image for good (trash, then purge): what still uses its key finds it missing. */
+  async function purgeImage(page, id) {
+    await postJson(page, '/api/items/trash', { items: [{ kind: 'asset', id }] });
+    return postJson(page, '/api/items/purge', { items: [{ kind: 'asset', id }] });
+  }
+
+  return { base, problems, dialogs, watch, launch, newContext, login, ensureAccounts, postJson, shareWith, uploadImage, purgeImage, PASSWORD };
 }
 
 module.exports = create;

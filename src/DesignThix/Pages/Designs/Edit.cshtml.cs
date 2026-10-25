@@ -43,7 +43,11 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public IReadOnlyList<string> Categories { get; private set; } = [];
 
-    public bool CanEdit => biz.IsDesigner;
+    /// <summary>The person may change the design (Edit on it).</summary>
+    public bool CanEdit { get; private set; }
+
+    /// <summary>The person manages the design (delete, template flag, share).</summary>
+    public bool CanManage { get; private set; }
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -59,7 +63,6 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostAsync()
     {
-        biz.RequireDesigner();
         if (!await LoadAsync())
         {
             return NotFound();
@@ -174,6 +177,9 @@ public sealed class EditModel(Biz biz) : PageModelBase
         }
 
         Design = design;
+        var place = await DesignLogic.PlaceAsync(biz, Id);
+        CanEdit = place.CanEdit;
+        CanManage = place.CanManage;
         var document = await DesignLogic.DocumentAsync(biz, Id);
         var usage = Placeholders.FieldsUsed(document).ToDictionary(u => u.Key, StringComparer.OrdinalIgnoreCase);
         var views = new List<FieldView>();

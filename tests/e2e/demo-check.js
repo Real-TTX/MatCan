@@ -95,7 +95,8 @@ async function measure(page, doc, rows) {
   const context = await newContext(browser);
   const page = await context.newPage();
   watch(page, 'demo');
-  check('signed in as the designer', await login(page, accounts.designer));
+  // the demo's list and job belong to the first administrator (their personal area); the template is a system template
+  check('signed in as the first administrator', await login(page, accounts.admin));
   await page.goto(base + '/Designs', { waitUntil: 'networkidle' });
 
   // ------------------------------------------------------------------------------------------------ 1. the layout of the six labels

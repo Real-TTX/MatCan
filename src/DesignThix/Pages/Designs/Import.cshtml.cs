@@ -17,7 +17,6 @@ public sealed class ImportModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostAsync()
     {
-        biz.RequireDesigner();
         Prepare();
         ModelState.Clear();
         if (DesignFile is not { Length: > 0 } file)

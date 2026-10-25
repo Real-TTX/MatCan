@@ -42,6 +42,7 @@ public sealed class PrintModel(Biz biz) : PageModelBase
             return NotFound();
         }
 
+        ViewData["FontsHref"] = $"/fonts.css?design={Id}";
         Design = design;
         var document = await DesignLogic.DocumentAsync(biz, Id);
         Fields = document.Fields;

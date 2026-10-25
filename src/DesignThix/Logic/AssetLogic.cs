@@ -34,6 +34,11 @@ public sealed record AssetRow
 
     public bool IsBuiltIn { get; init; }
 
+    /// <summary>The area the image lives in; null for the built-in images.</summary>
+    public long? SpaceId { get; init; }
+
+    public long? FolderId { get; init; }
+
     public DateTime UpdateDate { get; init; }
 
     public DateTime CreateDate { get; init; }
@@ -43,7 +48,7 @@ public sealed record AssetRow
 }
 
 /// <summary>The content of an asset for the endpoint: <see cref="Bytes"/> is null when the browser already has this version.</summary>
-public sealed record AssetContent(string ContentHash, string ContentType, string Extension, byte[]? Bytes);
+public sealed record AssetContent(string ContentHash, string ContentType, string Extension, byte[]? Bytes, bool IsBuiltIn);
 
 /// <summary>Where an asset key is used (a search in the JSON of designs and data rows).</summary>
 public sealed record AssetUsage(IReadOnlyList<Choice> Designs, IReadOnlyList<Choice> DataLists);
@@ -91,10 +96,11 @@ public static class AssetLogic
         return slug.Length == 0 ? "bild" : slug;
     }
 
+    /// <summary>The images the person may see: their areas, what is built in, and what sits in a folder that was shared with them.</summary>
     public static IQueryable<AssetRow> Query(Biz biz)
     {
         biz.RequireSignedIn();
-        return biz.Db.Asset.AsNoTracking().Select(a => new AssetRow { Id = a.Id, Key = a.Key, Name = a.Name, Category = a.Category, Tags = a.Tags, ContentType = a.ContentType, Extension = a.Extension, Width = a.Width, Height = a.Height, SizeBytes = a.SizeBytes, ContentHash = a.ContentHash, IsBuiltIn = a.IsBuiltIn, UpdateDate = a.UpdateDate, CreateDate = a.CreateDate });
+        return Access.Visible<Asset>(biz).AsNoTracking().Select(a => new AssetRow { Id = a.Id, Key = a.Key, Name = a.Name, Category = a.Category, Tags = a.Tags, ContentType = a.ContentType, Extension = a.Extension, Width = a.Width, Height = a.Height, SizeBytes = a.SizeBytes, ContentHash = a.ContentHash, IsBuiltIn = a.IsBuiltIn, SpaceId = a.SpaceId, FolderId = a.FolderId, UpdateDate = a.UpdateDate, CreateDate = a.CreateDate });
     }
 
     public static async Task<AssetRow?> GetAsync(Biz biz, long id)
@@ -108,11 +114,16 @@ public static class AssetLogic
 
     /// <summary>
     /// The pickers' search: by name, key, tag or category (the category without regard to case: <c>uploads</c> finds "Uploads"); ordered by name, or with
-    /// <paramref name="sort"/> <c>new</c> newest first (the media browser's uploads).
+    /// <paramref name="sort"/> <c>new</c> newest first (the media browser's uploads); <paramref name="spaceId"/> keeps the images of one area.
     /// </summary>
-    public static async Task<List<AssetRow>> SearchAsync(Biz biz, string? q, string? category, int take, string? sort = null)
+    public static async Task<List<AssetRow>> SearchAsync(Biz biz, string? q, string? category, int take, string? sort = null, long? spaceId = null)
     {
         var query = Query(biz);
+        if (spaceId is { } space)
+        {
+            query = query.Where(a => a.SpaceId == space);
+        }
+
         if (!string.IsNullOrWhiteSpace(category))
         {
             var c = category.Trim().ToLowerInvariant();
@@ -131,24 +142,34 @@ public static class AssetLogic
         return await ordered.Take(Math.Clamp(take, 1, 500)).ToListAsync();
     }
 
-    /// <summary>The bytes of an asset by key. When <paramref name="knownHash"/> is the current version the bytes are not even read.</summary>
-    public static async Task<AssetContent?> ContentAsync(Biz biz, string key, string? knownHash)
+    /// <summary>
+    /// The bytes of an asset by key, for <c>/media/{key}</c>. The address with its hash (<paramref name="version"/>, at least 12 hex characters of the content hash) is a capability: it serves
+    /// whoever has it, signed in or not (the APIs only hand it to people who may see the image). Without it the image must be built in or visible to the signed-in person; anything else is
+    /// <c>null</c> (404), the same answer as for a key that does not exist. When <paramref name="knownHash"/> is the current version the bytes are not even read.
+    /// </summary>
+    public static async Task<AssetContent?> ContentAsync(Biz biz, string key, string? knownHash, string? version = null)
     {
-        biz.RequireSignedIn();
         var normalized = (key ?? "").Trim().ToLowerInvariant();
-        var head = await biz.Db.Asset.AsNoTracking().Where(a => a.Key == normalized).Select(a => new { a.Id, a.ContentHash, a.ContentType, a.Extension }).FirstOrDefaultAsync();
+        var head = await biz.Db.Asset.AsNoTracking().Where(a => a.Key == normalized).Select(a => new { a.Id, a.ContentHash, a.ContentType, a.Extension, a.IsBuiltIn, a.SpaceId }).FirstOrDefaultAsync();
         if (head is null)
         {
             return null;
         }
 
+        var capability = version is { Length: >= 12 } v && head.ContentHash.StartsWith(v, StringComparison.OrdinalIgnoreCase);
+        if (!capability && (biz.User.UserId is null || !await Access.Visible<Asset>(biz).AnyAsync(a => a.Id == head.Id)))
+        {
+            return null;
+        }
+
+        var builtIn = head.IsBuiltIn || head.SpaceId is null;
         if (knownHash is not null && knownHash == head.ContentHash)
         {
-            return new AssetContent(head.ContentHash, head.ContentType, head.Extension, null);
+            return new AssetContent(head.ContentHash, head.ContentType, head.Extension, null, builtIn);
         }
 
         var bytes = await biz.Db.Asset.AsNoTracking().Where(a => a.Id == head.Id).Select(a => a.Bytes).FirstAsync();
-        return new AssetContent(head.ContentHash, head.ContentType, head.Extension, bytes);
+        return new AssetContent(head.ContentHash, head.ContentType, head.Extension, bytes, builtIn);
     }
 
     public static async Task<List<string>> UsedCategoriesAsync(Biz biz)
@@ -249,9 +270,6 @@ public static class AssetLogic
         }
     }
 
-    /// <summary>Is this a person (administrator or designer) who may upload? Endpoints ask before they read a body.</summary>
-    public static void RequireUploader(Biz biz) => biz.RequireDesigner();
-
     /// <summary>
     /// The category of an upload: the one that was asked for when it is a known category (without regard to case) or a plain name of at most 60 characters,
     /// else <see cref="UploadsCategory"/>.
@@ -279,14 +297,19 @@ public static class AssetLogic
         return name is "" or "image" or "blob";
     }
 
-    /// <summary>Uploads one file; the key comes from the file name, a taken key gets a suffix. A refused file is reported in the result, not thrown.</summary>
-    public static async Task<AssetUploadResult> UploadAsync(Biz biz, string fileName, byte[] bytes, string? category)
+    /// <summary>
+    /// Uploads one file into the area asked for (the person must be allowed to write there; by default their personal area) and the folder, if any; the key comes from the file name, a taken key gets
+    /// a suffix. A refused file (not an image, no room left in the storage) is reported in the result, not thrown.
+    /// </summary>
+    public static async Task<AssetUploadResult> UploadAsync(Biz biz, string fileName, byte[] bytes, string? category, long? spaceId = null, long? folderId = null)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
+        var (space, folder) = await Access.PlacementAsync(biz, spaceId, folderId);
         Prepared prepared;
         try
         {
             prepared = Prepare(bytes);
+            await StorageLogic.RequireRoomAsync(biz, space, prepared.Bytes.LongLength);
         }
         catch (BizException ex)
         {
@@ -315,6 +338,8 @@ public static class AssetLogic
                 Bytes = prepared.Bytes,
                 ContentHash = prepared.Hash,
                 SizeBytes = prepared.Bytes.LongLength,
+                SpaceId = space,
+                FolderId = folder,
             };
             biz.Db.Asset.Add(asset);
             try
@@ -344,8 +369,8 @@ public static class AssetLogic
 
     public static async Task<AssetRow> UpdateAsync(Biz biz, long id, AssetInput input)
     {
-        biz.RequireDesigner();
-        var asset = await biz.Db.Asset.FirstOrDefaultAsync(a => a.Id == id) ?? throw new BizException("Das Medium gibt es nicht mehr.");
+        await Access.RequireAsync(biz, ItemKind.Asset, id, AccessLevel.Manage);
+        var asset = await biz.Db.Asset.FirstOrDefaultAsync(a => a.Id == id) ?? throw new NotFoundException();
         var key = NormalizeKey(input.Key) ?? throw new BizException("Der Schlüssel darf nur Kleinbuchstaben, Ziffern, Bindestrich und Unterstrich enthalten (höchstens 64 Zeichen).", "Input.Key");
         if (await biz.Db.Asset.AnyAsync(a => a.Key == key && a.Id != id))
         {
@@ -373,9 +398,14 @@ public static class AssetLogic
 
     public static async Task<(AssetRow Asset, IReadOnlyList<string> Cleaned)> ReplaceFileAsync(Biz biz, long id, byte[] bytes)
     {
-        biz.RequireDesigner();
-        var asset = await biz.Db.Asset.FirstOrDefaultAsync(a => a.Id == id) ?? throw new BizException("Das Medium gibt es nicht mehr.");
+        await Access.RequireAsync(biz, ItemKind.Asset, id, AccessLevel.Manage);
+        var asset = await biz.Db.Asset.FirstOrDefaultAsync(a => a.Id == id) ?? throw new NotFoundException();
         var prepared = Prepare(bytes);
+        if (asset.SpaceId is { } space)
+        {
+            await StorageLogic.RequireRoomAsync(biz, space, prepared.Bytes.LongLength - asset.SizeBytes);
+        }
+
         asset.ContentType = prepared.ContentType;
         asset.Extension = prepared.Extension;
         asset.Width = prepared.Width;
@@ -388,30 +418,47 @@ public static class AssetLogic
         return ((await GetAsync(biz, id))!, prepared.Cleaned);
     }
 
-    /// <summary>Deletes softly. The bytes are let go; the record stays, so a built-in that was deleted is not seeded again.</summary>
+    /// <summary>
+    /// Deletes an image: one of an area goes to the trash (it keeps its bytes and its key until it is emptied or purged), one the platform owns (a built-in) is deleted softly at once: the bytes
+    /// are let go, the record stays, so a built-in that was deleted is not seeded again. Needs Manage (the area, for a built-in an administrator).
+    /// </summary>
     public static async Task DeleteAsync(Biz biz, long id)
     {
-        biz.RequireDesigner();
-        var asset = await biz.Db.Asset.FirstOrDefaultAsync(a => a.Id == id) ?? throw new BizException("Das Medium gibt es nicht mehr.");
-        asset.Bytes = [];
-        asset.SizeBytes = 0;
-        biz.Db.Asset.Remove(asset);
-        await biz.Db.SaveChangesAsync();
+        await Access.RequireAsync(biz, ItemKind.Asset, id, AccessLevel.Manage);
+        var asset = await biz.Db.Asset.FirstOrDefaultAsync(a => a.Id == id) ?? throw new NotFoundException();
+        if (asset.SpaceId is null)
+        {
+            asset.Bytes = [];
+            asset.SizeBytes = 0;
+            biz.Db.Asset.Remove(asset);
+            await biz.Db.SaveChangesAsync();
+        }
+        else
+        {
+            await ItemLogic.TrashAsync(biz, [new ItemRef(ItemKind.Asset, id)]);
+        }
+
         await biz.Log.LogAsync("Medium gelöscht", nameof(Asset), asset.Id, asset.Key);
     }
 
     // ------------------------------------------------------------------------------------------------ usage
 
-    /// <summary>Designs and data lists that mention the key: a simple search in their JSON (quoted, so "flag-d" does not find "flag-de").</summary>
+    /// <summary>The designs and data lists the person may see that use the image (by the stored references of <see cref="AssetRefs"/>).</summary>
     public static async Task<AssetUsage> UsageAsync(Biz biz, string key)
     {
         biz.RequireSignedIn();
-        var pattern = Services.Like.Contains("\"" + key + "\"");
-        var designs = await biz.Db.Design.FromSqlInterpolated($"SELECT * FROM \"Design\" WHERE \"DocumentJson\"::text ILIKE {pattern} ESCAPE '\\'")
-            .AsNoTracking().OrderBy(d => d.Name).Select(d => new Choice(d.Id, d.Name, d.Category)).Take(200).ToListAsync();
-        var listIds = await biz.Db.DataRow.FromSqlInterpolated($"SELECT * FROM \"DataRow\" WHERE \"ValuesJson\"::text ILIKE {pattern} ESCAPE '\\'")
-            .AsNoTracking().Select(r => r.DataListId).Distinct().Take(200).ToListAsync();
-        var lists = await biz.Db.DataList.AsNoTracking().Where(l => listIds.Contains(l.Id)).OrderBy(l => l.Name).Select(l => new Choice(l.Id, l.Name, null)).ToListAsync();
+        var wanted = (key ?? "").Trim().ToLowerInvariant();
+        var db = biz.Db;
+        var designs = await (from r in db.ItemAssetRef.AsNoTracking()
+                             where r.AssetKey == wanted && r.ItemKind == ItemKind.Design
+                             join d in Access.Visible<Design>(biz).AsNoTracking() on r.ItemId equals d.Id
+                             orderby d.Name
+                             select new Choice(d.Id, d.Name, d.Category)).Take(200).ToListAsync();
+        var lists = await (from r in db.ItemAssetRef.AsNoTracking()
+                           where r.AssetKey == wanted && r.ItemKind == ItemKind.DataList
+                           join l in Access.Visible<DataList>(biz).AsNoTracking() on r.ItemId equals l.Id
+                           orderby l.Name
+                           select new Choice(l.Id, l.Name, null)).Take(200).ToListAsync();
         return new AssetUsage(designs, lists);
     }
 }

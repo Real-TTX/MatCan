@@ -163,7 +163,7 @@
     };
 
     var S = {
-      name: '', revision: 0, canEdit: false, columns: [], rows: [], byCid: new Map(), view: [],
+      name: '', revision: 0, canEdit: false, columns: [], rows: [], byCid: new Map(), view: [], assets: {},
       filter: '', shown: CHUNK, dirty: false, saving: false, savedAt: '', nextCid: 1, last: null, current: null, loading: true,
     };
     var ui = {};
@@ -364,7 +364,7 @@
       var img = doc.createElement('img');
       img.alt = '';
       img.loading = 'lazy';
-      img.src = cfg.mediaUrl + encodeURIComponent(value);
+      img.src = S.assets[String(value).trim().toLowerCase()] || (cfg.mediaUrl + encodeURIComponent(value));
       img.addEventListener('error', function () {
         frame.textContent = '';
         frame.appendChild(icon('alert'));
@@ -748,6 +748,7 @@
           S.name = data.name || '';
           S.revision = data.revision || 0;
           S.canEdit = data.canEdit === true;
+          S.assets = data.assets && typeof data.assets === 'object' ? data.assets : {};
           root.classList.toggle('is-readonly', !S.canEdit);
           S.columns = (data.columns || []).map(function (c) {
             return { key: String(c.key), label: c.label || String(c.key), type: ['text', 'multiline', 'number', 'price', 'image'].indexOf(c.type) >= 0 ? c.type : 'text', decimals: c.decimals === undefined ? null : c.decimals, category: c.category || null };

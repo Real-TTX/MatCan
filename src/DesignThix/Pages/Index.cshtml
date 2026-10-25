@@ -44,7 +44,7 @@
             <div class="mat-gallery dt-gallery" data-found-designs>
                 @foreach (var d in found.Designs)
                 {
-                    <partial name="_RecentTile" model="(d, Model.CanEdit)" />
+                    <partial name="_RecentTile" model="(d, Model.Manageable.Contains(d.Id))" />
                 }
             </div>
         </section>
@@ -56,7 +56,7 @@
             <div class="dt-tplgrid" data-found-templates>
                 @foreach (var t in found.Templates)
                 {
-                    <partial name="_TemplateTile" model="(t, Model.CanEdit, Model.CanEdit)" />
+                    <partial name="_TemplateTile" model="(t, true, Model.Manageable.Contains(t.Id))" />
                 }
             </div>
         </section>
@@ -82,7 +82,7 @@ else
             <div class="dt-tilerow" data-start-templates>
                 @foreach (var t in Model.Templates)
                 {
-                    <partial name="_TemplateTile" model="(t, Model.CanEdit, false)" />
+                    <partial name="_TemplateTile" model="(t, true, false)" />
                 }
             </div>
             @if (!Model.CanEdit)
@@ -113,7 +113,7 @@ else
             <div class="mat-gallery dt-gallery" data-recent-designs>
                 @foreach (var d in Model.Recent)
                 {
-                    <partial name="_RecentTile" model="(d, Model.CanEdit)" />
+                    <partial name="_RecentTile" model="(d, Model.Manageable.Contains(d.Id))" />
                 }
             </div>
         }

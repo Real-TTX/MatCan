@@ -42,6 +42,10 @@ public sealed record OutputRow
 
     public DateTime UpdateDate { get; init; }
 
+    public long? SpaceId { get; init; }
+
+    public long? FolderId { get; init; }
+
     public string? DesignThumbnailUrl => DesignThumbnailHash is null ? null : $"/designs/{DesignId}/thumbnail.png?v={DesignThumbnailHash[..Math.Min(12, DesignThumbnailHash.Length)]}";
 }
 
@@ -94,8 +98,8 @@ public sealed record AdhocRequest(
     string? FileNamePattern);
 
 /// <summary>
-/// Outputs: saved batch runs (design + data list + selection + layout + format) and the data the run page renders them from. Designers and administrators
-/// change jobs; everybody who is signed in may read them and run them (the run is rendered in the browser, nothing is changed but the time of the last run).
+/// Outputs: saved batch runs (design + data list + selection + layout + format) and the data the run page renders them from. Whoever may edit a job changes it; whoever may view it runs it
+/// (the run is rendered in the browser, nothing is changed but the time of the last run), if they may also view its design and data list.
 /// </summary>
 public static class OutputLogic
 {
@@ -109,10 +113,11 @@ public static class OutputLogic
     {
         biz.RequireSignedIn();
         var db = biz.Db;
-        return from j in db.OutputJob.AsNoTracking()
-               join d in db.Design.AsNoTracking() on j.DesignId equals d.Id into designs
+        // a design or list the person may not see is shown as missing (null), not by name
+        return from j in Access.Visible<OutputJob>(biz).AsNoTracking()
+               join d in Access.Visible<Design>(biz).AsNoTracking() on j.DesignId equals d.Id into designs
                from d in designs.DefaultIfEmpty()
-               join l in db.DataList.AsNoTracking() on j.DataListId equals l.Id into lists
+               join l in Access.Visible<DataList>(biz).AsNoTracking() on j.DataListId equals l.Id into lists
                from l in lists.DefaultIfEmpty()
                join u in db.User.AsNoTracking() on j.LastRunUserId equals u.Id into users
                from u in users.DefaultIfEmpty()
@@ -134,19 +139,29 @@ public static class OutputLogic
                    LastRunDate = j.LastRunDate,
                    LastRunUserName = u == null ? null : u.DisplayName,
                    UpdateDate = j.UpdateDate,
+                   SpaceId = j.SpaceId,
+                   FolderId = j.FolderId,
                };
     }
 
+    /// <summary>The job as a record, or null when it does not exist or the person may not see it.</summary>
     public static async Task<OutputJob?> GetAsync(Biz biz, long id)
     {
-        biz.RequireSignedIn();
+        if (await Access.LevelAsync(biz, ItemKind.OutputJob, id) == AccessLevel.None)
+        {
+            return null;
+        }
+
         return await biz.Db.OutputJob.AsNoTracking().FirstOrDefaultAsync(j => j.Id == id);
     }
+
+    /// <summary>Where the job is and what the person may do with it (the flags of the pages).</summary>
+    public static Task<ItemPlace> PlaceAsync(Biz biz, long id) => Access.PlaceAsync(biz, ItemKind.OutputJob, id);
 
     public static async Task<int> CountAsync(Biz biz)
     {
         biz.RequireSignedIn();
-        return await biz.Db.OutputJob.CountAsync();
+        return await Access.Visible<OutputJob>(biz).CountAsync();
     }
 
     /// <summary>The jobs worked on or run last, for the start page.</summary>
@@ -180,7 +195,9 @@ public static class OutputLogic
         biz.RequireSignedIn();
         var list = jobs.ToList();
         var rowsByList = new Dictionary<long, List<PlanRow>>();
-        foreach (var listId in list.Where(j => j.DataListId is not null).Select(j => j.DataListId!.Value).Distinct())
+        var wantedLists = list.Where(j => j.DataListId is not null).Select(j => j.DataListId!.Value).Distinct().ToList();
+        var readable = (await Access.Visible<DataList>(biz).Where(l => wantedLists.Contains(l.Id)).Select(l => l.Id).ToListAsync()).ToHashSet();
+        foreach (var listId in wantedLists.Where(readable.Contains))
         {
             rowsByList[listId] = await PlanRowsAsync(biz, listId);
         }
@@ -188,7 +205,11 @@ public static class OutputLogic
         var counts = new Dictionary<long, LabelCount>();
         foreach (var job in list)
         {
-            if (job.DataListId is { } listId && rowsByList.TryGetValue(listId, out var rows))
+            if (job.DataListId is { } unreadable && !readable.Contains(unreadable))
+            {
+                counts[job.Id] = new LabelCount(0, null);
+            }
+            else if (job.DataListId is { } listId && rowsByList.TryGetValue(listId, out var rows))
             {
                 var selected = SelectedIds(job.SelectedRowIdsJson).ToHashSet();
                 counts[job.Id] = new LabelCount(OutputPlan.LabelCount(rows, job.RowSelection.ToString(), selected, job.Copies), OutputPlan.Select(rows, job.RowSelection.ToString(), selected).Count);
@@ -224,16 +245,29 @@ public static class OutputLogic
         int? Dpi,
         string? FileNamePattern);
 
-    public static async Task<OutputJob> SaveAsync(Biz biz, long? id, OutputInput input)
+    /// <summary>
+    /// Creates a job (in the area asked for, by default the personal area) or changes one (Edit). The person must be allowed to view the design and the data list it uses and the sheet layout.
+    /// </summary>
+    public static async Task<OutputJob> SaveAsync(Biz biz, long? id, OutputInput input, long? spaceId = null, long? folderId = null)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
+        // the access first: a person who may not do this is told so before anything about the input
+        (long Space, long? Folder)? target = null;
+        if (id is { } existingId)
+        {
+            await Access.RequireAsync(biz, ItemKind.OutputJob, existingId, AccessLevel.Edit);
+        }
+        else
+        {
+            target = await Access.PlacementAsync(biz, spaceId, folderId);
+        }
         var name = (input.Name ?? "").Trim();
         if (name.Length == 0)
         {
             throw new BizException("Bitte gib den Namen ein.", "Input.Name");
         }
 
-        var design = await biz.Db.Design.AsNoTracking().Where(d => d.Id == input.DesignId).Select(d => new { d.Id, d.DocumentJson }).FirstOrDefaultAsync()
+        var design = await Access.Visible<Design>(biz).AsNoTracking().Where(d => d.Id == input.DesignId).Select(d => new { d.Id, d.DocumentJson }).FirstOrDefaultAsync()
             ?? throw new BizException("Bitte wähle ein Design aus.", "Input.DesignId");
         if (input.Copies is < 1 or > OutputPlan.MaxCopies)
         {
@@ -245,7 +279,7 @@ public static class OutputLogic
         List<PlanRow> rows = [];
         if (input.DataListId is { } listId)
         {
-            if (!await biz.Db.DataList.AnyAsync(l => l.Id == listId))
+            if (!await Access.Visible<DataList>(biz).AnyAsync(l => l.Id == listId))
             {
                 throw new BizException("Die Datenliste gibt es nicht mehr.", "Input.DataListId");
             }
@@ -273,7 +307,7 @@ public static class OutputLogic
         var scale = OutputScale.Fit;
         if (input.Mode == OutputMode.Sheet && input.Format == OutputFormat.Print)
         {
-            var sheet = await biz.Db.SheetLayout.AsNoTracking().Where(s => s.Id == input.SheetLayoutId).Select(s => new { s.Id, s.Columns, s.Rows }).FirstOrDefaultAsync()
+            var sheet = await SheetLogic.Query(biz).Where(s => s.Id == input.SheetLayoutId).Select(s => new { s.Id, s.Columns, s.Rows }).FirstOrDefaultAsync()
                 ?? throw new BizException("Bitte wähle einen Druckbogen aus.", "Input.SheetLayoutId");
             sheetId = sheet.Id;
             if (input.StartPosition < 1 || input.StartPosition > sheet.Columns * sheet.Rows)
@@ -314,12 +348,12 @@ public static class OutputLogic
         OutputJob job;
         if (id is null)
         {
-            job = new OutputJob();
+            job = new OutputJob { SpaceId = target!.Value.Space, FolderId = target.Value.Folder };
             biz.Db.OutputJob.Add(job);
         }
         else
         {
-            job = await biz.Db.OutputJob.FirstOrDefaultAsync(j => j.Id == id) ?? throw new BizException("Die Serienausgabe gibt es nicht mehr.");
+            job = await biz.Db.OutputJob.FirstOrDefaultAsync(j => j.Id == id) ?? throw new NotFoundException();
         }
 
         job.Name = name.Length > 200 ? name[..200] : name;
@@ -343,25 +377,26 @@ public static class OutputLogic
 
     private static int DesignDpi(string documentJson) => DocumentValidator.Parse(documentJson)?.Dpi ?? 300;
 
+    /// <summary>Deletes a job: it goes to the trash. Needs Manage.</summary>
     public static async Task DeleteAsync(Biz biz, long id)
     {
-        biz.RequireDesigner();
-        var job = await biz.Db.OutputJob.FirstOrDefaultAsync(j => j.Id == id) ?? throw new BizException("Die Serienausgabe gibt es nicht mehr.");
-        biz.Db.OutputJob.Remove(job);
-        await biz.Db.SaveChangesAsync();
+        await Access.RequireAsync(biz, ItemKind.OutputJob, id, AccessLevel.Manage);
+        var job = await biz.Db.OutputJob.AsNoTracking().FirstOrDefaultAsync(j => j.Id == id) ?? throw new NotFoundException();
+        await ItemLogic.TrashAsync(biz, [new ItemRef(ItemKind.OutputJob, id)]);
         await biz.Log.LogAsync("Serienausgabe gelöscht", nameof(OutputJob), id, job.Name);
     }
 
     /// <summary>Notes that a job was run (printed or downloaded): time and person. Does not count as a change of the job (the audit columns stay).</summary>
     public static async Task MarkRanAsync(Biz biz, long id)
     {
-        biz.RequireSignedIn();
+        await Access.RequireAsync(biz, ItemKind.OutputJob, id, AccessLevel.View);
         var now = biz.Now;
         var userId = biz.UserId;
         var changed = await biz.Db.OutputJob.Where(j => j.Id == id).ExecuteUpdateAsync(s => s.SetProperty(j => j.LastRunDate, now).SetProperty(j => j.LastRunUserId, userId));
+        await ItemLogic.VisitAsync(biz, ItemKind.OutputJob, id);
         if (changed == 0)
         {
-            throw new BizException("Die Serienausgabe gibt es nicht mehr.");
+            throw new NotFoundException();
         }
 
         var name = await biz.Db.OutputJob.AsNoTracking().Where(j => j.Id == id).Select(j => j.Name).FirstOrDefaultAsync();
@@ -379,19 +414,25 @@ public static class OutputLogic
     /// <summary>The data for the run page of a saved job: nothing is drawn on the server, the browser renders it with the engine.</summary>
     public static async Task<OutputPayload> PayloadAsync(Biz biz, long id)
     {
-        biz.RequireSignedIn();
-        var job = await biz.Db.OutputJob.AsNoTracking().FirstOrDefaultAsync(j => j.Id == id) ?? throw new BizException("Die Serienausgabe gibt es nicht mehr.");
-        var design = await biz.Db.Design.AsNoTracking().Where(d => d.Id == job.DesignId).Select(d => new { d.Name, d.DocumentJson }).FirstOrDefaultAsync()
-            ?? throw new BizException("Das Design dieser Serienausgabe gibt es nicht mehr.");
+        await Access.RequireAsync(biz, ItemKind.OutputJob, id, AccessLevel.View);
+        var job = await biz.Db.OutputJob.AsNoTracking().FirstOrDefaultAsync(j => j.Id == id) ?? throw new NotFoundException();
+        // the runner needs to see the design and the data list too; without the list there is a warning and nothing to print, without the design nothing to draw
+        var design = await Access.Visible<Design>(biz).AsNoTracking().Where(d => d.Id == job.DesignId).Select(d => new { d.Id, d.Name, d.DocumentJson }).FirstOrDefaultAsync()
+            ?? throw new BizException("Das Design dieser Serienausgabe gibt es nicht mehr oder du darfst es nicht sehen.");
         var document = DocumentValidator.Parse(design.DocumentJson) ?? throw new BizException("Das Design ist beschädigt.");
         var warnings = new List<string>();
 
         var labels = new List<PayloadLabel>();
         if (job.DataListId is { } listId)
         {
-            var list = await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == listId) ?? throw new BizException("Die Datenliste dieser Serienausgabe gibt es nicht mehr.");
-            var columns = ColumnDefs.Parse(list.ColumnsJson);
-            var rows = await biz.Db.DataRow.AsNoTracking().Where(r => r.DataListId == listId).OrderBy(r => r.Position).ThenBy(r => r.Id).ToListAsync();
+            var list = await Access.Visible<DataList>(biz).AsNoTracking().FirstOrDefaultAsync(l => l.Id == listId);
+            if (list is null)
+            {
+                warnings.Add("Die Datenliste dieser Serienausgabe gibt es nicht mehr oder du darfst sie nicht sehen: es gibt nichts zu drucken.");
+            }
+
+            var columns = list is null ? [] : ColumnDefs.Parse(list.ColumnsJson);
+            var rows = list is null ? [] : await biz.Db.DataRow.AsNoTracking().Where(r => r.DataListId == listId).OrderBy(r => r.Position).ThenBy(r => r.Id).ToListAsync();
             var chosen = OutputPlan.Select(rows.Select(r => new PlanRow(r.Id, r.Copies, r.IsActive)), job.RowSelection.ToString(), SelectedIds(job.SelectedRowIdsJson).ToHashSet())
                 .Select(p => p.Id).ToHashSet();
             var jobCopies = Math.Clamp(job.Copies, 1, OutputPlan.MaxCopies);
@@ -427,16 +468,16 @@ public static class OutputLogic
         }
 
         var sheet = job.Mode == OutputMode.Sheet && job.Format == OutputFormat.Print ? await SheetOfAsync(biz, job.SheetLayoutId) : null;
-        return await BuildAsync(biz, job.Id, job.Name, design.Name, document, labels, warnings, ModeName(sheet is null ? OutputMode.Single : OutputMode.Sheet),
+        return await BuildAsync(biz, job.Id, design.Id, job.DataListId, job.Name, design.Name, document, labels, warnings, ModeName(sheet is null ? OutputMode.Single : OutputMode.Sheet),
             FormatName(job.Format), job.Dpi, job.CropMarks, ScaleName(job.Scale), job.StartPosition, job.FileNamePattern, sheet);
     }
 
-    /// <summary>The data for a single print of a design: no job is saved. Every signed-in person may print (a viewer prints what he sees).</summary>
+    /// <summary>The data for a single print of a design: no job is saved. Whoever may view the design may print it.</summary>
     public static async Task<OutputPayload> AdhocPayloadAsync(Biz biz, AdhocRequest request)
     {
-        biz.RequireSignedIn();
-        var design = await biz.Db.Design.AsNoTracking().Where(d => d.Id == request.DesignId).Select(d => new { d.Name, d.DocumentJson }).FirstOrDefaultAsync()
-            ?? throw new BizException("Das Design gibt es nicht mehr.");
+        await Access.RequireAsync(biz, ItemKind.Design, request.DesignId, AccessLevel.View);
+        var design = await biz.Db.Design.AsNoTracking().Where(d => d.Id == request.DesignId).Select(d => new { d.Id, d.Name, d.DocumentJson }).FirstOrDefaultAsync()
+            ?? throw new NotFoundException();
         var document = DocumentValidator.Parse(design.DocumentJson) ?? throw new BizException("Das Design ist beschädigt.");
         var values = new Dictionary<string, string>(SampleValues(document), StringComparer.Ordinal);
         foreach (var field in document.Fields)
@@ -454,17 +495,17 @@ public static class OutputLogic
         var dpi = Math.Clamp(request.Dpi ?? document.Dpi, 72, 600);
         var pattern = string.IsNullOrWhiteSpace(request.FileNamePattern) ? DefaultFileNamePattern : Clip(request.FileNamePattern.Trim(), 200);
         var scale = string.Equals(request.Scale, "none", StringComparison.OrdinalIgnoreCase) ? "none" : "fit";
-        return await BuildAsync(biz, null, design.Name, design.Name, document, [new PayloadLabel(null, copies, values)], [], sheet is null ? "single" : "sheet",
+        return await BuildAsync(biz, null, design.Id, null, design.Name, design.Name, document, [new PayloadLabel(null, copies, values)], [], sheet is null ? "single" : "sheet",
             FormatName(format), dpi, sheet is not null && request.CropMarks, scale, request.StartPosition, pattern, sheet);
     }
 
     private static async Task<PayloadSheet> SheetOfAsync(Biz biz, long? id)
     {
-        var s = await biz.Db.SheetLayout.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id) ?? throw new BizException("Der Druckbogen gibt es nicht mehr.");
+        var s = await SheetLogic.Query(biz).FirstOrDefaultAsync(x => x.Id == id) ?? throw new BizException("Der Druckbogen gibt es nicht mehr.");
         return new PayloadSheet(s.Name, s.PaperWidth, s.PaperHeight, s.MarginTop, s.MarginLeft, s.Columns, s.Rows, s.CellWidth, s.CellHeight, s.GapX, s.GapY);
     }
 
-    private static async Task<OutputPayload> BuildAsync(Biz biz, long? id, string name, string designName, DesignDocument document, List<PayloadLabel> labels,
+    private static async Task<OutputPayload> BuildAsync(Biz biz, long? id, long designId, long? listId, string name, string designName, DesignDocument document, List<PayloadLabel> labels,
         List<string> warnings, string mode, string format, int dpi, bool cropMarks, string scale, int startPosition, string? pattern, PayloadSheet? sheet)
     {
         long count = labels.Sum(l => (long)l.Copies);
@@ -503,7 +544,10 @@ public static class OutputLogic
         if (wanted.Count > 0)
         {
             var keys = wanted.ToList();
-            foreach (var asset in await biz.Db.Asset.AsNoTracking().Where(a => keys.Contains(a.Key)).Select(a => new { a.Key, a.ContentHash }).ToListAsync())
+            // the runner may view the design and the list: the images they store are theirs to load (with the hash as the capability), besides the ones the person may see anyway
+            var stored = (await biz.Db.ItemAssetRef.AsNoTracking().Where(r => keys.Contains(r.AssetKey) && ((r.ItemKind == ItemKind.Design && r.ItemId == designId) || (listId != null && r.ItemKind == ItemKind.DataList && r.ItemId == listId))).Select(r => r.AssetKey).ToListAsync()).ToHashSet(StringComparer.Ordinal);
+            var visible = Access.Visible<Asset>(biz);
+            foreach (var asset in await biz.Db.Asset.AsNoTracking().Where(a => keys.Contains(a.Key) && (stored.Contains(a.Key) || visible.Any(v => v.Id == a.Id))).Select(a => new { a.Key, a.ContentHash }).ToListAsync())
             {
                 assets[asset.Key] = AssetLogic.Url(asset.Key, asset.ContentHash);
             }
@@ -517,7 +561,7 @@ public static class OutputLogic
 
         // Fonts: the faces of the families the texts use.
         var families = Placeholders.FontFamilies(document);
-        var allFonts = families.Count == 0 ? [] : await FontLogic.AllAsync(biz);
+        var allFonts = families.Count == 0 ? [] : await FontLogic.AllAsync(biz, designId);
         var fonts = new List<PayloadFont>();
         foreach (var family in families)
         {

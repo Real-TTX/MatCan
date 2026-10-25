@@ -15,25 +15,8 @@ namespace DesignThix.Tests.Integration;
 /// Runs when DESIGNTHIX_TEST_DB names a server; returns at once otherwise.
 /// </summary>
 [Collection("app")]
-public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
+public sealed class OutputIntegrationTests(AppTests.AppFactory factory) : PlatformTestBase(factory)
 {
-    private static bool Enabled => AppTests.AppFactory.Connection is not null;
-
-    private async Task<T> As<T>(UserRole role, Func<Biz, Task<T>> action)
-    {
-        using var client = factory.CreateClient();
-        using var scope = factory.Services.CreateScope();
-        var user = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
-        using var acting = user.RunAs(1, "Test", role);
-        return await action(scope.ServiceProvider.GetRequiredService<Biz>());
-    }
-
-    private Task As(UserRole role, Func<Biz, Task> action) => As(role, async biz =>
-    {
-        await action(biz);
-        return 0;
-    });
-
     private static string Unique(string prefix) => prefix + Guid.NewGuid().ToString("N")[..8];
 
     private static byte[] Png() => File.ReadAllBytes(Path.Combine(RepoFiles.WwwRoot(), "img", "icon-192.png"));
@@ -72,34 +55,51 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
     // ------------------------------------------------------------------------------------------------ roles
 
     [Fact]
-    public async Task A_viewer_runs_and_reads_but_changes_nothing()
+    public async Task A_member_who_may_only_view_runs_and_reads_but_changes_nothing()
     {
         if (!Enabled)
         {
             return;
         }
 
-        var (design, job) = await As(UserRole.Designer, async biz =>
+        var (design, list, job) = await As(Role.Designer, async biz =>
         {
             var set = await SetUpAsync(biz, ("Gouda", 1, true, "flag-nl"));
-            return (set.Design, await OutputLogic.SaveAsync(biz, null, Input(set.Design, set.List)));
+            return (set.Design, set.List, await OutputLogic.SaveAsync(biz, null, Input(set.Design, set.List)));
         });
-
-        await As(UserRole.Viewer, async biz =>
+        // a job is run by somebody who may view the job, its design and its data list: with the job alone there is nothing to draw
+        await ShareAsync(Role.Designer, ItemKind.OutputJob, job.Id, Role.Viewer);
+        await As(Role.Viewer, async biz =>
         {
-            Assert.Contains(await OutputLogic.Query(biz).ToListAsync(), o => o.Id == job.Id);
+            Assert.Contains(await OutputLogic.Query(biz).ToListAsync(), o => o.Id == job.Id && o.DesignName is null && o.DataListName is null);
+            await Assert.ThrowsAsync<BizException>(() => OutputLogic.PayloadAsync(biz, job.Id));
+        });
+        await ShareAsync(Role.Designer, ItemKind.Design, design.Id, Role.Viewer);
+        await As(Role.Viewer, async biz =>
+        {
+            var withoutRows = await OutputLogic.PayloadAsync(biz, job.Id);
+            Assert.Equal(0, withoutRows.LabelCount);
+            Assert.Contains(withoutRows.Warnings, w => w.Contains("Datenliste"));
+        });
+        await ShareAsync(Role.Designer, ItemKind.DataList, list.Id, Role.Viewer);
+
+        await As(Role.Viewer, async biz =>
+        {
+            Assert.Contains(await OutputLogic.Query(biz).ToListAsync(), o => o.Id == job.Id && o.DesignName == design.Name);
             Assert.NotNull(await OutputLogic.GetAsync(biz, job.Id));
             var payload = await OutputLogic.PayloadAsync(biz, job.Id);
             Assert.Equal(1, payload.LabelCount);
+            Assert.Contains("flag-nl", payload.Assets.Keys);
             await OutputLogic.MarkRanAsync(biz, job.Id);
             var adhoc = await OutputLogic.AdhocPayloadAsync(biz, new AdhocRequest(design.Id, new Dictionary<string, string> { ["Name"] = "Hand" }, 2, "single", null, false, null, 1, "print", null, null));
             Assert.Equal(2, adhoc.LabelCount);
 
-            await Assert.ThrowsAsync<ForbiddenException>(() => OutputLogic.SaveAsync(biz, null, Input(design, null)));
             await Assert.ThrowsAsync<ForbiddenException>(() => OutputLogic.SaveAsync(biz, job.Id, Input(design, null)));
             await Assert.ThrowsAsync<ForbiddenException>(() => OutputLogic.DeleteAsync(biz, job.Id));
-            await Assert.ThrowsAsync<ForbiddenException>(() => DesignPackageLogic.ExportAsync(biz, design.Id));
-            await Assert.ThrowsAsync<ForbiddenException>(() => DesignPackageLogic.ImportAsync(biz, [1, 2, 3]));
+            // looking at the design is enough to export it and to make an output of one's own from it
+            Assert.NotEmpty((await DesignPackageLogic.ExportAsync(biz, design.Id)).Bytes);
+            Assert.NotNull((await OutputLogic.SaveAsync(biz, null, Input(design, null))).Name);
+            await Assert.ThrowsAsync<BizException>(() => DesignPackageLogic.ImportAsync(biz, [1, 2, 3]));
         });
     }
 
@@ -111,7 +111,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        using var scope = factory.Services.CreateScope();
+        using var scope = Factory.Services.CreateScope();
         var biz = scope.ServiceProvider.GetRequiredService<Biz>();
         await Assert.ThrowsAsync<ForbiddenException>(() => OutputLogic.PayloadAsync(biz, 1));
         await Assert.ThrowsAsync<ForbiddenException>(() => OutputLogic.AdhocPayloadAsync(biz, new AdhocRequest(1, null, 1, null, null, false, null, 1, null, null, null)));
@@ -128,7 +128,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (design, list, ids) = await SetUpAsync(biz, ("A", 1, true, ""), ("B", 1, true, ""));
             var a4 = await SheetIdAsync(biz, "a4-2x4");
@@ -156,7 +156,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (design, list, ids) = await SetUpAsync(biz, ("A", 2, true, ""), ("B", 1, false, ""), ("C", 1, true, ""));
             var a4 = await SheetIdAsync(biz, "a4-2x4");
@@ -175,12 +175,12 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             var changed = await OutputLogic.SaveAsync(biz, sheet.Id, Input(design, list, name: "Bogen 2", selection: OutputRowSelection.Active));
             Assert.Equal(sheet.Id, changed.Id);
             Assert.Equal((OutputRowSelection.Active, "[]", OutputMode.Single, (long?)null), (changed.RowSelection, changed.SelectedRowIdsJson, changed.Mode, changed.SheetLayoutId));
-            await Assert.ThrowsAsync<BizException>(() => OutputLogic.SaveAsync(biz, 424242, Input(design, list)));
+            await Assert.ThrowsAsync<NotFoundException>(() => OutputLogic.SaveAsync(biz, 424242, Input(design, list)));
 
             await OutputLogic.DeleteAsync(biz, png.Id);
             Assert.Null(await OutputLogic.GetAsync(biz, png.Id));
-            await Assert.ThrowsAsync<BizException>(() => OutputLogic.DeleteAsync(biz, png.Id));
-            await Assert.ThrowsAsync<BizException>(() => OutputLogic.PayloadAsync(biz, png.Id));
+            await Assert.ThrowsAsync<NotFoundException>(() => OutputLogic.DeleteAsync(biz, png.Id));
+            await Assert.ThrowsAsync<NotFoundException>(() => OutputLogic.PayloadAsync(biz, png.Id));
         });
     }
 
@@ -192,7 +192,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (design, list, ids) = await SetUpAsync(biz, ("A", 2, true, ""), ("B", 3, false, ""), ("C", 1, true, ""));
             var all = await OutputLogic.SaveAsync(biz, null, Input(design, list, selection: OutputRowSelection.All, copies: 2));
@@ -219,7 +219,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (design, list, ids) = await SetUpAsync(biz, ("Gouda", 2, true, "FLAG-NL"), ("Edamer", 1, false, "flag-nl"), ("Brie", 1, true, "flag-fr"));
             var job = await OutputLogic.SaveAsync(biz, null, Input(design, list, selection: OutputRowSelection.Active, copies: 3, mode: OutputMode.Sheet, sheet: await SheetIdAsync(biz, "a4-2x2-a6"), start: 2));
@@ -252,17 +252,21 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
-            var (design, list, ids) = await SetUpAsync(biz, ("A", 1, true, "gibt-es-nicht"));
+            // the image was there when the row was saved, and is gone for good by the time the label is drawn
+            var gone = (await AssetLogic.UploadAsync(biz, "gibt-es-nicht.png", Png(), null)).Asset!;
+            var (design, list, ids) = await SetUpAsync(biz, ("A", 1, true, gone.Key));
+            await AssetLogic.DeleteAsync(biz, gone.Id);
+            await ItemLogic.PurgeAsync(biz, [new ItemRef(ItemKind.Asset, gone.Id)]);
             var document = DocumentText.Replace("Montserrat", "Gibt Es Nicht Sans");
             await DesignLogic.SaveDocumentAsync(biz, design.Id, 2, document);
             var job = await OutputLogic.SaveAsync(biz, null, Input(design, list, selection: OutputRowSelection.Active));
             var payload = await OutputLogic.PayloadAsync(biz, job.Id);
-            Assert.Contains(payload.Warnings, w => w.Contains("gibt-es-nicht") && w.StartsWith("Medien fehlen"));
+            Assert.Contains(payload.Warnings, w => w.Contains(gone.Key) && w.StartsWith("Medien fehlen"));
             Assert.Contains(payload.Warnings, w => w.Contains("Gibt Es Nicht Sans"));
             Assert.Contains(payload.Warnings, w => w.Contains("Nur"));
-            Assert.DoesNotContain("gibt-es-nicht", payload.Assets.Keys);
+            Assert.DoesNotContain(gone.Key, payload.Assets.Keys);
             Assert.Empty(payload.Fonts);
 
             // Rows that are switched off after the job was saved leave nothing to print: a warning, not an error.
@@ -282,7 +286,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (design, list, _) = await SetUpAsync(biz, ("A", 999, true, ""), ("B", 999, true, ""), ("C", 999, true, ""));
             var error = await Assert.ThrowsAsync<BizException>(() => OutputLogic.SaveAsync(biz, null, Input(design, list)));
@@ -301,7 +305,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (design, _, _) = await SetUpAsync(biz, ("A", 1, true, ""));
             var values = new Dictionary<string, string> { ["name"] = new string('x', 5000), ["Preis"] = "4,5", ["Fremd"] = "nein", ["Land"] = "flag-ch" };
@@ -318,7 +322,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             // PNG never has a sheet
             var png = await OutputLogic.AdhocPayloadAsync(biz, new AdhocRequest(design.Id, null, 1, "sheet", await SheetIdAsync(biz, "a4-2x4"), true, null, 1, "png", 700, null));
             Assert.Equal(("single", "png", 600, false, null), (png.Mode, png.Format, png.Dpi, png.CropMarks, png.Sheet));
-            await Assert.ThrowsAsync<BizException>(() => OutputLogic.AdhocPayloadAsync(biz, new AdhocRequest(424242, null, 1, null, null, false, null, 1, null, null, null)));
+            await Assert.ThrowsAsync<NotFoundException>(() => OutputLogic.AdhocPayloadAsync(biz, new AdhocRequest(424242, null, 1, null, null, false, null, 1, null, null, null)));
             await Assert.ThrowsAsync<BizException>(() => OutputLogic.AdhocPayloadAsync(biz, new AdhocRequest(design.Id, null, 1, "sheet", 424242, false, null, 1, null, null, null)));
         });
     }
@@ -331,7 +335,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        var (job, changedAt) = await As(UserRole.Designer, async biz =>
+        var (job, changedAt) = await As(Role.Designer, async biz =>
         {
             var (design, list, _) = await SetUpAsync(biz, ("A", 1, true, ""));
             var saved = await OutputLogic.SaveAsync(biz, null, Input(design, list));
@@ -339,14 +343,16 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return (saved.Id, saved.UpdateDate);
         });
 
-        await As(UserRole.Viewer, biz => OutputLogic.MarkRanAsync(biz, job));
-        await As(UserRole.Viewer, async biz =>
+        await ShareAsync(Role.Designer, ItemKind.OutputJob, job, Role.Viewer);
+        await As(Role.Viewer, biz => OutputLogic.MarkRanAsync(biz, job));
+        var viewer = await UserAsync(Role.Viewer);
+        await As(Role.Viewer, async biz =>
         {
             var row = await OutputLogic.Query(biz).FirstAsync(o => o.Id == job);
             Assert.NotNull(row.LastRunDate);
             Assert.True(Math.Abs((row.UpdateDate - changedAt).TotalMilliseconds) < 1, "a run is no change of the job");
-            Assert.Equal(1, (await OutputLogic.GetAsync(biz, job))!.LastRunUserId);
-            await Assert.ThrowsAsync<BizException>(() => OutputLogic.MarkRanAsync(biz, 424242));
+            Assert.Equal(viewer, (await OutputLogic.GetAsync(biz, job))!.LastRunUserId);
+            await Assert.ThrowsAsync<NotFoundException>(() => OutputLogic.MarkRanAsync(biz, 424242));
         });
     }
 
@@ -378,7 +384,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (design, key) = await DesignWithMediaAsync(biz, Unique("logo-"), Png());
             var (bytes, name) = await DesignPackageLogic.ExportAsync(biz, design.Id);
@@ -397,7 +403,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             await DesignLogic.SaveDocumentAsync(biz, design.Id, 2, custom);
             var withFont = DesignPackageFormat.Read((await DesignPackageLogic.ExportAsync(biz, design.Id)).Bytes).Package!;
             Assert.Equal(fontless.Font.Family, Assert.Single(withFont.Fonts).Family);
-            await Assert.ThrowsAsync<BizException>(() => DesignPackageLogic.ExportAsync(biz, 424242));
+            await Assert.ThrowsAsync<NotFoundException>(() => DesignPackageLogic.ExportAsync(biz, 424242));
         });
     }
 
@@ -409,7 +415,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var (design, key) = await DesignWithMediaAsync(biz, Unique("logo-"), Png());
             var (bytes, _) = await DesignPackageLogic.ExportAsync(biz, design.Id);
@@ -453,7 +459,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var designsBefore = await biz.Db.Design.CountAsync();
             var assetsBefore = await biz.Db.Asset.CountAsync();
@@ -491,7 +497,7 @@ public sealed class OutputIntegrationTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var family = Unique("Importfont ");
             var document = DocumentText.Replace("Montserrat", family);

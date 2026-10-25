@@ -389,6 +389,25 @@
     var sheets = [];
     try { sheets = JSON.parse(form.getAttribute('data-sheets') || '[]'); } catch (e) { sheets = []; }
     var mediaUrl = form.getAttribute('data-media-url') || '/media/';
+    // the images of the design the person may load because they may view it (the server hands out their addresses with the hash); other keys fall back to the plain address
+    var resolved = {};
+    function mediaFor(key) {
+      var k = String(key).trim().toLowerCase();
+      return resolved[k] || (mediaUrl + encodeURIComponent(k));
+    }
+
+    function resolveDesignAssets(doc) {
+      var keys = engine.assetKeysUsed(doc);
+      (doc.fields || []).forEach(function (f) { if (f.type === 'image' && f.sample) { keys.push(f.sample); } });
+      $$('[data-dt-imagefield] input', form).forEach(function (input) { if (input.value) { keys.push(input.value); } });
+      var wanted = [];
+      keys.forEach(function (k) { var l = String(k).trim().toLowerCase(); if (l && wanted.indexOf(l) < 0) { wanted.push(l); } });
+      if (!wanted.length) { return Promise.resolve(); }
+      return fetch('/api/assets/resolve?context=design:' + encodeURIComponent(designId) + '&keys=' + encodeURIComponent(wanted.join(',')), { credentials: 'same-origin' })
+        .then(function (r) { return r.ok ? r.json() : {}; })
+        .then(function (map) { Object.keys(map || {}).forEach(function (k) { if (map[k] && map[k].url) { resolved[k] = map[k].url; } }); })
+        .catch(function () { /* the plain address is the fallback */ });
+    }
     var previewHost = $('[data-dt-print-preview]', form);
     var previewWarn = $('[data-dt-print-warn]', form);
     var sheetHost = $('[data-dt-sheet-preview]', form);
@@ -417,7 +436,7 @@
       rendering = true;
       engine.renderInto(previewHost, S.doc, values(), {
         mode: 'output',
-        assetUrl: function (key) { return mediaUrl + encodeURIComponent(String(key).trim().toLowerCase()); },
+        assetUrl: mediaFor,
         fonts: S.fonts,
         idPrefix: 'dtprint',
       }).catch(function () { /* the preview is a convenience */ }).then(function () {
@@ -442,7 +461,7 @@
       if (!key) { img.hidden = true; img.removeAttribute('src'); missing[name] = false; showMissing(); return; }
       img.onload = function () { img.hidden = false; missing[name] = false; showMissing(); };
       img.onerror = function () { img.hidden = true; missing[name] = key; showMissing(); };
-      img.src = mediaUrl + encodeURIComponent(key);
+      img.src = mediaFor(key);
     }
 
     $$('[data-dt-imagefield]', form).forEach(function (box) {
@@ -515,11 +534,13 @@
     form.addEventListener('change', refresh);
     form.addEventListener('submit', function (e) { e.preventDefault(); });
 
-    var fontsUrl = '/api/fonts';
+    var fontsUrl = '/api/fonts?design=' + encodeURIComponent(designId);
     Promise.all([fetchJson(form.getAttribute('data-design-url')), fetchJson(fontsUrl).catch(function () { return []; })]).then(function (parts) {
       S.doc = parts[0].document;
       S.design = designMm(S.doc);
       S.fonts = (parts[1] || []).map(function (f) { return { family: f.family, weight: f.weight, style: f.style, url: f.url }; });
+      return resolveDesignAssets(S.doc);
+    }).then(function () {
       if (previewHost) { previewHost.textContent = ''; }
       drawPreview();
       updateSheet();

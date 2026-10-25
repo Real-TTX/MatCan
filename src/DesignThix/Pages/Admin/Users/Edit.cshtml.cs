@@ -24,7 +24,7 @@ public sealed class EditModel(Biz biz) : PageModelBase
         public string? Phone { get; set; }
 
         [Display(Name = "Rolle")]
-        public UserRole Role { get; set; } = UserRole.Designer;
+        public UserRole Role { get; set; } = UserRole.Member;
 
         public bool IsActive { get; set; } = true;
 

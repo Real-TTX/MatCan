@@ -63,6 +63,8 @@ builder.Services.AddSingleton<SetupState>();
 builder.Services.AddSingleton<SettingStore>();
 builder.Services.AddSingleton<AiSecretStore>();
 builder.Services.AddSingleton<AiRateLimiter>();
+builder.Services.AddSingleton<TrashPurger>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<TrashPurger>());
 builder.Services.AddSingleton<ChatGptLoginStates>();
 builder.Services.AddScoped<SessionCookieEvents>();
 builder.Services.AddScoped<SignInService>();
@@ -94,11 +96,10 @@ builder.Services.AddAuthentication(SignInService.CookieScheme)
     });
 
 builder.Services.AddAuthorizationBuilder()
-    // Everything needs a signed-in person unless a page says otherwise: a new page is closed by default (a viewer may look at everything that is not administration).
+    // Everything needs a signed-in person unless a page says otherwise: a new page is closed by default. What a person may do with a design, a list or an upload is decided by the business layer
+    // (Logic/Access: area, shares, links), not by a role; the only role of the pages is the administrator.
     .SetFallbackPolicy(new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder(SignInService.CookieScheme).RequireAuthenticatedUser().Build())
     .AddPolicy("Admin", p => p.AddAuthenticationSchemes(SignInService.CookieScheme).RequireRole(nameof(UserRole.Admin)))
-    // Administrators and designers change things; the pages that do carry this policy (viewers only look).
-    .AddPolicy("Designer", p => p.AddAuthenticationSchemes(SignInService.CookieScheme).RequireRole(nameof(UserRole.Admin), nameof(UserRole.Designer)))
     .AddPolicy("SignedIn", p => p.AddAuthenticationSchemes(SignInService.CookieScheme).RequireAuthenticatedUser());
 
 builder.Services.AddRazorPages(options =>
@@ -110,12 +111,6 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AllowAnonymousToPage("/Account/Setup");
     options.Conventions.AllowAnonymousToPage("/Account/AccessDenied");
     options.Conventions.AllowAnonymousToPage("/Offline");
-    // Looking is for everybody who is signed in; the pages that make something new are for administrators and designers.
-    options.Conventions.AuthorizePage("/Assets/Upload", "Designer");
-    options.Conventions.AuthorizePage("/Fonts/Upload", "Designer");
-    options.Conventions.AuthorizePage("/Designs/Create", "Designer");
-    options.Conventions.AuthorizePage("/Designs/Import", "Designer");
-    options.Conventions.AuthorizePage("/Outputs/Create", "Designer");
 })
 .AddMvcOptions(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
@@ -155,7 +150,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStatusCodePagesWithReExecute("/Error", "?code={0}");
 
-// A rule of the business layer that says "not for you" ends the request with 403, whatever the page did or did not check.
+// A rule of the business layer that says "not for you" ends the request with 403 (a thing the person may not even see with 404), whatever the page did or did not check.
 app.Use(async (context, next) =>
 {
     try
@@ -166,6 +161,12 @@ app.Use(async (context, next) =>
     {
         context.Response.Clear();
         context.Response.StatusCode = StatusCodes.Status403Forbidden;
+    }
+    catch (NotFoundException) when (!context.Response.HasStarted)
+    {
+        // a thing that is missing or that the person may not see looks the same: 404
+        context.Response.Clear();
+        context.Response.StatusCode = StatusCodes.Status404NotFound;
     }
 });
 
@@ -317,6 +318,7 @@ app.MapGet("/api/admin/ai/profiles/{id:long}/chatgpt", async (long id, Biz biz) 
 
 app.MapLibraryEndpoints();
 app.MapStudioEndpoints();
+app.MapPlatformEndpoints();
 app.MapOutputEndpoints();
 app.MapAiEndpoints();
 
@@ -342,6 +344,9 @@ public sealed class SetupState
     }
 
     public void MarkDone() => _done = true;
+
+    /// <summary>Asks again on the next request (the tests that make an administrator for a while).</summary>
+    internal void Reset() => _done = false;
 }
 
 /// <summary>The command <c>dotnet DesignThix.dll --healthcheck</c>: asks the running site; exit code 0 means healthy.</summary>

@@ -10,7 +10,7 @@
   var SVG_NS = 'http://www.w3.org/2000/svg';
   var engine = window.DtEngine;
   var documents = new Map();
-  var fontsPromise = null;
+  var fontCache = new Map();
   var iconsPromise = null;
   var running = 0;
   var waiting = [];
@@ -29,14 +29,28 @@
     box.appendChild(svg);
   }
 
-  function loadFonts() {
-    if (!fontsPromise) {
-      fontsPromise = fetch('/api/fonts', { credentials: 'same-origin' })
+  /** The fonts of the library, per area: the ones the person may use plus (for a design of another area) those of the design's area. */
+  function loadFonts(designId, spaceId) {
+    var key = spaceId === null || spaceId === undefined ? 'none' : String(spaceId);
+    if (!fontCache.has(key)) {
+      var url = key === 'none' ? '/api/fonts' : '/api/fonts?design=' + encodeURIComponent(designId);
+      fontCache.set(key, fetch(url, { credentials: 'same-origin' })
         .then(function (r) { return r.ok ? r.json() : []; })
         .then(function (list) { return list.map(function (f) { return { family: f.family, weight: f.weight, style: f.style, url: f.url }; }); })
-        .catch(function () { return []; });
+        .catch(function () { return []; }));
     }
-    return fontsPromise;
+    return fontCache.get(key);
+  }
+
+  /** The addresses (with their hashes) of the images a design uses: the person may only load what the server resolves for the design. */
+  function resolveAssets(designId, doc) {
+    var keys = engine.assetKeysUsed(doc);
+    doc.fields.forEach(function (f) { if (f.type === 'image' && f.sample) { keys.push(f.sample); } });
+    var wanted = [];
+    keys.forEach(function (k) { if (wanted.indexOf(k) < 0) { wanted.push(k); } });
+    if (!wanted.length) { return Promise.resolve({}); }
+    return fetch('/api/assets/resolve?context=design:' + encodeURIComponent(designId) + '&keys=' + encodeURIComponent(wanted.join(',')), { credentials: 'same-origin' })
+      .then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; });
   }
 
   /** The icon library (lib/icons.json, cached by the service worker), loaded once and only when a design on the page has an icon. */
@@ -55,7 +69,7 @@
       documents.set(url, fetch(url, { credentials: 'same-origin' }).then(function (r) {
         if (!r.ok) { throw new Error('HTTP ' + r.status); }
         return r.json();
-      }).then(function (data) { return data.document; }));
+      }));
     }
     return documents.get(url);
   }
@@ -63,14 +77,19 @@
   function draw(box) {
     var url = box.getAttribute('data-dt-preview-url');
     if (!url || !engine) { placeholder(box); return Promise.resolve(); }
-    return Promise.all([loadDocument(url), loadFonts()]).then(function (parts) {
-      var doc = parts[0];
-      var normalized = engine.normalize(doc);
+    return loadDocument(url).then(function (data) {
+      var normalized = engine.normalize(data.document);
+      return Promise.all([loadFonts(data.id, data.spaceId), resolveAssets(data.id, normalized)]).then(function (parts) { return { normalized: normalized, fonts: parts[0], assets: parts[1] }; });
+    }).then(function (prepared) {
+      var normalized = prepared.normalized;
       box.style.setProperty('--dt-ar', normalized.width + ' / ' + normalized.height);
       return engine.renderInto(box, normalized, engine.sampleValues(normalized), {
         mode: 'output',
-        assetUrl: function (key) { return '/media/' + encodeURIComponent(key); },
-        fonts: parts[1],
+        assetUrl: function (key) {
+          var found = prepared.assets[String(key).toLowerCase()];
+          return found && found.url ? found.url : '/media/' + encodeURIComponent(String(key).toLowerCase());
+        },
+        fonts: prepared.fonts,
         icon: function (name) { return loadIcons().then(function (icons) { return icons[name] ? icons[name].b : null; }); },
         idPrefix: 'dtp' + (box.getAttribute('data-dt-preview') || '0') + '-',
       });

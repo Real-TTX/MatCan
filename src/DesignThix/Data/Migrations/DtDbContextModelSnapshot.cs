@@ -22,6 +22,66 @@ namespace DesignThix.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DesignThix.Data.Entities.AccessRequest", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DecidedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("DecidedUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ItemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ItemKind")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Permission")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ItemKind", "ItemId");
+
+                    b.ToTable("AccessRequest");
+                });
+
             modelBuilder.Entity("DesignThix.Data.Entities.ActivityLog", b =>
                 {
                     b.Property<long>("Id")
@@ -359,6 +419,9 @@ namespace DesignThix.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<long?>("FolderId")
+                        .HasColumnType("bigint");
+
                     b.Property<int?>("Height")
                         .HasColumnType("integer");
 
@@ -378,9 +441,18 @@ namespace DesignThix.Data.Migrations
                     b.Property<long>("SizeBytes")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("SpaceId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Tags")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("TrashedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("TrashedWithFolderId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
@@ -398,11 +470,76 @@ namespace DesignThix.Data.Migrations
 
                     b.HasIndex("Category");
 
+                    b.HasIndex("FolderId");
+
                     b.HasIndex("Key")
                         .IsUnique()
                         .HasFilter("\"UpdateState\" <> 0");
 
+                    b.HasIndex("SpaceId", "FolderId", "TrashedDate");
+
                     b.ToTable("Asset");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Comment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("DesignId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ElementId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PageId")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("ParentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ResolvedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("ResolvedUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<short>("UpdateState")
+                        .HasColumnType("smallint");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<double?>("X")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("Y")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DesignId");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("DesignThix.Data.Entities.DataList", b =>
@@ -429,6 +566,9 @@ namespace DesignThix.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<long?>("FolderId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -437,6 +577,15 @@ namespace DesignThix.Data.Migrations
                     b.Property<int>("Revision")
                         .IsConcurrencyToken()
                         .HasColumnType("integer");
+
+                    b.Property<long?>("SpaceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("TrashedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("TrashedWithFolderId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
@@ -448,6 +597,10 @@ namespace DesignThix.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FolderId");
+
+                    b.HasIndex("SpaceId", "FolderId", "TrashedDate");
 
                     b.ToTable("DataList");
                 });
@@ -520,6 +673,9 @@ namespace DesignThix.Data.Migrations
                         .IsRequired()
                         .HasColumnType("jsonb");
 
+                    b.Property<long?>("FolderId")
+                        .HasColumnType("bigint");
+
                     b.Property<double>("Height")
                         .HasColumnType("double precision");
 
@@ -535,12 +691,21 @@ namespace DesignThix.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("integer");
 
+                    b.Property<long?>("SpaceId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("ThumbnailHash")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
                     b.Property<byte[]>("ThumbnailPng")
                         .HasColumnType("bytea");
+
+                    b.Property<DateTime?>("TrashedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("TrashedWithFolderId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Unit")
                         .IsRequired()
@@ -561,9 +726,13 @@ namespace DesignThix.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FolderId");
+
                     b.HasIndex("IsTemplate");
 
                     b.HasIndex("UpdateDate");
+
+                    b.HasIndex("SpaceId", "FolderId", "TrashedDate");
 
                     b.ToTable("Design");
                 });
@@ -604,6 +773,69 @@ namespace DesignThix.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("DesignRevision");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Folder", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Color")
+                        .HasMaxLength(9)
+                        .HasColumnType("character varying(9)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<long?>("ParentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<long>("SpaceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("TrashedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("TrashedWithFolderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<short>("UpdateState")
+                        .HasColumnType("smallint");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("Path");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Path"), "btree");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Path"), new[] { "text_pattern_ops" });
+
+                    b.HasIndex("SpaceId", "ParentId", "TrashedDate");
+
+                    b.ToTable("Folder");
                 });
 
             modelBuilder.Entity("DesignThix.Data.Entities.Font", b =>
@@ -654,6 +886,9 @@ namespace DesignThix.Data.Migrations
                     b.Property<string>("Source")
                         .HasColumnType("text");
 
+                    b.Property<long?>("SpaceId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Style")
                         .IsRequired()
                         .HasColumnType("text");
@@ -675,7 +910,242 @@ namespace DesignThix.Data.Migrations
 
                     b.HasIndex("Family");
 
+                    b.HasIndex("SpaceId");
+
                     b.ToTable("Font");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Invitation", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(254)
+                        .HasColumnType("character varying(254)");
+
+                    b.Property<DateTime>("ExpiresDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MaxUses")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("RevokedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<long?>("SpaceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("Token")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Uses")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpaceId");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.ToTable("Invitation");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.ItemAssetRef", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AssetKey")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ItemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ItemKind")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssetKey");
+
+                    b.HasIndex("ItemKind", "ItemId");
+
+                    b.HasIndex("ItemKind", "ItemId", "AssetKey")
+                        .IsUnique();
+
+                    b.ToTable("ItemAssetRef");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.ItemVisit", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ItemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ItemKind")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<DateTime>("LastOpenedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "LastOpenedDate");
+
+                    b.HasIndex("UserId", "ItemKind", "ItemId")
+                        .IsUnique();
+
+                    b.ToTable("ItemVisit");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.LinkGrant", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("LastUsedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("ShareLinkId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ShareLinkId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("LinkGrant");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Notification", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("DataJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<DateTime?>("ReadDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Url")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "CreateDate");
+
+                    b.HasIndex("UserId", "ReadDate");
+
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("DesignThix.Data.Entities.OutputJob", b =>
@@ -711,6 +1181,9 @@ namespace DesignThix.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
+
+                    b.Property<long?>("FolderId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Format")
                         .IsRequired()
@@ -750,8 +1223,17 @@ namespace DesignThix.Data.Migrations
                     b.Property<long?>("SheetLayoutId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("SpaceId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("StartPosition")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime?>("TrashedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("TrashedWithFolderId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
@@ -768,7 +1250,11 @@ namespace DesignThix.Data.Migrations
 
                     b.HasIndex("DesignId");
 
+                    b.HasIndex("FolderId");
+
                     b.HasIndex("SheetLayoutId");
+
+                    b.HasIndex("SpaceId", "FolderId", "TrashedDate");
 
                     b.ToTable("OutputJob");
                 });
@@ -807,6 +1293,130 @@ namespace DesignThix.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Setting");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Share", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ItemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ItemKind")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Permission")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<long?>("SpaceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpaceId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ItemKind", "ItemId");
+
+                    b.HasIndex("ItemKind", "ItemId", "SpaceId")
+                        .IsUnique()
+                        .HasFilter("\"SpaceId\" IS NOT NULL");
+
+                    b.HasIndex("ItemKind", "ItemId", "UserId")
+                        .IsUnique()
+                        .HasFilter("\"UserId\" IS NOT NULL");
+
+                    b.ToTable("Share", t =>
+                        {
+                            t.HasCheckConstraint("CK_Share_Principal", "(\"UserId\" IS NULL) <> (\"SpaceId\" IS NULL)");
+                        });
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.ShareLink", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<bool>("AllowDownload")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Audience")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ExpiresDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("ItemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ItemKind")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Permission")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<DateTime?>("RevokedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Token")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("ItemKind", "ItemId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_ShareLink_ItemKind_ItemId_Live")
+                        .HasFilter("\"RevokedDate\" IS NULL");
+
+                    b.ToTable("ShareLink");
                 });
 
             modelBuilder.Entity("DesignThix.Data.Entities.SheetLayout", b =>
@@ -867,6 +1477,9 @@ namespace DesignThix.Data.Migrations
                     b.Property<int>("Rows")
                         .HasColumnType("integer");
 
+                    b.Property<long?>("SpaceId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -878,7 +1491,153 @@ namespace DesignThix.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SpaceId");
+
                     b.ToTable("SheetLayout");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Space", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("BrandJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(9)
+                        .HasColumnType("character varying(9)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<string>("Slug")
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<long?>("StorageQuotaBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<short>("UpdateState")
+                        .HasColumnType("smallint");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique()
+                        .HasFilter("\"Slug\" IS NOT NULL AND \"UpdateState\" <> 0");
+
+                    b.ToTable("Space");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.SpaceMember", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<long>("SpaceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("SpaceId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("SpaceMember");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Star", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ItemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ItemKind")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "ItemKind", "ItemId")
+                        .IsUnique();
+
+                    b.ToTable("Star");
                 });
 
             modelBuilder.Entity("DesignThix.Data.Entities.User", b =>
@@ -888,6 +1647,11 @@ namespace DesignThix.Data.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("ApprovalState")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("timestamp with time zone");
@@ -915,11 +1679,18 @@ namespace DesignThix.Data.Migrations
                     b.Property<DateTime?>("LockoutEndDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("NotifyMailJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
                     b.Property<DateTime?>("PasswordChangedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
+
+                    b.Property<long?>("PersonalSpaceId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Phone")
                         .HasColumnType("text");
@@ -947,6 +1718,8 @@ namespace DesignThix.Data.Migrations
                     b.HasIndex("Email")
                         .IsUnique()
                         .HasFilter("\"UpdateState\" <> 0");
+
+                    b.HasIndex("PersonalSpaceId");
 
                     b.ToTable("User");
                 });
@@ -1080,6 +1853,17 @@ namespace DesignThix.Data.Migrations
                     b.ToTable("UserTotp");
                 });
 
+            modelBuilder.Entity("DesignThix.Data.Entities.AccessRequest", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DesignThix.Data.Entities.AiJournalEntry", b =>
                 {
                     b.HasOne("DesignThix.Data.Entities.AiRun", "AiRun")
@@ -1102,6 +1886,32 @@ namespace DesignThix.Data.Migrations
                     b.Navigation("AiRun");
                 });
 
+            modelBuilder.Entity("DesignThix.Data.Entities.Asset", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.Folder", null)
+                        .WithMany()
+                        .HasForeignKey("FolderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DesignThix.Data.Entities.Space", null)
+                        .WithMany()
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.DataList", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.Folder", null)
+                        .WithMany()
+                        .HasForeignKey("FolderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DesignThix.Data.Entities.Space", null)
+                        .WithMany()
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("DesignThix.Data.Entities.DataRow", b =>
                 {
                     b.HasOne("DesignThix.Data.Entities.DataList", "DataList")
@@ -1113,6 +1923,19 @@ namespace DesignThix.Data.Migrations
                     b.Navigation("DataList");
                 });
 
+            modelBuilder.Entity("DesignThix.Data.Entities.Design", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.Folder", null)
+                        .WithMany()
+                        .HasForeignKey("FolderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DesignThix.Data.Entities.Space", null)
+                        .WithMany()
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("DesignThix.Data.Entities.DesignRevision", b =>
                 {
                     b.HasOne("DesignThix.Data.Entities.Design", "Design")
@@ -1122,6 +1945,79 @@ namespace DesignThix.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Design");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Folder", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.Folder", null)
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DesignThix.Data.Entities.Space", null)
+                        .WithMany()
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Font", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.Space", null)
+                        .WithMany()
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Invitation", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.Space", "Space")
+                        .WithMany()
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Space");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.ItemVisit", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.LinkGrant", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.ShareLink", "ShareLink")
+                        .WithMany()
+                        .HasForeignKey("ShareLinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DesignThix.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ShareLink");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Notification", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DesignThix.Data.Entities.OutputJob", b =>
@@ -1137,16 +2033,89 @@ namespace DesignThix.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("DesignThix.Data.Entities.Folder", null)
+                        .WithMany()
+                        .HasForeignKey("FolderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("DesignThix.Data.Entities.SheetLayout", "SheetLayout")
                         .WithMany()
                         .HasForeignKey("SheetLayoutId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("DesignThix.Data.Entities.Space", null)
+                        .WithMany()
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("DataList");
 
                     b.Navigation("Design");
 
                     b.Navigation("SheetLayout");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Share", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.Space", "Space")
+                        .WithMany()
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DesignThix.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Space");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.SheetLayout", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.Space", null)
+                        .WithMany()
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.SpaceMember", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.Space", "Space")
+                        .WithMany()
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DesignThix.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Space");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.Star", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.User", b =>
+                {
+                    b.HasOne("DesignThix.Data.Entities.Space", null)
+                        .WithMany()
+                        .HasForeignKey("PersonalSpaceId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("DesignThix.Data.Entities.UserRecoveryCode", b =>

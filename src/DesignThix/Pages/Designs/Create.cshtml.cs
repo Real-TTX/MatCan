@@ -78,7 +78,6 @@ public sealed class CreateModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostAsync()
     {
-        biz.RequireDesigner();
         await PrepareAsync();
         var fromTemplate = Input.Start == "template";
         if (fromTemplate && Input.TemplateId is null)

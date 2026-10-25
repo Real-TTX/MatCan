@@ -6,7 +6,7 @@ using Npgsql;
 namespace DesignThix.Services;
 
 /// <summary>
-/// Waits for PostgreSQL, creates the database when it is missing and applies the migrations. The stack therefore needs no setup script: the release
+/// Waits for PostgreSQL, creates the database when it is missing, applies the migrations and the data migration of the platform (<see cref="PlatformMigration"/>). The stack therefore needs no setup script: the release
 /// compose file is one app, one database and two volumes.
 /// </summary>
 public static class DatabaseInitializer
@@ -18,6 +18,8 @@ public static class DatabaseInitializer
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<DtDbContext>();
         await db.Database.MigrateAsync(ct);
+        // plan 3: the data of an older database goes into areas (once, in one transaction) before anything reads it
+        await PlatformMigration.RunAsync(db, logger, ct);
     }
 
     private static async Task EnsureDatabaseAsync(ConfigStore config, ILogger logger, CancellationToken ct)

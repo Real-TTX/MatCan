@@ -10,7 +10,7 @@
 
 @if (ro)
 {
-    <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst Designs nur ansehen. Ändern können Gestalter und Administratoren.</div></div>
+    <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst Designs nur ansehen.</div></div>
 }
 
 <form class="mat-form" method="post" novalidate>
@@ -155,6 +155,7 @@
         <dt-buttons no-save="true" back-href="/Designs">
             <a class="mat-btn mat-btn--secondary" href="/Designs/@Model.Id/Designer">@Ui.Icon("edit")<span>Im Designer ansehen</span></a>
             <a class="mat-btn mat-btn--secondary" href="/Designs/@Model.Id/Print">@Ui.ToolIcon("printer")<span>Einzeldruck</span></a>
+            <a class="mat-btn mat-btn--secondary" href="@Url.Page("/Designs/Edit", "Export", new { id = Model.Id })" download>@Ui.Icon("download")<span>Exportieren</span></a>
         </dt-buttons>
     }
     else

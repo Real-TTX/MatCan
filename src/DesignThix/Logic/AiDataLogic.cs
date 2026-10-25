@@ -59,8 +59,12 @@ public static class AiDataLogic
 
     private static string? Refusal(Biz biz, DataList list) => BlockedReason(biz, list);
 
+    /// <summary>The list for an action: the person needs Edit on it (the AI changes data); a list they may not see is a 404.</summary>
     private static async Task<DataList> LoadListAsync(Biz biz, long listId)
-        => await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == listId) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
+    {
+        await Access.RequireAsync(biz, ItemKind.DataList, listId, AccessLevel.Edit);
+        return await biz.Db.DataList.AsNoTracking().FirstOrDefaultAsync(l => l.Id == listId) ?? throw new NotFoundException();
+    }
 
     private static string TypeText(ColumnDef c) => c.Type switch
     {
@@ -85,7 +89,7 @@ public static class AiDataLogic
         foreach (var column in columns.Where(c => c.Type == "image"))
         {
             var category = column.Category;
-            var query = biz.Db.Asset.AsNoTracking();
+            var query = Access.Visible<Asset>(biz).AsNoTracking();
             if (!string.IsNullOrWhiteSpace(category))
             {
                 var lower = category.ToLowerInvariant();
@@ -135,7 +139,7 @@ public static class AiDataLogic
 
     private static async Task<PreparedImport> PrepareImportAsync(Biz biz, long listId, ImportInput input)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
         var list = await LoadListAsync(biz, listId);
         if (Refusal(biz, list) is { } refusal)
         {
@@ -226,7 +230,7 @@ public static class AiDataLogic
 
     private static async Task<PreparedFill> PrepareFillAsync(Biz biz, long listId, FillInput input)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
         var list = await LoadListAsync(biz, listId);
         if (Refusal(biz, list) is { } refusal)
         {
@@ -351,8 +355,13 @@ public static class AiDataLogic
     /// <summary>The checked proposal of a run for the preview (JSON as stored), with the status. A designer may open their own runs, an administrator any.</summary>
     public static async Task<(AiRunStatus Status, AiAction Action, string Json)> ProposalAsync(Biz biz, long runId)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
         var run = await OwnRunAsync(biz, runId, asTracked: false);
+        if (run.SubjectType == nameof(DataList) && run.SubjectId is { } subject)
+        {
+            await Access.RequireAsync(biz, ItemKind.DataList, subject, AccessLevel.View);
+        }
+
         if (run.Action is not (AiAction.DataImport or AiAction.DataFill))
         {
             throw new BizException("Dieser Lauf hat keinen Vorschlag.");
@@ -382,7 +391,7 @@ public static class AiDataLogic
     /// </summary>
     public static async Task<ApplyResult> ApplyAsync(Biz biz, long runId, IReadOnlyList<long>? include)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
         var run = await OwnRunAsync(biz, runId, asTracked: true);
         if (run.Status != AiRunStatus.Waiting || run.Action is not (AiAction.DataImport or AiAction.DataFill))
         {
@@ -395,6 +404,7 @@ public static class AiDataLogic
     private static async Task<ApplyResult> ApplyImportAsync(Biz biz, AiRun run, IReadOnlyList<long>? include)
     {
         var stored = JsonSerializer.Deserialize<StoredImport>(run.ResultJson, Web) ?? throw new BizException("Der Vorschlag ist nicht lesbar.");
+        await Access.RequireAsync(biz, ItemKind.DataList, stored.ListId, AccessLevel.Edit);
         var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == stored.ListId) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
         var columns = DataListLogic.ColumnsOf(list);
         var chosen = (include is null ? Enumerable.Range(0, stored.Rows.Count).Select(i => (long)i) : include.Distinct())
@@ -455,6 +465,7 @@ public static class AiDataLogic
             throw new RevisionConflictException(await biz.Db.DataList.AsNoTracking().Where(l => l.Id == list.Id).Select(l => l.Revision).FirstOrDefaultAsync());
         }
 
+        await DataListLogic.RebuildRefsAsync(biz.Db, list);
         foreach (var entity in added)
         {
             biz.Db.AiJournalEntry.Add(new AiJournalEntry { AiRunId = run.Id, EntityType = nameof(DataRow), EntityId = entity.Id, Field = JournalRow, OldValue = null, NewValue = entity.ValuesJson });
@@ -472,6 +483,7 @@ public static class AiDataLogic
     private static async Task<ApplyResult> ApplyFillAsync(Biz biz, AiRun run, IReadOnlyList<long>? include)
     {
         var stored = JsonSerializer.Deserialize<StoredFill>(run.ResultJson, Web) ?? throw new BizException("Der Vorschlag ist nicht lesbar.");
+        await Access.RequireAsync(biz, ItemKind.DataList, stored.ListId, AccessLevel.Edit);
         var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == stored.ListId) ?? throw new BizException("Die Datenliste gibt es nicht mehr.");
         if (list.Revision != stored.Revision)
         {
@@ -529,6 +541,8 @@ public static class AiDataLogic
             throw new RevisionConflictException(await biz.Db.DataList.AsNoTracking().Where(l => l.Id == list.Id).Select(l => l.Revision).FirstOrDefaultAsync());
         }
 
+        await DataListLogic.RebuildRefsAsync(biz.Db, list);
+        await biz.Db.SaveChangesAsync();
         await transaction.CommitAsync();
         await biz.Log.LogAsync("KI: Spalte gefüllt", nameof(DataList), list.Id, $"{list.Name}: {column.Label}, {changed} Werte (Lauf #{run.Id})");
         var message = (changed == 1 ? "Ein Wert übernommen." : $"{changed} Werte übernommen.") + (skipped > 0 ? $" {skipped} übersprungen, weil sie sich inzwischen geändert hatten." : string.Empty);
@@ -538,7 +552,7 @@ public static class AiDataLogic
     /// <summary>"Verwerfen": the proposal is not applied and the run says so.</summary>
     public static async Task DiscardAsync(Biz biz, long runId)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
         var run = await OwnRunAsync(biz, runId, asTracked: true);
         if (run.Status != AiRunStatus.Waiting)
         {

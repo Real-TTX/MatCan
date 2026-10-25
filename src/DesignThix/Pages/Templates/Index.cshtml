@@ -24,7 +24,7 @@
                 <div class="dt-tplgrid">
                     @foreach (var t in group)
                     {
-                        <partial name="_TemplateTile" model="(t, Model.CanEdit, Model.CanEdit)" />
+                        <partial name="_TemplateTile" model="(t, true, Model.Manageable.Contains(t.Id))" />
                     }
                 </div>
             </section>

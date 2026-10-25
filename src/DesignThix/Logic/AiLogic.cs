@@ -426,7 +426,17 @@ public static class AiLogic
     /// </summary>
     public static async Task<List<RunLine>> RunsOfAsync(Biz biz, string subjectType, long subjectId, int take = 8)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
+        // the runs of a list or a design are only for people who may use it
+        if (subjectType == nameof(DataList))
+        {
+            await Access.RequireAsync(biz, ItemKind.DataList, subjectId, AccessLevel.Edit);
+        }
+        else if (subjectType == nameof(Design))
+        {
+            await Access.RequireAsync(biz, ItemKind.Design, subjectId, AccessLevel.Edit);
+        }
+
         var query = biz.Db.AiRun.AsNoTracking().Where(r => r.SubjectType == subjectType && r.SubjectId == subjectId && r.Action != AiAction.Test);
         if (!biz.IsAdmin)
         {
@@ -449,7 +459,7 @@ public static class AiLogic
     /// </summary>
     public static async Task<string> UndoAsync(Biz biz, long runId)
     {
-        biz.RequireDesigner();
+        biz.RequireSignedIn();
         var run = await biz.Db.AiRun.AsNoTracking().FirstOrDefaultAsync(r => r.Id == runId) ?? throw new BizException("Den Lauf gibt es nicht.");
         if (!biz.IsAdmin && run.UserId != biz.UserId)
         {
@@ -465,6 +475,12 @@ public static class AiLogic
         if (await NewerRunAsync(biz.Db, journal) is { } blocker)
         {
             throw new BizException($"Ein neuerer Lauf (#{blocker}) hat dieselben Daten geändert. Mach zuerst ihn rückgängig.");
+        }
+
+        var rowIds = journal.Where(j => j.EntityType == nameof(DataRow)).Select(j => j.EntityId).Distinct().ToList();
+        foreach (var listId in await biz.Db.DataRow.AsNoTracking().Where(r => rowIds.Contains(r.Id)).Select(r => r.DataListId).Distinct().ToListAsync())
+        {
+            await Access.RequireAsync(biz, ItemKind.DataList, listId, AccessLevel.Edit);
         }
 
         var skipped = 0;
@@ -484,6 +500,7 @@ public static class AiLogic
             foreach (var list in await biz.Db.DataList.Where(l => touched.Contains(l.Id)).ToListAsync())
             {
                 list.Revision++;
+                await DataListLogic.RebuildRefsAsync(biz.Db, list);
             }
         }
 

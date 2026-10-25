@@ -3,6 +3,15 @@ namespace DesignThix.Data.Entities;
 /// <summary>An uploaded or built-in image (PNG, JPEG, WebP, GIF, SVG) with a unique <see cref="Key"/> that designs and data list cells refer to.</summary>
 public class Asset : AuditedEntity, ISoftDeletable
 {
+    /// <summary>Where the image lives: null for the built-in images (flags, seals), else the area of the person or team that uploaded it.</summary>
+    public long? SpaceId { get; set; }
+
+    public long? FolderId { get; set; }
+
+    public DateTime? TrashedDate { get; set; }
+
+    public long? TrashedWithFolderId { get; set; }
+
     /// <summary>Lower case letters, digits, dash and underscore. Unique among the records that are not deleted. Designs and data lists refer to it.</summary>
     public string Key { get; set; } = "";
 
@@ -41,6 +50,9 @@ public class Asset : AuditedEntity, ISoftDeletable
 /// <summary>A font file, served by the app itself (nothing is loaded from the internet).</summary>
 public class Font : AuditedEntity, ISoftDeletable
 {
+    /// <summary>The area the font belongs to; null for the built-in fonts.</summary>
+    public long? SpaceId { get; set; }
+
     public string Family { get; set; } = "";
 
     /// <summary>"400" or a range for a variable font: "100 900".</summary>
@@ -74,6 +86,14 @@ public class Font : AuditedEntity, ISoftDeletable
 /// <summary>A table of values (one row per label), filled into designs through placeholders.</summary>
 public class DataList : AuditedEntity, ISoftDeletable
 {
+    public long? SpaceId { get; set; }
+
+    public long? FolderId { get; set; }
+
+    public DateTime? TrashedDate { get; set; }
+
+    public long? TrashedWithFolderId { get; set; }
+
     public string Name { get; set; } = "";
 
     public string? Description { get; set; }
@@ -113,6 +133,15 @@ public class DataRow : AuditedEntity
 /// <summary>A design: a page of a fixed size with elements. The document is JSON (docs/PLAN.md section 2) validated by <c>DocumentValidator</c>.</summary>
 public class Design : AuditedEntity, ISoftDeletable
 {
+    /// <summary>The area of the design; null for the system templates (built-in templates, the demo), which everybody may view.</summary>
+    public long? SpaceId { get; set; }
+
+    public long? FolderId { get; set; }
+
+    public DateTime? TrashedDate { get; set; }
+
+    public long? TrashedWithFolderId { get; set; }
+
     public string Name { get; set; } = "";
 
     public string? Category { get; set; }
@@ -158,6 +187,9 @@ public class DesignRevision : AuditedEntity
 /// <summary>How labels sit on a sheet of paper (all lengths in mm).</summary>
 public class SheetLayout : AuditedEntity, ISoftDeletable
 {
+    /// <summary>The area the layout belongs to; null for the built-in layouts.</summary>
+    public long? SpaceId { get; set; }
+
     public string Name { get; set; } = "";
 
     public double PaperWidth { get; set; } = 210;
@@ -219,6 +251,14 @@ public enum OutputScale
 /// <summary>A saved batch run: design + data list (+ rows, copies) + layout + format. "Ausführen" renders it (phase H).</summary>
 public class OutputJob : AuditedEntity, ISoftDeletable
 {
+    public long? SpaceId { get; set; }
+
+    public long? FolderId { get; set; }
+
+    public DateTime? TrashedDate { get; set; }
+
+    public long? TrashedWithFolderId { get; set; }
+
     public string Name { get; set; } = "";
 
     public long DesignId { get; set; }

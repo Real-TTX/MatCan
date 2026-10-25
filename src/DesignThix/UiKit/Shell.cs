@@ -63,7 +63,7 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
             UserRole = user.Role is { } role ? Labels.Of(role) : "",
             UserLine = principal?.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "",
             UserMenu = UserMenu(),
-            CanCreate = user.Role is UserRole.Admin or UserRole.Designer,
+            CanCreate = user.UserId is not null,
             Version = $"DesignThix {AppVersion.Current}",
             Theme = theme,
         });
@@ -78,17 +78,15 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
     };
 
     /// <summary>
-    /// The main menu (docs/PLAN-CANVA.md section 1.2): "Design erstellen" (primary action, only for people who may change things; it opens the dialog with the format tiles, the
+    /// The main menu (docs/PLAN-CANVA.md section 1.2): "Design erstellen" (primary action; it opens the dialog with the format tiles, the
     /// link goes to the page of the same name), Start, Designs, Vorlagen, Uploads &amp; Medien, Marke and Schriften, and below them the group "Serien (Zusatz)" with the features
     /// that fill a design from data: data lists, series outputs and sheets.
     /// </summary>
     private NavSet WorkMenu()
     {
         var start = new List<NavItem>();
-        if (user.Role is UserRole.Admin or UserRole.Designer)
-        {
-            start.Add(new("Design erstellen", "/Designs/Create", "plus", Primary: true));
-        }
+        // every member makes designs (in their own area or a team's)
+        start.Add(new("Design erstellen", "/Designs/Create", "plus", Primary: true));
 
         start.Add(new("Start", "/", "dashboard"));
         return new NavSet("main", "Gestalten", "palette",

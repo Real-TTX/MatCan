@@ -1,14 +1,13 @@
 namespace DesignThix.Data.Entities;
 
 /// <summary>
-/// The roles: administrators set everything up (users, AI, settings) and may do everything a designer does; designers ("Gestalter") work on designs, media,
-/// fonts, data lists, sheets and outputs; viewers ("Betrachter") look at designs and data lists and run outputs, but change nothing.
+/// The two roles of the platform: administrators run it (users, AI, settings, the platform's own content) and get no access to the content of others from the role; everybody else is a
+/// member. What a member may do with a design, a data list or an upload follows from ownership, team membership and shares (<c>Logic/Access</c>).
 /// </summary>
 public enum UserRole
 {
     Admin,
-    Designer,
-    Viewer,
+    Member,
 }
 
 public class User : AuditedEntity, ISoftDeletable
@@ -20,7 +19,16 @@ public class User : AuditedEntity, ISoftDeletable
 
     public string? PasswordHash { get; set; }
 
-    public UserRole Role { get; set; } = UserRole.Designer;
+    public UserRole Role { get; set; } = UserRole.Member;
+
+    /// <summary>Pending and declined accounts cannot sign in (registration with approval).</summary>
+    public ApprovalState ApprovalState { get; set; } = ApprovalState.Approved;
+
+    /// <summary>The personal area "Meine Projekte"; made with the account.</summary>
+    public long? PersonalSpaceId { get; set; }
+
+    /// <summary>Which notifications also go out by mail (a JSON object by kind).</summary>
+    public string NotifyMailJson { get; set; } = "{}";
 
     public bool IsActive { get; set; } = true;
 

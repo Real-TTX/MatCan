@@ -8,8 +8,8 @@ namespace DesignThix.Endpoints;
 
 /// <summary>
 /// The endpoints of the design tool around the editor (docs/PLAN-CANVA.md section 3): format tiles, templates, one-click creation, resizing, upload of images and fonts
-/// (several files, paste), and the brand kit. Thin: the rules are in the business layer (<see cref="AssetLogic"/>, <see cref="FontLogic"/>, <see cref="DesignLogic"/>,
-/// <see cref="BrandLogic"/>), which checks the role again; every POST carries the antiforgery token (<see cref="LibraryEndpoints.Guard"/>).
+/// (several files, paste), and the brand kit. New things go into the area asked for (<c>spaceId</c>, <c>folderId</c>), by default the personal area. Thin: the rules are in the business layer
+/// (<see cref="AssetLogic"/>, <see cref="FontLogic"/>, <see cref="DesignLogic"/>, <see cref="BrandLogic"/>), which checks the access again; every POST carries the antiforgery token (<see cref="LibraryEndpoints.Guard"/>).
 /// </summary>
 public static class StudioEndpoints
 {
@@ -41,15 +41,16 @@ public static class StudioEndpoints
         // { preset?: "business-card" | "custom", width?, height?, unit?: "mm"|"px", name? } -> { id, url }
         app.MapPost("/api/designs", (HttpContext http, IAntiforgery antiforgery, Biz biz) => LibraryEndpoints.Guard(http, antiforgery, async () =>
         {
-            var body = await http.Request.ReadFromJsonAsync<CreateBody>(Web, http.RequestAborted) ?? new CreateBody(null, null, null, null, null);
-            var design = await DesignLogic.CreateFromFormatAsync(biz, body.Preset, body.Width, body.Height, body.Unit, body.Name);
+            var body = await http.Request.ReadFromJsonAsync<CreateBody>(Web, http.RequestAborted) ?? new CreateBody(null, null, null, null, null, null, null);
+            var design = await DesignLogic.CreateFromFormatAsync(biz, body.Preset, body.Width, body.Height, body.Unit, body.Name, body.SpaceId, body.FolderId);
             return Results.Json(new { id = design.Id, url = DesignerUrl(design.Id) }, Web);
         })).RequireAuthorization("SignedIn");
 
-        // -> { id, url }: a copy of the template as a new design
+        // { spaceId?, folderId? } -> { id, url }: a copy of the template as a new design
         app.MapPost("/api/designs/{id:long}/use-template", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => LibraryEndpoints.Guard(http, antiforgery, async () =>
         {
-            var design = await DesignLogic.UseTemplateAsync(biz, id);
+            var target = http.Request.ContentLength is > 0 ? await http.Request.ReadFromJsonAsync<TargetBody>(Web, http.RequestAborted) : null;
+            var design = await DesignLogic.UseTemplateAsync(biz, id, target?.SpaceId, target?.FolderId);
             return Results.Json(new { id = design.Id, url = DesignerUrl(design.Id) }, Web);
         })).RequireAuthorization("SignedIn");
 
@@ -86,7 +87,7 @@ public static class StudioEndpoints
         // multipart/form-data: files (several), category? -> { uploaded: [{ key, name, url, width, height, contentType, fileName, cleaned }], errors: [{ fileName, error }] }
         app.MapPost("/api/assets/upload", (HttpContext http, IAntiforgery antiforgery, Biz biz) => LibraryEndpoints.Guard(http, antiforgery, async () =>
         {
-            AssetLogic.RequireUploader(biz);
+            biz.RequireSignedIn();
             var read = await ReadFilesAsync(http, AssetLogic.MaxUploadFileBytes, AssetLogic.MaxUploadFiles);
             if (read.Failure is not null)
             {
@@ -94,6 +95,8 @@ public static class StudioEndpoints
             }
 
             var category = http.Request.Form["category"].ToString();
+            var spaceId = FormId(http, "spaceId") ?? await PreferredSpaceAsync(biz, FormId(http, "preferSpace"));
+            var folderId = FormId(http, "folderId");
             var uploaded = new List<object>();
             var errors = new List<UploadError>();
             foreach (var file in read.Files)
@@ -104,7 +107,7 @@ public static class StudioEndpoints
                     continue;
                 }
 
-                var result = await AssetLogic.UploadAsync(biz, file.Name, file.Bytes!, category);
+                var result = await AssetLogic.UploadAsync(biz, file.Name, file.Bytes!, category, spaceId, folderId);
                 if (result.Asset is not { } asset)
                 {
                     errors.Add(new UploadError(file.Name, result.Error));
@@ -120,7 +123,7 @@ public static class StudioEndpoints
         // multipart/form-data: files (several) -> { uploaded: [{ id, family, weight, style, format, url, license, isBuiltIn, fileName }], errors: [{ fileName, error }] }
         app.MapPost("/api/fonts/upload", (HttpContext http, IAntiforgery antiforgery, Biz biz) => LibraryEndpoints.Guard(http, antiforgery, async () =>
         {
-            AssetLogic.RequireUploader(biz);
+            biz.RequireSignedIn();
             var read = await ReadFilesAsync(http, FontLogic.MaxFontBytes, AssetLogic.MaxUploadFiles);
             if (read.Failure is not null)
             {
@@ -137,7 +140,7 @@ public static class StudioEndpoints
                     continue;
                 }
 
-                var result = await FontLogic.UploadAsync(biz, file.Name, file.Bytes!, http.Request.Form["license"].ToString());
+                var result = await FontLogic.UploadAsync(biz, file.Name, file.Bytes!, http.Request.Form["license"].ToString(), FormId(http, "spaceId") ?? await PreferredSpaceAsync(biz, FormId(http, "preferSpace")));
                 if (result.Font is not { } font)
                 {
                     errors.Add(new UploadError(file.Name, result.Error));
@@ -152,10 +155,29 @@ public static class StudioEndpoints
 
         // ---------------------------------------------------------------------------------------- brand kit
 
-        // { colors: ["#1fb3d6"], fonts: { heading, subheading, body }, logos: ["key"], logoAssets: [{ key, name, url, width, height, contentType }] }
-        app.MapGet("/api/brand", async (Biz biz) => Results.Json(Shape(await BrandLogic.GetAsync(biz)), Web)).RequireAuthorization("SignedIn");
+        // ?space={id} (default: the personal area; an area the person is no member of falls back to it, so the editor of a design that was only shared with them still gets a kit)
+        // { spaceId, colors: ["#1fb3d6"], fonts: { heading, subheading, body }, logos: ["key"], logoAssets: [{ key, name, url, width, height, contentType }] }
+        app.MapGet("/api/brand", async (long? space, Biz biz) =>
+        {
+            try
+            {
+                return Results.Json(Shape(await BrandLogic.GetAsync(biz, space)), Web);
+            }
+            catch (NotFoundException) when (space is not null)
+            {
+                return Results.Json(Shape(await BrandLogic.GetAsync(biz)), Web);
+            }
+        }).RequireAuthorization("SignedIn");
 
-        app.MapPost("/api/brand", (HttpContext http, IAntiforgery antiforgery, Biz biz) => LibraryEndpoints.Guard(http, antiforgery, async () =>
+        app.MapGet("/api/spaces/{id:long}/brand", async (long id, Biz biz) => Results.Json(Shape(await BrandLogic.GetAsync(biz, id)), Web)).RequireAuthorization("SignedIn");
+
+        app.MapPost("/api/spaces/{id:long}/brand", (long id, HttpContext http, IAntiforgery antiforgery, Biz biz) => LibraryEndpoints.Guard(http, antiforgery, async () =>
+        {
+            var body = await http.Request.ReadFromJsonAsync<BrandKit>(Web, http.RequestAborted);
+            return body is null ? Results.Json(new { error = "Die Anfrage braucht colors, fonts und logos." }, statusCode: StatusCodes.Status400BadRequest) : Results.Json(Shape(await BrandLogic.SaveAsync(biz, body, id)), Web);
+        })).RequireAuthorization("SignedIn");
+
+        app.MapPost("/api/brand", (long? space, HttpContext http, IAntiforgery antiforgery, Biz biz) => LibraryEndpoints.Guard(http, antiforgery, async () =>
         {
             var body = await http.Request.ReadFromJsonAsync<BrandKit>(Web, http.RequestAborted);
             if (body is null)
@@ -163,7 +185,7 @@ public static class StudioEndpoints
                 return Results.Json(new { error = "Die Anfrage braucht colors, fonts und logos." }, statusCode: StatusCodes.Status400BadRequest);
             }
 
-            return Results.Json(Shape(await BrandLogic.SaveAsync(biz, body)), Web);
+            return Results.Json(Shape(await BrandLogic.SaveAsync(biz, body, space)), Web);
         })).RequireAuthorization("SignedIn");
     }
 
@@ -174,6 +196,7 @@ public static class StudioEndpoints
 
     private static object Shape(BrandView view) => new
     {
+        spaceId = view.SpaceId,
         colors = view.Kit.Colors,
         fonts = new { heading = view.Kit.Fonts.Heading, subheading = view.Kit.Fonts.Subheading, body = view.Kit.Fonts.Body },
         logos = view.Kit.Logos,
@@ -252,7 +275,15 @@ public static class StudioEndpoints
         return new UploadRead(list, null);
     }
 
-    private sealed record CreateBody(string? Preset, double? Width, double? Height, string? Unit, string? Name);
+    private sealed record CreateBody(string? Preset, double? Width, double? Height, string? Unit, string? Name, long? SpaceId, long? FolderId);
+
+    private sealed record TargetBody(long? SpaceId, long? FolderId);
+
+    /// <summary>The area the editor of a design asks for (<c>preferSpace</c>): used when the person may write there, else null (their personal area).</summary>
+    private static async Task<long?> PreferredSpaceAsync(Biz biz, long? preferred)
+        => preferred is { } id && await Access.RoleInAsync(biz, id) is { } role && role != Data.Entities.SpaceRole.Viewer ? id : null;
+
+    private static long? FormId(HttpContext http, string name) => long.TryParse(http.Request.Form[name].ToString(), out var id) ? id : null;
 
     private sealed record ResizeBody(double Width, double Height, string? Unit, bool Scale);
 }

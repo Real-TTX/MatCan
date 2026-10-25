@@ -18,7 +18,7 @@
   }
 
   function problem(result) {
-    if (result.status === 403) { return 'Das dürfen nur Gestalter und Administratoren.'; }
+    if (result.status === 403) { return 'Dafür fehlt dir die Berechtigung.'; }
     return result.data && result.data.error ? result.data.error : 'Das hat nicht geklappt (Fehler ' + result.status + ').';
   }
 

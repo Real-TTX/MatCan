@@ -45,7 +45,8 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public List<SelectListItem> CategoryItems { get; private set; } = [];
 
-    public bool CanEdit => biz.IsDesigner;
+    /// <summary>The person manages the image (its area, or an administrator for a built-in one): only they change or delete it.</summary>
+    public bool CanEdit { get; private set; }
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -60,7 +61,6 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostAsync()
     {
-        biz.RequireDesigner();
         if (!await LoadAsync())
         {
             return NotFound();
@@ -119,6 +119,7 @@ public sealed class EditModel(Biz biz) : PageModelBase
         }
 
         Asset = asset;
+        CanEdit = await Access.LevelAsync(biz, Data.Entities.ItemKind.Asset, asset.Id) >= AccessLevel.Manage;
         Usage = await AssetLogic.UsageAsync(biz, asset.Key);
         var categories = AssetLogic.Categories.Union(await AssetLogic.UsedCategoriesAsync(biz));
         CategoryItems = [.. categories.Select(c => new SelectListItem(c, c))];

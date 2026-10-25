@@ -9,16 +9,14 @@ public static class Labels
     public static string Of(UserRole r) => r switch
     {
         UserRole.Admin => "Administrator",
-        UserRole.Designer => "Gestalter",
-        _ => "Betrachter",
+        _ => "Mitglied",
     };
 
     /// <summary>What a role may do, in a sentence (the user form and the profile show it).</summary>
     public static string Describe(UserRole r) => r switch
     {
-        UserRole.Admin => "Darf alles, auch Benutzer, KI und Einstellungen verwalten.",
-        UserRole.Designer => "Gestaltet Designs, pflegt Medien, Schriften, Datenlisten und Druckbögen und führt Serienausgaben aus.",
-        _ => "Sieht Designs und Datenlisten und führt Serienausgaben aus, ändert aber nichts.",
+        UserRole.Admin => "Betreibt die Plattform: Benutzer, KI, Einstellungen und die Vorlagen und Medien, die allen gehören. Die Inhalte anderer sieht der Administrator nicht.",
+        _ => "Arbeitet im eigenen Bereich und in Teams; was jemand mit einem Design, einer Datenliste oder einem Bild darf, ergibt sich aus Besitz, Teamrolle und Freigaben.",
     };
 
     public static string Of(AiProvider p) => p == AiProvider.ChatGpt ? "ChatGPT-Konto" : "OpenAI-kompatibel (API-Schlüssel)";

@@ -14,10 +14,13 @@ public sealed class DesignerModel(Biz biz) : PageModelBase
 
     public DesignRow Design { get; private set; } = null!;
 
-    public bool CanEdit => biz.IsDesigner;
+    /// <summary>The person may change the design (Edit on it); with View only the editor opens read-only.</summary>
+    public bool CanEdit { get; private set; }
+
+    public bool CanManage { get; private set; }
 
     /// <summary>The button "Mit KI formulieren" is offered to people who may change the design, when the AI is switched on.</summary>
-    public bool AiVisible => biz.IsDesigner && AiLogic.IsEnabled(biz);
+    public bool AiVisible => CanEdit && AiLogic.IsEnabled(biz);
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -28,6 +31,11 @@ public sealed class DesignerModel(Biz biz) : PageModelBase
         }
 
         Design = design;
+        var place = await DesignLogic.PlaceAsync(biz, Id);
+        CanEdit = place.CanEdit;
+        CanManage = place.CanManage;
+        await ItemLogic.VisitAsync(biz, Data.Entities.ItemKind.Design, Id);
+        ViewData["FontsHref"] = $"/fonts.css?design={Id}";
         Head(design.Name, null, ("Designs", "/Designs"), (design.Name, $"/Designs/{design.Id}"), ("Designer", null));
         return Page();
     }

@@ -260,3 +260,14 @@ Teilen dialog, team page, public view), CLAUDE.md, this plan's status.
 
 Real-time co-editing (presence + revision check instead), comments on data lists, SSO/Entra, public galleries/marketplace, version branching,
 per-item audit trail beyond the existing activity log and design history.
+
+---
+
+## P1 status (what the result does differently)
+
+- The data migration is the C# service `Services/PlatformMigration` (marker setting `Platform.Migrated`), not SQL in the EF migration: the old role names Designer/Viewer are no value of the new `UserRole` enum. `ItemKind` also has `Asset`.
+- Platform-owned items (`SpaceId` null: built-in media, templates, fonts, sheets) are View for every signed-in person; an administrator has Manage on them. The demo design is such a system template; the demo list and job go into the first administrator's personal area.
+- Deleting a user's item moves it to the trash (`TrashedDate`, cascade through `TrashedWithFolderId`); system items are soft deleted at once; `TrashPurger` (hourly) and `ItemLogic.PurgeOlderAsync` empty the trash.
+- A person with Edit through a share may change or remove only the shares they made themselves. A link counts as long as it is not revoked (an expired one is still listed; it grants nothing). The sharing search returns teams first, at most 8 hits. Sign-in is refused for Pending/Declined accounts.
+- `/media/{key}` without `?v=hash` needs a signed-in person who may see the asset (anonymous: 401, signed in without access: 404). Extra endpoints: `/api/spaces*`, `/api/share/open`, `/api/spaces/{id}/brand`. Notifications are not written by `ShareLogic` yet (P5).
+- Switching a design to a template needs Manage. The AI "Weitermachen" of an administrator only works where the administrator has Edit on the subject.

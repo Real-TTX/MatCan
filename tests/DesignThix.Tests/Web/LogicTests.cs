@@ -55,8 +55,7 @@ public sealed class RoleLabelTests
 {
     [Theory]
     [InlineData(UserRole.Admin, "Administrator")]
-    [InlineData(UserRole.Designer, "Gestalter")]
-    [InlineData(UserRole.Viewer, "Betrachter")]
+    [InlineData(UserRole.Member, "Mitglied")]
     public void Roles_have_their_german_names(UserRole role, string label) => Assert.Equal(label, Labels.Of(role));
 
     [Fact]

@@ -4,6 +4,7 @@ using DesignThix.Core.Data;
 using DesignThix.Core.Documents;
 using DesignThix.Data;
 using DesignThix.Data.Entities;
+using DesignThix.Logic;
 using Microsoft.EntityFrameworkCore;
 
 namespace DesignThix.Services;
@@ -17,6 +18,9 @@ namespace DesignThix.Services;
 public static class DemoSeeder
 {
     public const string Marker = "Demo.Seeded";
+
+    /// <summary>Set when the data list and the output job of the demo were put into somebody's personal area (or were there already).</summary>
+    public const string PersonalMarker = "Demo.PersonalSeeded";
 
     private const string ResourceName = "DesignThix.Demo.kaesetheke.json";
 
@@ -42,7 +46,7 @@ public static class DemoSeeder
         await db.SaveChangesAsync(ct);
         if (empty)
         {
-            logger.LogInformation("The demo (template, data list and output job) was added.");
+            logger.LogInformation("The demo template was added (the data list and the output job follow when the first administrator is made).");
         }
     }
 
@@ -79,37 +83,98 @@ public static class DemoSeeder
         };
         design.Revisions.Add(new DesignRevision { Revision = 1, DocumentJson = check.Json });
         db.Design.Add(design);
+    }
 
-        var listMeta = root.GetProperty("list");
-        var list = new DataList
+    /// <summary>The name of the demo design (it tells the demo template from other templates when a database is migrated).</summary>
+    public static string? DesignName()
+    {
+        using var file = ReadFile(Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance);
+        return file?.RootElement.GetProperty("design").GetProperty("name").GetString();
+    }
+
+    /// <summary>The embedded demo file as a JSON document (design, list, output and rows).</summary>
+    private static JsonDocument? ReadFile(ILogger logger)
+    {
+        using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ResourceName);
+        if (stream is null)
         {
-            Name = listMeta.GetProperty("name").GetString() ?? "Demo",
-            Description = listMeta.GetProperty("description").GetString(),
-            ColumnsJson = ColumnDefs.ToJson(ColumnDefs.FromFields(check.Document.Fields)),
-        };
-        var position = 0;
-        foreach (var row in root.GetProperty("rows").EnumerateArray())
-        {
-            var values = row.EnumerateObject().ToDictionary(p => p.Name, p => p.Value.GetString() ?? "");
-            list.Rows.Add(new DataRow { Position = position++, ValuesJson = JsonSerializer.Serialize(values), Copies = 1, IsActive = true });
+            logger.LogWarning("The demo file is not part of the assembly.");
+            return null;
         }
 
-        db.DataList.Add(list);
+        return JsonDocument.Parse(stream);
+    }
 
-        var outputMeta = root.GetProperty("output");
-        var sheetKey = outputMeta.GetProperty("sheet").GetString();
-        var sheet = await db.SheetLayout.FirstOrDefaultAsync(s => s.BuiltInKey == sheetKey, ct);
-        db.OutputJob.Add(new OutputJob
+    /// <summary>
+    /// Puts the data list and the output job of the demo into the personal area of <paramref name="user"/> (the first administrator), once per database. The demo design must be there as a system template;
+    /// without it, or when the demo was seeded for somebody already, nothing happens.
+    /// </summary>
+    public static async Task SeedPersonalAsync(DtDbContext db, User user, ILogger logger, CancellationToken ct = default)
+    {
+        if (await db.Setting.AnyAsync(s => s.Key == PersonalMarker, ct))
         {
-            Name = outputMeta.GetProperty("name").GetString() ?? "Demo",
-            Design = design,
-            DataList = list,
-            RowSelection = OutputRowSelection.Active,
-            Copies = 1,
-            Mode = sheet is null ? OutputMode.Single : OutputMode.Sheet,
-            SheetLayout = sheet,
-            Format = OutputFormat.Print,
-            Scale = OutputScale.Fit,
-        });
+            return;
+        }
+
+        var personal = user.PersonalSpaceId ?? (await SpaceLogic.EnsurePersonalAsync(db, user)).Id;
+        using var file = ReadFile(logger);
+        if (file is null)
+        {
+            return;
+        }
+
+        var root = file.RootElement;
+        var designName = root.GetProperty("design").GetProperty("name").GetString();
+        var design = await db.Design.FirstOrDefaultAsync(d => d.IsTemplate && d.SpaceId == null && d.Name == designName, ct);
+        var added = false;
+        if (design is not null)
+        {
+            var check = DocumentValidator.Validate(root.GetProperty("document").GetRawText());
+            if (check.Ok && check.Document is not null)
+            {
+                var listMeta = root.GetProperty("list");
+                var list = new DataList
+                {
+                    Name = listMeta.GetProperty("name").GetString() ?? "Demo",
+                    Description = listMeta.GetProperty("description").GetString(),
+                    ColumnsJson = ColumnDefs.ToJson(ColumnDefs.FromFields(check.Document.Fields)),
+                    SpaceId = personal,
+                };
+                var position = 0;
+                foreach (var row in root.GetProperty("rows").EnumerateArray())
+                {
+                    var values = row.EnumerateObject().ToDictionary(p => p.Name, p => p.Value.GetString() ?? "");
+                    list.Rows.Add(new DataRow { Position = position++, ValuesJson = JsonSerializer.Serialize(values), Copies = 1, IsActive = true });
+                }
+
+                db.DataList.Add(list);
+                var outputMeta = root.GetProperty("output");
+                var sheetKey = outputMeta.GetProperty("sheet").GetString();
+                var sheet = await db.SheetLayout.FirstOrDefaultAsync(s => s.BuiltInKey == sheetKey, ct);
+                db.OutputJob.Add(new OutputJob
+                {
+                    Name = outputMeta.GetProperty("name").GetString() ?? "Demo",
+                    Design = design,
+                    DataList = list,
+                    RowSelection = OutputRowSelection.Active,
+                    Copies = 1,
+                    Mode = sheet is null ? OutputMode.Single : OutputMode.Sheet,
+                    SheetLayout = sheet,
+                    Format = OutputFormat.Print,
+                    Scale = OutputScale.Fit,
+                    SpaceId = personal,
+                });
+                await db.SaveChangesAsync(ct);
+                await DataListLogic.RebuildRefsAsync(db, list);
+                added = true;
+            }
+        }
+
+        db.Setting.Add(new Setting { Key = PersonalMarker, Value = DateTime.UtcNow.ToString("yyyy-MM-dd") });
+        await db.SaveChangesAsync(ct);
+        if (added)
+        {
+            logger.LogInformation("The demo (data list and output job) was added to the personal area of the first administrator.");
+        }
     }
 }

@@ -75,7 +75,8 @@ public abstract class OutputFormPage(Biz biz) : PageModelBase
 
     protected Biz Biz { get; } = biz;
 
-    public bool CanEdit => Biz.IsDesigner;
+    /// <summary>The person may change the job (Edit on it); a new job is always theirs to make.</summary>
+    public bool CanEdit { get; protected set; } = true;
 
     public List<SelectListItem> SelectionItems { get; } = [new("Nur aktive Zeilen", nameof(OutputRowSelection.Active)), new("Alle Zeilen", nameof(OutputRowSelection.All)), new("Ausgewählte Zeilen", nameof(OutputRowSelection.Selected))];
 

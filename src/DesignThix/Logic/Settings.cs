@@ -38,6 +38,31 @@ public sealed class AiSettings
     public int TimeoutSeconds { get; set; } = 280;
 }
 
+/// <summary>
+/// The rules of the platform that the administrator sets (docs/PLAN-PLATFORM.md section 2): who may register, whether members invite and make teams, public links, the storage of an area,
+/// how long the trash keeps things. The JSON names are camel case (<c>registration</c>, <c>publicLinks</c> ...).
+/// </summary>
+public sealed class PlatformSettings
+{
+    /// <summary>"off" (only invitations), "open" or "approval" (an administrator approves the account).</summary>
+    public string Registration { get; set; } = "off";
+
+    /// <summary>E-mail domains that may register (empty = any).</summary>
+    public List<string> AllowedDomains { get; set; } = [];
+
+    public bool MembersMayInvite { get; set; } = true;
+
+    public bool MembersMayCreateTeams { get; set; } = true;
+
+    public bool PublicLinks { get; set; } = true;
+
+    public int PersonalQuotaMb { get; set; } = 2048;
+
+    public int TeamQuotaMb { get; set; } = 10240;
+
+    public int TrashDays { get; set; } = 30;
+}
+
 /// <summary>What the app says about itself and who runs it (llms.txt, the footer).</summary>
 public sealed class SiteSettings
 {
@@ -59,6 +84,7 @@ public sealed class SettingStore(IServiceScopeFactory scopes)
     public const string Ai = "Ai";
     public const string Site = "Site";
     public const string Brand = "Brand";
+    public const string Platform = "Platform";
     public const string VisitorSalt = "Ai.VisitorSalt";
 
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);

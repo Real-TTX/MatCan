@@ -130,7 +130,7 @@
   function uploadImages(files, category) {
     if (!files.length) { return Promise.resolve({ uploaded: [], errors: [] }); }
     showProgress(files.length + ' ' + fileWord(files.length) + ' werden hochgeladen …', 0);
-    return postFiles('/api/assets/upload', files, category ? { category: category } : {}, function (p) { showProgress(files.length + ' ' + fileWord(files.length) + ' werden hochgeladen … ' + Math.round(p * 100) + ' %', p); }).then(function (res) {
+    return postFiles('/api/assets/upload', files, Object.assign(category ? { category: category } : {}, app.spaceId ? { preferSpace: app.spaceId } : {}), function (p) { showProgress(files.length + ' ' + fileWord(files.length) + ' werden hochgeladen … ' + Math.round(p * 100) + ' %', p); }).then(function (res) {
       hideProgress();
       var data = res.data || {};
       if (!res.ok && !(data.uploaded && data.uploaded.length)) {
@@ -151,11 +151,11 @@
 
   /** Refreshes the fonts after an upload: the list for the pickers, the faces for the engine and the style sheet for the previews. */
   function refreshFonts() {
-    return D.request('GET', '/api/fonts').then(function (res) {
+    return D.request('GET', '/api/fonts?design=' + encodeURIComponent(app.id)).then(function (res) {
       if (!res.ok) { return; }
       app.fonts = res.data.map(function (f) { return { family: f.family, weight: f.weight, style: f.style, url: f.url }; });
       app.fontIndex = D.buildFontIndex(res.data);
-      var link = D.el('link', { rel: 'stylesheet', href: '/fonts.css?v=' + Date.now() });
+      var link = D.el('link', { rel: 'stylesheet', href: '/fonts.css?design=' + encodeURIComponent(app.id) + '&v=' + Date.now() });
       document.head.appendChild(link);
       app.emit('fonts');
     });
@@ -164,7 +164,7 @@
   /** Uploads font files and applies the first new family to the given (or the selected) text elements. */
   function uploadFonts(files, textIds) {
     showProgress(files.length + ' ' + fileWord(files.length) + ' werden hochgeladen …', 0);
-    return postFiles('/api/fonts/upload', files, {}, function (p) { showProgress(files.length + ' Schriften werden hochgeladen … ' + Math.round(p * 100) + ' %', p); }).then(function (res) {
+    return postFiles('/api/fonts/upload', files, app.spaceId ? { preferSpace: app.spaceId } : {}, function (p) { showProgress(files.length + ' Schriften werden hochgeladen … ' + Math.round(p * 100) + ' %', p); }).then(function (res) {
       hideProgress();
       var data = res.data || {};
       reportErrors(data.errors);

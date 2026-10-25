@@ -15,25 +15,8 @@ namespace DesignThix.Tests.Integration;
 /// Runs when DESIGNTHIX_TEST_DB names a server; returns at once otherwise.
 /// </summary>
 [Collection("app")]
-public sealed class LibraryTests(AppTests.AppFactory factory)
+public sealed class LibraryTests(AppTests.AppFactory factory) : PlatformTestBase(factory)
 {
-    private static bool Enabled => AppTests.AppFactory.Connection is not null;
-
-    private async Task<T> As<T>(UserRole role, Func<Biz, Task<T>> action)
-    {
-        using var client = factory.CreateClient();
-        using var scope = factory.Services.CreateScope();
-        var user = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
-        using var acting = user.RunAs(1, "Test", role);
-        return await action(scope.ServiceProvider.GetRequiredService<Biz>());
-    }
-
-    private Task As(UserRole role, Func<Biz, Task> action) => As(role, async biz =>
-    {
-        await action(biz);
-        return 0;
-    });
-
     private static byte[] Png() => File.ReadAllBytes(Path.Combine(RepoFiles.WwwRoot(), "img", "icon-192.png"));
 
     private static string Unique(string prefix) => prefix + Guid.NewGuid().ToString("N")[..8];
@@ -48,25 +31,25 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             return;
         }
 
-        var (assets, fonts, sheets) = await As(UserRole.Viewer, async biz => (await biz.Db.Asset.CountAsync(a => a.IsBuiltIn), await biz.Db.Font.CountAsync(f => f.IsBuiltIn), await biz.Db.SheetLayout.CountAsync(s => s.IsBuiltIn)));
+        var (assets, fonts, sheets) = await As(Role.Viewer, async biz => (await biz.Db.Asset.CountAsync(a => a.IsBuiltIn), await biz.Db.Font.CountAsync(f => f.IsBuiltIn), await biz.Db.SheetLayout.CountAsync(s => s.IsBuiltIn)));
         Assert.True(assets >= 36);
         Assert.True(fonts >= 17);
         Assert.Equal(6, sheets);
 
-        await LibrarySeeder.SeedAsync(factory.Services, RepoFiles.WwwRoot(), NullLogger.Instance);
-        var again = await As(UserRole.Viewer, async biz => await biz.Db.Asset.CountAsync(a => a.IsBuiltIn));
+        await LibrarySeeder.SeedAsync(Factory.Services, RepoFiles.WwwRoot(), NullLogger.Instance);
+        var again = await As(Role.Viewer, async biz => await biz.Db.Asset.CountAsync(a => a.IsBuiltIn));
         Assert.Equal(assets, again);
 
-        // The person deletes a flag, renames a seal: neither comes back at the next start.
-        await As(UserRole.Designer, async biz =>
+        // An administrator deletes a flag and renames a seal (what the platform owns is theirs to manage): neither comes back at the next start.
+        await As(Role.Admin, async biz =>
         {
             var flag = await AssetLogic.GetByKeyAsync(biz, "flag-fi") ?? throw new InvalidOperationException("flag-fi is not seeded");
             await AssetLogic.DeleteAsync(biz, flag.Id);
             var seal = await AssetLogic.GetByKeyAsync(biz, "icon-bio") ?? throw new InvalidOperationException("icon-bio is not seeded");
             await AssetLogic.UpdateAsync(biz, seal.Id, new AssetLogic.AssetInput("mein-bio", seal.Name, seal.Category, seal.Tags));
         });
-        await LibrarySeeder.SeedAsync(factory.Services, RepoFiles.WwwRoot(), NullLogger.Instance);
-        await As(UserRole.Viewer, async biz =>
+        await LibrarySeeder.SeedAsync(Factory.Services, RepoFiles.WwwRoot(), NullLogger.Instance);
+        await As(Role.Viewer, async biz =>
         {
             Assert.Null(await AssetLogic.GetByKeyAsync(biz, "flag-fi"));
             Assert.Null(await AssetLogic.GetByKeyAsync(biz, "icon-bio"));
@@ -78,29 +61,39 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
     // ------------------------------------------------------------------------------------------------ roles
 
     [Fact]
-    public async Task A_viewer_may_read_but_not_write_anything_of_the_library()
+    public async Task A_member_who_may_only_view_reads_but_changes_nothing_of_what_was_shared_with_them()
     {
         if (!Enabled)
         {
             return;
         }
 
-        await As(UserRole.Viewer, async biz =>
+        var (design, list) = await As(Role.Designer, async biz =>
+        {
+            var d = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign("Teilen", null, "a4-portrait", null, null, null, null));
+            var l = await DataListLogic.SaveGeneralAsync(biz, null, new DataListLogic.ListInput("Teilen", null, false));
+            return (d.Id, l.Id);
+        });
+        await ShareAsync(Role.Designer, ItemKind.Design, design, Role.Viewer);
+        await ShareAsync(Role.Designer, ItemKind.DataList, list, Role.Viewer);
+        var builtIn = await Db(db => db.Asset.Where(a => a.IsBuiltIn).Select(a => a.Id).FirstAsync());
+        await As(Role.Viewer, async biz =>
         {
             Assert.NotEmpty(await AssetLogic.SearchAsync(biz, "deutsch", null, 10));
             Assert.NotEmpty(await FontLogic.AllAsync(biz));
-            await Assert.ThrowsAsync<ForbiddenException>(() => AssetLogic.UploadAsync(biz, "x.png", Png(), null));
-            await Assert.ThrowsAsync<ForbiddenException>(() => AssetLogic.DeleteAsync(biz, 1));
-            await Assert.ThrowsAsync<ForbiddenException>(() => FontLogic.UploadAsync(biz, "x.ttf", [1], null));
-            await Assert.ThrowsAsync<ForbiddenException>(() => SheetLogic.SaveAsync(biz, null, new SheetLogic.SheetInput("x", 210, 297, 0, 0, 1, 1, 100, 100, 0, 0, false)));
-            await Assert.ThrowsAsync<ForbiddenException>(() => DataListLogic.SaveGeneralAsync(biz, null, new DataListLogic.ListInput("x", null, false)));
-            await Assert.ThrowsAsync<ForbiddenException>(() => DataListLogic.SaveRowsAsync(biz, 1, 1, []));
-            await Assert.ThrowsAsync<ForbiddenException>(() => DataListLogic.ImportAsync(biz, 1, new DataListLogic.ImportRequest("a", true, [], false)));
-            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign("x", null, "a4-portrait", null, null, null, null)));
-            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.SaveDocumentAsync(biz, 1, 1, "{}"));
-            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.SaveThumbnailAsync(biz, 1, Png()));
-            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.RenameAsync(biz, 1, "x"));
-            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.CopyWithDocumentAsync(biz, 1, "{}"));
+            Assert.NotNull(await DesignLogic.GetAsync(biz, design));
+            Assert.False((await DataListLogic.GridAsync(biz, list)).CanEdit);
+            await Assert.ThrowsAsync<ForbiddenException>(() => AssetLogic.DeleteAsync(biz, builtIn));
+            await Assert.ThrowsAsync<ForbiddenException>(() => DataListLogic.SaveRowsAsync(biz, list, 1, []));
+            await Assert.ThrowsAsync<ForbiddenException>(() => DataListLogic.ImportAsync(biz, list, new DataListLogic.ImportRequest("a", true, [], false)));
+            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.SaveDocumentAsync(biz, design, 1, "{}"));
+            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.SaveThumbnailAsync(biz, design, Png()));
+            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.RenameAsync(biz, design, "x"));
+            await Assert.ThrowsAsync<ForbiddenException>(() => DesignLogic.DeleteAsync(biz, design));
+            // what is not shared with them is not even there
+            await Assert.ThrowsAsync<NotFoundException>(() => DesignLogic.RenameAsync(biz, long.MaxValue, "x"));
+            // their own area is theirs to fill
+            Assert.NotNull((await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign("Meins", null, "a4-portrait", null, null, null, null))).Name);
         });
     }
 
@@ -115,7 +108,7 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
         }
 
         var name = Unique("kaese");
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var first = await AssetLogic.UploadAsync(biz, name + ".png", Png(), "Logos");
             var second = await AssetLogic.UploadAsync(biz, name + ".png", Png(), "Logos");
@@ -130,9 +123,12 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             Assert.Equal(first.Asset.ContentHash, content!.ContentHash);
             Assert.Null((await AssetLogic.ContentAsync(biz, name, content.ContentHash))!.Bytes);
 
-            // A deleted key is free again.
+            // A deleted upload waits in the trash and holds its key; once it is purged the key is free again.
             await AssetLogic.DeleteAsync(biz, first.Asset.Id);
             Assert.Null(await AssetLogic.ContentAsync(biz, name, null));
+            var held = await AssetLogic.UploadAsync(biz, name + ".png", Png(), "Logos");
+            Assert.Equal(name + "-3", held.Asset!.Key);
+            await ItemLogic.PurgeAsync(biz, [new ItemRef(ItemKind.Asset, first.Asset.Id)]);
             var third = await AssetLogic.UploadAsync(biz, name + ".png", Png(), "Logos");
             Assert.Equal(name, third.Asset!.Key);
 
@@ -149,7 +145,7 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
         }
 
         var name = Unique("zugleich");
-        var keys = await Task.WhenAll(Enumerable.Range(0, 6).Select(_ => As(UserRole.Designer, async biz =>
+        var keys = await Task.WhenAll(Enumerable.Range(0, 6).Select(_ => As(Role.Designer, async biz =>
             (await AssetLogic.UploadAsync(biz, name + ".png", Png(), null)).Asset?.Key)));
         Assert.All(keys, key => Assert.NotNull(key));
         Assert.Equal(6, keys.Distinct().Count());
@@ -167,7 +163,7 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var result = await AssetLogic.UploadAsync(biz, fileName, Png(), "../../x");
             var key = result.Asset!.Key;
@@ -185,7 +181,7 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
         }
 
         var hostile = System.Text.Encoding.UTF8.GetBytes("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\"><script>alert(1)</script><rect width=\"20\" height=\"20\" onclick=\"x()\"/></svg>");
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var result = await AssetLogic.UploadAsync(biz, Unique("boese") + ".svg", hostile, null);
             Assert.NotNull(result.Asset);
@@ -210,9 +206,9 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             return;
         }
 
-        var key = Unique("usage-");
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
+            var key = (await AssetLogic.UploadAsync(biz, Unique("usage-") + ".png", Png(), null)).Asset!.Key;
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign("Nutzt " + key, null, "label-150x100", null, null, null, null));
             var base_ = DocumentValidator.Create(150, 100);
             var document = base_ with { Pages = [base_.Pages[0] with { Background = new BackgroundDef("#ffffff", null, key, "cover") }] };
@@ -239,7 +235,7 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var list = await DataListLogic.SaveGeneralAsync(biz, null, new DataListLogic.ListInput(Unique("Liste "), null, false));
             await DataListLogic.SaveColumnsAsync(biz, list.Id, [new("Name", "Name", "text", null, null), new("Preis", "Preis", "price", 2, null)]);
@@ -278,7 +274,7 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var list = await DataListLogic.SaveGeneralAsync(biz, null, new DataListLogic.ListInput(Unique("Csv "), null, false));
             var csv = "Name;Preis in €;Gereift\r\n\"Gouda; jung\";2,99;\"4\r\nWochen\"\r\nBergkäse;4;\r\n";
@@ -321,7 +317,7 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Etikett "), "Käse", "label-150x100", null, null, null, null));
             Assert.Equal(150, design.Width);
@@ -366,7 +362,7 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Autosave "), "Käse", "label-150x100", null, null, null, null));
             var json = """{"schema":2,"width":150,"height":100,"pages":[{"id":"p1","elements":[]}]}""";
@@ -398,14 +394,14 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var design = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Umbenennen "), "Käse", "label-150x100", null, null, null, null));
             Assert.Equal("Neuer Name", await DesignLogic.RenameAsync(biz, design.Id, "  Neuer Name  "));
             Assert.Equal("Neuer Name", (await DesignLogic.GetAsync(biz, design.Id))!.Name);
             Assert.Equal(1, (await DesignLogic.GetAsync(biz, design.Id))!.Revision);
             await Assert.ThrowsAsync<BizException>(() => DesignLogic.RenameAsync(biz, design.Id, "   "));
-            await Assert.ThrowsAsync<BizException>(() => DesignLogic.RenameAsync(biz, long.MaxValue, "x"));
+            await Assert.ThrowsAsync<NotFoundException>(() => DesignLogic.RenameAsync(biz, long.MaxValue, "x"));
 
             // somebody saved meanwhile: the document of this person becomes a new design (own history, revision 1), the original stays as it is
             await DesignLogic.SaveDocumentAsync(biz, design.Id, 1, """{"schema":1,"width":150,"height":100,"elements":[]}""");
@@ -420,7 +416,7 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             Assert.Single(copied.Pages[0].Elements);
             Assert.Empty((await DesignLogic.DocumentAsync(biz, design.Id)).Pages[0].Elements);
             await Assert.ThrowsAsync<BizException>(() => DesignLogic.CopyWithDocumentAsync(biz, design.Id, "not json"));
-            await Assert.ThrowsAsync<BizException>(() => DesignLogic.CopyWithDocumentAsync(biz, long.MaxValue, mine));
+            await Assert.ThrowsAsync<NotFoundException>(() => DesignLogic.CopyWithDocumentAsync(biz, long.MaxValue, mine));
         });
     }
 
@@ -432,7 +428,7 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             var template = await DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign(Unique("Vorlage "), null, null, 85, 55, "mm", null));
             await DesignLogic.UpdatePropertiesAsync(biz, template.Id, new DesignLogic.DesignInput(template.Name, "Karten", "Eine Vorlage", true));
@@ -470,7 +466,7 @@ public sealed class LibraryTests(AppTests.AppFactory factory)
             return;
         }
 
-        await As(UserRole.Designer, async biz =>
+        await As(Role.Designer, async biz =>
         {
             await Assert.ThrowsAsync<BizException>(() => DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign("x", null, "custom", 1, 100, "mm", null)));
             await Assert.ThrowsAsync<BizException>(() => DesignLogic.CreateAsync(biz, new DesignLogic.NewDesign("", null, "a4-portrait", null, null, null, null)));

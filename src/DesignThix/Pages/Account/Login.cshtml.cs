@@ -68,6 +68,12 @@ public sealed class LoginModel(SignInService signIn, TwoFactorTicket ticket, Act
                 ModelState.AddModelError(string.Empty, "Dieses Konto ist deaktiviert. Bitte wende dich an die Administration.");
                 return Page();
 
+            case SignInOutcome.NotApproved:
+                ModelState.AddModelError(string.Empty, result.User!.ApprovalState == Data.Entities.ApprovalState.Declined
+                    ? "Dieses Konto wurde nicht freigegeben. Bitte wende dich an die Administration."
+                    : "Dein Konto wartet noch auf die Freigabe durch die Administration. Du bekommst Bescheid, sobald es soweit ist.");
+                return Page();
+
             default:
                 ModelState.AddModelError(string.Empty, "E-Mail-Adresse oder Passwort stimmen nicht.");
                 return Page();

@@ -1,5 +1,5 @@
 // Checks the templates (docs/PLAN-CANVA.md section 1 item 3 and section 5): the gallery "Vorlagen" (grouped by category, search, category filter, thumbnails drawn by the engine),
-// "Vorlage verwenden" (a copy opens in the designer, the template stays), "Bearbeiten", and that EVERY template draws on every page without a warning of the render engine
+// "Vorlage verwenden" (a copy opens in the designer, the template stays; every member), "Bearbeiten" (the templates are the platform's own: only an administrator opens them), and that EVERY template draws on every page without a warning of the render engine
 // (missing medium, unknown icon, invalid code, unknown placeholder, missing font). The copies the check makes are deleted again at the end.
 //
 //   cd tests/e2e && npm install
@@ -37,7 +37,7 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); 
   check('every tile has a thumbnail (a saved picture or one drawn by the engine), none failed', thumbs.length === tiles.length && thumbs.every(t => t.ok && !t.failed), JSON.stringify(thumbs));
   check('the ten templates of the plan are there by name', ['Käsetheke', 'Obst & Gemüse', 'Regaletikett', 'Glasetikett', 'Visitenkarte', 'Flyer A5', 'Poster A3', 'SALE', 'Neu im Laden', 'Grußkarte'].every(n => tiles.some(t => t.title.includes(n))), tiles.map(t => t.title).join(' | '));
   check('a tile shows name, size and category', tiles.every(t => /\d/.test(t.meta) && t.title.length > 3));
-  check('every tile has "Vorlage verwenden" and "Bearbeiten"', (await page.$$('.dt-tpl .mat-btn--primary[data-use-template]')).length === tiles.length && (await page.$$('.dt-tpl .mat-btn:has-text("Bearbeiten")')).length === tiles.length);
+  check('every tile has "Vorlage verwenden"; a member has no "Bearbeiten" (the templates belong to the platform)', (await page.$$('.dt-tpl .mat-btn--primary[data-use-template]')).length === tiles.length && (await page.$$('.dt-tpl .mat-btn:has-text("Bearbeiten")')).length === 0);
   check('the toolbar is above the gallery (search, filter, sort)', await page.isVisible('.mat-toolbar input[type=search]') && await page.isVisible('.mat-toolbar button:has-text("Filter")') && await page.isVisible('.mat-toolbar button:has-text("Sortierung")'));
   await page.screenshot({ path: require('path').join(require('os').tmpdir(), 'designthix-templates-gallery.png') });
 
@@ -59,8 +59,16 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); 
 
   // ------------------------------------------------------------------------------------------------ use and edit
   const visit = tiles.find(t => t.title.startsWith('Visitenkarte'));
-  const href = await page.locator(`[data-template="${visit.id}"] .mat-btn:has-text("Bearbeiten")`).getAttribute('href');
+  // an administrator manages the templates of the platform: every tile has "Bearbeiten"
+  const actx = await newContext(browser, { viewport: { width: 1440, height: 900 } });
+  const admin = await actx.newPage();
+  watch(admin, 'admin');
+  check('the administrator signs in', await login(admin, accounts.admin));
+  await admin.goto(base + '/Templates', { waitUntil: 'networkidle' });
+  check('the administrator has "Bearbeiten" on every tile', (await admin.$$('.dt-tpl .mat-btn:has-text("Bearbeiten")')).length === tiles.length);
+  const href = await admin.locator(`[data-template="${visit.id}"] .mat-btn:has-text("Bearbeiten")`).getAttribute('href');
   check('"Bearbeiten" opens the template itself in the designer', href === `/Designs/${visit.id}/Designer`, href);
+  await actx.close();
   await Promise.all([page.waitForURL(/\/Designs\/\d+\/Designer/), page.click(`[data-template="${visit.id}"] [data-use-template].mat-btn`)]);
   const copyId = Number(/Designs\/(\d+)\/Designer/.exec(page.url())[1]);
   created.push(copyId);
@@ -109,9 +117,10 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); 
   check('the viewer signs in', await login(viewer, accounts.viewer));
   await viewer.goto(base + '/Templates', { waitUntil: 'networkidle' });
   const vTiles = await viewer.$$('.dt-tpl');
-  check('the viewer sees all templates, "Vorlage verwenden" is disabled with the reason, no "Bearbeiten"', vTiles.length >= 10 && (await viewer.$$('.dt-tpl button[disabled][title*="Betrachter"]')).length === vTiles.length && (await viewer.$$('.dt-tpl a:has-text("Bearbeiten")')).length === 0);
-  const refused = await postJson(viewer, `/api/designs/${visit.id}/use-template`, {});
-  check('the API refuses the viewer (403)', refused.status === 403, String(refused.status));
+  check('a second member sees all templates with "Vorlage verwenden" enabled and no "Bearbeiten"', vTiles.length >= 10 && (await viewer.$$('.dt-tpl button[disabled]')).length === 0 && (await viewer.$$('.dt-tpl .mat-btn--primary[data-use-template]')).length === vTiles.length && (await viewer.$$('.dt-tpl a:has-text("Bearbeiten")')).length === 0);
+  const used = await postJson(viewer, `/api/designs/${visit.id}/use-template`, {});
+  check('the API gives them their own copy (200); the template itself they cannot delete (403)', used.status === 200 && used.body.id !== Number(visit.id) && (await postJson(viewer, `/api/designs/${visit.id}/delete`, {})).status === 403, JSON.stringify(used));
+  if (used.status === 200) { await postJson(viewer, `/api/designs/${used.body.id}/delete`, {}); }
 
   // ------------------------------------------------------------------------------------------------ the phone
   const phone = await newContext(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });

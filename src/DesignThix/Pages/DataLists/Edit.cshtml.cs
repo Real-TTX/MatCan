@@ -95,10 +95,14 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public IReadOnlyList<string> Categories => AssetLogic.Categories;
 
-    public bool CanEdit => biz.IsDesigner;
+    /// <summary>The person may change the list (Edit on it); a new list is always theirs to make.</summary>
+    public bool CanEdit { get; private set; } = true;
+
+    /// <summary>The person manages the list (delete, share, move).</summary>
+    public bool CanManage { get; private set; } = true;
 
     /// <summary>The AI buttons are offered to people who may change the list, when the AI is switched on.</summary>
-    public bool AiVisible => biz.IsDesigner && List is not null && AiLogic.IsEnabled(biz);
+    public bool AiVisible => CanEdit && List is not null && AiLogic.IsEnabled(biz);
 
     /// <summary>Why the AI may not read this list (personal data, switch off), or null.</summary>
     public string? AiBlocked => List is null ? null : AiDataLogic.BlockedReason(biz, List);
@@ -137,7 +141,6 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostGeneralAsync()
     {
-        biz.RequireDesigner();
         if (!await LoadAsync())
         {
             return NotFound();
@@ -197,7 +200,6 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostColumnsAsync()
     {
-        biz.RequireDesigner();
         ModelState.Clear();
         if (!await LoadAsync())
         {
@@ -223,7 +225,6 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostFromDesignAsync()
     {
-        biz.RequireDesigner();
         if (DesignId is null)
         {
             FlashError("Bitte wähle ein Design aus.");
@@ -247,7 +248,6 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostPreviewAsync()
     {
-        biz.RequireDesigner();
         ModelState.Clear();
         if (!await LoadAsync())
         {
@@ -291,7 +291,6 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public async Task<IActionResult> OnPostImportAsync()
     {
-        biz.RequireDesigner();
         try
         {
             var count = await DataListLogic.ImportAsync(biz, Id ?? 0, new DataListLogic.ImportRequest(CsvText ?? "", HasHeader, Mapping, ImportMode == "replace"));
@@ -316,6 +315,11 @@ public sealed class EditModel(Biz biz) : PageModelBase
             {
                 return false;
             }
+
+            var place = await DataListLogic.PlaceAsync(biz, id);
+            CanEdit = place.CanEdit;
+            CanManage = place.CanManage;
+            await ItemLogic.VisitAsync(biz, Data.Entities.ItemKind.DataList, id);
 
             RowCount = await DataListLogic.RowCountAsync(biz, id);
             DesignItems = [.. (await DesignLogic.ChoicesAsync(biz)).Select(c => new SelectListItem(string.IsNullOrEmpty(c.Detail) ? c.Name : $"{c.Name} ({c.Detail})", c.Id.ToString(System.Globalization.CultureInfo.InvariantCulture)))];

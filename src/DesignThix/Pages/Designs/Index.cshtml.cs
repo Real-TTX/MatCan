@@ -17,7 +17,8 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public IReadOnlyList<DesignRow> Items { get; private set; } = [];
 
-    public bool CanEdit => biz.IsDesigner;
+    /// <summary>Everybody who is signed in may make things (in their own area), so the buttons that make something new are always there; what a person may do with one item is decided on its page.</summary>
+    public bool CanEdit => true;
 
     public async Task<IActionResult> OnGetAsync()
     {

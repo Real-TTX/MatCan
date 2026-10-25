@@ -22,7 +22,6 @@ public sealed class EditModel(Biz biz) : OutputFormPage(biz)
 
     public async Task<IActionResult> OnPostAsync()
     {
-        Biz.RequireDesigner();
         if (!await LoadAsync())
         {
             return NotFound();
@@ -49,7 +48,6 @@ public sealed class EditModel(Biz biz) : OutputFormPage(biz)
     /// <summary>"Ausführen" saves what is on the page and opens the run page.</summary>
     public async Task<IActionResult> OnPostRunAsync()
     {
-        Biz.RequireDesigner();
         if (!await LoadAsync())
         {
             return NotFound();
@@ -95,6 +93,8 @@ public sealed class EditModel(Biz biz) : OutputFormPage(biz)
             return false;
         }
 
+        CanEdit = (await OutputLogic.PlaceAsync(Biz, Id)).CanEdit;
+        await ItemLogic.VisitAsync(Biz, Data.Entities.ItemKind.OutputJob, Id);
         await PrepareAsync(Job.Name, Job.Name);
         return true;
     }

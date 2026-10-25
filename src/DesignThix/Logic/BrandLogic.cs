@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using DesignThix.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ public sealed class BrandFonts
     public string? Body { get; set; }
 }
 
-/// <summary>The brand kit as it is kept in the setting <c>Brand</c> (one JSON): colours (#rrggbb), the fonts, and the asset keys of the logos.</summary>
+/// <summary>The brand kit as it is kept in <c>Space.BrandJson</c> (one JSON per area): colours (#rrggbb), the fonts, and the asset keys of the logos.</summary>
 public sealed class BrandKit
 {
     public List<string> Colors { get; set; } = [];
@@ -25,11 +26,11 @@ public sealed class BrandKit
 }
 
 /// <summary>The brand kit with what the pages need to show it: the logos as assets (key, name, address, size).</summary>
-public sealed record BrandView(BrandKit Kit, IReadOnlyList<AssetRow> LogoAssets);
+public sealed record BrandView(BrandKit Kit, IReadOnlyList<AssetRow> LogoAssets, long SpaceId);
 
 /// <summary>
-/// The brand kit (Marke): colours, fonts and logos that every design of the team can use. One settings JSON <c>Brand</c>: at most 40 colours, three fonts (a family that exists
-/// in the Fonts, or none) and at most 20 logos (keys of assets that exist). Everybody who is signed in reads it, designers and administrators change it.
+/// The brand kit (Marke): colours, fonts and logos that every design of an area can use. One per area (<c>Space.BrandJson</c>; the personal area when none is asked for): at most 40 colours, three
+/// fonts (a family the area can use, or none) and at most 20 logos (keys of images the person may see). Every member of the area reads it; the owner of a personal area and the owners and admins of a team change it.
 /// </summary>
 public static partial class BrandLogic
 {
@@ -52,12 +53,33 @@ public static partial class BrandLogic
         return t.Length == 4 ? $"#{t[1]}{t[1]}{t[2]}{t[2]}{t[3]}{t[3]}" : t;
     }
 
-    /// <summary>The brand kit as saved, cleaned: what is no longer valid (a deleted font, a deleted logo) is left out.</summary>
-    public static async Task<BrandView> GetAsync(Biz biz)
+    private static readonly JsonSerializerOptions Web = new(JsonSerializerDefaults.Web);
+
+    /// <summary>The area a kit belongs to: the one asked for (the person must be a member) or their personal area.</summary>
+    private static async Task<long> SpaceAsync(Biz biz, long? spaceId, SpaceRole min)
     {
         biz.RequireSignedIn();
-        var saved = biz.Service<SettingStore>().Get<BrandKit>(SettingStore.Brand);
-        var families = await FamiliesAsync(biz);
+        var space = spaceId ?? await biz.PersonalSpaceIdAsync();
+        await Access.RequireSpaceRole(biz, space, min);
+        return space;
+    }
+
+    /// <summary>The brand kit of an area as saved, cleaned: what is no longer valid (a deleted font, a deleted logo) is left out.</summary>
+    public static async Task<BrandView> GetAsync(Biz biz, long? spaceId = null)
+    {
+        var space = await SpaceAsync(biz, spaceId, SpaceRole.Viewer);
+        var json = await biz.Db.Space.AsNoTracking().Where(s => s.Id == space).Select(s => s.BrandJson).FirstOrDefaultAsync() ?? "{}";
+        BrandKit saved;
+        try
+        {
+            saved = JsonSerializer.Deserialize<BrandKit>(json, Web) ?? new BrandKit();
+        }
+        catch (JsonException)
+        {
+            saved = new BrandKit();
+        }
+
+        var families = await FamiliesAsync(biz, space);
         string? Font(string? family) => FindFamily(families, family);
 
         var kit = new BrandKit
@@ -69,16 +91,16 @@ public static partial class BrandLogic
         var wanted = (saved.Logos ?? []).Select(AssetLogic.NormalizeKey).OfType<string>().Distinct(StringComparer.Ordinal).Take(MaxLogos).ToList();
         var logos = wanted.Count == 0 ? [] : await AssetLogic.Query(biz).Where(a => wanted.Contains(a.Key)).ToListAsync();
         kit.Logos = [.. wanted.Where(k => logos.Any(a => a.Key == k))];
-        return new BrandView(kit, [.. kit.Logos.Select(k => logos.First(a => a.Key == k))]);
+        return new BrandView(kit, [.. kit.Logos.Select(k => logos.First(a => a.Key == k))], space);
     }
 
     /// <summary>
     /// Saves the brand kit. Refused with a message (nothing is saved) when a colour is not #rgb or #rrggbb, there are more than 40 colours or 20 logos, a font family does not
     /// exist or a logo key is not an asset. Designers and administrators.
     /// </summary>
-    public static async Task<BrandView> SaveAsync(Biz biz, BrandKit input)
+    public static async Task<BrandView> SaveAsync(Biz biz, BrandKit input, long? spaceId = null)
     {
-        biz.RequireDesigner();
+        var space = await SpaceAsync(biz, spaceId, SpaceRole.Admin);
         var colors = new List<string>();
         foreach (var raw in input.Colors ?? [])
         {
@@ -94,7 +116,7 @@ public static partial class BrandLogic
             throw new BizException($"Die Marke hat höchstens {MaxColors} Farben.", "Colors");
         }
 
-        var families = await FamiliesAsync(biz);
+        var families = await FamiliesAsync(biz, space);
         string? Font(string? family, string label)
         {
             var name = (family ?? "").Trim();
@@ -130,7 +152,7 @@ public static partial class BrandLogic
 
         if (logos.Count > 0)
         {
-            var existing = await biz.Db.Asset.AsNoTracking().Where(a => logos.Contains(a.Key)).Select(a => a.Key).ToListAsync();
+            var existing = await Access.Visible<Asset>(biz).AsNoTracking().Where(a => logos.Contains(a.Key)).Select(a => a.Key).ToListAsync();
             var missing = logos.Where(k => !existing.Contains(k)).ToList();
             if (missing.Count > 0)
             {
@@ -139,16 +161,24 @@ public static partial class BrandLogic
         }
 
         var kit = new BrandKit { Colors = colors, Fonts = fonts, Logos = logos };
-        await biz.Service<SettingStore>().SetAsync(biz.Db, SettingStore.Brand, kit);
-        await biz.Log.LogAsync("Marke geändert", nameof(Setting), null, $"{colors.Count} Farben, {logos.Count} Logos");
-        return await GetAsync(biz);
+        var row = await biz.Db.Space.FirstAsync(s => s.Id == space);
+        row.BrandJson = JsonSerializer.Serialize(kit, Web);
+        await biz.Db.SaveChangesAsync();
+        await biz.Log.LogAsync("Marke geändert", nameof(Space), space, $"{colors.Count} Farben, {logos.Count} Logos");
+        return await GetAsync(biz, space);
     }
 
-    /// <summary>The font families of the library, each once, by name.</summary>
-    public static async Task<List<string>> FamiliesAsync(Biz biz)
+    /// <summary>The font families the person may use, each once, by name; with <paramref name="spaceId"/> only the built-in ones and those of that area.</summary>
+    public static async Task<List<string>> FamiliesAsync(Biz biz, long? spaceId = null)
     {
         biz.RequireSignedIn();
-        return await biz.Db.Font.AsNoTracking().Select(f => f.Family).Distinct().OrderBy(f => f).ToListAsync();
+        var fonts = Access.VisibleInSpaces<Font>(biz).AsNoTracking();
+        if (spaceId is { } space)
+        {
+            fonts = fonts.Where(f => f.SpaceId == null || f.SpaceId == space);
+        }
+
+        return await fonts.Select(f => f.Family).Distinct().OrderBy(f => f).ToListAsync();
     }
 
     private static string? FindFamily(IEnumerable<string> families, string? family)

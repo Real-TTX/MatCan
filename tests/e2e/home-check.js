@@ -2,7 +2,7 @@
 //  - the heading, the search, the format tiles (one click creates a design of the right size and opens the designer), "Eigene Größe", the dialog "Design erstellen"
 //  - the menu: "Design erstellen" first, Start, Designs, Vorlagen, Uploads & Medien, Marke, Schriften, then the group "Serien (Zusatz)" (Datenlisten, Serienausgaben, Druckbögen)
 //  - the row of templates ("Vorlage verwenden" opens a copy in the designer), the search (designs and templates), the actions of a recent design (rename, duplicate, delete)
-//  - the viewer (no tiles, no create, read-only actions, the API refuses), the phone (no sideways scrolling), zero console errors and CSP violations
+//  - a member who only looks at one design that was shared with them (tiles and own area as for everybody, read-only actions on the shared design, the API refuses to delete it), the phone (no sideways scrolling), zero console errors and CSP violations
 // The designs the check makes are deleted again at the end.
 //
 //   cd tests/e2e && npm install
@@ -13,7 +13,7 @@ const path = require('path');
 const lib = require('./lib.js');
 
 const args = process.argv.slice(2);
-const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson } = lib(args, { ignoreUrl: /\/api\/designs\/\d+/ });
+const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignoreUrl: /\/api\/designs\/\d+/ });
 const outIndex = args.indexOf('--out');
 const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'designthix-home-check'));
 fs.mkdirSync(outDir, { recursive: true });
@@ -186,27 +186,37 @@ const stamp = String(Date.now()).slice(-6);
   await page.click('dialog[open] button[data-dialog-close]');
   check('cancelling the delete keeps the design', !!(await page.$(`[data-recent="${tileId}"]`)));
 
-  // ------------------------------------------------------------------------------------------------ the viewer
+  // ------------------------------------------------------------------------------------------------ a member who only looks (the "viewer" of the older checks)
+  // Every member makes designs in their own area; what somebody else made is only there when it was shared, and then it is read-only.
+  const sharedMade = await postJson(page, '/api/designs', { preset: 'business-card' });
+  const sharedId = sharedMade.body.id;
+  created.push(sharedId);
+  await shareWith(page, 'design', sharedId, accounts.viewer.email, 'View');
   const vctx = await newContext(browser, { viewport: { width: 1440, height: 900 } });
   const viewer = await vctx.newPage();
   watch(viewer, 'viewer');
-  check('the viewer signs in', await login(viewer, accounts.viewer));
+  check('the second member signs in', await login(viewer, accounts.viewer));
   await viewer.goto(base + '/', { waitUntil: 'networkidle' });
   await settle(viewer);
-  check('the viewer sees no format tiles and no "Design erstellen" in the menu', (await viewer.$$('[data-format], [data-format-custom]')).length === 0 && !(await viewer.isVisible('.mat-nav a.mat-nav__item--primary')) && (await viewer.$$('#dt-create')).length === 0);
-  check('the viewer sees the templates, "Vorlage verwenden" is disabled with a reason', await viewer.evaluate(() => { const b = Array.from(document.querySelectorAll('.dt-tpl .mat-btn--primary')); return b.length >= 6 && b.every(x => x.disabled && /Betrachter/.test(x.title)); }));
-  check('the viewer sees the heading and the search', (await viewer.textContent('h1')).includes('Was möchtest du heute gestalten?') && await viewer.isVisible('input[name=q]'));
+  check('they see the format tiles and "Design erstellen" like everybody', (await viewer.$$('main [data-formats] [data-format], main [data-formats] [data-format-custom]')).length === 11 && await viewer.isVisible('.mat-nav a.mat-nav__item--primary') && (await viewer.$$('#dt-create')).length === 1);
+  check('they see the templates, "Vorlage verwenden" is enabled', await viewer.evaluate(() => { const b = Array.from(document.querySelectorAll('.dt-tpl .mat-btn--primary')); return b.length >= 6 && b.every(x => !x.disabled && x.hasAttribute('data-use-template')); }));
+  check('they see the heading and the search', (await viewer.textContent('h1')).includes('Was möchtest du heute gestalten?') && await viewer.isVisible('input[name=q]'));
   const recentCount = await viewer.$$eval('[data-recent-designs] [data-recent]', els => els.length);
-  check('the viewer sees recent designs with "Öffnen" only', recentCount > 0 && (await viewer.$$('[data-recent-action]')).length === 0 && (await viewer.$$('.dt-recent__actions a')).length === recentCount);
+  check('they see the shared design among the recent ones with "Öffnen" only', recentCount > 0 && (await viewer.$$(`[data-recent="${sharedId}"]`)).length === 1 && (await viewer.$$('[data-recent-action]')).length === 0 && (await viewer.$$('.dt-recent__actions a')).length === recentCount);
   await viewer.screenshot({ path: path.join(outDir, 'start-viewer.png') });
-  const refused = await postJson(viewer, '/api/designs', { preset: 'business-card' });
-  check('the API refuses the viewer (403)', refused.status === 403, String(refused.status));
-  const refusedTemplate = await postJson(viewer, `/api/designs/${templateTiles[0]}/use-template`, {});
-  check('"Vorlage verwenden" is refused for the viewer by the API (403)', refusedTemplate.status === 403, String(refusedTemplate.status));
-  const refusedDelete = await postJson(viewer, `/api/designs/${created[0]}/delete`, {});
-  check('deleting is refused for the viewer by the API (403)', refusedDelete.status === 403, String(refusedDelete.status));
+  const ownMade = await postJson(viewer, '/api/designs', { preset: 'business-card' });
+  check("the API lets them make a design of their own (200)", ownMade.status === 200, String(ownMade.status));
+  const usedTemplate = await postJson(viewer, `/api/designs/${templateTiles[0]}/use-template`, {});
+  check('"Vorlage verwenden" gives them a copy of their own (200)', usedTemplate.status === 200 && usedTemplate.body.id !== templateTiles[0], String(usedTemplate.status));
+  const refusedDelete = await postJson(viewer, `/api/designs/${sharedId}/delete`, {});
+  check('deleting the shared design is refused by the API (403)', refusedDelete.status === 403, String(refusedDelete.status));
+  const refusedRename = await postJson(viewer, `/api/designs/${sharedId}/rename`, { name: 'Meins' });
+  check('so is renaming it (403)', refusedRename.status === 403, String(refusedRename.status));
+  const unknown = await viewer.evaluate(async () => (await fetch('/api/designs/999999999')).status);
+  check('a design nobody shared with them is not even there (404)', unknown === 404, String(unknown));
+  for (const made of [ownMade, usedTemplate]) { if (made.status === 200) { await postJson(viewer, `/api/designs/${made.body.id}/delete`, {}); } }
   await viewer.goto(base + '/Templates', { waitUntil: 'networkidle' });
-  check('the page Vorlagen: the viewer sees "Ansehen" and a disabled "Vorlage verwenden"', (await viewer.$$('.dt-tpl a:has-text("Ansehen")')).length >= 10 && (await viewer.$$('.dt-tpl button[disabled]')).length >= 10);
+  check('the page Vorlagen: "Vorlage verwenden" is enabled and there is no "Bearbeiten"', (await viewer.$$('.dt-tpl button[disabled]')).length === 0 && (await viewer.$$('.dt-tpl a:has-text("Bearbeiten")')).length === 0);
 
   // ------------------------------------------------------------------------------------------------ the phone
   const phone = await newContext(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });

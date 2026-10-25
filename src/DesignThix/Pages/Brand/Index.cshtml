@@ -10,7 +10,7 @@
 <div class="dt-brand" id="dt-brand" data-brand="@Model.StateJson" data-can-edit="@(ro ? "false" : "true")">
     @if (ro)
     {
-        <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst die Marke nur ansehen. Ändern können Gestalter und Administratoren.</div></div>
+        <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst die Marke nur ansehen.</div></div>
     }
 
     <dt-card title="Farben" icon="palette" sub="bis zu @BrandLogic.MaxColors">

@@ -16,7 +16,8 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public TableModel Table { get; private set; } = null!;
 
-    public bool CanEdit => biz.IsDesigner;
+    /// <summary>Everybody who is signed in may make things (in their own area), so the buttons that make something new are always there; what a person may do with one item is decided on its page.</summary>
+    public bool CanEdit => true;
 
     public async Task OnGetAsync()
     {
@@ -58,7 +59,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
         [
             (new TableColumn("Serienausgabe"), o => Ui.NameWithSub(o.Name, $"/Outputs/Edit/{o.Id}", o.Format == OutputFormat.Png ? "Einzelne PNG-Bilder in einer ZIP-Datei" : o.Mode == OutputMode.Sheet ? "Mehrere Etiketten auf einem Druckbogen" : "Ein Etikett pro Seite")),
             (new TableColumn("Design", HideOnPhone: true), DesignCell),
-            (new TableColumn("Datenliste", HideOnPhone: true), o => o.DataListId is null ? Ui.Concat(Ui.Text("Beispielwerte"), new HtmlString(" "), Ui.Pill("ohne Liste", "plain")) : o.DataListName is null ? Ui.Pill("gelöscht", "warn", "alert") : Ui.Link(o.DataListName, $"/DataLists/Edit/{o.DataListId}")),
+            (new TableColumn("Datenliste", HideOnPhone: true), o => o.DataListId is null ? Ui.Concat(Ui.Text("Beispielwerte"), new HtmlString(" "), Ui.Pill("ohne Liste", "plain")) : o.DataListName is null ? Ui.Pill("nicht verfügbar", "warn", "alert") : Ui.Link(o.DataListName, $"/DataLists/Edit/{o.DataListId}")),
             (new TableColumn("Etiketten", Numeric: true), o => CountCell(counts.GetValueOrDefault(o.Id))),
             (new TableColumn("Format", HideOnPhone: true), o => o.Format == OutputFormat.Png ? Ui.Pill($"PNG-ZIP · {o.Dpi} dpi", "info") : Ui.Pill("Drucken / PDF", "accent")),
             (new TableColumn("Zuletzt ausgeführt", HideOnPhone: true), o => o.LastRunDate is null ? Ui.Text("noch nie") : Ui.NameWithSub(Fmt.Moment(o.LastRunDate), null, o.LastRunUserName)),
@@ -75,7 +76,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
     {
         if (o.DesignName is null)
         {
-            return Ui.Pill("gelöscht", "warn", "alert");
+            return Ui.Pill("nicht verfügbar", "warn", "alert");
         }
 
         var thumb = o.DesignThumbnailUrl is { } url
