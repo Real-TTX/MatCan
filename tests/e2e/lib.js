@@ -7,7 +7,7 @@ const path = require('path');
 const { chromium } = require('playwright');
 
 const PASSWORD = 'Passw0rd!Passw0rd';
-const accountFile = path.join(__dirname, 'test-account.json');
+const accountFile = process.env.DT_ACCOUNT_FILE || path.join(__dirname, 'test-account.json'); // DT_ACCOUNT_FILE: another file, for checks that run side by side
 
 /**
  * @param {string[]} args process arguments (an http(s) address is the base address)

@@ -27,7 +27,7 @@ node run-all.js [base url]          # all checks one after the other, one summar
 
 A clean run (without `redeploy -Clean`, which wipes the local stack's database)
 
-1. Back up `test-account.json` (the checks write it for the database they ran on).
+1. Back up `test-account.json` (the checks write it for the database they ran on), or better point `DT_ACCOUNT_FILE` at a file in the temp folder (`lib.js` and `screens.js` use it instead; needed when two runs go side by side).
 2. Start the app from source on port 3053 against a NEW database of the local Postgres (it creates the database itself): `DESIGNTHIX_PORT=3053 DESIGNTHIX_DATA=<temp folder> DESIGNTHIX__Database__Host=localhost DESIGNTHIX__Database__Port=3045 DESIGNTHIX__Database__Database=designthix_k6_x DESIGNTHIX__Database__Username=designthix DESIGNTHIX__Database__Password=designthix dotnet run --project src/DesignThix --no-launch-profile --artifacts-path <temp folder>`.
 3. `node screens.js http://localhost:3053`, then `node run-all.js http://localhost:3053 --fake-host 127.0.0.1` - twice: the checks clean up after themselves or use names of their own, so a second run on the same database is green too.
 4. Stop the app, `DROP DATABASE designthix_k6_x WITH (FORCE)` (through `docker exec designthix-local-db-1 psql -U designthix -d postgres`), restore `test-account.json`.

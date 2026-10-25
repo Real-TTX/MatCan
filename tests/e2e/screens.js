@@ -22,7 +22,7 @@ const out = path.resolve(__dirname, argValue('--out', '../../docs/images'));
 const fakePort = Number(argValue('--fake-port', '3066'));
 const fakeHost = argValue('--fake-host', /localhost:3043|127\.0\.0\.1:3043/.test(base) ? 'host.docker.internal' : '127.0.0.1');
 const withAi = !args.includes('--no-ai');
-const accountFile = path.join(__dirname, 'test-account.json');
+const accountFile = process.env.DT_ACCOUNT_FILE || path.join(__dirname, 'test-account.json'); // DT_ACCOUNT_FILE: another file, for checks that run side by side
 
 const written = [];
 
