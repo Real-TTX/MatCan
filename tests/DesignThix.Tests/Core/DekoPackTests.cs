@@ -119,7 +119,7 @@ public sealed partial class DekoPackTests
         // a name with a colour in brackets has a key that ends with the colour word
         var colours = new Dictionary<string, string>
         {
-            ["Gold"] = "gold", ["Rosé"] = "rose", ["Salbei"] = "salbei", ["Navy"] = "navy", ["Schwarz"] = "schwarz", ["Weiß"] = "weiss", ["Bordeaux"] = "bordeaux",
+            ["Gold"] = "gold", ["Rosé"] = "rose", ["Salbei"] = "salbei", ["Navy"] = "navy", ["Schwarz"] = "schwarz", ["Weiß"] = "weiss", ["Bordeaux"] = "bordeaux", ["Tanne"] = "tanne", ["Warnung"] = "warn",
             ["Bunt"] = "bunt", ["Pastell"] = "pastell", ["Herbst"] = "herbst", ["Boho"] = "boho",
         };
         var match = Regex.Matches(string.Join('\n', deko.Select(e => e.Name)), @"\((?<c>[^)]+)\)$", RegexOptions.Multiline);

@@ -13,7 +13,7 @@
     "schema":2,"unit":"mm","width":297,"height":210,"dpi":300,"locale":"de-DE",
     "fields": [
       {"key":"Name","label":"Name","type":"text","sample":"Mia Hartmann","decimals":null,"category":null,"required":false},
-      {"key":"Monat","label":"Monat","type":"text","sample":"November 2026","decimals":null,"category":null,"required":false},
+      {"key":"Monat","label":"Monat","type":"text","sample":"November 2027","decimals":null,"category":null,"required":false},
       {"key":"Abteilung","label":"Abteilung","type":"text","sample":"Service","decimals":null,"category":null,"required":false}
     ],
     "pages": [
@@ -119,8 +119,8 @@
     ]
   },
   "sampleRows": [
-    {"Name":"Mia Hartmann","Monat":"November 2026","Abteilung":"Service"},
-    {"Name":"Maximilian Schneider-Hohenstein","Monat":"Dezember 2026","Abteilung":"Lager und Versand"},
-    {"Name":"Jo Li","Monat":"Januar 2027","Abteilung":""}
+    {"Name":"Mia Hartmann","Monat":"November 2027","Abteilung":"Service"},
+    {"Name":"Maximilian Schneider-Hohenstein","Monat":"Dezember 2027","Abteilung":"Lager und Versand"},
+    {"Name":"Jo Li","Monat":"Januar 2028","Abteilung":""}
   ]
 }

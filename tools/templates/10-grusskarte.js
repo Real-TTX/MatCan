@@ -48,7 +48,7 @@ module.exports = {
       text('Text', 20, 43, 108, 34, 'zu deinem Geburtstag wünsche ich dir Sonne im Herzen, viel Zeit für das, was dir Freude macht, und ein Jahr voller schöner Überraschungen.', { f: 'Caveat', s: 21, w: 500, c: INK, v: 'top', wrap: true, lh: 1.25, fit: 'shrink', min: 12 }),
       text('Gruß', 20, 80, 108, 10, 'Alles Liebe, dein Max', { f: 'Caveat', s: 24, w: 700, c: TEAL, a: 'right', min: 12 }),
       line('Linie', 20, 93, 128, 93, '#e6d9c2', 0.6, { dash: 'dotted' }),
-      text('Absender', 20, 94.5, 108, 5, 'Hofladen Wiesengrund · Dorfstraße 12 · 12345 Musterstadt', { f: 'Montserrat', s: 6.5, w: 500, c: '#8a8095', a: 'center', min: 5 }),
+      text('Absender', 20, 94.5, 108, 5, 'Hofladen Wiesengrund · Dorfstraße 12 · 12345 Musterstadt', { f: 'Montserrat', s: 7, w: 500, c: '#8a8095', a: 'center', min: 7 }),
     ], 'Innenseite'),
   ],
 };

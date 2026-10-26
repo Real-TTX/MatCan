@@ -70,8 +70,8 @@ module.exports = family({
   formatKey: 'a4-portrait',
   width: 210,
   height: 297,
-  fields: [field('Woche', 'Woche', 'text', 'KW 44 · 26. Oktober – 1. November 2026')],
-  sampleRows: [{ Woche: 'KW 44 · 26. Oktober – 1. November 2026' }, { Woche: 'KW 45 · 2. – 8. November 2026' }, { Woche: '' }],
+  fields: [field('Woche', 'Woche', 'text', 'KW 43 · 25. – 31. Oktober 2027')],
+  sampleRows: [{ Woche: 'KW 43 · 25. – 31. Oktober 2027' }, { Woche: 'KW 44 · 1. – 7. November 2027' }, { Woche: '' }],
 }, [
   {
     slug: 'essensplan-klassisch', variant: 'Klassisch',

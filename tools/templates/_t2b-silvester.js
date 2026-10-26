@@ -2,7 +2,7 @@
 /* Family: Silvester-Party. Variants: Mitternacht (Einladung A6), Countdown (Plakat A3), Prosit (Instagram-Story). The year is a field. */
 const D = require('./dsl');
 const { decor, scatter, infoRow } = require('./_t2b-lib');
-const { text, rect, ellipse, shape, icon, deko, dekoIn, page, gradient, field, line, shadow } = D;
+const { text, rect, ellipse, shape, icon, deko, dekoWindow, dekoIn, page, gradient, field, line, shadow } = D;
 
 const fields = [field('Jahr', 'Neues Jahr', 'text', '2028')];
 const sampleRows = [{ Jahr: '2028' }, { Jahr: '2030' }, { Jahr: '2099' }];
@@ -76,8 +76,8 @@ const prosit = (() => Object.assign({}, base, {
   formatKey: 'instagram-story', width: 1080, height: 1920,
   pages: [page(gradient(165, '#3a1c8a', '#d6409f'), [
     decor([
-      deko('Konfetti', 'deko-konfetti-streuung-gold', 0, 0, 1080, undefined, { opacity: 0.8 }),
-      deko('Konfetti 2', 'deko-konfetti-streuung-gold', 0, 840, 1080, undefined, { opacity: 0.8, flipX: true, flipY: true }),
+      deko('Konfetti oben', 'deko-konfetti-regen', 0, 0, 1080),
+      deko('Konfetti unten', 'deko-konfetti-regen', 0, 1550, 1080, undefined, { flipY: true, flipX: true }),
       ellipse('Glanz', 140, 520, 800, 800, '#ffffff', { opacity: 0.1 }),
       rect('Textfeld', 100, 1470, 880, 190, '#3a1c8a', { opacity: 0.55, radius: 40 }),
       icon('Glas links', 'wine', 190, 560, 340, '#ffffff', 1.1, { rotation: -14 }),

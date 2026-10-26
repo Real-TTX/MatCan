@@ -103,7 +103,7 @@ const strand = (() => {
       text('Titel', 70, 330, 940, 170, 'Sommerfest', { f: 'Pacifico', s: 90, c: CORAL, a: 'left', min: 40 }),
       text('Datum', 80, 520, 920, 70, 'Sa., 17. Juli · ab 14 Uhr', { f: 'Fredoka', s: 34, w: 600, c: NAVY, a: 'left', min: 18 }),
       text('Ort', 80, 590, 920, 60, 'Festwiese am Sportplatz', { f: 'Fredoka', s: 26, w: 500, c: NAVY, a: 'left', min: 14 }),
-      text('Veranstalter', 80, 1010, 920, 60, '{{Veranstalter}}', { f: 'Fredoka', s: 24, w: 500, c: '#ffffff', a: 'center', min: 12 }),
+      text('Veranstalter', 80, 972, 920, 60, '{{Veranstalter}}', { f: 'Fredoka', s: 24, w: 500, c: '#ffffff', a: 'center', min: 12 }),
     ])],
   });
 })();

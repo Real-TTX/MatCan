@@ -29,7 +29,7 @@ const botanisch = {
     deko('Zweig', 'deko-blumen-eukalyptuszweig-salbei', 15.5, 17, 19, undefined, { locked: true }),
     line('Linie', 20, 124, 30, 124, GREEN, 0.4, { locked: true }),
     text('Zitat', 6, 90, 38, 31, '{{Zitat}}', { f: 'Cormorant Garamond', s: 11, w: 600, i: true, c: '#2c3a22', a: 'center', v: 'bottom', wrap: true, lh: 1.3, min: 6.5 }),
-    text('Autor', 6, 127, 38, 6, '{{Autor}}', { f: 'Raleway', s: 7, w: 700, c: GREEN, a: 'center', up: true, ls: 0.2, min: 5.5, showIf: 'Autor' }),
+    text('Autor', 5, 127, 40, 6, '{{Autor}}', { f: 'Raleway', s: 7, w: 700, c: GREEN, a: 'center', up: true, ls: 0.2, min: 5.5, showIf: 'Autor' }),
   ])],
 };
 
@@ -57,7 +57,7 @@ const typo = {
     ellipse('Loch', 22.5, 7, 5, 5, '#2b2b2b', { stroke: '#555555', sw: 0.3, locked: true }),
     text('Lesen', -5, 29, 60, 30, 'LESEN', { f: 'Anton', s: 52, c: '#ffd23f', a: 'center', lh: 1, rotation: -90, min: 20, locked: true }),
     rect('Balken', 6, 80, 8, 1.2, '#ffd23f', { locked: true }),
-    text('Zitat', 6, 85, 38, 42, '{{Zitat}}', { f: 'Inter', s: 8, w: 500, c: '#e6e6e6', v: 'top', wrap: true, lh: 1.4, min: 5.5 }),
+    text('Zitat', 6, 85, 36, 42, '{{Zitat}}', { f: 'Inter', s: 8, w: 500, c: '#e6e6e6', v: 'top', wrap: true, lh: 1.4, min: 5.5 }),
     text('Autor', 6, 131, 38, 12, '{{Autor}}', { f: 'Inter', s: 7, w: 700, c: '#ffd23f', v: 'bottom', wrap: true, lh: 1.3, min: 5.5, showIf: 'Autor' }),
   ])],
 };

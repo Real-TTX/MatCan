@@ -2478,6 +2478,73 @@
     ]
   },
   {
+    "key": "deko-blumen-tannenzweig-tanne",
+    "name": "Blumen & Blätter · Tannenzweig (Tanne)",
+    "category": "Deko",
+    "file": "deko/blumen-tannenzweig-tanne.svg",
+    "tags": [
+      "Tanne",
+      "Tannenzweig",
+      "Weihnachten",
+      "Advent",
+      "Winter",
+      "Nadeln",
+      "Blume",
+      "Blatt",
+      "Natur",
+      "Pflanze",
+      "Tannengrün",
+      "dunkelgrün",
+      "grün",
+      "Blumen & Blätter"
+    ]
+  },
+  {
+    "key": "deko-blumen-tannenzweig-gold",
+    "name": "Blumen & Blätter · Tannenzweig (Gold)",
+    "category": "Deko",
+    "file": "deko/blumen-tannenzweig-gold.svg",
+    "tags": [
+      "Tanne",
+      "Tannenzweig",
+      "Weihnachten",
+      "Advent",
+      "Winter",
+      "Nadeln",
+      "Blume",
+      "Blatt",
+      "Natur",
+      "Pflanze",
+      "Gold",
+      "golden",
+      "metallic",
+      "edel",
+      "Blumen & Blätter"
+    ]
+  },
+  {
+    "key": "deko-blumen-tannenzweig-weiss",
+    "name": "Blumen & Blätter · Tannenzweig (Weiß)",
+    "category": "Deko",
+    "file": "deko/blumen-tannenzweig-weiss.svg",
+    "tags": [
+      "Tanne",
+      "Tannenzweig",
+      "Weihnachten",
+      "Advent",
+      "Winter",
+      "Nadeln",
+      "Blume",
+      "Blatt",
+      "Natur",
+      "Pflanze",
+      "Weiß",
+      "hell",
+      "für dunklen Hintergrund",
+      "Blumen & Blätter"
+    ]
+  },
+  {
     "key": "deko-blumen-margerite-rose",
     "name": "Blumen & Blätter · Margerite (Rosé)",
     "category": "Deko",
@@ -6026,6 +6093,29 @@
       "blau",
       "dunkelblau",
       "marine"
+    ]
+  },
+  {
+    "key": "deko-muster-warnstreifen",
+    "name": "Muster · Warnstreifen",
+    "category": "Deko",
+    "file": "deko/muster-warnstreifen.svg",
+    "tags": [
+      "Muster",
+      "Pattern",
+      "Hintergrund",
+      "Fläche",
+      "Textur",
+      "Warnstreifen",
+      "Warnung",
+      "Achtung",
+      "Baustelle",
+      "Handwerker",
+      "gelb schwarz",
+      "diagonal",
+      "Gelb",
+      "Schwarz",
+      "Handwerk"
     ]
   },
   {

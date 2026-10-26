@@ -91,7 +91,7 @@ const aushang = {
     infoRow('Erfahrung', 'star', 18, 170, 170, 'Erfahrung', 'Abitur 1,3  ·  seit 3 Jahren Nachhilfelehrerin', { c: '#1b3a1f', icolor: GREENB, ic: 10, vs: 15, vw: 700, ls: 8, lc: '#5b7a60' }),
     rect('Kontakt Feld', 18, 192, 174, 30, '#ebfbee', { radius: 4 }),
     text('Kontakt', 18, 192, 174, 30, `Lena  ·  ${PHONE}  ·  lena@beispiel.de`, { f: 'Poppins', w: 700, s: 17, c: '#1b3a1f', a: 'center', min: 9 }),
-    tearOff(8, 232, 65, ['Nachhilfe Mathe', 'Englisch · Deutsch', 'Lena', PHONE], { lineH: 5.2, sizes: [10, 8.5, 10, 10], weights: [700, 500, 700, 800], colors: ['#1b3a1f', '#4b6a50', '#1b3a1f', GREENB], f: 'Poppins', line: '#555555' }),
+    tearOff(8, 232, 65, ['Nachhilfe Mathe', 'Englisch · Deutsch', 'Lena', PHONE], { lineH: 4.7, sizes: [10, 8.5, 10, 10], weights: [700, 500, 700, 800], colors: ['#1b3a1f', '#4b6a50', '#1b3a1f', GREENB], f: 'Poppins', line: '#555555' }),
   ])],
 };
 

@@ -17,12 +17,12 @@ const stille = {
   tags: ['Plakat', 'Poster', 'Minimal', 'Ausstellung', 'Vernissage', 'Galerie', 'Kunst', 'Ruhig', 'Weißraum', 'Elegant'],
   pages: [page(BONE, [
     line('Strich', 60, 0, 60, 300, INK, 0.5, { locked: true }),
-    text('Reihe', 78, 28, 150, 8, 'AUSSTELLUNG  2026', { f: 'Inter', w: 500, s: 13, c: INK, ls: 0.4, a: 'left', min: 6 }),
+    text('Reihe', 78, 28, 150, 8, 'AUSSTELLUNG  2027', { f: 'Inter', w: 500, s: 13, c: INK, ls: 0.4, a: 'left', min: 6 }),
     text('Titel', 74, 214, 210, 60, 'Stille', { f: 'Cormorant Garamond', w: 300, s: 150, c: INK, a: 'left', lh: 1, min: 60 }),
     text('Untertitel', 78, 278, 190, 14, 'Fotografien von Hanna Lorenz', { f: 'Cormorant Garamond', i: true, w: 400, s: 24, c: INK, a: 'left', min: 12 }),
-    text('Datum', 78, 346, 100, 28, '12. September bis\n8. November 2026', { f: 'Inter', w: 400, s: 13, c: INK, a: 'left', v: 'top', wrap: true, lh: 1.6, min: 7 }),
+    text('Datum', 78, 346, 100, 28, '12. September bis\n8. November 2027', { f: 'Inter', w: 400, s: 13, c: INK, a: 'left', v: 'top', wrap: true, lh: 1.6, min: 7 }),
     text('Ort', 182, 346, 90, 28, 'Galerie am Fluss\nUferweg 5, Musterstadt', { f: 'Inter', w: 400, s: 13, c: INK, a: 'left', v: 'top', wrap: true, lh: 1.6, min: 7 }),
-    text('Eröffnung', 78, 386, 190, 8, 'Eröffnung: Freitag, 11. September, 19 Uhr', { f: 'Inter', w: 500, s: 12, c: '#777770', a: 'left', min: 6 }),
+    text('Eröffnung', 78, 386, 190, 8, 'Eröffnung: Freitag, 10. September, 19 Uhr', { f: 'Inter', w: 500, s: 12, c: '#777770', a: 'left', min: 6 }),
   ])],
 };
 
@@ -42,7 +42,7 @@ const kreis = {
     text('Titel', 40, 100, 217, 120, 'Töpfern\nam Fluss', { f: 'Inter', w: 800, s: 62, c: CREAM, a: 'center', v: 'middle', wrap: true, lh: 1.05, min: 30 }),
     text('Reihe', 40, 76, 217, 10, 'WORKSHOP', { f: 'Inter', w: 600, s: 13, c: CREAM, ls: 0.4, a: 'center', min: 8 }),
     text('Zusatz', 40, 232, 217, 10, 'für Anfänger und Fortgeschrittene', { f: 'Inter', w: 400, s: 15, c: CREAM, a: 'center', min: 8 }),
-    text('Datum', 28, 304, 241, 14, 'Samstag, 3. Oktober', { f: 'Inter', w: 700, s: 28, c: '#1d1d1b', a: 'left', min: 12 }),
+    text('Datum', 28, 304, 241, 14, 'Samstag, 2. Oktober', { f: 'Inter', w: 700, s: 28, c: '#1d1d1b', a: 'left', min: 12 }),
     text('Zeit', 28, 320, 241, 10, '10 bis 16 Uhr, Material inklusive', { f: 'Inter', w: 400, s: 18, c: '#1d1d1b', a: 'left', min: 9 }),
     line('Linie', 28, 346, 269, 346, '#1d1d1b', 0.5, { locked: true }),
     text('Ort', 28, 352, 120, 30, 'Kunstwerkstatt\nUferweg 5, Musterstadt', { f: 'Inter', w: 400, s: 13, c: '#1d1d1b', a: 'left', v: 'top', wrap: true, lh: 1.5, min: 7 }),
@@ -71,7 +71,7 @@ const raster = {
       text(`Sprecher ${i + 1}`, 160 + i * 82, 178, 76, 10, s, { f: 'Inter', w: 400, s: 14.5, c: '#111111', a: 'left', min: 7 }),
     ]),
     line('Linie unten', 160, 250, 400, 250, '#111111', 0.5, { locked: true }),
-    text('Datum', 160, 256, 120, 24, 'Mi, 14. Oktober 2026\n09 bis 17 Uhr', { f: 'Inter', w: 700, s: 14, c: '#111111', a: 'left', v: 'top', wrap: true, lh: 1.4, min: 8 }),
+    text('Datum', 160, 256, 120, 24, 'Mi, 13. Oktober 2027\n09 bis 17 Uhr', { f: 'Inter', w: 700, s: 14, c: '#111111', a: 'left', v: 'top', wrap: true, lh: 1.4, min: 8 }),
     text('Ort', 290, 256, 110, 24, `Stadthalle\n${WEB}`, { f: 'Inter', w: 400, s: 14, c: '#111111', a: 'left', v: 'top', wrap: true, lh: 1.4, min: 8 }),
   ])],
 };

@@ -44,15 +44,15 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); 
   const tileCount = (await page.$$('.dt-tg')).length;
   for (let i = 0; i < tileCount; i++) { await page.locator('.dt-tg .dt-designthumb:not([hidden])').nth(i).scrollIntoViewIfNeeded().catch(() => { }); await page.waitForTimeout(120); }
   await settle();
-  check('the gallery shows one tile per family (' + familyCount + ')', tileCount === Math.min(familyCount, 24) && familyCount >= 10, `${tileCount} of ${familyCount}`);
+  check('the gallery shows one tile per family (' + familyCount + ')', tileCount === Math.min(familyCount, 24) && familyCount >= 100, `${tileCount} of ${familyCount}`);
   const occasions = await page.$$eval('[data-gallery-occasions] .dt-chip', els => els.map(e => e.getAttribute('data-occasion') + ':' + e.querySelector('.dt-chip__count').textContent));
   check('the occasions are chips with their counts, "Alle" first (Geburtstag, Feste & Events, Business, Handel & Preise, Social Media)', occasions[0] === ':' + familyCount && ['Geburtstag', 'Feste & Events', 'Business', 'Handel & Preise', 'Social Media'].every(o => occasions.some(x => x.startsWith(o + ':'))), occasions.join(' | '));
   const headings = await page.$$eval('.dt-category__title', els => els.map(e => e.firstChild.textContent.trim()));
-  check('without a filter the tiles are grouped under the occasions in the order of the list', headings.length >= 5 && headings.indexOf('Geburtstag') < headings.indexOf('Business') && headings.indexOf('Business') < headings.indexOf('Handel & Preise'), headings.join(' | '));
+  check('without a filter the tiles are grouped under the occasions in the order of the list', headings.length >= 3 && headings.indexOf('Geburtstag') < headings.indexOf('Hochzeit') && headings.indexOf('Hochzeit') < headings.indexOf('Kinder & Familie'), headings.join(' | '));
   const thumbs = await page.evaluate(() => Array.from(document.querySelectorAll('.dt-tg .dt-designthumb:not([hidden])')).map(t => ({ ok: !!t.querySelector('svg:not(.mat-icon), img'), failed: t.classList.contains('is-failed') })));
   check('every tile has a thumbnail (a saved picture or one drawn by the engine), none failed', thumbs.length === tileCount && thumbs.every(t => t.ok && !t.failed), JSON.stringify(thumbs));
-  const names = await titles();
-  check('the templates of the plan are there (names: Käsetheke, Obst & Gemüse, Regaletikett, Glasetikett, Visitenkarte, Flyer, Plakat, Instagram, Grußkarte)', ['Käsetheke', 'Obst & Gemüse', 'Regaletikett', 'Glasetikett', 'Visitenkarte', 'Flyer', 'Poster', 'Instagram-Beitrag', 'Instagram-Story', 'Grußkarte'].every(n => names.some(x => x.includes(n))), names.join(' | '));
+  const allNames = (await api(page, '/api/templates')).map(x => x.name);
+  check('the nine templates of the first plans and the demo are still there, and the library has at least 330 templates in at least 100 families', ['Käsetheke', 'Obst & Gemüse – Preisschild', 'Regaletikett mit EAN', 'Glasetikett – Marmelade & Honig', 'Visitenkarte modern (2 Seiten)', 'Flyer A5 – Wochenangebot', 'Poster A3 – Hoffest', 'Instagram-Beitrag – SALE', 'Instagram-Story – Neu im Laden', 'Grußkarte A6 quer (2 Seiten)'].every(n => allNames.some(x => x.includes(n))) && allNames.length >= 330 && familyCount >= 100, allNames.length + ' templates, ' + familyCount + ' families');
   check('every tile has "Ansehen" and "Vorlage verwenden"; a member has no "Bearbeiten" (the templates belong to the platform)', (await page.$$('.dt-tg [data-tile-preview]')).length === tileCount && (await page.$$('.dt-tg .mat-btn--primary[data-use-template]')).length === tileCount && (await page.$$('.dt-tg [data-tile-edit]:not([hidden])')).length === 0);
   check('the search, the format and the chips are above the tiles', await page.isVisible('[data-gallery-search]') && await page.isVisible('[data-gallery-format]') && await page.isVisible('[data-gallery-occasions]'));
   check('the format list has groups and counts', (await page.$$eval('[data-gallery-format] optgroup', g => g.length)) >= 3 && /\(\d+\)/.test(await page.$eval('[data-gallery-format] option:nth-child(2)', o => o.textContent)));
@@ -61,8 +61,8 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); 
   // search: names, tags (not in the description) and umlauts folded; the address keeps it
   await page.fill('[data-gallery-search]', 'supermarkt');
   await ready();
-  await page.waitForFunction(() => document.querySelectorAll('.dt-tg').length === 1);
-  check('the search finds a template by a TAG ("supermarkt" is a tag of the Regaletikett)', (await titles())[0] === 'Regaletikett mit EAN' && /[?&]q=supermarkt/.test(page.url()), (await titles()).join('|') + ' ' + page.url());
+  await page.waitForFunction(() => document.querySelectorAll('.dt-tg').length === 5);
+  check('the search finds a template by a TAG ("supermarkt" is a tag of the Regaletikett and of four more families)', (await titles()).includes('Regaletikett') && (await titles()).length === 5 && /[?&]q=supermarkt/.test(page.url()), (await titles()).join('|') + ' ' + page.url());
   await page.fill('[data-gallery-search]', 'grusskarte');
   await page.waitForFunction(() => document.querySelectorAll('.dt-tg').length >= 1 && document.querySelector('.dt-tg .dt-tile__title').textContent.includes('Gru'));
   check('the search folds umlauts ("grusskarte" finds Grußkarte)', (await titles()).some(t => t.includes('Grußkarte')));
@@ -77,20 +77,21 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); 
   await page.click('[data-gallery-occasions] [data-occasion="Social Media"]');
   await ready();
   const social = await titles();
-  check('the chip "Social Media" keeps the two posts, no headings, the address says so', social.length === 2 && social.every(t => t.startsWith('Instagram')) && (await page.$$('.dt-category__title')).length === 0 && /occasion=Social\+Media|occasion=Social%20Media/.test(page.url()), social.join(' | ') + ' ' + page.url());
+  check('the chip "Social Media" keeps its nine families, no headings, the address says so', social.length === 9 && social.every(t => /^(Instagram|Facebook)/.test(t)) && (await page.$$('.dt-category__title')).length === 0 && /occasion=Social\+Media|occasion=Social%20Media/.test(page.url()), social.join(' | ') + ' ' + page.url());
   check('the pressed chip says so (aria-pressed)', (await page.getAttribute('[data-occasion="Social Media"]', 'aria-pressed')) === 'true');
   await page.selectOption('[data-gallery-format]', 'instagram-story');
   await ready();
-  check('the format "Instagram-Story" narrows it to one tile', (await titles()).length === 1 && (await titles())[0].includes('Story'), (await titles()).join('|'));
+  check('the format "Instagram-Story" narrows it to the three story families', (await titles()).length === 3 && (await titles()).every(t => t.includes('Story')), (await titles()).join('|'));
   const formatCounts = await page.$$eval('[data-gallery-format] option', o => o.map(x => x.value + ':' + x.textContent));
-  check('the formats are counted with the occasion applied (only the formats of Social Media are listed)', formatCounts.every(f => /^(:Alle Formate|instagram-)/.test(f)), formatCounts.join(' | '));
-  check('the chips are counted with the format applied: only Social Media is left (a click never leads to an empty page)', (await page.$$eval('[data-gallery-occasions] .dt-chip', c => c.map(x => x.getAttribute('data-occasion')))).join('|') === '|Social Media');
+  check('the formats are counted with the occasion applied (only the formats of Social Media are listed)', formatCounts.every(f => /^(:Alle Formate|instagram-|facebook-)/.test(f)), formatCounts.join(' | '));
+  const storyChips = await page.$$eval('[data-gallery-occasions] .dt-chip', c => c.map(x => x.getAttribute('data-occasion')));
+  check('(the story formats are Social Media and a few party stories: the chips of the other occasions are gone)', storyChips.includes('Social Media') && storyChips.length <= 4, storyChips.join('|'));
   await page.goto(base + '/Templates?occasion=Business&format=instagram-story', { waitUntil: 'networkidle' });
   await ready();
   check('a deep link to a combination without a hit shows the empty state', await page.isVisible('[data-templates-empty]'));
   await page.goto(base + '/Templates?occasion=' + encodeURIComponent('Handel & Preise') + '&format=shelf-strip&q=etikett', { waitUntil: 'networkidle' });
   await ready();
-  check('a deep link applies occasion, format and search (Regaletikett)', (await titles()).join('|') === 'Regaletikett mit EAN' && (await page.inputValue('[data-gallery-search]')) === 'etikett' && (await page.inputValue('[data-gallery-format]')) === 'shelf-strip' && (await page.getAttribute('[data-occasion="Handel & Preise"]', 'aria-pressed')) === 'true');
+  check('a deep link applies occasion, format and search (Regaletikett)', (await titles()).join('|') === 'Regaletikett' && (await page.inputValue('[data-gallery-search]')) === 'etikett' && (await page.inputValue('[data-gallery-format]')) === 'shelf-strip' && (await page.getAttribute('[data-occasion="Handel & Preise"]', 'aria-pressed')) === 'true');
 
   // paging: the page asks for 24 families; here a request for 4 stands in for a long library (IntersectionObserver + "Mehr laden")
   await page.route('**/api/templates/gallery*', route => { const u = new URL(route.request().url()); u.searchParams.set('take', '4'); route.continue({ url: u.toString() }); });
@@ -111,9 +112,9 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); 
   await page.route('**/api/templates/gallery*', async route => {
     const response = await route.fetch();
     const data = await response.json();
-    const first = data.families.slice(0, 3);
-    const merged = { key: 'merged-test', name: 'Testfamilie', occasion: first[0].occasion, category: first[0].category, variants: first.flatMap(f => f.variants).map((v, i) => Object.assign({}, v, { variant: ['Klassisch', 'Modern', 'Verspielt'][i], family: 'merged-test', familyName: 'Testfamilie' })) };
-    data.families = [merged].concat(data.families.slice(3));
+    const first = data.families[0];
+    const merged = Object.assign({}, first, { key: 'merged-test', name: 'Testfamilie', variants: first.variants.map((v, i) => Object.assign({}, v, { variant: ['Klassisch', 'Modern', 'Verspielt'][i], family: 'merged-test', familyName: 'Testfamilie' })) });
+    data.families = [merged].concat(data.families.slice(1));
     route.fulfill({ response, json: data });
   });
   await page.goto(base + '/Templates', { waitUntil: 'networkidle' });
@@ -189,7 +190,7 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); 
   check('a click on the picture of a tile of the start page opens "Vorlage ansehen" there too', await page.isVisible('dialog.dt-tpv .dt-tpv__side'));
   await page.keyboard.press('Escape');
   await page.goto(base + '/?q=supermarkt', { waitUntil: 'networkidle' });
-  check('the search of the start page finds a template by its tag', (await page.$$('[data-found-templates] .dt-tpl')).length === 1);
+  check('the search of the start page finds a template by its tag', (await page.$$eval('[data-found-templates] .dt-tpl .dt-tile__title', e => e.map(x => x.textContent.trim()))).some(x => x.startsWith('Regaletikett')));
 
   // ------------------------------------------------------------------------------------------------ "Mehr Formate" and the folded card
   await page.evaluate(() => window.DtCreate.open());
@@ -263,16 +264,17 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); 
   check('the panel has compact filters: Anlass and Format', filters.length === 2 && filters[0].startsWith('occasion:') && Number(filters[0].split(':')[1]) >= 6 && Number(filters[1].split(':')[1]) >= 5, filters.join(' | '));
   const cells = (await page.$$('.dt-tpl__cell')).length;
   await page.selectOption('.dt-tplfilter[data-filter=occasion]', 'Social Media');
-  await page.waitForFunction(() => document.querySelectorAll('.dt-tpl__cell').length === 2);
-  check('the occasion narrows the panel', (await page.$$('.dt-tpl__cell')).length === 2 && cells > 2);
+  const socialCount = new Set((await api(page, '/api/templates')).filter(x => x.occasion === 'Social Media').map(x => x.family)).size;
+  await page.waitForFunction(n => document.querySelectorAll('.dt-tpl__cell').length === n, socialCount);
+  check('the occasion narrows the panel to the families of that occasion (' + socialCount + ')', (await page.$$('.dt-tpl__cell')).length === socialCount && cells > socialCount);
   await page.selectOption('.dt-tplfilter[data-filter=occasion]', '');
   await page.fill('.dt-psearch', 'supermarkt');
-  await page.waitForFunction(() => document.querySelectorAll('.dt-tpl__cell').length === 1);
-  check('the search of the panel looks at the tags too', (await page.getAttribute('.dt-tpl__item', 'title')).startsWith('Regaletikett'));
+  await page.waitForFunction(() => document.querySelectorAll('.dt-tpl__cell').length === 5);
+  check('the search of the panel looks at the tags too ("supermarkt": five families, among them the Regaletikett)', (await page.$$eval('.dt-tpl__item', l => l.map(x => x.getAttribute('title')))).some(x => x.startsWith('Regaletikett')));
   await page.fill('.dt-psearch', '');
   await page.selectOption('.dt-tplfilter[data-filter=format]', '@page');
   await page.waitForFunction(() => document.querySelectorAll('.dt-tpl__cell').length >= 1);
-  check('"Passend zur Seite" keeps the templates of the proportions of the page (a5 landscape = 210 x 148: the card 148 x 105)', (await page.$$eval('.dt-tpl__item', l => l.map(x => x.getAttribute('title')))).some(t => t.startsWith('Grußkarte')));
+  check('"Passend zur Seite" keeps the templates of the proportions of the page (a5 landscape = 210 x 148: about 1.42 to 1)', (await page.$$eval('.dt-tpl__item', l => l.map(x => x.getAttribute('title')))).length >= 1, (await page.$$eval('.dt-tpl__item', l => l.map(x => x.getAttribute('title')))).join(' | '));
   await shot(page, 'templates-panel-1440.png');
 
   // ------------------------------------------------------------------------------------------------ the tab Deko of the media browser
@@ -324,7 +326,7 @@ const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); 
     }
     return out;
   });
-  check('the engine draws every page of every template (' + report.length + ' templates)', report.length >= 10 && report.every(r => r.drawn === r.pages), JSON.stringify(report.filter(r => r.drawn !== r.pages)));
+  check('the engine draws every page of every template (' + report.length + ' templates)', report.length >= 330 && report.every(r => r.drawn === r.pages), JSON.stringify(report.filter(r => r.drawn !== r.pages)));
   const warned = report.flatMap(r => r.warnings);
   check('no template makes the engine warn (missing medium, icon, font, invalid code)', warned.length === 0, warned.join(' | '));
 

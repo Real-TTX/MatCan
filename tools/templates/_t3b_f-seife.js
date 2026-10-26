@@ -7,13 +7,13 @@ const fields = [
   field('Zusatz', 'Zusatz', 'text', 'Handgemachte Naturseife'),
   field('Zutaten', 'Zutaten', 'text', 'Olivenöl, Kokosöl, Sheabutter, Honig, Lavendelöl'),
   field('Gewicht', 'Gewicht', 'text', '100 g'),
-  field('Hersteller', 'Hersteller', 'text', 'Seifenmanufaktur Wiesengrund'),
+  field('Hersteller', 'Hersteller', 'text', 'Manufaktur Wiesengrund'),
 ];
 const sampleRows = [
-  { Produkt: 'Lavendel & Honig', Zusatz: 'Handgemachte Naturseife', Zutaten: 'Olivenöl, Kokosöl, Sheabutter, Honig, Lavendelöl', Gewicht: '100 g', Hersteller: 'Seifenmanufaktur Wiesengrund' },
-  { Produkt: 'Orange, Zimt und Nelke', Zusatz: 'Handgemachte Peelingseife mit Mohn', Zutaten: 'Sonnenblumenöl, Kokosöl, Sheabutter, Mohn, Orangenöl, Zimt, Nelke, Kaolin', Gewicht: '120 g', Hersteller: 'Seifenmanufaktur Wiesengrund' },
+  { Produkt: 'Lavendel & Honig', Zusatz: 'Handgemachte Naturseife', Zutaten: 'Olivenöl, Kokosöl, Sheabutter, Honig, Lavendelöl', Gewicht: '100 g', Hersteller: 'Manufaktur Wiesengrund' },
+  { Produkt: 'Orange, Zimt und Nelke', Zusatz: 'Handgemachte Peelingseife mit Mohn', Zutaten: 'Sonnenblumenöl, Kokosöl, Sheabutter, Mohn, Orangenöl, Zimt, Nelke, Kaolin', Gewicht: '120 g', Hersteller: 'Manufaktur Wiesengrund' },
   { Produkt: 'Pur', Zusatz: 'ohne Duft', Zutaten: 'Olivenöl, Kokosöl', Gewicht: '90 g', Hersteller: '' },
-  { Produkt: 'Rose', Zusatz: '', Zutaten: '', Gewicht: '100 g', Hersteller: 'Seifenmanufaktur Wiesengrund' },
+  { Produkt: 'Rose', Zusatz: '', Zutaten: '', Gewicht: '100 g', Hersteller: 'Manufaktur Wiesengrund' },
 ];
 
 const common = {
@@ -32,11 +32,11 @@ const botanisch = {
     deko('Lavendel', 'deko-blumen-lavendel-navy', 5, 5, 14.5, undefined, { locked: true }),
     text('Kopf', 24, 6, 41, 3.4, 'Naturseife', { f: 'Raleway', s: 7, w: 600, c: PLUM, up: true, ls: 0.26, min: 5.5 }),
     text('Produkt', 24, 10.4, 42, 15, '{{Produkt}}', { f: 'Cormorant Garamond', s: 21, w: 700, c: '#2e2540', v: 'top', wrap: true, lh: 1, fit: 'shrink', min: 10 }),
-    text('Zusatz', 24, 26, 42, 4.4, '{{Zusatz}}', { f: 'Cormorant Garamond', s: 9, i: true, w: 500, c: '#6a5f78', min: 6.5, showIf: 'Zusatz' }),
+    text('Zusatz', 24, 26, 40, 4.4, '{{Zusatz}}', { f: 'Cormorant Garamond', s: 9, i: true, w: 500, c: '#6a5f78', min: 6.5, showIf: 'Zusatz' }),
     line('Trenner', 24, 31.6, 66, 31.6, '#cfc4dc', 0.3),
     text('Zutaten', 24, 32.8, 42, 8.6, '{{Zutaten}}', { f: 'Raleway', s: 7, c: '#4a4358', v: 'top', wrap: true, lh: 1.25, min: 5.5, showIf: 'Zutaten' }),
-    text('Gewicht', 24, 42.6, 16, 4, '{{Gewicht}}', { f: 'Raleway', s: 7.5, w: 800, c: PLUM, min: 6 }),
-    text('Hersteller', 38, 42.6, 28, 4, '{{Hersteller}}', { f: 'Raleway', s: 7, w: 500, c: '#6a5f78', a: 'right', min: 5.5, showIf: 'Hersteller' }),
+    text('Gewicht', 24, 42.6, 12, 4, '{{Gewicht}}', { f: 'Raleway', s: 7.5, w: 800, c: PLUM, min: 6 }),
+    text('Hersteller', 34, 42.6, 32, 4, '{{Hersteller}}', { f: 'Raleway', s: 7, w: 500, c: '#6a5f78', a: 'right', min: 5.5, showIf: 'Hersteller' }),
   ])],
 };
 
@@ -68,7 +68,7 @@ const apotheke = {
     rect('Kopfband', 2.4, 2.4, 65.2, 8.6, '#111111', { locked: true }),
     text('Kopf', 5, 2.4, 30, 8.6, 'NATURSEIFE', { f: 'IBM Plex Mono', s: 8, w: 700, c: '#ffffff', ls: 0.12, min: 6 }),
     text('Nr', 40, 2.4, 25.6, 8.6, '{{Gewicht}}', { f: 'IBM Plex Mono', s: 8, w: 700, c: '#ffffff', a: 'right', min: 6 }),
-    text('Produkt', 5, 12.4, 60, 11, '{{Produkt}}', { f: 'Josefin Sans', s: 17, w: 600, c: '#111111', up: true, ls: 0.06, lh: 1, min: 8 }),
+    text('Produkt', 5, 12.4, 58.5, 11, '{{Produkt}}', { f: 'Josefin Sans', s: 17, w: 600, c: '#111111', up: true, ls: 0.06, lh: 1, min: 8 }),
     text('Zusatz', 5, 23.4, 60, 4, '{{Zusatz}}', { f: 'IBM Plex Mono', s: 7, c: '#555555', min: 5.5, showIf: 'Zusatz' }),
     line('Linie 1', 2.4, 28.6, 67.6, 28.6, '#111111', 0.3, { locked: true }),
     text('Zutaten Titel', 5, 29.4, 14, 3.8, 'Inhalt', { f: 'IBM Plex Mono', s: 7, w: 700, c: '#111111', min: 5.5 }),

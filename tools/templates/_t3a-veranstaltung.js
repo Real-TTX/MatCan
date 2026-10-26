@@ -23,12 +23,12 @@ const bildflaeche = {
     rect('Streifen', 0, 92, 148, 3, ORANGE, { locked: true }),
     group('Datumsplakette', [
       ellipse('Plakette', 10, 74, 36, 36, ORANGE),
-      text('Tag', 12, 80, 32, 14, '14', { f: 'Poppins', w: 700, s: 28, c: '#ffffff', a: 'center', lh: 1.2, min: 14 }),
+      text('Tag', 12, 80, 32, 14, '12', { f: 'Poppins', w: 700, s: 28, c: '#ffffff', a: 'center', lh: 1.2, min: 14 }),
       text('Monat', 12, 94, 32, 6, 'JUNI', { f: 'Poppins', w: 600, s: 10, c: TEAL, a: 'center', ls: 0.16, min: 7 }),
     ], { rotation: -6 }),
     text('Titel', 12, 113, 124, 26, 'Kulturabend\nim Stadtgarten', { f: 'Poppins', w: 700, s: 22, c: TEAL, a: 'left', v: 'top', wrap: true, lh: 1.15, min: 14 }),
     text('Beschreibung', 12, 141, 124, 12, 'Livemusik, Lesung und Mitmachaktionen für die ganze Familie.', { f: 'Source Sans 3', s: 11, c: '#4b5b60', a: 'left', v: 'top', wrap: true, lh: 1.35, min: 8 }),
-    infoRow('Datum', 'calendar', 12, 158, 124, 'Wann', `Samstag, 14. Juni  ·  ab ${typo.time('17:00')}`, { c: TEAL, icolor: ORANGE, vs: 11, lc: '#7a8a8f' }),
+    infoRow('Datum', 'calendar', 12, 158, 124, 'Wann', `Samstag, 12. Juni  ·  ab ${typo.time('17:00')}`, { c: TEAL, icolor: ORANGE, vs: 11, lc: '#7a8a8f' }),
     infoRow('Ort', 'map-pin', 12, 170, 124, 'Wo', 'Stadtgarten, Parkallee 3, Musterstadt', { c: TEAL, icolor: ORANGE, vs: 11, lc: '#7a8a8f' }),
     infoRow('Eintritt', 'ticket', 12, 182, 124, 'Eintritt', 'Frei, Spenden willkommen', { c: TEAL, icolor: ORANGE, vs: 11, lc: '#7a8a8f' }),
     rect('Fuß', 0, 199, 148, 11, TEAL, { locked: true }),
@@ -50,10 +50,10 @@ const typografisch = {
   pages: [page(BLACK, [
     text('Zeile 1', 10, 10, 128, 36, 'KULTUR', { f: 'Anton', s: 100, c: '#ffffff', lh: 1.15, a: 'left', min: 50 }),
     text('Zeile 2', 10, 44, 128, 36, 'NACHT', { f: 'Anton', s: 100, c: BLACK, outline: { color: LIME, width: 1.6 }, lh: 1.15, a: 'left', min: 50 }),
-    text('Zeile 3', 10, 78, 128, 36, '2026', { f: 'Anton', s: 100, c: LIME, lh: 1.15, a: 'left', min: 50 }),
+    text('Zeile 3', 10, 78, 128, 36, '2027', { f: 'Anton', s: 100, c: LIME, lh: 1.15, a: 'left', min: 50 }),
     rect('Balken', 12, 123, 124, 1.2, LIME, { locked: true }),
     text('Rubriken', 12, 129, 124, 24, 'Konzerte  /  Lesungen  /  Theater  /  Ausstellungen  /  Tanz', { f: 'Inter', w: 500, s: 12, c: '#ffffff', a: 'left', v: 'top', wrap: true, lh: 1.5, min: 8 }),
-    text('Datum', 12, 160, 90, 12, 'Sa, 12. September', { f: 'Anton', s: 26, c: LIME, a: 'left', lh: 1.15, min: 14 }),
+    text('Datum', 12, 160, 90, 12, 'Sa, 11. September', { f: 'Anton', s: 26, c: LIME, a: 'left', lh: 1.15, min: 14 }),
     text('Zeit', 12, 172, 90, 8, `18${typo.dash}24 Uhr`, { f: 'Inter', w: 600, s: 14, c: '#ffffff', a: 'left', min: 9 }),
     text('Ort', 12, 182, 90, 12, 'Altstadt Musterstadt\nTreffpunkt Marktplatz', { f: 'Inter', s: 9.5, c: '#bdbdbd', a: 'left', v: 'top', wrap: true, lh: 1.4, min: 7 }),
     group('Plakette', [
@@ -90,7 +90,7 @@ const geometrisch = {
     text('Anlass', 9, 14, 50, 6, 'Einladung zum', { f: 'Raleway', w: 600, s: 10, c: '#ffffff', up: true, ls: 0.2, min: 7 }),
     text('Titel', 9, 44, 82, 50, 'LICHTER\nFEST', { f: 'Raleway', w: 800, s: 38, c: '#ffffff', a: 'left', v: 'bottom', wrap: true, lh: 1.05, min: 20 }),
     rect('Datum Streifen', 0, 104, 99, 14, PINK, { locked: true }),
-    text('Datum', 9, 104, 81, 14, `Freitag, 23. Oktober  ·  19 Uhr`, { f: 'Raleway', w: 700, s: 11, c: '#ffffff', a: 'left', min: 8 }),
+    text('Datum', 9, 104, 81, 14, `Freitag, 22. Oktober  ·  19 Uhr`, { f: 'Raleway', w: 700, s: 11, c: '#ffffff', a: 'left', min: 8 }),
     text('Programm Titel', 9, 126, 81, 6, 'Programm', { f: 'Raleway', w: 700, s: 8, c: '#8a6fa8', up: true, ls: 0.2, min: 6 }),
     slot(1, 135, '19:00', 'Laternenumzug'),
     slot(2, 148, '20:00', 'Feuershow'),
@@ -98,7 +98,7 @@ const geometrisch = {
     text('Eintritt', 9, 178, 81, 7, 'Eintritt frei', { f: 'Raleway', w: 800, s: 15, c: MINT, a: 'left', min: 9 }),
     text('Adresse', 9, 187, 81, 12, 'Festplatz am Schloss\nSchlossallee 1, Musterstadt', { f: 'Raleway', s: 8.5, c: '#5a4a6e', a: 'left', v: 'top', wrap: true, lh: 1.4, min: 6 }),
     rect('Fuß', 0, 202, 99, 8, VIOLET, { locked: true }),
-    text('Web', 9, 202, 81, 8, WEB, { f: 'Raleway', w: 600, s: 8, c: '#ffffff', a: 'left', min: 6 }),
+    text('Web', 9, 199.5, 81, 8, WEB, { f: 'Raleway', w: 600, s: 8, c: '#ffffff', a: 'left', min: 6 }),
   ])],
 };
 

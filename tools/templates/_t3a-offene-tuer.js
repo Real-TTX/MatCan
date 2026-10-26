@@ -29,7 +29,7 @@ const einladung = {
     text('Ort', 12, 64, 92, 7, 'Vereinsheim Eintracht Musterstadt', { f: 'Poppins', s: 9, c: '#cfe0ff', a: 'left', min: 6 }),
     group('Datum', [
       rect('Datum Fläche', 12, 86, 124, 22, YEL, { radius: 4 }),
-      text('Datum', 12, 86, 124, 22, `Samstag, 21. März  ·  10${typo.dash}16 Uhr`, { f: 'Poppins', w: 700, s: 15, c: '#1c2a4a', a: 'center', min: 8 }),
+      text('Datum', 12, 86, 124, 22, `Samstag, 20. März  ·  10${typo.dash}16 Uhr`, { f: 'Poppins', w: 700, s: 15, c: '#1c2a4a', a: 'center', min: 8 }),
     ]),
     text('Programm Kopf', 14, 116, 120, 5, 'PROGRAMM', { f: 'Poppins', w: 700, s: 8, c: '#6b7aa0', ls: 0.2, a: 'left', min: 5 }),
     time(1, 123, '10:00', 'Begrüßung und Rundgang'),
@@ -61,7 +61,7 @@ const schule = {
     text('Titel', 18, 36, 112, 76, 'Tür\nauf!', { f: 'Fredoka', w: 700, s: 92, c: PLUM, a: 'left', v: 'top', wrap: true, lh: 0.98, min: 40 }),
     text('Untertitel', 20, 118, 170, 24, 'Tag der offenen Tür für alle Kinder und Eltern, die unsere Schule kennenlernen möchten.', { f: 'Fredoka', s: 17, c: '#4a3550', a: 'left', v: 'top', wrap: true, lh: 1.35, min: 10 }),
     rect('Datum', 20, 150, 170, 26, PLUM, { radius: 13 }),
-    text('Datum Text', 20, 150, 170, 26, `Samstag, 14. Februar  ·  10${typo.dash}13 Uhr`, { f: 'Fredoka', w: 600, s: 24, c: '#ffffff', a: 'center', min: 12 }),
+    text('Datum Text', 20, 150, 170, 26, `Samstag, 13. Februar  ·  10${typo.dash}13 Uhr`, { f: 'Fredoka', w: 600, s: 24, c: '#ffffff', a: 'center', min: 12 }),
     ...[['book-open', 'Schnupperunterricht', 'für Vorschulkinder in der ersten Klasse'], ['palette', 'Mitmachwerkstätten', 'Basteln, Experimentieren und Musik'], ['coffee', 'Elterncafé', 'Kaffee, Kuchen und Gespräche mit dem Kollegium'], ['school', 'Rundgang', 'durch Klassenzimmer, Turnhalle und Hort']].map(([ic, t, s], i) => [
       ellipse(`Punkt ${i + 1} Kreis`, 22, 190 + i * 21, 15, 15, i % 2 ? CORAL : PLUM),
       icon(`Punkt ${i + 1} Symbol`, ic, 25.2, 193.2 + i * 21, 8.6, '#ffffff', 2),
@@ -88,7 +88,7 @@ const betrieb = {
     text('Etikett', 9, 20, 79, 6, 'TAG DER OFFENEN TÜR', { f: 'Oswald', w: 500, s: 10, c: AMBER, ls: 0.2, a: 'left', min: 6 }),
     text('Titel', 9, 28, 82, 52, 'BLICK\nHINTER DIE\nKULISSEN', { f: 'Oswald', w: 700, s: 29, c: '#ffffff', a: 'left', v: 'top', wrap: true, lh: 1.08, min: 16 }),
     icon('Zahnrad', 'settings', 66, 90, 22, AMBER, 1.4, { opacity: 0.9 }),
-    text('Datum', 9, 90, 56, 14, 'Sa, 6. Juni', { f: 'Oswald', w: 600, s: 21, c: AMBER, a: 'left', min: 10 }),
+    text('Datum', 9, 90, 56, 14, 'Sa, 5. Juni', { f: 'Oswald', w: 600, s: 21, c: AMBER, a: 'left', min: 10 }),
     text('Zeit', 9, 103, 56, 7, `10${typo.dash}15 Uhr`, { f: 'Source Sans 3', w: 600, s: 11, c: '#ffffff', a: 'left', min: 7 }),
     line('Linie', 9, 118, 89, 118, '#3a3f4a', 0.4),
     ...[['10:30', 'Werksführung'], ['12:00', 'Imbiss vom Grill'], ['13:30', 'Ausbildung live'], ['14:30', 'Gewinnspiel']].map(([t, l], i) => [

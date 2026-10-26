@@ -14,7 +14,7 @@
     "fields": [
       {"key":"Name","label":"Name","type":"text","sample":"Emma Wagner","decimals":null,"category":null,"required":false},
       {"key":"Klasse","label":"Klasse","type":"text","sample":"5b","decimals":null,"category":null,"required":false},
-      {"key":"Schuljahr","label":"Schuljahr","type":"text","sample":"2026/27","decimals":null,"category":null,"required":false}
+      {"key":"Schuljahr","label":"Schuljahr","type":"text","sample":"2027/28","decimals":null,"category":null,"required":false}
     ],
     "pages": [
       {"id":"p1","name":"Stundenplan","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
@@ -81,8 +81,8 @@
     ]
   },
   "sampleRows": [
-    {"Name":"Emma Wagner","Klasse":"5b","Schuljahr":"2026/27"},
-    {"Name":"Maximilian Schneider-Hohenstein","Klasse":"10 d (Gymnasium)","Schuljahr":"2026/2027"},
+    {"Name":"Emma Wagner","Klasse":"5b","Schuljahr":"2027/28"},
+    {"Name":"Maximilian Schneider-Hohenstein","Klasse":"10 d (Gymnasium)","Schuljahr":"2027/2028"},
     {"Name":"","Klasse":"","Schuljahr":""}
   ]
 }

@@ -91,10 +91,10 @@ module.exports = family({
   formatKey: 'a4-landscape',
   width: 297,
   height: 210,
-  fields: [field('Name', 'Name', 'text', 'Emma Wagner'), field('Klasse', 'Klasse', 'text', '5b'), field('Schuljahr', 'Schuljahr', 'text', '2026/27')],
+  fields: [field('Name', 'Name', 'text', 'Emma Wagner'), field('Klasse', 'Klasse', 'text', '5b'), field('Schuljahr', 'Schuljahr', 'text', '2027/28')],
   sampleRows: [
-    { Name: 'Emma Wagner', Klasse: '5b', Schuljahr: '2026/27' },
-    { Name: 'Maximilian Schneider-Hohenstein', Klasse: '10 d (Gymnasium)', Schuljahr: '2026/2027' },
+    { Name: 'Emma Wagner', Klasse: '5b', Schuljahr: '2027/28' },
+    { Name: 'Maximilian Schneider-Hohenstein', Klasse: '10 d (Gymnasium)', Schuljahr: '2027/2028' },
     { Name: '', Klasse: '', Schuljahr: '' },
   ],
 }, [

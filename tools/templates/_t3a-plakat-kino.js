@@ -51,7 +51,7 @@ const vintage = {
     text('Starburst Text', 196, 182, 68, 36, 'Eintritt\n6 €', { f: 'Abril Fatface', s: 22, c: '#f2e6cc', a: 'center', v: 'middle', wrap: true, lh: 1.05, min: 10, rotation: 12 }),
     text('Unter', 30, 184, 150, 12, 'Drei Filmklassiker unter freiem Himmel', { f: 'Libre Baskerville', i: true, s: 16, c: DARK, a: 'left', min: 9 }),
     line('Linie', 30, 206, 267, 206, DARK, 1, { locked: true }),
-    ...[['Fr, 17. Juli', 'Das Appartement'], ['Fr, 24. Juli', 'Ein Herz und eine Krone'], ['Fr, 31. Juli', 'Der dritte Mann']].map(([d, f], i) => [
+    ...[['Fr, 16. Juli', 'Das Appartement'], ['Fr, 23. Juli', 'Ein Herz und eine Krone'], ['Fr, 30. Juli', 'Der dritte Mann']].map(([d, f], i) => [
       text(`Datum ${i + 1}`, 30, 218 + i * 36, 80, 14, d, { f: 'Libre Baskerville', w: 700, s: 18, c: RED, a: 'left', min: 9 }),
       text(`Film ${i + 1}`, 30, 232 + i * 36, 237, 18, f, { f: 'Abril Fatface', s: 30, c: DARK, a: 'left', min: 14 }),
     ]),
@@ -83,7 +83,7 @@ const neon = {
     text('Anlass', 20, 22, 380, 12, 'EINE LANGE NACHT VOLLER SCIENCE-FICTION', { f: 'Oswald', w: 400, s: 18, c: NEON, ls: 0.45, a: 'center', min: 9 }),
     text('Titel', 10, 40, 400, 90, 'MIDNIGHT', { f: 'Anton', s: 200, c: '#0a0612', outline: { color: NEON, width: 2.4 }, a: 'center', lh: 1, min: 80 }),
     text('Untertitel', 20, 134, 380, 18, 'DIE FILMNACHT', { f: 'Anton', s: 48, c: '#ffffff', ls: 0.3, a: 'center', min: 20 }),
-    text('Datum', 20, 164, 380, 12, 'Samstag, 7. November  ·  ab 20 Uhr  ·  Kulturzentrum Musterstadt', { f: 'Oswald', w: 500, s: 18, c: '#ffe9fb', ls: 0.15, a: 'center', min: 9 }),
+    text('Datum', 20, 164, 380, 12, 'Samstag, 6. November  ·  ab 20 Uhr  ·  Kulturzentrum Musterstadt', { f: 'Oswald', w: 500, s: 18, c: '#ffe9fb', ls: 0.15, a: 'center', min: 9 }),
     text('Filme', 20, 262, 380, 14, 'Drei Filme  ·  Snacks und Getränke  ·  Sitzsäcke  ·  Eintritt 12 €', { f: 'Oswald', w: 400, s: 16, c: '#ffffff', ls: 0.2, a: 'center', min: 8 }),
   ])],
 };

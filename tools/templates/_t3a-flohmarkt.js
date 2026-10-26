@@ -19,7 +19,7 @@ const kraftpapier = {
   tags: ['Flyer', 'Flohmarkt', 'Trödelmarkt', 'Garagenflohmarkt', 'Hofflohmarkt', 'Aushang', 'Kraftpapier', 'Plakat', 'Schnäppchen'],
   pages: [page(KRAFT, [
     text('Großer', 30, 20, 80, 18, 'Der große', { f: 'Caveat', w: 700, s: 46, c: RED, a: 'left', min: 20, rotation: -5 }),
-    text('Titel', 10, 34, 190, 46, 'FLOHMARKT', { f: 'Permanent Marker', s: 100, c: INK, a: 'center', lh: 1.1, min: 50 }),
+    text('Titel', 16, 34, 178, 46, 'FLOHMARKT', { f: 'Permanent Marker', s: 100, c: INK, a: 'center', lh: 1.1, min: 50 }),
     rect('Unterstrich', 62, 82, 86, 1.6, RED, { locked: true, rotation: -1.2 }),
     text('Untertitel', 20, 90, 170, 14, 'Trödeln, Stöbern, Schnäppchen finden', { f: 'Caveat', w: 700, s: 34, c: INK, a: 'center', min: 18 }),
     text('Rubriken', 15, 108, 180, 8, 'KLEIDUNG  ·  BÜCHER  ·  SPIELZEUG  ·  HAUSHALT  ·  DEKO', { f: 'Source Sans 3', w: 700, s: 11, c: INK, a: 'center', ls: 0.12, min: 7 }),
@@ -27,7 +27,7 @@ const kraftpapier = {
       rect('Zettel Papier', 22, 130, 166, 74, PAPER, { shadow: shadow('#3b2a1a', 0.3, 3, 0.5, 1) }),
       rect('Klebeband links', 14, 128, 30, 9, '#f2dc8a', { opacity: 0.85, rotation: -35 }),
       rect('Klebeband rechts', 166, 128, 30, 9, '#f2dc8a', { opacity: 0.85, rotation: 35 }),
-      text('Datum', 30, 140, 150, 17, 'Samstag, 12. September', { f: 'Permanent Marker', s: 30, c: INK, a: 'center', min: 14 }),
+      text('Datum', 30, 140, 150, 17, 'Samstag, 11. September', { f: 'Permanent Marker', s: 30, c: INK, a: 'center', min: 14 }),
       text('Uhrzeit', 30, 160, 150, 12, 'von 9 bis 16 Uhr', { f: 'Caveat', w: 700, s: 32, c: RED, a: 'center', min: 16 }),
       text('Ort', 30, 176, 150, 20, 'Schulhof der Grundschule\nSchulstraße 4, 12345 Musterstadt', { f: 'Source Sans 3', w: 600, s: 13, c: '#4a3b2c', a: 'center', v: 'top', wrap: true, lh: 1.4, min: 8 }),
     ], { rotation: -1.5 }),
@@ -41,7 +41,7 @@ const kraftpapier = {
     infoRow('Aufbau', 'clock', 24, 248, 110, '', 'Aufbau ab 7 Uhr', { c: INK, vs: 12, vw: 600, ic: 6.5 }),
     infoRow('Anmeldung', 'phone', 24, 259, 110, '', `Anmeldung unter ${PHONE}`, { c: INK, vs: 12, vw: 600, ic: 6.5 }),
     rect('Fußband', 0, 281, 210, 16, INK, { locked: true }),
-    text('Hinweis', 14, 281, 182, 16, 'Bei schlechtem Wetter findet der Flohmarkt in der Turnhalle statt.', { f: 'Caveat', w: 700, s: 17, c: KRAFT, a: 'center', min: 10 }),
+    text('Hinweis', 14, 275, 182, 16, 'Bei schlechtem Wetter findet der Flohmarkt in der Turnhalle statt.', { f: 'Caveat', w: 700, s: 17, c: KRAFT, a: 'center', min: 10 }),
   ])],
 };
 
@@ -64,7 +64,7 @@ const plakativ = {
     group('Datum', [
       ellipse('Datum Kreis', 92, 132, 46, 46, BLK),
       text('Datum Wochentag', 94, 140, 42, 6, 'SAMSTAG', { f: 'Source Sans 3', w: 700, s: 8, c: '#ffffff', a: 'center', ls: 0.16, min: 6 }),
-      text('Datum Tag', 94, 145, 42, 17, '12.9.', { f: 'Anton', s: 32, c: YEL, a: 'center', lh: 1.1, min: 16 }),
+      text('Datum Tag', 94, 145, 42, 17, '11.9.', { f: 'Anton', s: 32, c: YEL, a: 'center', lh: 1.1, min: 16 }),
       text('Datum Zeit', 94, 162, 42, 6, '9–16 Uhr', { f: 'Source Sans 3', w: 700, s: 9, c: '#ffffff', a: 'center', min: 6 }),
     ], { rotation: 8 }),
     text('Ort Titel', 10, 134, 78, 8, 'WO?', { f: 'Anton', s: 20, c: BLK, a: 'left', min: 10 }),
@@ -94,7 +94,7 @@ const pastell = {
     rect('Titelpille', 14, 44, 120, 34, PINK, { radius: 17, shadow: shadow('#8a4a5a', 0.25, 4, 0, 1.2) }),
     text('Titel', 16, 45, 116, 32, 'Flohmarkt', { f: 'Fredoka', w: 700, s: 54, c: '#ffffff', a: 'center', lh: 1.15, min: 24 }),
     text('Untertitel', 14, 84, 120, 9, 'für Kinderkleidung & Spielzeug', { f: 'Fredoka', w: 500, s: 16, c: DARK, a: 'center', min: 10 }),
-    infoRow('Datum', 'calendar-days', 20, 102, 108, 'Wann', `Sonntag, 20. September, 10${typo.dash}14 Uhr`, { f: 'Fredoka', lf: 'Fredoka', c: DARK, icolor: '#ffffff', disc: MINTY, ic: 6, discSize: 10, vs: 11, vw: 500, lc: '#8a8f98', gap: 3.5 }),
+    infoRow('Datum', 'calendar-days', 20, 102, 108, 'Wann', `Sonntag, 19. September, 10${typo.dash}14 Uhr`, { f: 'Fredoka', lf: 'Fredoka', c: DARK, icolor: '#ffffff', disc: MINTY, ic: 6, discSize: 10, vs: 11, vw: 500, lc: '#8a8f98', gap: 3.5 }),
     infoRow('Ort', 'map-pin', 20, 120, 108, 'Wo', 'Gemeindesaal St. Martin, Kirchweg 2', { f: 'Fredoka', lf: 'Fredoka', c: DARK, icolor: '#ffffff', disc: PINK, ic: 6, discSize: 10, vs: 11, vw: 500, lc: '#8a8f98', gap: 3.5 }),
     infoRow('Stand', 'tag', 20, 138, 108, 'Stand', 'Tisch 5 €, ein Kuchen für das Buffet', { f: 'Fredoka', lf: 'Fredoka', c: DARK, icolor: '#ffffff', disc: '#f4a261', ic: 6, discSize: 10, vs: 11, vw: 500, lc: '#8a8f98', gap: 3.5 }),
     rect('Anmeldung Feld', 18, 160, 112, 26, '#fff1f4', { radius: 6 }),

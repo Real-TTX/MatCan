@@ -34,6 +34,6 @@ module.exports = {
     line('Trennlinie', 80, 944, 1000, 944, '#ffffff', 1.5, { opacity: 0.55 }),
     icon('Pfeil', 'arrow-right', 80, 975, 44, '#ffffff', 2.4),
     text('Adresse', 140, 969, 520, 52, 'www.wiesengrund.example', { f: 'Montserrat', s: 16, w: 700, c: '#ffffff', min: 10 }),
-    text('Bis', 660, 969, 340, 52, 'bis Samstag, 8.11.', { f: 'Montserrat', s: 14, w: 500, c: '#ffffff', a: 'right', min: 9 }),
+    text('Bis', 660, 969, 340, 52, 'bis Samstag, 6.11.', { f: 'Montserrat', s: 15, w: 500, c: '#ffffff', a: 'right', min: 15 }),
   ])],
 };

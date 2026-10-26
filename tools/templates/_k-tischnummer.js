@@ -33,7 +33,7 @@ const salbei = tpl(Object.assign({}, META, {
     dk('Kranz', S.wreath, 6, 26, 93),
     ctext('Tisch', 52.5, 46, 60, 7, 'TISCH', { f: S.caps, s: 9, w: 600, c: S.accent, ls: 0.4, min: 5 }),
     ctext('Nummer', 52.5, 54, 60, 36, '{{Tisch}}', { f: S.serif, s: 80, w: 500, c: S.ink, lh: 1, min: 34 }),
-    ctext('Namen', 52.5, 128, 80, 6, 'ANNA & JONAS', { f: S.caps, s: 6.5, w: 600, c: S.accent, ls: 0.34, min: 4 }),
+    ctext('Namen', 52.5, 128, 80, 6, 'ANNA & JONAS', { f: S.caps, s: 7, w: 600, c: S.accent, ls: 0.34, min: 7 }),
   ], 'Tischnummer')],
 }));
 
@@ -48,7 +48,7 @@ const minimal = tpl(Object.assign({}, META, {
     text('Tisch', 12, 14, 60, 7, 'TISCH', { f: M.caps, s: 10, w: 600, c: M.accent, ls: 0.5, min: 5 }),
     text('Nummer', 4, 22, 97, 90, '{{Tisch}}', { f: M.caps, s: 200, w: 200, c: M.ink, lh: 1, a: 'center', min: 70 }),
     text('Namen', 12, 124, 80, 6, 'ANNA & JONAS', { f: M.caps, s: 7.5, w: 400, c: M.ink, ls: 0.34, min: 5 }),
-    text('Datum', 12, 132, 80, 5, C.dateNum, { f: M.caps, s: 6.5, w: 600, c: M.accent, ls: 0.3, min: 4 }),
+    text('Datum', 12, 132, 80, 5, C.dateNum, { f: M.caps, s: 7, w: 600, c: M.accent, ls: 0.3, min: 7 }),
   ], 'Tischnummer')],
 }));
 

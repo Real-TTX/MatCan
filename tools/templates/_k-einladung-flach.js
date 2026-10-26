@@ -9,7 +9,7 @@ const INTRO = 'Wir heiraten und möchten diesen besonderen Tag gemeinsam mit euc
 /** A line of the info page: an icon, a heading and a text. */
 const infoRow = (n, x, y, w, ic, head, body, st, o = {}) => [
   icon('Symbol ' + n, ic, x, y + 0.5, o.iconSize || 7, st.accent, 1.5),
-  text('Überschrift ' + n, x + (o.indent || 11), y, w - (o.indent || 11), 6, head, { f: st.caps, s: o.hs || 7.5, w: 600, c: st.accent, ls: 0.24, min: 5 }),
+  text('Überschrift ' + n, x + (o.indent || 11), y, w - (o.indent || 11), 6, head, { f: st.caps, s: o.hs || 7.5, w: 600, c: st.accent, ls: 0.24, min: 7 }),
   text('Text ' + n, x + (o.indent || 11), y + 6.5, w - (o.indent || 11), o.bh || 12, body, { f: st.sans, s: o.bs || 10.5, w: 500, c: st.ink, wrap: true, v: 'top', lh: 1.4, min: 6 }),
 ];
 
@@ -72,10 +72,10 @@ const salbei = tpl(Object.assign({}, META, {
       dk('Zweig oben', S.stem, 4, 4, 9),
       dk('Zweig unten', S.stem, 86, 160, 9, undefined, { flipY: true }),
       ctext('Titel', 49.5, 20, 80, 14, 'Gut zu wissen', { f: S.script, s: 26, c: S.ink, min: 12 }),
-      ...infoRow(1, 14, 46, 74, 'map-pin', 'ANFAHRT', 'Gut Birkenhof, Birkenallee 4,\n12345 Musterstadt. Parkplätze sind ausgeschildert.', S, { bh: 20, hs: 6.5, bs: 10 }),
-      ...infoRow(2, 14, 84, 74, 'shirt', 'DRESSCODE', 'Festlich, gern in sommerlichen Farben.', S, { hs: 6.5, bs: 10, bh: 14 }),
-      ...infoRow(3, 14, 112, 74, 'bed-double', 'ÜBERNACHTUNG', 'Zimmer im Gasthof Linde, Stichwort „Hochzeit“.', S, { hs: 6.5, bs: 10, bh: 14 }),
-      ...infoRow(4, 14, 140, 74, 'mail-check', 'RÜCKMELDUNG', 'Bitte bis zum 1. Mai 2027\nanna.jonas@example.org', S, { hs: 6.5, bs: 10, bh: 14 }),
+      ...infoRow(1, 14, 46, 74, 'map-pin', 'ANFAHRT', 'Gut Birkenhof, Birkenallee 4,\n12345 Musterstadt. Parkplätze sind ausgeschildert.', S, { bh: 20, hs: 7, bs: 10 }),
+      ...infoRow(2, 14, 84, 74, 'shirt', 'DRESSCODE', 'Festlich, gern in sommerlichen Farben.', S, { hs: 7, bs: 10, bh: 14 }),
+      ...infoRow(3, 14, 112, 74, 'bed-double', 'ÜBERNACHTUNG', 'Zimmer im Gasthof Linde, Stichwort „Hochzeit“.', S, { hs: 7, bs: 10, bh: 14 }),
+      ...infoRow(4, 14, 140, 74, 'mail-check', 'RÜCKMELDUNG', 'Bitte bis zum 1. Mai 2027\nanna.jonas@example.org', S, { hs: 7, bs: 10, bh: 14 }),
       ctext('Gruß', 49.5, 174, 80, 14, 'Wir freuen uns auf euch', { f: S.script, s: 20, c: S.ink, min: 10 }),
     ], 'Rückseite'),
   ],

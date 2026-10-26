@@ -104,7 +104,7 @@ const rubin = (() => {
         ellipse('Plakette', 48, 74, 26, 26, WINE), ellipse('Plakette Ring', 49.5, 75.5, 23, 23, null, { stroke: GOLD, sw: 0.8 }),
       ]),
       text('Jahre', 48, 79, 26, 13, '{{Jahre}}', { f: 'Playfair Display', s: 20, w: 700, c: '#ffffff', a: 'center', min: 9 }),
-      text('Jahre Wort', 48, 91, 26, 6, 'JAHRE', { f: 'Montserrat', s: 5.5, w: 700, c: GOLD, a: 'center', ls: 0.2, min: 4.5 }),
+      text('Jahre Wort', 48, 91, 26, 6, 'JAHRE', { f: 'Montserrat', s: 7, w: 700, c: GOLD, a: 'center', ls: 0.2, min: 7 }),
       text('Kopf', 92, 16, 106, 7, 'WIR LADEN EIN ZUR', { f: 'Montserrat', s: 8, w: 700, c: WINE, a: 'left', ls: 0.25, min: 6 }),
       text('Art', 92, 24, 108, 20, '{{Art}}', { f: 'Playfair Display', s: 28, w: 700, c: INK, a: 'left', min: 12 }),
       text('Namen', 92, 45, 108, 14, '{{Namen}}', { f: 'Playfair Display', s: 19, w: 400, i: true, c: WINE, a: 'left', min: 9 }),

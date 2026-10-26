@@ -26,7 +26,7 @@ const landhaus = {
     text('Inhalt', 6, 36.4, 24, 5.6, '{{Inhalt}}', { f: 'Lora', s: 10, w: 700, c: BERRY, a: 'right', min: 7 }),
     ellipse('Punkt', 34.2, 38.4, 1.6, 1.6, ROSE, { locked: true }),
     text('Datum', 38.4, 36.4, 28, 5.6, '{{Datum}}', { f: 'Lora', s: 8, c: '#7a5560', a: 'left', min: 6, showIf: 'Datum' }),
-    text('Hinweis', 6, 43.4, 58, 3.8, 'Kühl und dunkel lagern', { f: 'Lora', s: 6.5, i: true, c: '#a58a92', a: 'center', min: 5.5 }),
+    text('Hinweis', 6, 42.4, 58, 3.8, 'Kühl und dunkel lagern', { f: 'Lora', s: 7, i: true, c: '#a58a92', a: 'center', min: 7 }),
   ])],
 };
 
@@ -39,13 +39,13 @@ const modern = {
   tags: ['Modern', 'Grün', 'Senf', 'Kräftig', 'Chutney', 'Senf', 'Pesto', 'QR-Code'],
   pages: [page('#ffffff', [
     rect('Streifen', 0, 0, 13, 50, GR, { locked: true }),
-    text('Erzeuger', -15.5, 20.5, 44, 9, '{{Erzeuger}}', { f: 'Montserrat', s: 7, w: 700, c: '#ffffff', a: 'center', up: true, ls: 0.16, rotation: -90, min: 5.5 }),
-    text('Etikett', 17, 5.4, 36, 3.6, 'Aus eigener Küche', { f: 'Montserrat', s: 6.5, w: 700, c: GR, up: true, ls: 0.16, min: 5.5 }),
-    text('Produkt', 17, 10, 50, 14, '{{Produkt}}', { f: 'Poppins', s: 20, w: 700, c: '#111111', v: 'middle', lh: 1.08, min: 9 }),
+    text('Erzeuger', -13.5, 20.5, 40, 9, '{{Erzeuger}}', { f: 'Montserrat', s: 7, w: 700, c: '#ffffff', a: 'center', up: true, ls: 0.16, rotation: -90, min: 7 }),
+    text('Etikett', 17, 5.4, 36, 3.6, 'Aus eigener Küche', { f: 'Montserrat', s: 7, w: 700, c: GR, up: true, ls: 0.16, min: 7 }),
+    text('Produkt', 17, 10, 48.5, 14, '{{Produkt}}', { f: 'Poppins', s: 20, w: 700, c: '#111111', v: 'middle', lh: 1.08, min: 9 }),
     text('Sorte', 17, 25.8, 50, 4.4, '{{Sorte}}', { f: 'Montserrat', s: 8, w: 500, c: '#5c6b64', min: 6, showIf: 'Sorte' }),
     ellipse('Inhalt Kreis', 17, 32.4, 14.5, 14.5, MU, { locked: true }),
     text('Inhalt', 17.4, 35.6, 13.7, 8, '{{Inhalt}}', { f: 'Poppins', s: 8.5, w: 700, c: '#111111', a: 'center', min: 5.5 }),
-    text('Datum', 33.4, 33.4, 18, 12, '{{Datum}}', { f: 'Montserrat', s: 6.5, w: 500, c: '#5c6b64', v: 'middle', wrap: true, lh: 1.3, min: 5, showIf: 'Datum' }),
+    text('Datum', 33.4, 33.4, 18, 12, '{{Datum}}', { f: 'Montserrat', s: 7, w: 500, c: '#5c6b64', v: 'middle', wrap: true, lh: 1.3, min: 7, showIf: 'Datum' }),
     qr('QR-Code', 53.2, 32.6, 13.6, '{{URL}}', { c: GR, bg: null, ecc: 'M', quiet: false, showIf: 'URL' }),
   ])],
 };

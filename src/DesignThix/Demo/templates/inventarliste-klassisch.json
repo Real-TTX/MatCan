@@ -14,7 +14,7 @@
     "fields": [
       {"key":"Organisation","label":"Organisation","type":"text","sample":"Jugendtreff Südstadt","decimals":null,"category":null,"required":false},
       {"key":"Bereich","label":"Bereich / Raum","type":"text","sample":"Geräteraum","decimals":null,"category":null,"required":false},
-      {"key":"Stand","label":"Stand","type":"text","sample":"Oktober 2026","decimals":null,"category":null,"required":false}
+      {"key":"Stand","label":"Stand","type":"text","sample":"Oktober 2027","decimals":null,"category":null,"required":false}
     ],
     "pages": [
       {"id":"p1","name":"Inventarliste","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
@@ -90,8 +90,8 @@
     ]
   },
   "sampleRows": [
-    {"Organisation":"Jugendtreff Südstadt","Bereich":"Geräteraum","Stand":"Oktober 2026"},
-    {"Organisation":"Freiwillige Feuerwehr Musterstadt-Neuenhagen","Bereich":"Lager im Keller, Regalreihe C bis F","Stand":"31. Dezember 2026"},
+    {"Organisation":"Jugendtreff Südstadt","Bereich":"Geräteraum","Stand":"Oktober 2027"},
+    {"Organisation":"Freiwillige Feuerwehr Musterstadt-Neuenhagen","Bereich":"Lager im Keller, Regalreihe C bis F","Stand":"31. Dezember 2027"},
     {"Organisation":"","Bereich":"","Stand":""}
   ]
 }

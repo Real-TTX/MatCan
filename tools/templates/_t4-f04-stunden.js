@@ -50,11 +50,11 @@ module.exports = family({
   formatKey: 'a4-portrait',
   width: 210,
   height: 297,
-  fields: [field('Name', 'Name', 'text', 'Mia Hartmann'), field('Monat', 'Monat', 'text', 'November 2026'), field('Abteilung', 'Abteilung', 'text', 'Service')],
+  fields: [field('Name', 'Name', 'text', 'Mia Hartmann'), field('Monat', 'Monat', 'text', 'November 2027'), field('Abteilung', 'Abteilung', 'text', 'Service')],
   sampleRows: [
-    { Name: 'Mia Hartmann', Monat: 'November 2026', Abteilung: 'Service' },
-    { Name: 'Maximilian Schneider-Hohenstein', Monat: 'Dezember 2026', Abteilung: 'Lager und Versand' },
-    { Name: 'Jo Li', Monat: 'Januar 2027', Abteilung: '' },
+    { Name: 'Mia Hartmann', Monat: 'November 2027', Abteilung: 'Service' },
+    { Name: 'Maximilian Schneider-Hohenstein', Monat: 'Dezember 2027', Abteilung: 'Lager und Versand' },
+    { Name: 'Jo Li', Monat: 'Januar 2028', Abteilung: '' },
   ],
 }, [
   {

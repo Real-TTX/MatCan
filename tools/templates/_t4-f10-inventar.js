@@ -43,10 +43,10 @@ module.exports = family({
   formatKey: 'a4-portrait',
   width: 210,
   height: 297,
-  fields: [field('Organisation', 'Organisation', 'text', 'Jugendtreff Südstadt'), field('Bereich', 'Bereich / Raum', 'text', 'Geräteraum'), field('Stand', 'Stand', 'text', 'Oktober 2026')],
+  fields: [field('Organisation', 'Organisation', 'text', 'Jugendtreff Südstadt'), field('Bereich', 'Bereich / Raum', 'text', 'Geräteraum'), field('Stand', 'Stand', 'text', 'Oktober 2027')],
   sampleRows: [
-    { Organisation: 'Jugendtreff Südstadt', Bereich: 'Geräteraum', Stand: 'Oktober 2026' },
-    { Organisation: 'Freiwillige Feuerwehr Musterstadt-Neuenhagen', Bereich: 'Lager im Keller, Regalreihe C bis F', Stand: '31. Dezember 2026' },
+    { Organisation: 'Jugendtreff Südstadt', Bereich: 'Geräteraum', Stand: 'Oktober 2027' },
+    { Organisation: 'Freiwillige Feuerwehr Musterstadt-Neuenhagen', Bereich: 'Lager im Keller, Regalreihe C bis F', Stand: '31. Dezember 2027' },
     { Organisation: '', Bereich: '', Stand: '' },
   ],
 }, [

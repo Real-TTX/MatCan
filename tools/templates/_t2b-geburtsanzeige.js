@@ -47,7 +47,7 @@ const kranz = (() => {
         text('Datum', 33, 68, 52, 10, '{{Datum}}', { f: 'Raleway', s: 11, w: 600, c: INK, a: 'left', min: 7 }),
         text('Gewicht', 33, 82, 52, 10, '{{Gewicht}}', { f: 'Raleway', s: 11, w: 600, c: INK, a: 'left', min: 7 }),
         text('Größe', 33, 96, 52, 10, '{{Groesse}}', { f: 'Raleway', s: 11, w: 600, c: INK, a: 'left', min: 7 }),
-        text('Eltern', 8, 120, 89, 8, 'Es freuen sich\n' + PARENTS, { f: 'Raleway', s: 9.5, w: 600, c: INK, a: 'center', wrap: true, v: 'top', lh: 1.4, min: 7 }),
+        text('Eltern', 8, 120, 89, 10, 'Es freuen sich\n' + PARENTS, { f: 'Raleway', s: 9.5, w: 600, c: INK, a: 'center', wrap: true, v: 'top', lh: 1.4, min: 7 }),
         text('Adresse', 8, 134, 89, 6, ADDR, { f: 'Raleway', s: 7.5, w: 500, c: SAGE, a: 'center', min: 6 }),
       ], 'Rückseite'),
     ],
@@ -101,7 +101,7 @@ const hallo = (() => {
     rect('Chip ' + label, x, 74, 38, 22, '#ffffff', { radius: 11, stroke: '#f0d6c0', sw: 0.5, locked: true }),
     icon('Symbol ' + label, iconName, x + 4, 79.5, 11, TEAL, 1.7, { locked: true }),
     text('Wert ' + label, x + 15.5, 75.5, 21, 10, '{{' + key + '}}', { f: 'Fredoka', s: 9, w: 600, c: INK, a: 'left', min: 5.5 }),
-    text('Etikett ' + label, x + 15.5, 85, 21, 6, label, { f: 'Nunito', s: 6.5, w: 700, c: TEAL, a: 'left', min: 5, up: true, ls: 0.1 }),
+    text('Etikett ' + label, x + 15.5, 85, 21, 6, label, { f: 'Nunito', s: 7, w: 700, c: TEAL, a: 'left', min: 7, up: true, ls: 0.1 }),
   ];
   return Object.assign({}, base, {
     slug: 'geburtsanzeige-hallo-welt',
@@ -121,7 +121,7 @@ const hallo = (() => {
       text('Name', 10, 26, 128, 30, '{{Name}}!', { f: 'Fredoka', s: 52, w: 700, c: INK, a: 'left', min: 20 }),
       text('Text', 10, 57, 128, 12, 'Wir sind überglücklich über unser kleines Wunder.', { f: 'Nunito', s: 10.5, w: 700, c: INK, a: 'left', min: 7 }),
       ...chip(10, 'calendar-heart', 'Datum', 'Geboren'), ...chip(54, 'scale', 'Gewicht', 'Gewicht'), ...chip(98, 'ruler', 'Groesse', 'Größe'),
-      text('Eltern', 10, 98, 128, 5, 'Anna und Tom Mustermann · Musterweg 5 · 12345 Musterstadt', { f: 'Nunito', s: 7.5, w: 600, c: TEAL, a: 'left', min: 5.5 }),
+      text('Eltern', 10, 96.5, 128, 5, 'Anna und Tom Mustermann · Musterweg 5 · 12345 Musterstadt', { f: 'Nunito', s: 7.5, w: 600, c: TEAL, a: 'left', min: 5.5 }),
     ])],
   });
 })();

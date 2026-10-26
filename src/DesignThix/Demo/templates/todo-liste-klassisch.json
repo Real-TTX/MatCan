@@ -12,7 +12,7 @@
   "document": {
     "schema":2,"unit":"mm","width":210,"height":297,"dpi":300,"locale":"de-DE",
     "fields": [
-      {"key":"Datum","label":"Datum","type":"text","sample":"Montag, 26. Oktober 2026","decimals":null,"category":null,"required":false}
+      {"key":"Datum","label":"Datum","type":"text","sample":"Montag, 25. Oktober 2027","decimals":null,"category":null,"required":false}
     ],
     "pages": [
       {"id":"p1","name":"To-do-Liste","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
@@ -194,8 +194,8 @@
     ]
   },
   "sampleRows": [
-    {"Datum":"Montag, 26. Oktober 2026"},
-    {"Datum":"Kalenderwoche 44 · 26. Oktober bis 1. November 2026"},
+    {"Datum":"Montag, 25. Oktober 2027"},
+    {"Datum":"Kalenderwoche 43 · 25. bis 31. Oktober 2027"},
     {"Datum":""}
   ]
 }

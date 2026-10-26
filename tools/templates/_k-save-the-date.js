@@ -44,11 +44,11 @@ const salbei = tpl(Object.assign({}, META, {
   pages: [
     page(S.bg, [
       dk('Kranz', S.wreath, 28, 8, 92),
-      ctext('Save the Date', 74, 27, 60, 6, 'SAVE THE DATE', { f: S.caps, s: 6.5, w: 600, c: S.accent, ls: 0.34, min: 4 }),
+      ctext('Save the Date', 74, 27, 60, 6, 'SAVE THE DATE', { f: S.caps, s: 7, w: 600, c: S.accent, ls: 0.34, min: 7 }),
       ctext('Namen', 74, 34, 60, 17, C.couple, { f: S.script, s: 29, c: S.ink, min: 14 }),
       line('Strich', 64, 55, 84, 55, S.line, 0.3, { locked: true }),
       ctext('Datum', 74, 56.5, 60, 9, C.dateShort, { f: S.serif, s: 15, w: 600, c: S.ink, min: 8 }),
-      ctext('Ort', 74, 66, 60, 6, C.place.toUpperCase(), { f: S.caps, s: 6, w: 400, c: S.accent, ls: 0.24, min: 4 }),
+      ctext('Ort', 74, 66, 60, 6, C.place.toUpperCase(), { f: S.caps, s: 7, w: 400, c: S.accent, ls: 0.24, min: 7 }),
     ], 'Vorderseite'),
     page(S.bg, [
       dk('Ecke oben', S.corner, 2, 2, 46),
@@ -75,13 +75,13 @@ const minimal = tpl(Object.assign({}, META, {
       line('Linie', 58, 14, 58, 86, M.ink, 0.25, { locked: true }),
       text('Save the Date', 64, 14, 30, 14, 'SAVE\nTHE\nDATE', { f: M.caps, s: 8, w: 600, c: M.ink, ls: 0.3, wrap: true, lh: 1.5, v: 'top', min: 5 }),
       text('Namen', 64, 62, 32, 14, 'ANNA\n&\nJONAS', { f: M.caps, s: 8, w: 300, c: M.ink, ls: 0.3, wrap: true, lh: 1.5, v: 'top', min: 5 }),
-      text('Ort', 64, 80, 32, 6, C.city.toUpperCase(), { f: M.caps, s: 6, w: 400, c: M.accent, ls: 0.24, min: 4 }),
+      text('Ort', 64, 80, 32, 6, C.city.toUpperCase(), { f: M.caps, s: 7, w: 400, c: M.accent, ls: 0.24, min: 7 }),
     ], 'Vorderseite'),
     page(M.soft, [
       ctext('Titel', 50, 24, 76, 18, 'Wir heiraten.', { f: M.serif, s: 26, i: true, w: 400, c: M.ink, min: 14 }),
       line('Linie', 44, 47, 56, 47, M.accent, 0.5, { locked: true }),
       ctext('Text', 50, 52, 66, 24, 'Bitte merkt euch den ' + C.dateShort + ' vor. Die Einladung folgt.', { f: M.sans, s: 8.5, w: 400, c: M.ink, wrap: true, v: 'top', lh: 1.7, min: 6 }),
-      ctext('Ort', 50, 82, 70, 6, C.place.toUpperCase() + ' · ' + C.city.toUpperCase(), { f: M.caps, s: 6, w: 600, c: M.ink, ls: 0.24, min: 4 }),
+      ctext('Ort', 50, 82, 70, 6, C.place.toUpperCase() + ' · ' + C.city.toUpperCase(), { f: M.caps, s: 7, w: 600, c: M.ink, ls: 0.24, min: 7 }),
     ], 'Rückseite'),
   ],
 }));

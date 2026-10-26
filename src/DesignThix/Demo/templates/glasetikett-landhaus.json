@@ -15,7 +15,7 @@
       {"key":"Produkt","label":"Produkt","type":"text","sample":"Waldhonig","decimals":null,"category":null,"required":true},
       {"key":"Sorte","label":"Sorte oder Zusatz","type":"text","sample":"Sommertracht, cremig","decimals":null,"category":null,"required":false},
       {"key":"Inhalt","label":"Inhalt","type":"text","sample":"500 g","decimals":null,"category":null,"required":false},
-      {"key":"Datum","label":"Abgefüllt","type":"text","sample":"Abgefüllt 07/2026","decimals":null,"category":null,"required":false},
+      {"key":"Datum","label":"Abgefüllt","type":"text","sample":"Abgefüllt 07/2027","decimals":null,"category":null,"required":false},
       {"key":"Erzeuger","label":"Erzeuger","type":"text","sample":"Imkerei Sonnenhang","decimals":null,"category":null,"required":false},
       {"key":"URL","label":"Internetadresse für den QR-Code","type":"text","sample":"https://example.org/honig","decimals":null,"category":null,"required":false}
     ],
@@ -29,14 +29,14 @@
         {"id":"e6","type":"text","name":"Inhalt","x":6,"y":36.4,"w":24,"h":5.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Inhalt}}","fontFamily":"Lora","fontSize":10,"fontWeight":700,"italic":false,"color":"#b3394f","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
         {"id":"e7","type":"shape","name":"Punkt","x":34.2,"y":38.4,"w":1.6,"h":1.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#e7a1ae","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
         {"id":"e8","type":"text","name":"Datum","x":38.4,"y":36.4,"w":28,"h":5.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Datum","flipX":false,"flipY":false,"shadow":null,"text":"{{Datum}}","fontFamily":"Lora","fontSize":8,"fontWeight":400,"italic":false,"color":"#7a5560","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
-        {"id":"e9","type":"text","name":"Hinweis","x":6,"y":43.4,"w":58,"h":3.8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Kühl und dunkel lagern","fontFamily":"Lora","fontSize":6.5,"fontWeight":400,"italic":true,"color":"#a58a92","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+        {"id":"e9","type":"text","name":"Hinweis","x":6,"y":42.4,"w":58,"h":3.8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Kühl und dunkel lagern","fontFamily":"Lora","fontSize":7,"fontWeight":400,"italic":true,"color":"#a58a92","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
       ]}
     ]
   },
   "sampleRows": [
-    {"Produkt":"Waldhonig","Sorte":"Sommertracht, cremig","Inhalt":"500 g","Datum":"Abgefüllt 07/2026","Erzeuger":"Imkerei Sonnenhang","URL":"https://example.org/honig"},
-    {"Produkt":"Erdbeermarmelade","Sorte":"mit 60 % Frucht","Inhalt":"250 g","Datum":"Abgefüllt 06/2026","Erzeuger":"Hofladen Wiesengrund","URL":"https://example.org/erdbeere"},
+    {"Produkt":"Waldhonig","Sorte":"Sommertracht, cremig","Inhalt":"500 g","Datum":"Abgefüllt 07/2027","Erzeuger":"Imkerei Sonnenhang","URL":"https://example.org/honig"},
+    {"Produkt":"Erdbeermarmelade","Sorte":"mit 60 % Frucht","Inhalt":"250 g","Datum":"Abgefüllt 06/2027","Erzeuger":"Hofladen Wiesengrund","URL":"https://example.org/erdbeere"},
     {"Produkt":"Holunder-Gelee","Sorte":"Herbstlese","Inhalt":"200 g","Datum":"","Erzeuger":"Hofladen Wiesengrund","URL":"https://example.org/gelee"},
-    {"Produkt":"Quittenkonfitüre","Sorte":"","Inhalt":"250 g","Datum":"Abgefüllt 10/2026","Erzeuger":"","URL":""}
+    {"Produkt":"Quittenkonfitüre","Sorte":"","Inhalt":"250 g","Datum":"Abgefüllt 10/2027","Erzeuger":"","URL":""}
   ]
 }

@@ -60,7 +60,7 @@ const kreativ = {
     deko('Sonne', 'deko-formen-sonne-bunt', 1590, 120, 230, undefined, { locked: true }),
     text('Kicker', 120, 190, 900, 60, 'Workshop', { f: 'Poppins', s: 21, w: 700, c: '#ffffff', up: true, ls: 0.2, background: { color: '#e8553d', radius: 36, padding: 28 }, wrap: false, fit: 'none' }),
     text('Titel', 120, 310, 1050, 380, 'Ideen, die ins Rollen kommen', { f: 'Poppins', s: 84, w: 800, c: '#2a1a4a', v: 'top', wrap: true, lh: 1.08, fit: 'shrink', min: 40 }),
-    text('Untertitel', 120, 720, 1000, 90, 'Gemeinsam entwickeln wir Projekte für unsere Stadt', { f: 'Poppins', s: 30, w: 500, c: '#4a3a6a', v: 'top', wrap: true, lh: 1.3, min: 18 }),
+    text('Untertitel', 120, 720, 1000, 112, 'Gemeinsam entwickeln wir Projekte für unsere Stadt', { f: 'Poppins', s: 30, w: 500, c: '#4a3a6a', v: 'top', wrap: true, lh: 1.3, min: 18 }),
     text('Sprecher', 120, 900, 800, 56, 'Mit Anna Beispiel und Jo Kurz', { f: 'Poppins', s: 22, w: 700, c: '#e8553d', min: 12 }),
     text('Datum', 120, 960, 800, 50, '12. Juni 2027 · Kulturhaus', { f: 'Poppins', s: 20, w: 400, c: '#4a3a6a', min: 12 }),
   ])],

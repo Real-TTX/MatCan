@@ -2,7 +2,7 @@
 /* Family: Weihnachtsfeier (Firma, Verein). Variants: Tannengrün (DIN lang), Winternacht (Plakat A3), Gemütlich (A6 quer). The host (company, club) is a field. */
 const D = require('./dsl');
 const { decor, scatter, cloud, infoRow } = require('./_t2b-lib');
-const { text, rect, ellipse, shape, icon, deko, dekoIn, page, gradient, field, line, shadow } = D;
+const { text, rect, ellipse, shape, icon, deko, dekoWindow, dekoIn, page, gradient, field, line, shadow } = D;
 
 const fields = [field('Firma', 'Firma oder Verein', 'text', 'Mustermann GmbH')];
 const sampleRows = [{ Firma: 'Mustermann GmbH' }, { Firma: 'Turn- und Sportverein Oberhausen-Niederweiler 1897 e. V.' }, { Firma: 'Kita Sonnenschein' }];
@@ -57,7 +57,7 @@ const winter = (() => {
     formatKey: 'poster-a3-portrait', width: 297, height: 420,
     pages: [page(gradient(170, '#0c1638', '#27418a'), [
       decor([
-        deko('Sterne', 'deko-sterne-himmel-weiss', 0, 0, 297, undefined, { opacity: 0.2 }),
+        dekoWindow('Sterne', 'deko-sterne-himmel-weiss', 0, 0, 297, 84, { opacity: 0.3, ay: 0 }),
         deko('Flocke 1', 'deko-sterne-schneeflocke-1-weiss', 214, 20, 66), deko('Flocke 2', 'deko-sterne-schneeflocke-3-weiss', 24, 14, 40, undefined, { opacity: 0.8 }),
         deko('Flocke 3', 'deko-sterne-schneeflocke-2-weiss', 140, 38, 30, undefined, { opacity: 0.7 }), deko('Flocke 4', 'deko-sterne-schneeflocke-1-weiss', 250, 78, 24, undefined, { opacity: 0.6 }),
         deko('Flocke 5', 'deko-sterne-schneeflocke-3-weiss', 254, 346, 32, undefined, { opacity: 0.55 }),

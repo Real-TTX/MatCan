@@ -30,7 +30,7 @@ const gold = tpl(Object.assign({}, META, {
         i < MENU.length - 1 && diamond('Raute ' + (i + 1), 49.5, y + 26.5, 1.2, G.line),
       ];
     }),
-    ctext('Fuß', 49.5, 193, 76, 6, 'ANNA & JONAS · 12.06.2027', { f: G.caps, s: 6, w: 500, c: G.accent, ls: 0.24, min: 4 }),
+    ctext('Fuß', 49.5, 193, 76, 6, 'ANNA & JONAS · 12.06.2027', { f: G.caps, s: 7, w: 500, c: G.accent, ls: 0.24, min: 7 }),
   ], 'Menükarte')],
 }));
 
@@ -46,13 +46,13 @@ const salbei = tpl(Object.assign({}, META, {
     ...MENU.flatMap(([course, dish], i) => {
       const y = 46 + i * 27;
       return [
-        ctext('Gang ' + (i + 1), 49.5, y, 76, 6, course.toUpperCase(), { f: S.caps, s: 6.5, w: 600, c: S.accent, ls: 0.34, min: 4 }),
-        ctext('Gericht ' + (i + 1), 49.5, y + 7, 80, 16, dish, { f: S.serif, s: 12, w: 500, c: S.ink, wrap: true, v: 'top', lh: 1.3, min: 7 }),
+        ctext('Gang ' + (i + 1), 49.5, y, 76, 6, course.toUpperCase(), { f: S.caps, s: 7, w: 600, c: S.accent, ls: 0.34, min: 7 }),
+        ctext('Gericht ' + (i + 1), 49.5, y + 7, 80, 17, dish, { f: S.serif, s: 12, w: 500, c: S.ink, wrap: true, v: 'top', lh: 1.3, min: 7 }),
       ];
     }),
     dk('Ecke links', S.corner, 0, 170, 40, undefined, { flipY: true }),
     dk('Ecke rechts', S.corner, 59, 170, 40, undefined, { flipX: true, flipY: true }),
-    ctext('Fuß', 49.5, 196, 70, 6, 'ANNA & JONAS', { f: S.caps, s: 6, w: 600, c: S.accent, ls: 0.34, min: 4 }),
+    ctext('Fuß', 49.5, 196, 70, 6, 'ANNA & JONAS', { f: S.caps, s: 7, w: 600, c: S.accent, ls: 0.34, min: 7 }),
   ], 'Menükarte')],
 }));
 
@@ -65,13 +65,13 @@ const minimal = tpl(Object.assign({}, META, {
   pages: [page(M.bg, [
     rect('Sandspalte', 0, 0, 10, 210, M.soft, { locked: true }),
     text('Titel', 18, 14, 70, 18, 'Menü.', { f: M.serif, s: 32, i: true, w: 400, c: M.ink, min: 16 }),
-    text('Unter', 18, 32, 70, 6, C.dateNum + ' · ' + C.place.toUpperCase(), { f: M.caps, s: 6, w: 400, c: M.accent, ls: 0.24, min: 4 }),
+    text('Unter', 18, 32, 70, 6, C.dateNum + ' · ' + C.place.toUpperCase(), { f: M.caps, s: 7, w: 400, c: M.accent, ls: 0.24, min: 7 }),
     ...MENU.flatMap(([course, dish], i) => {
       const y = 48 + i * 29;
       return [
         line('Linie ' + (i + 1), 18, y, 91, y, M.ink, 0.25, { locked: true }),
         text('Nummer ' + (i + 1), 18, y + 3, 10, 6, '0' + (i + 1), { f: M.caps, s: 7, w: 600, c: M.accent, min: 4 }),
-        text('Gang ' + (i + 1), 30, y + 3, 60, 6, course.toUpperCase(), { f: M.caps, s: 6.5, w: 600, c: M.ink, ls: 0.3, min: 4 }),
+        text('Gang ' + (i + 1), 30, y + 3, 60, 6, course.toUpperCase(), { f: M.caps, s: 7, w: 600, c: M.ink, ls: 0.3, min: 7 }),
         text('Gericht ' + (i + 1), 30, y + 10, 62, 16, dish, { f: M.sans, s: 8.5, w: 400, c: M.ink, wrap: true, v: 'top', lh: 1.45, min: 6 }),
       ];
     }),

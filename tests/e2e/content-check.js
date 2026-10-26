@@ -1296,13 +1296,13 @@ sections.templates = async ({ page }) => {
   check('an occasion filters the list', (await page.$$('.dt-tpl__item')).length < n && (await page.$$('.dt-tpl__item')).length >= 1);
   await page.selectOption('.dt-tplfilter[data-filter=occasion]', '');
   await page.fill('.dt-psearch', 'käse');
-  await page.waitForFunction(() => document.querySelectorAll('.dt-tpl__item').length === 1);
-  check('the search finds a template by name (käse)', (await page.getAttribute('.dt-tpl__item', 'title')).includes('Käsetheke'));
+  await page.waitForFunction(() => document.querySelectorAll('.dt-tpl__item').length >= 1 && document.querySelectorAll('.dt-tpl__item').length < 10);
+  check('the search finds a template by name (käse)', (await page.$$eval('.dt-tpl__item', l => l.map(x => x.getAttribute('title')))).some(x => x.includes('Käsetheke')));
   await shot(page, 'content-1440-templates.png');
   await page.fill('.dt-psearch', '');
   await page.waitForFunction(count => document.querySelectorAll('.dt-tpl__item').length === count, n);
   // add as a new page
-  await page.click('.dt-tpl__item[title^="Käsetheke"]');
+  await page.click('.dt-tpl__item[title*="Käsetheke"]');
   await page.waitForSelector('.dt-tpldlg');
   const buttons = await page.$$eval('.dt-tpldlg .mat-btn-row button', b => b.map(x => x.textContent.trim()));
   check('the dialog offers "Aktuelle Seite ersetzen" and "Als neue Seite hinzufügen"', buttons.includes('Aktuelle Seite ersetzen') && buttons.includes('Als neue Seite hinzufügen') && buttons.includes('Abbrechen'), buttons.join('|'));
@@ -1321,7 +1321,7 @@ sections.templates = async ({ page }) => {
   // replace the current page
   const keep = await addEl(page, 'rect');
   await settle(page);
-  await page.click('.dt-tpl__item[title^="Obst"]');
+  await page.click('.dt-tpl__item[title*="Obst"]');
   await page.waitForSelector('.dt-tpldlg');
   check('with content on the page the dialog warns that replacing deletes it', (await page.textContent('.dt-tpldlg')).includes('löscht den Inhalt'));
   await page.click('.dt-tpldlg button[data-value="replace"]');

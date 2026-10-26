@@ -47,6 +47,13 @@ const pieces = [
     for (let i = -10; i < 24; i++) d.M(i * 60 - 200, -40).L(i * 60 - 200 + 1200, 1160).L(i * 60 - 200 + 1200 + 14, 1160).L(i * 60 - 200 + 14, -40).Z();
     return path(d, { fill: p.ink });
   }),
+  piece('warnstreifen', 'Warnstreifen', ['warn'], ['Warnstreifen', 'Warnung', 'Achtung', 'Baustelle', 'Handwerker', 'gelb schwarz', 'diagonal'], (c) => {
+    const [yellow, black] = c.p.colors;
+    const bg = new Path().M(0, 0).L(1000, 0).L(1000, 1000).L(0, 1000).Z();
+    const d = new Path();
+    for (let i = 0; i < 20; i++) { const x = -1200 + i * 140; d.M(x, 1100).L(x + 1200, -100).L(x + 1270, -100).L(x + 70, 1100).Z(); }
+    return path(bg, { fill: yellow }) + path(d, { fill: black });
+  }),
   piece('wellen', 'Wellen', FOUR.concat(['salbei']), ['Wellen', 'Wasser', 'Meer', 'wellig', 'Linien', 'maritim'], (c) => {
     const { p } = c;
     const d = new Path();

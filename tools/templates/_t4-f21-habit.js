@@ -59,8 +59,8 @@ module.exports = family({
   formatKey: 'a4-landscape',
   width: 297,
   height: 210,
-  fields: [field('Monat', 'Monat', 'text', 'November 2026')],
-  sampleRows: [{ Monat: 'November 2026' }, { Monat: 'Dezember 2026' }, { Monat: '' }],
+  fields: [field('Monat', 'Monat', 'text', 'November 2027')],
+  sampleRows: [{ Monat: 'November 2027' }, { Monat: 'Dezember 2027' }, { Monat: '' }],
 }, [
   {
     slug: 'gewohnheits-tracker-klassisch', variant: 'Klassisch',

@@ -30,7 +30,7 @@ const vermisst = {
     text('Zusatz', 76, 178, 114, 12, 'sucht sein Zuhause', { f: 'Source Sans 3', i: true, s: 18, c: '#555555', a: 'left', min: 10 }),
     datum(1, 198, 'Tier', 'Hund, Mischling, 4 Jahre'),
     datum(2, 211, 'Aussehen', 'Braun mit weißer Brust, rotes Halsband'),
-    datum(3, 224, 'Zuletzt gesehen', 'Sonntag, 8. Juni, Stadtpark Musterstadt'),
+    datum(3, 224, 'Zuletzt gesehen', 'Sonntag, 6. Juni, Stadtpark Musterstadt'),
     rect('Belohnung', 20, 242, 170, 14, '#fff0f0', { radius: 3 }),
     text('Belohnung Text', 20, 242, 170, 14, 'Hohe Belohnung für Hinweise! Bello ist gechippt und sehr lieb.', { f: 'Source Sans 3', w: 700, s: 13, c: RED, a: 'center', min: 8 }),
     rect('Telefonband', 0, 262, 210, 35, INK, { locked: true }),
@@ -54,7 +54,7 @@ const suchplakat = {
   description: 'Freundlicher A4-Aushang „Wer hat mich gesehen?“ für Katze, Hund oder Kaninchen: rundes Foto in Orange, Pfotenspuren, Steckbrief in drei Zeilen, Hinweis auf Chip und Kontakt mit großem Telefon.',
   tags: ['Aushang', 'Tier entlaufen', 'Katze vermisst', 'Hund vermisst', 'Kaninchen', 'Suchplakat', 'Haustier', 'Pfoten', 'Foto', 'Hinweise'],
   pages: [page(CREAM, [
-    text('Titel', 14, 16, 182, 36, 'Wer hat mich\ngesehen?', { f: 'Fredoka', w: 700, s: 56, c: TEAL, a: 'center', v: 'top', wrap: true, lh: 1.1, min: 30 }),
+    text('Titel', 14, 16, 182, 44, 'Wer hat mich\ngesehen?', { f: 'Fredoka', w: 700, s: 56, c: TEAL, a: 'center', v: 'top', wrap: true, lh: 1.1, min: 30 }),
     ellipse('Foto Hintergrund', 45, 82, 120, 120, '#ffe0b8', { locked: true }),
     icon('Foto Symbol', 'cat', 80, 117, 50, '#e8b27a', 1.1, { locked: true }),
     frame('Foto', 45, 82, 120, 120, { mask: 'circle', border: { color: ORANGE, width: 4 } }),

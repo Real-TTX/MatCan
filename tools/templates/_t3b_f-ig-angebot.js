@@ -73,7 +73,7 @@ const geteilt = {
     ellipse('Foto Hintergrund', 480, 130, 680, 680, '#9fd4bd'),
     icon('Foto Symbol', 'image', 720, 370, 200, '#6fb79b', 1.2),
     frame('Foto', 480, 130, 680, 680, { mask: 'circle', border: { color: '#ffffff', width: 8 } }),
-    text('Titel', 70, 140, 460, 50, '{{Titel}}', { f: 'Poppins', s: 14, w: 700, c: '#2f7a5e', up: true, ls: 0.16, min: 9, showIf: 'Titel' }),
+    text('Titel', 70, 140, 460, 50, '{{Titel}}', { f: 'Poppins', s: 15, w: 700, c: '#2f7a5e', up: true, ls: 0.16, min: 15, showIf: 'Titel' }),
     text('Produkt', 70, 200, 420, 360, '{{Produkt}}', { f: 'Poppins', s: 36, w: 700, c: '#123d2e', v: 'top', wrap: true, lh: 1.1, fit: 'shrink', min: 18 }),
     rect('Preis Etikett', 70, 640, 420, 130, '#e8553d', { radius: 26 }),
     text('Preis', 80, 640, 400, 130, '{{Preis}}', { f: 'Poppins', s: 52, w: 800, c: '#ffffff', a: 'center', v: 'middle', lh: 1, min: 22 }),

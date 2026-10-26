@@ -25,7 +25,7 @@ function offer(n, y, title, description, price) {
 
 const info = (x, iconName, label, value) => [
   icon(label + ' Symbol', iconName, x, 196.2, 6, SUN, 1.8),
-  text(label, x + 8.5, 195.2, 34, 3.4, label, { f: 'Montserrat', s: 6, w: 700, c: SUN, up: true, ls: 0.16, v: 'top' }),
+  text(label, x + 8.5, 195.2, 34, 3.4, label, { f: 'Montserrat', s: 7, w: 700, c: SUN, up: true, ls: 0.16, v: 'top' }),
   text(label + ' Wert', x + 8.5, 199, 34, 8, value, { f: 'Montserrat', s: 7.5, w: 500, c: '#ffffff', v: 'top', wrap: true, lh: 1.3, min: 5.5 }),
 ];
 
@@ -48,7 +48,7 @@ module.exports = {
     ellipse('Kurve', -16, 60, 180, 30, CREAM, { locked: true }),
     text('Etikett', 12, 11.5, 60, 6, 'Wochenangebot', { f: 'Montserrat', s: 8, w: 700, c: FOREST, up: true, ls: 0.2, background: { color: SUN, radius: 3, padding: 2 }, wrap: false, fit: 'none' }),
     text('Überschrift', 12, 22, 118, 28, 'Frisch auf den Tisch', { f: 'Playfair Display', s: 37, w: 700, c: '#ffffff', v: 'top', wrap: true, lh: 1.02, fit: 'shrink', min: 20 }),
-    text('Gültigkeit', 12, 51.5, 118, 5, 'Gültig von Montag, 3. bis Samstag, 8. November', { f: 'Montserrat', s: 9, w: 500, c: '#d4efe0', min: 6 }),
+    text('Gültigkeit', 12, 51.5, 118, 5, 'Gültig von Montag, 1. bis Samstag, 6. November', { f: 'Montserrat', s: 9, w: 500, c: '#d4efe0', min: 6 }),
     offer(1, 69, 'Frische Erdbeeren', 'Süß und aromatisch, 500 g Schale, aus Anbau der Region.', '2,99'),
     offer(2, 107.5, 'Bauernbrot', 'Im Steinofen gebacken, kräftige Kruste, 750 g Laib.', '3,50'),
     offer(3, 146, 'Ziegenfrischkäse', 'Cremig und mild, 150 g, vom Hof nebenan.', '2,29'),

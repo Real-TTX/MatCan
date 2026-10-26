@@ -12,7 +12,7 @@
   "document": {
     "schema":2,"unit":"mm","width":210,"height":297,"dpi":300,"locale":"de-DE",
     "fields": [
-      {"key":"Monat","label":"Monat","type":"text","sample":"November 2026","decimals":null,"category":null,"required":false}
+      {"key":"Monat","label":"Monat","type":"text","sample":"November 2027","decimals":null,"category":null,"required":false}
     ],
     "pages": [
       {"id":"p1","name":"Haushaltsbuch","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
@@ -93,9 +93,9 @@
     ]
   },
   "sampleRows": [
-    {"Monat":"November 2026"},
-    {"Monat":"Dezember 2026"},
-    {"Monat":"Januar 2027"},
+    {"Monat":"November 2027"},
+    {"Monat":"Dezember 2027"},
+    {"Monat":"Januar 2028"},
     {"Monat":""}
   ]
 }

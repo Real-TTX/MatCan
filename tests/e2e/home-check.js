@@ -131,7 +131,8 @@ const stamp = String(Date.now()).slice(-6);
   check('the row "Vorlagen" has template tiles and a link "Alle Vorlagen"', templateTiles.length >= 6 && await page.isVisible('a:has-text("Alle Vorlagen")'), String(templateTiles.length));
   await settle(page);
   const firstTemplate = page.locator('[data-start-templates] .dt-tpl').first();
-  const templateName = (await firstTemplate.locator('.dt-tile__title').textContent()).trim();
+  // the tile carries the name of its FAMILY; the copy is named like the shown variant
+  const templateName = (await apiDesign(page, Number(await firstTemplate.getAttribute('data-template')))).name;
   await Promise.all([page.waitForURL(/\/Designs\/\d+\/Designer/), firstTemplate.locator('[data-use-template].mat-btn').click()]);
   id = designIdOf(page.url());
   created.push(id);

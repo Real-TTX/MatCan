@@ -20,8 +20,8 @@ DesignThix ist ein Docker-Container mit einer PostgreSQL-Datenbank. Es läuft au
 
 - **Start mit einem Klick:** Die Startseite fragt „Was möchtest du heute gestalten?“. Ein Klick auf ein Format (Preisschild, Etikett, Regaletikett, Visitenkarte, Flyer A5, Poster A3, Karte A6, Instagram-Beitrag
   und -Story, Präsentation oder eine eigene Größe in mm oder px) legt das leere Design an und öffnet den Designer. Darunter stehen die Vorlagen und die zuletzt bearbeiteten Designs; die Suche findet Designs und Vorlagen.
-- **Vorlagen:** Zehn fertige Entwürfe zum Anpassen (Preisschilder, Regaletikett mit EAN-Code, Glasetikett mit QR-Code, Visitenkarte und Grußkarte mit zwei Seiten, Flyer, Poster, Instagram-Beitrag und -Story),
-  nach Kategorien sortiert, mit Suche. „Vorlage verwenden“ macht eine Kopie; die Vorlage bleibt, wie sie ist.
+- **Vorlagen:** **333 fertige Entwürfe in 110 Familien**, jede in mindestens drei Varianten: Grußkarten, Hochzeit, Kindergeburtstag, Feste, Flyer und Plakate, Visitenkarten, Etiketten, Instagram, Formulare und Planer.
+  Sortiert nach Anlass, mit Suche über Namen und Stichwörter, Vorschau aller Seiten und Wechsel zwischen den Varianten. „Vorlage verwenden“ macht eine Kopie; die Vorlage bleibt, wie sie ist. Siehe *Vorlagen* unten.
 - **Designer:** Eine Leiste mit Reitern (Vorlagen, Elemente, Text, Uploads, Marke, Ebenen, Daten) und eine Werkzeugleiste, die zur Auswahl passt. Mehrere Seiten je Design, Gruppen, Ebenen, Ausrichten und Einrasten
   mit Abstandshilfen, Kontextmenü mit der rechten Maustaste, Tastenkürzel, Rückgängig, **automatisches Speichern**. Mit Maus, Stift und Finger; auf dem Handy mit Reiterleiste unten.
 - **Elemente und Symbole:** Formen und Linien, Bildrahmen (rund, Herz, Stern …), rund 1 900 Symbole (Lucide) mit deutscher Suche, Flaggen und Siegel, **QR-Codes** und Strichcodes (EAN-13, EAN-8, Code 128).
@@ -50,7 +50,7 @@ Wer viele ähnliche Etiketten oder Karten braucht, nutzt zusätzlich (Menü *Ser
 
 ## So sieht es aus
 
-Beim ersten Start sind die zehn Vorlagen da, dazu ein Beispiel für die Serien mit Daten: die Vorlage **Käsetheke – Preisschild**, die Datenliste **Käsetheke (Beispiel)** mit sechs Käsen und die Serienausgabe
+Beim ersten Start sind die Vorlagen da, dazu ein Beispiel für die Serien mit Daten: die Vorlage **Käsetheke – Preisschild**, die Datenliste **Käsetheke (Beispiel)** mit sechs Käsen und die Serienausgabe
 **Käsetheke – A4 mit 4 Etiketten**. Damit kannst du alles ausprobieren; was du löschst, kommt nicht wieder (eine Vorlage, die eine spätere Version neu mitbringt, wird einmal ergänzt).
 
 **Gestalten**
@@ -58,11 +58,11 @@ Beim ersten Start sind die zehn Vorlagen da, dazu ein Beispiel für die Serien m
 | | |
 |---|---|
 | ![Start](docs/images/start.png) | ![Vorlagen](docs/images/templates.png) |
-| **Start:** „Was möchtest du heute gestalten?“, Formate mit einem Klick, Vorlagen und zuletzt bearbeitete Designs | **Vorlagen:** fertige Entwürfe nach Kategorien, mit Suche |
+| **Start:** „Was möchtest du heute gestalten?“, Formate mit einem Klick, Vorlagen und zuletzt bearbeitete Designs | **Vorlagen:** eine Kachel je Familie mit „3 Varianten“, nach Anlass sortiert, mit Suche |
 | ![Kontextmenü](docs/images/context-menu.png) | ![Schriftkombinationen](docs/images/text-combinations.png) |
 | **Kontextmenü** mit der rechten Maustaste: Kopieren, Stil übertragen, Ebene, Ausrichten, Gruppieren, Sperren | **Text:** Überschriften und zehn fertige Schriftkombinationen |
 | ![Texteffekte](docs/images/text-effects.png) | ![Medienbrowser](docs/images/media-browser.png) |
-| **Texteffekte:** Schatten, Kontur, Hintergrund, Kreisbogen – mit Vorschau | **Medienbrowser:** Uploads, Flaggen, Siegel und Logos mit Suche; Bilder auch per Ziehen und Strg+V |
+| **Texteffekte:** Schatten, Kontur, Hintergrund, Kreisbogen – mit Vorschau | **Medienbrowser:** Uploads, Flaggen, Siegel, Logos und der Reiter *Deko* (Rahmen, Blumen, Konfetti, Muster …) mit Suche; Bilder auch per Ziehen und Strg+V |
 | ![Design erstellen](docs/images/create-dialog.png) | ![Herunterladen](docs/images/download.png) |
 | **Design erstellen:** ein Format wählen oder eine eigene Größe in mm oder px eingeben | **Herunterladen:** PNG, JPG, SVG oder PDF, Größe und transparenter Hintergrund |
 | ![Handy](docs/images/phone-editor.png) | ![Start auf dem Handy](docs/images/phone-start.png) |
@@ -145,6 +145,29 @@ Es gibt zwei Branches: **`main`** ist das Release, **`dev`** der Entwicklungssta
 | lokal gebaut | `local-<datum>` | `designthix:local` |
 
 Major und Minor stehen in `Directory.Build.props`, die Build-Nummer ist die Nummer des Laufs der Action. Die Version steht links unten im Menü; ein Klick öffnet *Über DesignThix*.
+
+## Vorlagen
+
+Die Vorlagen sind fertige Entwürfe zum Anpassen: Du wählst eine, bekommst eine Kopie in deinem Bereich und änderst Texte, Farben und Bilder im Designer. Die Vorlage selbst bleibt unverändert (bearbeiten darf sie nur die Administration).
+Alles funktioniert **ohne Internet und ohne Fotos**: Schmuck kommt aus dem eingebauten Deko-Paket und aus Symbolen, Bildflächen sind Rahmen, in die du dein Foto ziehst.
+
+- **333 Vorlagen in 110 Familien.** Eine Familie ist eine Art von Vorlage (zum Beispiel „Hochzeit: Einladung (Klappkarte)“) in **mindestens drei Varianten**, die sich in Aufbau, Schrift und Schmuck unterscheiden (klassisch, modern, verspielt; bei Kindergeburtstagen die Motive Pirat, Einhorn, Dino, Weltall, Fußball, Feuerwehr, Unterwasser).
+  Die Galerie zeigt eine Kachel je Familie mit „3 Varianten“ und drei Punkten; ein Klick auf einen Punkt zeigt die Variante, **Ansehen** öffnet alle Seiten und lässt dich mit den Pfeiltasten zwischen den Varianten wechseln.
+- **Zwölf Anlässe** (Filter und Überschriften der Galerie): Geburtstag (3 Familien), Hochzeit (10), Kinder & Familie (10), Feiertage (9), Feste & Events (15), Trauer (1), Business (11), Gastronomie (4), Verein & Schule (12), Handel & Preise (14), Social Media (9), Formulare & Planer (11).
+  Dazu der Filter nach Format (37 Formate) und die Suche, die Namen, Stichwörter und Beschreibungen durchsucht (Umlaute egal: „grusskarte“ findet Grußkarte).
+- **Karten:** Grußkarten für Geburtstag, Danke, Glückwunsch, Gute Besserung, Weihnachten, Ostern, Neujahr, Mutter- und Vatertag, Beileid; **Hochzeit** komplett (Save the Date, Einladung als Klappkarte und flach, Antwortkarte, Programm, Menükarte, Tischkarte mit `{{Name}}`, Tischnummer, Danksagung, Willkommensschild); Taufe, Kommunion, Konfirmation, Einschulung, Babyparty, Geburtsanzeige, Jubiläum, Abschluss, Halloween, Silvester, Sommerfest, Grillfest, Weihnachtsfeier.
+- **Gefaltete Karten:** Das Dokument hat eine **Falz** (senkrecht oder waagerecht). Die Seite ist das offene Blatt (zum Beispiel 210 × 148 mm für eine Klappkarte A6), die Seiten heißen „Außen (Rückseite | Vorderseite)“ und „Innen“. Der Designer zeichnet die Falzlinie und den Sicherheitsrand als Hilfslinien (an- und abschaltbar); Druck, Download und Vorschau kennen sie nicht.
+- **Flyer, Plakate, Business:** Veranstaltung, Vereinsfest, Flohmarkt, Konzert, Kurse, Mittagstisch, Lieferdienst, Handwerker, Reinigung, Nachhilfe, Aushänge mit Abreißzetteln, Eröffnung, Sale, Spendenaufruf, Tag der offenen Tür, Plakate; Visitenkarten, Briefpapier, Gutschein (`{{Code}}`, `{{Betrag}}`), Urkunde, Speisekarte, Etiketten für Marmelade, Gewürz, Seife, Kerze und Honig, Namensschilder, Lesezeichen, Instagram (Beitrag und Story), Facebook-Titelbild, Präsentation.
+- **Formulare und Planer** (zum Ausdrucken und Ausfüllen von Hand, sparsam mit Toner, Ränder ab 10 mm, Schrift ab 8 pt): Anmeldung, Bestellschein, Stundenzettel, Urlaubsantrag, Übergabeprotokoll, Feedbackbogen, Teilnehmerliste, Quittung, Inventarliste, Checkliste, To-do-Liste, Wochen- und Monatsplaner, Stundenplan, Essensplan, Einkaufs- und Packliste, Haushaltsbuch, Lesetagebuch, Gewohnheits-Tracker. Wo eine Serie Sinn hat, sind die Angaben **Felder** mit Beispielzeilen, damit ein Tischkartenstapel oder ein Satz Urkunden aus einer Datenliste entsteht.
+- **Deko-Paket:** 335 eigene Zeichnungen (150 Motive in Farbvarianten: Rahmen, Ornamente, Trenner, Ecken, Blumen und Blätter, Herzen, Sterne, Konfetti und Ballons, Bänder und Siegel, Muster, Formen) im Reiter *Deko* der Medienauswahl; sie gehören zu DesignThix und haben keine fremde Lizenz.
+- **Schriften:** 33 Familien (Schreibschriften für Hochzeit und Geburtstag, Antiqua, Serifenlose, Kinderschriften, Plakatschriften), alle unter freien Lizenzen und mit ä ö ü ß € „ “ –; sie liegen in der App.
+
+| | |
+|---|---|
+| ![Vorlagen für die Hochzeit](docs/images/templates-hochzeit.png) | ![Vorschau einer Familie](docs/images/template-preview.png) |
+| **Galerie** nach Anlass gefiltert: zehn Familien für die Hochzeit, je mit drei Varianten | **Ansehen:** alle Seiten einer Klappkarte mit Falzlinie, die Varianten als Auswahl, „Vorlage verwenden“ auf der gezeigten |
+
+**Eigene Vorlagen** machst du aus jedem Design (Eigenschaften, Schalter „Als Vorlage anbieten“), im Team von Bearbeitern aufwärts. Die eingebauten werden beim Start einmal in eine Datenbank übernommen (eine Vorlage, die du löschst, kommt nicht wieder; eine, die eine spätere Version neu mitbringt, wird einmal ergänzt).
 
 ## Projekte, Teams und Teilen
 
@@ -300,7 +323,8 @@ Verbindung zurück, lädt die Seite sich selbst neu, damit nichts Altes stehen b
 
 ## Schriften, Symbole und Lizenzen
 
-- **Schriften** (zwölf Familien, nichts wird aus dem Internet geladen): Montserrat, Bebas Neue, Oswald, Kaushan Script, Caveat, Playfair Display, Lora, Open Sans, Pacifico, Source Sans 3 unter der
+- **Schriften** (33 Familien, nichts wird aus dem Internet geladen): Montserrat, Bebas Neue, Oswald, Kaushan Script, Caveat, Playfair Display, Lora, Open Sans, Pacifico, Source Sans 3, Great Vibes, Parisienne, Allura, Dancing Script,
+  Cormorant Garamond, Libre Baskerville, Cinzel, Fredoka, Baloo 2, Patrick Hand, Gochi Hand, Abril Fatface, Anton, Righteous, Amatic SC, Inter, Nunito, Josefin Sans, Raleway, Poppins und IBM Plex Mono unter der
   **SIL Open Font License 1.1**; Roboto Slab und Permanent Marker unter der **Apache License 2.0**. Die Lizenztexte liegen in `src/DesignThix/wwwroot/fonts/LICENSES`.
 - **Symbole der Oberfläche:** [Lucide](https://lucide.dev) (ISC-Lizenz), über MatUi. Dieselben Lucide-Symbole (rund 1 900) gibt es im Designer; weitere Sätze kommen nur über den Katalog *Icons (Iconify)* und behalten ihre Lizenz (siehe *Kataloge*).
 - **Flaggen und Siegel** sind eigene Zeichnungen (keine geschützten Zeichen; die echten Bio- oder g.t.S.-Siegel lädst du selbst unter *Medien* hoch).
@@ -321,6 +345,7 @@ dotnet ef migrations add <Name> -p src/DesignThix -s src/DesignThix -o Data/Migr
 
 - **Browser-Prüfungen** (`tests/e2e`, Playwright mit dem installierten Edge): `cd tests/e2e && npm install && node run-all.js http://localhost:3043` startet Engine, PWA, Demo, Start, Projekte, Vorlagen, Designer, Canva-Editor, Editor-Inhalte,
   Serienausgabe, Teilen, Kommentare, Teams und KI nacheinander (rund zehn Minuten). Jede einzeln und was sie prüft: [tests/e2e/README.md](tests/e2e/README.md). Sie legen ihre Konten selbst an, wenn die Datenbank leer ist.
+- **Vorlagen** sind Quelltext: `tools/templates/<NNN>-<slug>.js` (Hilfen in `tools/templates/dsl.js`), `node tools/templates-build.js` schreibt daraus die Dateien in `src/DesignThix/Demo/templates`, `node tools/templates-sheet.js` zeichnet Übersichtsbögen zum Ansehen und `node tools/templates-lint.js` misst jede Seite in Originalgröße (Schrift ab 7 pt, Sicherheitsrand, Überlappungen). Die Anleitung steht in [docs/PLAN-TEMPLATES.md](docs/PLAN-TEMPLATES.md) und [CLAUDE.md](CLAUDE.md).
 - **Screenshots** dieser Seite: `node tests/e2e/screens.js` gegen eine frische, leere Datenbank (`./scripts/redeploy.ps1 -Clean`, oder die App mit `dotnet run` gegen eine neue Datenbank, siehe [CLAUDE.md](CLAUDE.md)), Ergebnis in `docs/images`; die KI-Bilder entstehen mit einem Schein-Anbieter (`fake-ai.js`), nie mit einem echten, und `--ai-only` macht nur diese drei.
 - **MatUi** (Oberflächen-Bibliothek) wird nie in `src/DesignThix/wwwroot/ui` geändert, sondern aus MatDesign geholt: `./scripts/sync-matui.ps1`, geprüft mit `./scripts/check-matui.ps1`.
 - Aufbau, Regeln und Stolpersteine für die Arbeit am Code: [CLAUDE.md](CLAUDE.md). Die Baupläne: [docs/PLAN-PLATFORM.md](docs/PLAN-PLATFORM.md) (Plan 3: Plattform, Teams, Teilen), [docs/PLAN-CANVA.md](docs/PLAN-CANVA.md) (Plan 2: Canva-Stil, Dokumentformat 2), [docs/PLAN.md](docs/PLAN.md) (Plan 1: Produkt, Architektur); der Editor: [docs/EDITOR.md](docs/EDITOR.md).

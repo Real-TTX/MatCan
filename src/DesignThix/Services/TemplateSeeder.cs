@@ -1,4 +1,6 @@
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using DesignThix.Core.Documents;
 using DesignThix.Data;
@@ -18,6 +20,15 @@ namespace DesignThix.Services;
 public static class TemplateSeeder
 {
     public const string Marker = "Templates.Seeded";
+
+    /// <summary>The setting that remembers, per slug, the hash of the embedded file as last seeded or refreshed and the revision the design had then (see <see cref="RefreshAsync"/>).</summary>
+    public const string FilesMarker = "Templates.Files";
+
+    /// <summary>Tests only: replaces the text of an embedded file (to simulate a newer version of the app).</summary>
+    public static Func<string, string?>? ReadOverride { get; set; }
+
+    /// <summary>What is known of a built-in template since it was seeded: <c>H</c> = hash of its file, <c>R</c> = the revision of the design then (-1 = edited by a person: never refreshed).</summary>
+    public sealed record FileState(string H, int R);
 
     private const string ResourcePrefix = "DesignThix.Demo.templates.";
 
@@ -102,6 +113,124 @@ public static class TemplateSeeder
         return changed;
     }
 
+    private static string FileHash(string slug) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(Read(slug) ?? "")))[..24];
+
+    private static async Task<Dictionary<string, FileState>> LoadStatesAsync(DtDbContext db, CancellationToken ct)
+    {
+        var value = await db.Setting.Where(s => s.Key == FilesMarker).Select(s => s.Value).FirstOrDefaultAsync(ct);
+        try
+        {
+            return value is null ? [] : JsonSerializer.Deserialize<Dictionary<string, FileState>>(value) ?? [];
+        }
+        catch (JsonException)
+        {
+            return [];
+        }
+    }
+
+    private static async Task SaveStatesAsync(DtDbContext db, Dictionary<string, FileState> states, CancellationToken ct)
+    {
+        var value = JsonSerializer.Serialize(states);
+        var setting = await db.Setting.FirstOrDefaultAsync(s => s.Key == FilesMarker, ct);
+        if (setting is null)
+        {
+            db.Setting.Add(new Setting { Key = FilesMarker, Value = value });
+        }
+        else if (setting.Value != value)
+        {
+            setting.Value = value;
+        }
+
+        await db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>
+    /// Brings a newer version of a built-in template to a database that has it already. Cheap at start-up: the hash of every embedded file is compared with the one in the setting <see cref="FilesMarker"/>
+    /// (no document is read from the database for a file that did not change). For a changed file the design is looked at: it is replaced (the document, a new revision with the note "Vorlage aktualisiert",
+    /// the saved picture dropped) only when nobody changed it since it was seeded: its revision is still the one recorded then (a database from before this rule has no record: revision 1 counts).
+    /// A template that was edited is marked (<c>R = -1</c>) and never touched again; one that was deleted is not found (soft delete) and stays deleted. Returns how many were replaced.
+    /// </summary>
+    public static async Task<int> RefreshAsync(DtDbContext db, IReadOnlyCollection<string> seeded, ILogger logger, CancellationToken ct = default)
+    {
+        var states = await LoadStatesAsync(db, ct);
+        var pending = new List<(string Slug, string Hash)>();
+        foreach (var slug in Slugs().Where(s => seeded.Contains(s, StringComparer.Ordinal)))
+        {
+            var hash = FileHash(slug);
+            if (!states.TryGetValue(slug, out var state) || state.H != hash)
+            {
+                pending.Add((slug, hash));
+            }
+        }
+
+        if (pending.Count == 0)
+        {
+            return 0;
+        }
+
+        var keys = pending.Select(p => p.Slug).ToList();
+        var designs = await db.Design.Where(d => d.SpaceId == null && d.IsTemplate && d.TemplateKey != null && keys.Contains(d.TemplateKey)).ToListAsync(ct);
+        var replaced = 0;
+        foreach (var (slug, hash) in pending)
+        {
+            var design = designs.FirstOrDefault(d => d.TemplateKey == slug);
+            if (design is null)
+            {
+                // deleted (or never seeded under this key): nothing to refresh, but remember the file so that the check is not repeated
+                states[slug] = new FileState(hash, -1);
+                continue;
+            }
+
+            var known = states.TryGetValue(slug, out var before);
+            var untouched = known ? before!.R >= 0 && design.Revision == before.R : design.Revision == 1;
+            if (!untouched)
+            {
+                states[slug] = new FileState(hash, -1);
+                continue;
+            }
+
+            try
+            {
+                using var file = JsonDocument.Parse(Read(slug)!);
+                var check = DocumentValidator.Validate(file.RootElement.GetProperty("document").GetRawText());
+                if (!check.Ok || check.Document is null || check.Json is null)
+                {
+                    logger.LogWarning("The template {Slug} is not valid: {Error}", slug, check.Error);
+                    continue;
+                }
+
+                var current = DocumentValidator.Validate(design.DocumentJson).Json;
+                if (current != check.Json)
+                {
+                    design.DocumentJson = check.Json;
+                    design.Revision++;
+                    design.Width = check.Document.Width;
+                    design.Height = check.Document.Height;
+                    design.Unit = check.Document.Unit;
+                    design.ThumbnailPng = null;
+                    design.ThumbnailHash = null;
+                    design.Revisions.Add(new DesignRevision { Revision = design.Revision, DocumentJson = check.Json, Note = "Vorlage aktualisiert" });
+                    replaced++;
+                }
+
+                states[slug] = new FileState(hash, design.Revision);
+            }
+            catch (Exception ex) when (ex is JsonException or KeyNotFoundException or InvalidOperationException)
+            {
+                logger.LogWarning("The template {Slug} could not be refreshed: {Message}", slug, ex.Message);
+            }
+        }
+
+        await db.SaveChangesAsync(ct);
+        await SaveStatesAsync(db, states, ct);
+        if (replaced > 0)
+        {
+            logger.LogInformation("{Count} built-in templates were updated to the version of the app.", replaced);
+        }
+
+        return replaced;
+    }
+
     /// <summary>The slugs of the embedded templates, in file name order.</summary>
     public static IReadOnlyList<string> Slugs()
         => [.. Assembly.GetExecutingAssembly().GetManifestResourceNames()
@@ -111,6 +240,16 @@ public static class TemplateSeeder
 
     /// <summary>The text of an embedded template file (null when there is none of that slug).</summary>
     public static string? Read(string slug)
+    {
+        if (ReadOverride is { } over)
+        {
+            return over(slug) ?? ReadResource(slug);
+        }
+
+        return ReadResource(slug);
+    }
+
+    private static string? ReadResource(string slug)
     {
         using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ResourcePrefix + slug + ".json");
         if (stream is null)
@@ -150,9 +289,12 @@ public static class TemplateSeeder
         if (fresh.Count == 0 && marker is not null)
         {
             await SyncMetadataAsync(db, ct);
+            await RefreshAsync(db, seeded, logger, ct);
             return 0;
         }
 
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        var states = await LoadStatesAsync(db, ct);
         var added = 0;
         foreach (var slug in fresh)
         {
@@ -160,6 +302,7 @@ public static class TemplateSeeder
             if (design is not null)
             {
                 db.Design.Add(design);
+                states[slug] = new FileState(FileHash(slug), 1);
                 added++;
             }
 
@@ -178,10 +321,12 @@ public static class TemplateSeeder
         }
 
         await db.SaveChangesAsync(ct);
+        await SaveStatesAsync(db, states, ct);
         await SyncMetadataAsync(db, ct);
+        await RefreshAsync(db, seeded, logger, ct);
         if (added > 0)
         {
-            logger.LogInformation("{Count} built-in templates were added.", added);
+            logger.LogInformation("{Count} built-in templates were added in {Ms} ms.", added, clock.ElapsedMilliseconds);
         }
 
         return added;

@@ -68,14 +68,14 @@ const minimal = tpl(Object.assign({}, META, {
   formatKey: 'a6-portrait', width: 105, height: 148,
   pages: [page(M.bg, [
     text('Titel', 12, 12, 70, 16, 'Der Ablauf.', { f: M.serif, s: 26, i: true, w: 400, c: M.ink, min: 13 }),
-    text('Datum', 12, 28, 80, 6, C.dateNum + ' · ' + C.place.toUpperCase(), { f: M.caps, s: 6.5, w: 400, c: M.ink, ls: 0.24, min: 4 }),
+    text('Datum', 12, 28, 80, 6, C.dateNum + ' · ' + C.place.toUpperCase(), { f: M.caps, s: 7, w: 400, c: M.ink, ls: 0.24, min: 7 }),
     ...PLAN.flatMap(([time, what], i) => [
       line('Linie ' + (i + 1), 12, 40 + i * 13, 93, 40 + i * 13, M.soft, 0.4, { locked: true }),
       text('Uhrzeit ' + (i + 1), 12, 41 + i * 13, 20, 11, time, { f: M.caps, s: 9, w: 600, c: M.accent, ls: 0.05, min: 5 }),
       text('Programmpunkt ' + (i + 1), 34, 41 + i * 13, 60, 11, what, { f: M.sans, s: 9.5, w: 400, c: M.ink, min: 6 }),
     ]),
     line('Linie 8', 12, 40 + 7 * 13, 93, 40 + 7 * 13, M.soft, 0.4, { locked: true }),
-    text('Fuß', 12, 136, 80, 4, 'ANNA & JONAS', { f: M.caps, s: 5.5, w: 600, c: M.ink, ls: 0.3, min: 4 }),
+    text('Fuß', 12, 136, 80, 4, 'ANNA & JONAS', { f: M.caps, s: 7, w: 600, c: M.ink, ls: 0.3, min: 7 }),
   ], 'Ablauf')],
 }));
 

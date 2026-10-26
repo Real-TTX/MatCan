@@ -1,6 +1,6 @@
 'use strict';
 const { dsl, pt, ADDRESS, PHONE, WEB, infoRow } = require('./_t3a-lib');
-const { text, rect, ellipse, shape, icon, frame, deko, dekoIn, group, page, typo, qr, line, gradient, shadow } = dsl;
+const { text, rect, ellipse, shape, icon, frame, deko, dekoWindow, dekoIn, group, page, typo, qr, line, gradient, shadow } = dsl;
 
 const FAMILY = { family: 'flyer-handwerker', familyName: 'Flyer Handwerker', occasion: 'Business', category: 'Flyer' };
 
@@ -47,8 +47,8 @@ const meister = {
 // ---- Warnstreifen: DIN lang, yellow with black hazard stripes
 const YEL = '#ffd400';
 const BLK = '#161616';
-const stripesTop = Array.from({ length: 11 }, (_, i) => rect('Streifen ' + (i + 1), -20 + i * 14, -13, 7, 60, BLK, { rotation: -40, locked: true }));
-const stripesBottom = Array.from({ length: 11 }, (_, i) => rect('Streifen unten ' + (i + 1), -20 + i * 14, 185, 7, 40, BLK, { rotation: -40, locked: true }));
+const stripesTop = dekoWindow('Warnstreifen oben', 'deko-muster-warnstreifen', 0, 0, 99, 34, { locked: true, ay: 0.5 });
+const stripesBottom = dekoWindow('Warnstreifen unten', 'deko-muster-warnstreifen', 0, 202, 99, 8, { locked: true });
 const punkt = (n, y, label) => [
   rect(`Punkt ${n}`, 10, y + 1, 4, 4, BLK, { locked: true }),
   text(`Leistung ${n}`, 18, y - 1, 72, 8, label, { f: 'Oswald', w: 500, s: 14, c: BLK, a: 'left', min: 8 }),
@@ -62,7 +62,7 @@ const warnstreifen = {
   description: 'Auffälliger DIN-lang-Flyer für Hausmeister, Umzug, Entrümpelung oder Gartenbau: gelber Grund mit schwarzen Warnstreifen oben und unten, Oswald-Schlagzeile und Leistungsliste mit Telefon.',
   tags: ['Flyer', 'DIN lang', 'Handwerker', 'Hausmeisterservice', 'Entrümpelung', 'Umzug', 'Gartenbau', 'Warnstreifen', 'Gelb', 'Schnellservice'],
   pages: [page(YEL, [
-    ...stripesTop,
+    stripesTop,
     rect('Titelfeld', 0, 34, 99, 64, BLK, { locked: true }),
     text('Etikett', 10, 40, 79, 6, 'SCHNELL · SAUBER · FAIR', { f: 'Oswald', w: 500, s: 9, c: YEL, ls: 0.18, a: 'left', min: 6 }),
     text('Titel', 10, 47, 82, 48, 'HAUS-\nMEISTER\nSERVICE', { f: 'Oswald', w: 700, s: 30, c: '#ffffff', a: 'left', v: 'top', wrap: true, lh: 1.05, min: 16 }),
@@ -71,7 +71,7 @@ const warnstreifen = {
     punkt(3, 132, 'Umzüge und Transporte'),
     punkt(4, 143, 'Entrümpelung'),
     punkt(5, 154, 'Montage und Aufbau'),
-    ...stripesBottom,
+    stripesBottom,
     rect('Kontaktfeld', 0, 166, 99, 36, YEL, { locked: true }),
     text('Anrufen', 10, 168, 79, 6, 'JETZT ANRUFEN', { f: 'Oswald', w: 500, s: 10, c: BLK, ls: 0.18, a: 'left', min: 6 }),
     text('Nummer', 10, 175, 82, 14, PHONE, { f: 'Oswald', w: 700, s: 26, c: BLK, a: 'left', min: 14 }),

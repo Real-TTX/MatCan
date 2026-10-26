@@ -58,7 +58,7 @@ const modern = {
       text('Titel', 10, 11, 79, 12, 'Speisekarte', { f: 'Poppins', s: 24, w: 800, c: '#ffffff', min: 14 }),
       text('Untertitel', 10, 24, 79, 5, 'Restaurant Wiesengrund', { f: 'Poppins', s: 8.5, w: 500, c: '#bfe6e2', min: 6 }),
       ...m.els,
-      text('Fuß', 10, 192, 79, 8, 'Alle Preise inkl. MwSt. · Allergene auf Anfrage', { f: 'Poppins', s: 6.5, c: '#6a7b7a', v: 'top', wrap: true, lh: 1.4, min: 5.5 }),
+      text('Fuß', 10, 192, 79, 8, 'Alle Preise inkl. MwSt. · Allergene auf Anfrage', { f: 'Poppins', s: 7, c: '#6a7b7a', v: 'top', wrap: true, lh: 1.4, min: 7 }),
     ])];
   })(),
 };

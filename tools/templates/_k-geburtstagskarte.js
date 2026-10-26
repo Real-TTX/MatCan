@@ -59,7 +59,7 @@ const klassisch = tpl(Object.assign({}, META, {
   ], [
     dk('Ecke links', 'deko-ecken-schnoerkel-gold', 8, 8, 30),
     dk('Ecke rechts', 'deko-ecken-schnoerkel-gold', 172, 110, 30, undefined, { flipX: true, flipY: true }),
-    ctext('Titel innen', 52.5, 62, 80, 14, 'Herzlichen\nGlückwunsch', { f: 'Cormorant Garamond', s: 20, w: 500, i: true, c: GOLD, wrap: true, lh: 1.2, min: 11 }),
+    ctext('Titel innen', 52.5, 60.5, 80, 17, 'Herzlichen\nGlückwunsch', { f: 'Cormorant Garamond', s: 20, w: 500, i: true, c: GOLD, wrap: true, lh: 1.2, min: 11 }),
     line('Mittelstrich', 105, 20, 105, 128, '#e6dcc4', 0.25, { locked: true }),
     text('Anrede', 120, 24, 76, 10, 'Liebe Anna,', { f: 'Cormorant Garamond', s: 19, w: 600, i: true, c: T, min: 11 }),
     text('Text', 120, 38, 76, 62, 'zu deinem Ehrentag wünsche ich dir Gesundheit, Zufriedenheit und viele unvergessliche Momente mit den Menschen, die dir am Herzen liegen.', { f: 'Cormorant Garamond', s: 13.5, w: 500, c: T, v: 'top', wrap: true, lh: 1.4, min: 9 }),

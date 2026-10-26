@@ -19,9 +19,9 @@ public sealed class TemplateMetaFileTests
 {
     /// <summary>
     /// Plan 6 wants every kind of template in at least three variants. The 10 templates of the first plans are one variant each, so this is only enforced when the library is complete: set the environment
-    /// variable DESIGNTHIX_REQUIRE_VARIANTS=1 (T5, the final pass, makes it the default by setting <see cref="EnforceByDefault"/>).
+    /// variable DESIGNTHIX_REQUIRE_VARIANTS=1 (T5, the final pass, made it the default: <see cref="EnforceByDefault"/>).
     /// </summary>
-    private const bool EnforceByDefault = false;
+    private const bool EnforceByDefault = true;
 
     public static TheoryData<string> Slugs
     {

@@ -70,7 +70,7 @@ const bistro = {
       frame('Foto', 136, 12, 58, 46, { mask: 'rounded', radius: 4 }),
       ...l.els, ...r.els,
       rect('Fußband', 0, 278, 210, 19, '#2a1d18', { locked: true }),
-      text('Fuß', 16, 281, 178, 13, 'Alle Preise inklusive Mehrwertsteuer · Allergene und Zusatzstoffe auf Anfrage · Mo–Sa 11–22 Uhr', { f: 'Poppins', s: 7.5, w: 400, c: '#e9d6cd', a: 'center', wrap: true, lh: 1.4, min: 6 }),
+      text('Fuß', 16, 279, 178, 13, 'Alle Preise inklusive Mehrwertsteuer · Allergene und Zusatzstoffe auf Anfrage · Mo–Sa 11–22 Uhr', { f: 'Poppins', s: 7.5, w: 400, c: '#e9d6cd', a: 'center', wrap: true, lh: 1.4, min: 6 }),
     ])];
   })(),
 };

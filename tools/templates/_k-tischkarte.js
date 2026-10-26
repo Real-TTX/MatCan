@@ -28,7 +28,7 @@ const gold = tpl(Object.assign({}, META, {
   ], [
     dk('Funkeln', G.funkeln, 38, 38, 14),
     ctext('Namen', 45, 56, 70, 8, 'Anna & Jonas', { f: G.script, s: 20, c: G.ink, min: 10 }),
-    ctext('Datum', 45, 66, 70, 5, C.dateNum, { f: G.caps, s: 6.5, w: 500, c: G.accent, ls: 0.3, min: 4 }),
+    ctext('Datum', 45, 66, 70, 5, C.dateNum, { f: G.caps, s: 7, w: 500, c: G.accent, ls: 0.3, min: 7 }),
   ], G.bg),
 }));
 
@@ -43,11 +43,11 @@ const salbei = tpl(Object.assign({}, META, {
     dk('Zweig rechts', S.stem, 78, y + 4, 7, undefined, { flipX: true }),
     ctext('Name', 45, y + 14, 56, 16, '{{Name}}', { f: S.script, s: 25, c: S.ink, min: 11 }),
     line('Strich', 38, y + 35, 52, y + 35, S.line, 0.3, { locked: true }),
-    ctext('Tisch', 45, y + 38, 60, 5, 'TISCH {{Tisch}}', { f: S.caps, s: 6.5, w: 600, c: S.accent, ls: 0.34, min: 4.5 }),
+    ctext('Tisch', 45, y + 38, 60, 5, 'TISCH {{Tisch}}', { f: S.caps, s: 7, w: 600, c: S.accent, ls: 0.34, min: 7 }),
   ], [
     dk('Zweig', S.stem, 41, 20, 8),
     ctext('Namen', 45, 62, 70, 8, 'Anna & Jonas', { f: S.script, s: 22, c: S.ink, min: 10 }),
-    ctext('Datum', 45, 72, 70, 5, C.dateNum, { f: S.caps, s: 6.5, w: 600, c: S.accent, ls: 0.34, min: 4 }),
+    ctext('Datum', 45, 72, 70, 5, C.dateNum, { f: S.caps, s: 7, w: 600, c: S.accent, ls: 0.34, min: 7 }),
   ], S.bg),
 }));
 
@@ -59,12 +59,12 @@ const minimal = tpl(Object.assign({}, META, {
   tags: ['Hochzeit', 'Tischkarte', 'Platzkarte', 'Namenskarte', 'Zeltkarte', 'minimalistisch', 'modern', 'schlicht', 'Gäste', 'Serie'],
   pages: tent(y => [
     rect('Band', 0, y, 90, 5, M.soft, { locked: true }),
-    ctext('Tisch', 45, y + 10, 60, 5, 'TISCH {{Tisch}}', { f: M.caps, s: 6.5, w: 600, c: M.accent, ls: 0.4, min: 4.5 }),
+    ctext('Tisch', 45, y + 10, 60, 5, 'TISCH {{Tisch}}', { f: M.caps, s: 7, w: 600, c: M.accent, ls: 0.4, min: 7 }),
     ctext('Name', 45, y + 19, 76, 14, '{{Name}}', { f: M.caps, s: 15, w: 300, c: M.ink, ls: 0.12, up: true, min: 7 }),
     line('Linie', 40, y + 38, 50, y + 38, M.ink, 0.4, { locked: true }),
   ], [
     ctext('Namen', 45, 56, 70, 6, 'ANNA & JONAS', { f: M.caps, s: 8, w: 400, c: M.ink, ls: 0.34, min: 5 }),
-    ctext('Datum', 45, 64, 70, 5, C.dateNum, { f: M.caps, s: 6.5, w: 600, c: M.accent, ls: 0.3, min: 4 }),
+    ctext('Datum', 45, 64, 70, 5, C.dateNum, { f: M.caps, s: 7, w: 600, c: M.accent, ls: 0.3, min: 7 }),
   ], M.bg),
 }));
 

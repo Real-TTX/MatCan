@@ -30,7 +30,7 @@ const typo = (() => {
         line('Linie', 10, 124, 89, 124, INK, 0.5),
       ]),
       text('Jahr', 10, 20, 79, 7, '2027', { f: 'Oswald', s: 12, w: 500, c: GREEN, a: 'left', ls: 0.3, min: 7 }),
-      text('Konfirmation', 8, 30, 85, 58, 'KON-\nFIR-\nMA-\nTION', { f: 'Anton', s: 42, c: INK, a: 'left', wrap: true, lh: 0.98, v: 'top', min: 22 }),
+      text('Konfirmation', 8, 30, 85, 56, 'KONFIR-\nMATION', { f: 'Anton', s: 74, c: INK, a: 'left', wrap: true, lh: 0.98, v: 'top', min: 50 }),
       text('Name', 10, 94, 79, 14, '{{Name}}', { f: 'Oswald', s: 26, w: 500, c: GREEN, a: 'left', up: true, ls: 0.08, min: 12 }),
       text('Einladung', 10, 109, 79, 12, 'wird gesegnet und lädt\nzum Fest ein.', { f: 'Inter', s: 9.5, w: 500, c: INK, a: 'left', wrap: true, v: 'top', lh: 1.4, min: 7 }),
       text('Datum', 10, 128, 79, 9, DATE, { f: 'Inter', s: 11, w: 700, c: INK, a: 'left', min: 7 }),

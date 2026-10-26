@@ -7,13 +7,13 @@ const fields = [
   field('Zusatz', 'Zusatz', 'text', 'Duftkerze aus Sojawachs'),
   field('Brenndauer', 'Brenndauer', 'text', 'ca. 40 Stunden'),
   field('Gewicht', 'Gewicht', 'text', '180 g'),
-  field('Hersteller', 'Hersteller', 'text', 'Kerzenmanufaktur Wiesengrund'),
+  field('Hersteller', 'Hersteller', 'text', 'Manufaktur Wiesengrund'),
 ];
 const sampleRows = [
-  { Produkt: 'Vanille & Zimt', Zusatz: 'Duftkerze aus Sojawachs', Brenndauer: 'ca. 40 Stunden', Gewicht: '180 g', Hersteller: 'Kerzenmanufaktur Wiesengrund' },
-  { Produkt: 'Wintermärchen: Tannennadel, Orange und Gewürznelke', Zusatz: 'Handgegossene Duftkerze aus nachhaltigem Sojawachs im Glas', Brenndauer: 'ca. 60 Stunden', Gewicht: '300 g', Hersteller: 'Kerzenmanufaktur Wiesengrund' },
+  { Produkt: 'Vanille & Zimt', Zusatz: 'Duftkerze aus Sojawachs', Brenndauer: 'ca. 40 Stunden', Gewicht: '180 g', Hersteller: 'Manufaktur Wiesengrund' },
+  { Produkt: 'Wintermärchen: Tannennadel, Orange und Gewürznelke', Zusatz: 'Handgegossene Duftkerze aus nachhaltigem Sojawachs im Glas', Brenndauer: 'ca. 60 Stunden', Gewicht: '300 g', Hersteller: 'Manufaktur Wiesengrund' },
   { Produkt: 'Meeresbrise', Zusatz: 'Duftkerze', Brenndauer: 'ca. 25 Stunden', Gewicht: '110 g', Hersteller: '' },
-  { Produkt: 'Zeder', Zusatz: '', Brenndauer: '', Gewicht: '180 g', Hersteller: 'Kerzenmanufaktur Wiesengrund' },
+  { Produkt: 'Zeder', Zusatz: '', Brenndauer: '', Gewicht: '180 g', Hersteller: 'Manufaktur Wiesengrund' },
 ];
 const HINWEIS = 'Nie unbeaufsichtigt brennen lassen. Von Kindern und Haustieren fernhalten. Docht vor dem Anzünden auf 5 mm kürzen.';
 

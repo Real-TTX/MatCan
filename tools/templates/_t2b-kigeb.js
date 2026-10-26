@@ -10,7 +10,7 @@ const base = {
   category: 'Einladungen', family: 'kindergeburtstag-einladung', familyName: 'Kindergeburtstag-Einladung', occasion: 'Kinder & Familie', unit: 'mm', fields, sampleRows,
 };
 const tags = (...more) => require('./_t2b-lib').dedupe(['Kindergeburtstag', 'Einladung', 'Geburtstag', 'Kinder', 'Party', 'Einladungskarte', 'Geburtstagseinladung', ...more]);
-const DATE = 'Samstag, 14. Juni 2027 · 15 Uhr';
+const DATE = 'Samstag, 12. Juni 2027 · 15 Uhr';
 const PLACE = 'Musterweg 5 · 12345 Musterstadt';
 const RSVP = 'Zusage bis 5. Juni: 0170 1234567';
 
@@ -157,11 +157,11 @@ const weltall = (() => {
     formatKey: 'din-lang-portrait', width: 99, height: 210,
     pages: [page(gradient(175, '#0a0e2e', '#2b1a6e'), [
       decor([
-        deko('Sternenhimmel', 'deko-sterne-himmel-weiss', 0, -14, W, undefined, { opacity: 0.85 }),
+        deko('Sternenhimmel', 'deko-sterne-himmel-weiss', 0, -14, W, undefined, { opacity: 0.6 }),
         deko('Mond', 'deko-formen-mond-gold', 67, 9, 22),
         ellipse('Planet klein', 9, 42, 14, 14, CORAL), ellipse('Planet klein Streifen', 11.5, 47, 9, 2.2, '#ffffff', { opacity: 0.35 }),
-        ellipse('Glanz', 23, 28, 56, 56, '#ffffff', { opacity: 0.07 }),
-        ellipse('Glanz innen', 28, 33, 46, 46, '#ffffff', { opacity: 0.07 }),
+        ellipse('Glanz', 23, 28, 56, 56, '#1c2070'),
+        ellipse('Glanz innen', 28, 33, 46, 46, '#2a2f8a'),
         icon('Rakete', 'rocket', 29.5, 33, 40, GOLD, 1.5),
         ellipse('Planet Ring hinten', 58, 182, 56, 16, null, { stroke: LILAC, sw: 2.6, rotation: -18, opacity: 0.9 }),
         ellipse('Planet groß', 67, 175, 34, 34, '#7a5be0'),
@@ -169,10 +169,10 @@ const weltall = (() => {
         deko('Funkeln', 'deko-sterne-funkeln-gold', 10, 184, 14),
         deko('Funkeln 2', 'deko-sterne-stern-gold', 40, 197, 6),
       ]),
-      text('Countdown', 8, 82, 83, 7, 'Countdown läuft!', { f: 'Righteous', s: 13, c: GOLD, a: 'center', ls: 0.12, min: 8 }),
-      text('Name', 6, 90, 87, 16, '{{Name}}', { f: 'Righteous', s: 36, c: '#ffffff', a: 'center', min: 14 }),
-      text('wird', 6, 107, 87, 12, 'wird {{Alter}}!', { f: 'Righteous', s: 27, c: CORAL, a: 'center', min: 14 }),
-      text('Einladung', 8, 123, 83, 11, 'Starte mit uns zur\nGeburtstagsmission.', { f: 'Nunito', s: 11, w: 600, c: '#e6e1ff', a: 'center', wrap: true, v: 'top', lh: 1.25, min: 8 }),
+      text('Countdown', 8, 86, 83, 7, 'Countdown läuft!', { f: 'Righteous', s: 13, c: GOLD, a: 'center', ls: 0.12, min: 8 }),
+      text('Name', 6, 93, 87, 16, '{{Name}}', { f: 'Righteous', s: 36, c: '#ffffff', a: 'center', min: 14 }),
+      text('wird', 6, 109, 87, 12, 'wird {{Alter}}!', { f: 'Righteous', s: 27, c: CORAL, a: 'center', min: 14 }),
+      text('Einladung', 8, 125, 83, 11, 'Starte mit uns zur\nGeburtstagsmission.', { f: 'Nunito', s: 11, w: 600, c: '#e6e1ff', a: 'center', wrap: true, v: 'top', lh: 1.25, min: 8 }),
       ...infoRow('Datum', 11, 142, 77, 'calendar-days', DATE, { chip: GOLD, ic: '#0a0e2e', c: '#ffffff', s: 9, w: 700, d: 7.5 }),
       ...infoRow('Ort', 11, 153, 77, 'map-pin', PLACE, { chip: GOLD, ic: '#0a0e2e', c: '#ffffff', s: 9, w: 700, d: 7.5 }),
       ...infoRow('Zusage', 11, 164, 77, 'phone', RSVP, { chip: GOLD, ic: '#0a0e2e', c: '#ffffff', s: 9, w: 700, d: 7.5 }),

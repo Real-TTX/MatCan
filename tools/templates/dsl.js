@@ -16,7 +16,7 @@
      };
 
    Helpers:  text rect ellipse line shape icon frame image strip qr barcode group gradient shadow field page ean13           (the basics)
-             deko dekoIn dekoCorners dekoRepeat                       images of the Deko pack (builtin keys deko-*): proportions from the drawing's viewBox
+             deko dekoWindow dekoIn dekoCorners dekoRepeat           images of the Deko pack (builtin keys deko-*): proportions from the drawing's viewBox
              foldCard panels                                          folded cards: two named pages, the panels (halves) of the open sheet
              formLine formBox checkbox checkItem ruled tableGrid     forms for print and handwriting
              typo                                                     German typography: quote, nbsp, dash, euro, date
@@ -190,6 +190,24 @@ function deko(name, key, x, y, w, h, o = {}) {
   const width = w || h * a;
   const height = h || w / a;
   return image(name, key, x, y, width, height, Object.assign({ fit: 'contain' }, o));
+}
+
+/**
+ * dekoWindow(name, key, x, y, w, h, o): a w x h window onto a piece (a pattern, a field of confetti, stripes): the piece is scaled to COVER the box and cut by its crop, so
+ * nothing sticks out of the page (an image that is larger than the page shows outside it in the editor). o.ax / o.ay (0..1, default 0.5) say which part of the piece is seen.
+ */
+function dekoWindow(name, key, x, y, w, h, o = {}) {
+  const a = dekoAspect(key);
+  const boxRatio = w / h;
+  let cw = 1;
+  let ch = 1;
+  if (boxRatio >= a) ch = a / boxRatio; else cw = boxRatio / a;
+  const ax = o.ax === undefined ? 0.5 : o.ax;
+  const ay = o.ay === undefined ? 0.5 : o.ay;
+  const rest = Object.assign({}, o);
+  delete rest.ax;
+  delete rest.ay;
+  return Object.assign(image(name, key, x, y, w, h, Object.assign({ fit: 'cover' }, rest)), { crop: { x: round((1 - cw) * ax), y: round((1 - ch) * ay), w: round(cw), h: round(ch) } });
 }
 
 /** dekoIn(name, key, bx, by, bw, bh, o): the piece as large as it gets INSIDE the box, keeping its proportions. o.align left|center|right, o.valign top|middle|bottom (default centre). */
@@ -389,5 +407,5 @@ const typo = {
 
 module.exports = {
   text, shape, rect, ellipse, line, icon, frame, image, strip, qr, barcode, group, gradient, shadow, field, page, ean13, iconNames, builtinKeys, fontFamilies,
-  deko, dekoIn, dekoCorners, dekoRepeat, dekoAspect, foldCard, panels, turn180, formLine, formBox, checkbox, checkItem, ruled, tableGrid, lineMm, typo, flat,
+  deko, dekoWindow, dekoIn, dekoCorners, dekoRepeat, dekoAspect, foldCard, panels, turn180, formLine, formBox, checkbox, checkItem, ruled, tableGrid, lineMm, typo, flat,
 };

@@ -54,7 +54,7 @@ const bold = {
   description: 'Kräftiger Zitat-Beitrag für Instagram (1080 × 1080 px): gelber Grund, riesige Anführungszeichen und Zitat in fetten Versalien, Urheber im schwarzen Balken. Zitat und Urheber sind Felder, so entsteht eine ganze Reihe aus einer Liste.',
   tags: ['Bold', 'Gelb', 'Schwarz', 'Versalien', 'Motivation', 'Laut'],
   pages: [page('#ffd23f', [
-    text('Anführungszeichen', 40, -20, 420, 420, '“', { f: 'Anton', s: 330, c: '#111111', lh: 1, min: 100, locked: true }),
+    text('Anführungszeichen', 40, 20, 420, 420, '“', { f: 'Anton', s: 330, c: '#111111', lh: 1, min: 100, locked: true }),
     text('Zitat', 80, 260, 920, 560, '{{Zitat}}', { f: 'Anton', s: 60, c: '#111111', up: true, v: 'middle', wrap: true, lh: 1.15, fit: 'shrink', min: 24 }),
     text('Autor', 80, 880, 700, 64, '{{Autor}}', { f: 'Montserrat', s: 20, w: 700, c: '#ffd23f', up: true, ls: 0.12, background: { color: '#111111', radius: 0, padding: 22 }, wrap: false, fit: 'none', showIf: 'Autor' }),
   ])],

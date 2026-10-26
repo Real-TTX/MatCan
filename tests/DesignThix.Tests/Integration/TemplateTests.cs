@@ -302,6 +302,102 @@ public sealed class TemplateTests(AppTests.AppFactory factory) : PlatformTestBas
     }
 
     [Fact]
+    public async Task A_newer_version_of_a_template_replaces_the_document_only_where_nobody_changed_it_and_a_deleted_one_stays_deleted()
+    {
+        if (!Enabled)
+        {
+            return;
+        }
+
+        const string untouched = "regaletikett";
+        const string edited = "poster-hoffest";
+        const string deleted = "flyer-wochenangebot";
+        await TemplateSeeder.SeedAsync(Factory.Services, NullLogger.Instance);
+
+        // the app ships a new version of the three files: the first text of the first page says something else
+        string Changed(string slug)
+        {
+            var node = System.Text.Json.Nodes.JsonNode.Parse(TemplateSeeder.Read(slug)!)!;
+            var elements = node["document"]!["pages"]![0]!["elements"]!.AsArray();
+            var text = elements.First(e => e!["type"]!.GetValue<string>() == "text")!;
+            text["text"] = "Neue Fassung " + slug;
+            return node.ToJsonString();
+        }
+
+        async Task<Design?> Find(string slug)
+        {
+            using var scope = Factory.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<Data.DtDbContext>();
+            return await db.Design.Include(d => d.Revisions).AsNoTracking().FirstOrDefaultAsync(d => d.SpaceId == null && d.IsTemplate && d.TemplateKey == slug);
+        }
+
+        var before = await Find(untouched);
+        var beforeEdited = await Find(edited);
+        var beforeDeleted = await Find(deleted);
+        Assert.NotNull(before);
+        Assert.NotNull(beforeEdited);
+        Assert.NotNull(beforeDeleted);
+
+        // a person saved the second one (its revision moved on), an administrator deleted the third
+        using (var scope = Factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<Data.DtDbContext>();
+            var design = await db.Design.SingleAsync(d => d.Id == beforeEdited!.Id);
+            design.Revision += 1;
+            db.DesignRevision.Add(new DesignRevision { DesignId = design.Id, Revision = design.Revision, DocumentJson = design.DocumentJson });
+            await db.SaveChangesAsync();
+        }
+
+        await As(Role.Admin, biz => DesignLogic.DeleteAsync(biz, beforeDeleted!.Id));
+
+        try
+        {
+            var changed = new[] { untouched, edited, deleted }.ToDictionary(s => s, Changed);
+            TemplateSeeder.ReadOverride = slug => changed.GetValueOrDefault(slug);
+            Assert.Equal(0, await TemplateSeeder.SeedAsync(Factory.Services, NullLogger.Instance));
+
+            var after = await Find(untouched);
+            Assert.Contains("Neue Fassung " + untouched, after!.DocumentJson);
+            Assert.Equal(before!.Revision + 1, after.Revision);
+            Assert.Contains(after.Revisions, r => r.Revision == after.Revision && r.Note == "Vorlage aktualisiert");
+            Assert.Equal(before.Name, after.Name);
+
+            var afterEdited = await Find(edited);
+            Assert.DoesNotContain("Neue Fassung", afterEdited!.DocumentJson);
+            Assert.Equal(beforeEdited!.Revision + 1, afterEdited.Revision);
+            Assert.Null(await Find(deleted));
+
+            // again: nothing changes (the hashes are known), also not for the edited one
+            Assert.Equal(0, await TemplateSeeder.SeedAsync(Factory.Services, NullLogger.Instance));
+            Assert.Equal(after.Revision, (await Find(untouched))!.Revision);
+            Assert.Equal(afterEdited.Revision, (await Find(edited))!.Revision);
+            Assert.Null(await Find(deleted));
+        }
+        finally
+        {
+            TemplateSeeder.ReadOverride = null;
+        }
+
+        // the old files are back: the untouched one follows (a new revision), the edited one is still left alone
+        await TemplateSeeder.SeedAsync(Factory.Services, NullLogger.Instance);
+        var restored = await Find(untouched);
+        Assert.DoesNotContain("Neue Fassung", restored!.DocumentJson);
+        Assert.Equal(before.Revision + 2, restored.Revision);
+
+        // put the deleted one back for the other tests: its slug leaves the list, so it is seeded again
+        using (var scope = Factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<Data.DtDbContext>();
+            var seeded = await db.Setting.SingleAsync(s => s.Key == TemplateSeeder.Marker);
+            seeded.Value = JsonSerializer.Serialize(JsonSerializer.Deserialize<List<string>>(seeded.Value)!.Where(s => s != deleted));
+            await db.SaveChangesAsync();
+        }
+
+        Assert.Equal(1, await TemplateSeeder.SeedAsync(Factory.Services, NullLogger.Instance));
+        Assert.NotNull(await Find(deleted));
+    }
+
+    [Fact]
     public async Task A_seeded_template_is_stored_as_the_validated_document_and_can_be_used_by_every_member()
     {
         if (!Enabled)

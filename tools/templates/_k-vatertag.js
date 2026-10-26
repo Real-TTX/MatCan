@@ -81,7 +81,7 @@ const streifen = tpl(Object.assign({}, META, KM, {
     icon('Krone', 'crown', BL.cx - 5, 56, 10, '#b8902f', 1.6),
   ], [
     dk('Muster innen', 'deko-muster-streifen-navy', 14, 36, 76, 76, { opacity: 0.14 }),
-    ctext('Titel', 52.5, 54, 76, 20, 'Für den\nbesten Vater', { f: 'Bebas Neue', s: 32, c: NAVY, wrap: true, lh: 1.05, ls: 0.04, min: 14 }),
+    ctext('Titel', 52.5, 52, 76, 24, 'Für den\nbesten Vater', { f: 'Bebas Neue', s: 32, c: NAVY, wrap: true, lh: 1.05, ls: 0.04, min: 14 }),
     text('Anrede', 120, 26, 76, 12, 'Lieber Papa,', { f: 'Dancing Script', s: 24, w: 700, c: '#b8902f', min: 12 }),
     text('Text', 120, 42, 76, 60, 'danke für deinen Rat, deinen Humor und deine ruhige Art. Auf dich kann man sich immer verlassen. Lass dich heute feiern!', { f: 'Montserrat', s: 10, w: 400, c: NAVY, v: 'top', wrap: true, lh: 1.6, min: 7 }),
     text('Gruß', 120, 108, 76, 10, 'Deine Tochter Mia', { f: 'Dancing Script', s: 19, w: 700, c: NAVY, a: 'right', min: 9 }),

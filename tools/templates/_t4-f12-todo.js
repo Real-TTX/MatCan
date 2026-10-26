@@ -90,8 +90,8 @@ module.exports = family({
   formatKey: 'a4-portrait',
   width: 210,
   height: 297,
-  fields: [field('Datum', 'Datum', 'text', 'Montag, 26. Oktober 2026')],
-  sampleRows: [{ Datum: 'Montag, 26. Oktober 2026' }, { Datum: 'Kalenderwoche 44 · 26. Oktober bis 1. November 2026' }, { Datum: '' }],
+  fields: [field('Datum', 'Datum', 'text', 'Montag, 25. Oktober 2027')],
+  sampleRows: [{ Datum: 'Montag, 25. Oktober 2027' }, { Datum: 'Kalenderwoche 43 · 25. bis 31. Oktober 2027' }, { Datum: '' }],
 }, [
   {
     slug: 'todo-liste-klassisch', variant: 'Klassisch',

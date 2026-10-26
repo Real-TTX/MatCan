@@ -62,15 +62,15 @@ const hohl = {
   name: 'Poster A2 – Typo Hohl',
   variant: 'Hohl',
   formatKey: 'poster-a2-portrait', width: 420, height: 594,
-  description: 'Starkes A2-Schriftplakat für Tanzabend, Club oder Festival: zehn Zeilen mit hohlem Wort in Linienschrift, eine Zeile gefüllt in Gelb, davor eine weiße Infotafel mit Datum, Ort und Eintritt.',
+  description: 'Starkes A2-Schriftplakat für Tanzabend, Club oder Festival: vier Zeilen mit hohlem Wort in Linienschrift, die immer heller werden, bis eine Zeile gefüllt in Gelb leuchtet, darunter eine weiße Infotafel mit Datum, Ort und Eintritt.',
   tags: ['Plakat', 'Poster', 'A2', 'Typografie', 'Tanzabend', 'Club', 'Hohlschrift', 'Wiederholung', 'Gelb', 'Dunkel'],
   pages: [page(DARK, [
-    ...Array.from({ length: 9 }, (_, i) => text('Wiederholung ' + (i + 1), -10, 8 + i * 62, 440, 64, i === 4 ? 'TANZ TANZ TANZ' : 'TANZ TANZ TANZ', { f: 'Anton', s: 150, c: i === 4 ? '#ffd23f' : DARK, outline: i === 4 ? null : { color: '#3b4a68', width: 1.4 }, a: 'center', lh: 1, min: 60 })),
-    rect('Tafel', 40, 360, 340, 186, '#ffffff', { locked: true }),
-    text('Anlass', 60, 372, 300, 12, 'DER GROSSE', { f: 'Inter', w: 800, s: 22, c: '#10151f', ls: 0.3, a: 'left', min: 10 }),
-    text('Titel', 58, 384, 304, 60, 'Tanzabend', { f: 'Anton', s: 120, c: '#10151f', a: 'left', lh: 1, min: 50 }),
-    text('Datum', 60, 450, 300, 18, 'Freitag, 20. November, 21 Uhr', { f: 'Inter', w: 800, s: 30, c: '#c1121f', a: 'left', min: 14 }),
-    text('Info', 60, 476, 300, 52, 'Stadthalle Musterstadt, Großer Saal\nMit Live-Band und DJ  ·  Eintritt 8 €\nTischreservierung unter ' + PHONE, { f: 'Inter', w: 500, s: 20, c: '#10151f', a: 'left', v: 'top', wrap: true, lh: 1.5, min: 10 }),
+    ...Array.from({ length: 5 }, (_, i) => text('Wiederholung ' + (i + 1), 0, 14 + i * 66, 420, 66, 'TANZ TANZ TANZ', { f: 'Anton', s: 150, c: i === 4 ? '#ffd23f' : DARK, outline: i === 4 ? null : { color: ['#2a3550', '#364466', '#465a82', '#5d74a0'][i], width: 1.6 }, a: 'center', lh: 1, min: 60, locked: true })),
+    rect('Tafel', 40, 368, 340, 186, '#ffffff', { locked: true }),
+    text('Anlass', 60, 380, 300, 12, 'DER GROSSE', { f: 'Inter', w: 800, s: 22, c: '#10151f', ls: 0.3, a: 'left', min: 10 }),
+    text('Titel', 58, 392, 304, 60, 'Tanzabend', { f: 'Anton', s: 120, c: '#10151f', a: 'left', lh: 1, min: 50 }),
+    text('Datum', 60, 458, 300, 18, 'Freitag, 19. November, 21 Uhr', { f: 'Inter', w: 800, s: 30, c: '#c1121f', a: 'left', min: 14 }),
+    text('Info', 60, 484, 300, 52, 'Stadthalle Musterstadt, Großer Saal\nMit Live-Band und DJ  ·  Eintritt 8 €\nTischreservierung unter ' + PHONE, { f: 'Inter', w: 500, s: 20, c: '#10151f', a: 'left', v: 'top', wrap: true, lh: 1.5, min: 10 }),
   ])],
 };
 

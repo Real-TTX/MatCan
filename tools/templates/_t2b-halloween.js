@@ -91,7 +91,7 @@ const suess = (() => Object.assign({}, base, {
       ...bat('Fledermaus', 100, 60, 160, '#2a1238'),
     ]),
     text('Kopf', 80, 150, 900, 90, 'KOMMT MIT ZUM', { f: 'Fredoka', s: 30, w: 600, c: '#2a1238', a: 'left', ls: 0.2, min: 18 }),
-    text('Titel', 70, 230, 940, 230, 'Süßes oder\nSaures!', { f: 'Baloo 2', s: 95, w: 800, c: '#ffffff', a: 'left', wrap: true, lh: 1.0, min: 40, shadow: shadow('#2a1238', 0.35, 0, 6, 8) }),
+    text('Titel', 70, 217, 940, 256, 'Süßes oder\nSaures!', { f: 'Baloo 2', s: 95, w: 800, c: '#ffffff', a: 'left', wrap: true, lh: 1.0, min: 40, shadow: shadow('#2a1238', 0.35, 0, 6, 8) }),
     text('Datum', 80, 560, 520, 70, 'Sonntag, 31. Oktober', { f: 'Fredoka', s: 30, w: 600, c: '#2a1238', a: 'left', min: 16 }),
     text('Zeit', 80, 622, 520, 60, 'ab 17 Uhr · Treffpunkt Spielplatz', { f: 'Fredoka', s: 20, w: 500, c: '#2a1238', a: 'left', wrap: true, v: 'top', min: 12 }),
   ])],

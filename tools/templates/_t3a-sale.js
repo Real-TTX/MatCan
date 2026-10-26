@@ -16,7 +16,7 @@ const prozent = {
   tags: ['Flyer', 'Sale', 'Rabatt', 'Räumungsverkauf', 'Schlussverkauf', 'Prozent', 'Schaufenster', 'Aushang', 'Angebot', 'Preis'],
   pages: [page(RED, [
     text('Etikett', 14, 14, 182, 16, 'RÄUMUNGSVERKAUF', { f: 'Anton', s: 40, c: '#ffffff', ls: 0.12, a: 'center', min: 18 }),
-    text('Zahl', 4, 34, 202, 130, '–50 %', { f: 'Anton', s: 300, c: '#ffffff', a: 'center', lh: 1, min: 100 }),
+    text('Zahl', 10, 34, 190, 130, '–50 %', { f: 'Anton', s: 300, c: '#ffffff', a: 'center', lh: 1, min: 100 }),
     rect('Band', -10, 176, 230, 30, '#ffffff', { rotation: -3, locked: true }),
     text('Band Text', -4, 176, 218, 30, 'AUF ALLES, WAS IM LADEN STEHT', { f: 'Anton', s: 30, c: RED, a: 'center', min: 14, rotation: -3 }),
     text('Gruppen', 14, 220, 182, 24, 'Mode  ·  Schuhe  ·  Taschen  ·  Accessoires', { f: 'Source Sans 3', w: 700, s: 22, c: '#ffffff', a: 'center', min: 12 }),

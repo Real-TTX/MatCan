@@ -16,7 +16,7 @@
       {"key":"Zusatz","label":"Zusatz","type":"text","sample":"Duftkerze aus Sojawachs","decimals":null,"category":null,"required":false},
       {"key":"Brenndauer","label":"Brenndauer","type":"text","sample":"ca. 40 Stunden","decimals":null,"category":null,"required":false},
       {"key":"Gewicht","label":"Gewicht","type":"text","sample":"180 g","decimals":null,"category":null,"required":false},
-      {"key":"Hersteller","label":"Hersteller","type":"text","sample":"Kerzenmanufaktur Wiesengrund","decimals":null,"category":null,"required":false}
+      {"key":"Hersteller","label":"Hersteller","type":"text","sample":"Manufaktur Wiesengrund","decimals":null,"category":null,"required":false}
     ],
     "pages": [
       {"id":"p1","name":"","background":{"color":"#111113","gradient":null,"asset":null,"fit":"cover"},"elements":[
@@ -34,9 +34,9 @@
     ]
   },
   "sampleRows": [
-    {"Produkt":"Vanille & Zimt","Zusatz":"Duftkerze aus Sojawachs","Brenndauer":"ca. 40 Stunden","Gewicht":"180 g","Hersteller":"Kerzenmanufaktur Wiesengrund"},
-    {"Produkt":"Wintermärchen: Tannennadel, Orange und Gewürznelke","Zusatz":"Handgegossene Duftkerze aus nachhaltigem Sojawachs im Glas","Brenndauer":"ca. 60 Stunden","Gewicht":"300 g","Hersteller":"Kerzenmanufaktur Wiesengrund"},
+    {"Produkt":"Vanille & Zimt","Zusatz":"Duftkerze aus Sojawachs","Brenndauer":"ca. 40 Stunden","Gewicht":"180 g","Hersteller":"Manufaktur Wiesengrund"},
+    {"Produkt":"Wintermärchen: Tannennadel, Orange und Gewürznelke","Zusatz":"Handgegossene Duftkerze aus nachhaltigem Sojawachs im Glas","Brenndauer":"ca. 60 Stunden","Gewicht":"300 g","Hersteller":"Manufaktur Wiesengrund"},
     {"Produkt":"Meeresbrise","Zusatz":"Duftkerze","Brenndauer":"ca. 25 Stunden","Gewicht":"110 g","Hersteller":""},
-    {"Produkt":"Zeder","Zusatz":"","Brenndauer":"","Gewicht":"180 g","Hersteller":"Kerzenmanufaktur Wiesengrund"}
+    {"Produkt":"Zeder","Zusatz":"","Brenndauer":"","Gewicht":"180 g","Hersteller":"Manufaktur Wiesengrund"}
   ]
 }

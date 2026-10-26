@@ -12,7 +12,7 @@
   "document": {
     "schema":2,"unit":"mm","width":210,"height":297,"dpi":300,"locale":"de-DE",
     "fields": [
-      {"key":"Woche","label":"Woche","type":"text","sample":"KW 44 · 26. Oktober – 1. November 2026","decimals":null,"category":null,"required":false}
+      {"key":"Woche","label":"Woche","type":"text","sample":"KW 43 · 25. – 31. Oktober 2027","decimals":null,"category":null,"required":false}
     ],
     "pages": [
       {"id":"p1","name":"Wochenplaner","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
@@ -113,8 +113,8 @@
     ]
   },
   "sampleRows": [
-    {"Woche":"KW 44 · 26. Oktober – 1. November 2026"},
-    {"Woche":"KW 45 · 2. – 8. November 2026"},
+    {"Woche":"KW 43 · 25. – 31. Oktober 2027"},
+    {"Woche":"KW 44 · 1. – 7. November 2027"},
     {"Woche":""}
   ]
 }

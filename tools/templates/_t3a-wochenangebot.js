@@ -28,7 +28,7 @@ const preisliste = {
     rect('Kopf', 0, 0, 148, 62, BLK, { locked: true }),
     text('Etikett', 12, 10, 50, 6, 'Nur diese Woche', { f: 'Source Sans 3', s: 8, w: 700, c: '#ffffff', up: true, ls: 0.16, background: { color: RED, radius: 1.5, padding: 2 }, fit: 'none' }),
     text('Schlagzeile', 12, 19, 124, 31, 'ANGEBOTE', { f: 'Anton', s: 68, c: YEL, ls: 0.01, lh: 1.15, min: 40, a: 'left' }),
-    text('Gültigkeit', 12, 50, 100, 6, 'Gültig von Mo, 3. bis Sa, 8. November', { f: 'Source Sans 3', s: 10, w: 600, c: '#ffffff', min: 7 }),
+    text('Gültigkeit', 12, 50, 100, 6, 'Gültig von Mo, 1. bis Sa, 6. November', { f: 'Source Sans 3', s: 10, w: 600, c: '#ffffff', min: 7 }),
     group('Rabattstern', [
       shape('star', 'Stern', 108, 6, 34, 34, RED, { points: 18, inner: 0.88 }),
       text('Stern bis zu', 109, 13.5, 32, 5, 'bis zu', { f: 'Source Sans 3', s: 8, w: 700, c: '#ffffff', a: 'center', up: true, ls: 0.1, min: 5 }),
@@ -76,7 +76,7 @@ const handgemacht = {
     product(2, 76, 62, 'wheat', 'Dinkelbrot', '750 g, frisch gebacken', typo.euro(3.5), 9),
     product(3, 6, 126, 'egg', 'Freiland-Eier', '10 Stück, Größe M', typo.euro(3.19), 8),
     product(4, 76, 126, 'milk', 'Frische Milch', '1 Liter, Glasflasche', typo.euro(1.39), -9),
-    text('Gültig', 12, 188, 124, 5, `Gültig von Montag, 3. bis Samstag, 8. November`, { f: 'Patrick Hand', s: 11, c: BROWN, a: 'center', min: 7 }),
+    text('Gültig', 12, 188, 124, 5, `Gültig von Montag, 1. bis Samstag, 6. November`, { f: 'Patrick Hand', s: 11, c: BROWN, a: 'center', min: 7 }),
     rect('Linie', 12, 195, 124, 0.4, BROWN, { opacity: 0.4 }),
     text('Hof', 12, 197, 124, 5, 'Hofladen Wiesengrund', { f: 'Patrick Hand', s: 13, c: BROWN, a: 'center', min: 8 }),
     text('Kontakt', 12, 203, 124, 4, `${ADDRESS}  ·  ${PHONE}`, { f: 'Source Sans 3', s: 7.5, c: '#7a6450', a: 'center', min: 6 }),

@@ -8,9 +8,9 @@ const META = { family: 'hochzeit-antwortkarte', familyName: 'Hochzeit: Antwortka
 function addressSide(st, o) {
   return page(st.bg, [
     rect('Briefmarke', o.sx, o.sy, 22, 26, null, { stroke: st.line, sw: 0.3, dash: 'dashed', locked: true }),
-    ctext('Briefmarke Hinweis', o.sx + 11, o.sy + 9, 20, 8, 'Marke', { f: st.sans, s: 6, c: st.accent, min: 4 }),
+    ctext('Briefmarke Hinweis', o.sx + 11, o.sy + 9, 20, 8, 'Marke', { f: st.sans, s: 7, c: st.accent, min: 7 }),
     ...o.extra,
-    text('Empfänger', o.ax, o.ay, o.aw, 6, 'ANTWORT AN', { f: st.caps, s: 6.5, w: 600, c: st.accent, ls: 0.3, min: 4 }),
+    text('Empfänger', o.ax, o.ay, o.aw, 6, 'ANTWORT AN', { f: st.caps, s: 7, w: 600, c: st.accent, ls: 0.3, min: 7 }),
     text('Anschrift', o.ax, o.ay + 8, o.aw, 22, 'Anna & Jonas Berger\nBirkenallee 4\n12345 ' + C.city, { f: st.serif, s: o.fs || 14, w: 600, c: st.ink, wrap: true, v: 'top', lh: 1.4, min: 8 }),
   ], 'Rückseite');
 }
@@ -77,7 +77,7 @@ const minimal = tpl(Object.assign({}, META, {
     page(M.bg, [
       rect('Block', 0, 0, 52, 105, M.soft, { locked: true }),
       text('Titel', 9, 12, 38, 40, 'Wir freuen\nuns auf\neure\nAntwort.', { f: M.serif, s: 21, i: true, w: 400, c: M.ink, wrap: true, lh: 1.1, v: 'top', min: 10 }),
-      text('Frist', 9, 82, 38, 14, 'BITTE BIS\n1. MAI 2027', { f: M.caps, s: 6.5, w: 600, c: M.ink, ls: 0.24, wrap: true, lh: 1.5, v: 'top', min: 4 }),
+      text('Frist', 9, 82, 38, 14, 'BITTE BIS\n1. MAI 2027', { f: M.caps, s: 7, w: 600, c: M.ink, ls: 0.24, wrap: true, lh: 1.5, v: 'top', min: 7 }),
       ...checkItem('Zusage', 62, 12, 78, 'Wir kommen gern', { f: M.sans, s: 9, c: M.ink, color: M.ink, size: 3.4, radius: 0 }),
       ...checkItem('Absage', 62, 21, 78, 'Wir können leider nicht', { f: M.sans, s: 9, c: M.ink, color: M.ink, size: 3.4, radius: 0 }),
       ...formLine('Namen', 62, 44, 76, 'NAME(N)', { color: M.ink, f: M.caps, labelSize: 7, labelColor: M.accent }),

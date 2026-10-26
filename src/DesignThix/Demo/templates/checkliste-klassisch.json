@@ -13,7 +13,7 @@
     "schema":2,"unit":"mm","width":210,"height":297,"dpi":300,"locale":"de-DE",
     "fields": [
       {"key":"Titel","label":"Titel","type":"text","sample":"Umzug im Oktober","decimals":null,"category":null,"required":false},
-      {"key":"Datum","label":"Datum","type":"text","sample":"3. Oktober 2026","decimals":null,"category":null,"required":false}
+      {"key":"Datum","label":"Datum","type":"text","sample":"3. Oktober 2027","decimals":null,"category":null,"required":false}
     ],
     "pages": [
       {"id":"p1","name":"Checkliste","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
@@ -121,7 +121,7 @@
     ]
   },
   "sampleRows": [
-    {"Titel":"Umzug im Oktober","Datum":"3. Oktober 2026"},
+    {"Titel":"Umzug im Oktober","Datum":"3. Oktober 2027"},
     {"Titel":"Sommerfest des Kindergartens – Aufbau, Verpflegung und Aufräumen","Datum":"27. Juni 2027"},
     {"Titel":"","Datum":""}
   ]

@@ -115,7 +115,7 @@ async function platformShots(browser, page) {
 
   // folders and designs of Mia (copies of the templates with names of a farm shop), each with a picture of its own
   const templates = await mia.evaluate(async () => (await (await fetch('/api/templates')).json()));
-  const template = prefix => { const t = templates.find(x => x.name.indexOf(prefix) === 0); if (!t) { throw new Error('No template ' + prefix); } return t.id; };
+  const template = prefix => { const t = templates.find(x => x.name === prefix) || templates.find(x => x.name.indexOf(prefix) === 0); if (!t) { throw new Error('No template ' + prefix); } return t.id; };
   const folder = async (name, color) => must(await postJson(mia, '/api/folders', { name, color }), 'folder ' + name).id;
   const folders = { hofladen: await folder('Hofladen Sommer', '#f2a65a'), markt: await folder('Wochenmarkt', '#7cb518'), herbst: await folder('Herbstkampagne', '#e5634d') };
   const made = [];
@@ -125,19 +125,19 @@ async function platformShots(browser, page) {
     made.push(copy.id);
     return copy.id;
   };
-  const poster = await design('Poster A3', 'Hoffest-Plakat', folders.hofladen);
-  await design('Flyer A5', 'Wochenangebot Flyer', folders.hofladen);
-  await design('Instagram-Beitrag', 'Sommeraktion Instagram', folders.hofladen);
-  await design('Glasetikett', 'Honig-Etikett', folders.hofladen);
-  await design('Obst', 'Preisschilder Obst und Gemüse', folders.markt);
-  await design('Regaletikett', 'Regaletikett Hofladen', folders.markt);
-  await design('Grußkarte', 'Herbstgruß an Stammkunden', folders.herbst);
-  await design('Instagram-Story', 'Erntedank Story', folders.herbst);
+  const poster = await design('Poster A3 – Hoffest', 'Hoffest-Plakat', folders.hofladen);
+  await design('Flyer A5 – Wochenangebot', 'Wochenangebot Flyer', folders.hofladen);
+  await design('Instagram-Beitrag – SALE', 'Sommeraktion Instagram', folders.hofladen);
+  await design('Glasetikett – Marmelade', 'Honig-Etikett', folders.hofladen);
+  await design('Obst & Gemüse – Preisschild', 'Preisschilder Obst und Gemüse', folders.markt);
+  await design('Regaletikett mit EAN', 'Regaletikett Hofladen', folders.markt);
+  await design('Grußkarte A6 quer (2 Seiten)', 'Herbstgruß an Stammkunden', folders.herbst);
+  await design('Instagram-Story – Neu im Laden', 'Erntedank Story', folders.herbst);
   const cheese = await design('Käsetheke', 'Käsetheke – Preisschild');
-  await design('Flyer A5', 'Flyer Herbstmarkt');
-  await design('Poster A3', 'Plakat Wochenmarkt');
-  await design('Instagram-Beitrag', 'Angebot der Woche');
-  await design('Glasetikett', 'Marmeladen-Etikett');
+  await design('Flyer A5 – Wochenangebot', 'Flyer Herbstmarkt');
+  await design('Poster A3 – Hoffest', 'Plakat Wochenmarkt');
+  await design('Instagram-Beitrag – SALE', 'Angebot der Woche');
+  await design('Glasetikett – Marmelade', 'Marmeladen-Etikett');
   // the picture of a design is made by the editor after a save: open each one and let it make the picture
   for (const id of made) {
     await openDesigner(mia, base, id);
@@ -373,8 +373,10 @@ async function catalogShots(browser, page) {
   });
   await idle(page);
   await page.fill('.dt-psearch', '');
-  await page.selectOption('.dt-psec[data-section="icons"] [data-icon-set]', 'iconify:mdi');
+  // the grid of a set without the filler circles of the fake (tabler: all real icons); the save is done before the shot (no "Wird gespeichert …" in the bar)
+  await page.selectOption('.dt-psec[data-section="icons"] [data-icon-set]', 'iconify:tabler');
   await page.waitForSelector('.dt-icongrid--set .dt-icontile');
+  await page.waitForFunction(() => window.DtDesigner.app.saveState === 'saved', null, { timeout: 20000 });
   await page.waitForTimeout(600);
   await raf2(page);
   await shotOf('catalogs-icons.png');
@@ -473,6 +475,19 @@ async function catalogShots(browser, page) {
   await page.goto(base + '/Templates', { waitUntil: 'networkidle' });
   await waitPreviews(page);
   await shot('templates.png');
+  // plan 6: the gallery narrowed to one occasion (families with their variant dots) and the preview of a family with its variants
+  await page.goto(base + '/Templates?occasion=Hochzeit', { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => { const g = document.querySelector('[data-gallery]'); return g && g.getAttribute('data-state') === 'ready'; }, null, { timeout: 20000 });
+  await waitPreviews(page);
+  await shot('templates-hochzeit.png');
+  const weddingTile = page.locator('.dt-tg[data-family="hochzeit-einladung-klappkarte"]');
+  await weddingTile.locator('[data-tile-preview]').click();
+  await page.waitForSelector('dialog.dt-tpv[open]');
+  await page.waitForFunction(() => { const pages = document.querySelectorAll('dialog.dt-tpv .dt-tpv__page'); return pages.length >= 2 && document.querySelectorAll('dialog.dt-tpv .dt-tpv__page .dt-designthumb.is-ready').length === pages.length; }, null, { timeout: 20000 });
+  await page.waitForTimeout(400);
+  await shot('template-preview.png');
+  await page.keyboard.press('Escape');
+  await page.waitForSelector('dialog.dt-tpv', { state: 'detached' });
 
   // The add-on "Serien": the data list, the library of media, the output job with its sheets.
   const listId = Number((await hrefOf('/DataLists', 'a', 'Käsetheke (Beispiel)')).match(/(\d+)(\?.*)?$/)[1]);
@@ -504,7 +519,7 @@ async function catalogShots(browser, page) {
   // The editor. A template is opened itself where nothing is changed; a copy (deleted at the end) is made for the effects.
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   const templates = await page.evaluate(async () => (await (await fetch('/api/templates')).json()));
-  const templateId = name => { const t = templates.find(x => x.name.indexOf(name) === 0); if (!t) { throw new Error('No template ' + name); } return t.id; };
+  const templateId = name => { const t = templates.find(x => x.name === name) || templates.find(x => x.name.indexOf(name) === 0); if (!t) { throw new Error('No template ' + name); } return t.id; };
   const open = id => openDesigner(page, base, id);
   const select = async name => {
     await page.evaluate(n => { const app = window.DtDesigner.app; const el = app.elements().find(e => e.name === n); app.select([el.id]); }, name);
@@ -514,7 +529,7 @@ async function catalogShots(browser, page) {
   const elementId = name => page.evaluate(n => window.DtDesigner.app.elements().find(e => e.name === n).id, name);
 
   // 1. The Instagram post with the panel Elemente and a selected headline.
-  await open(templateId('Instagram-Beitrag'));
+  await open(templateId('Instagram-Beitrag – SALE'));
   await openPanel(page, 'elements');
   await page.waitForTimeout(800);
   await select('SALE');
@@ -539,12 +554,12 @@ async function catalogShots(browser, page) {
   await page.waitForSelector('dialog.dt-downloaddlg', { state: 'detached' });
 
   // 5. The media browser through "Ersetzen" of the photo frame.
-  await open(templateId('Glasetikett'));
+  await open(templateId('Glasetikett – Marmelade'));
   await openPanel(page, 'uploads');
   await select('Foto');
   await page.click('#dt-ctx button:has-text("Bild wählen")');
   await page.waitForSelector('dialog.dt-media[open]');
-  await page.click('.dt-media__tab[data-tab="all"]');
+  await page.click('.dt-media__tab:has-text("Deko")');
   await page.waitForSelector('.dt-media__tile');
   await page.waitForTimeout(700);
   await shot('media-browser.png');
@@ -566,7 +581,7 @@ async function catalogShots(browser, page) {
     const token = document.querySelector('meta[name=dt-csrf]').content;
     const r = await fetch('/api/designs/' + id + '/use-template', { method: 'POST', headers: { RequestVerificationToken: token } });
     return r.json();
-  }, templateId('Instagram-Beitrag'));
+  }, templateId('Instagram-Beitrag – SALE'));
   await open(copy.id);
   await select('Hinweis');
   await page.click('#dt-ctx button[aria-label="Effekte"]');
@@ -582,7 +597,7 @@ async function catalogShots(browser, page) {
   }, copy.id);
 
   // 8. The phone editor.
-  await openDesigner(p, base, templateId('Instagram-Beitrag'));
+  await openDesigner(p, base, templateId('Instagram-Beitrag – SALE'));
   await p.waitForTimeout(800);
   await p.screenshot({ path: path.join(out, 'phone-editor.png') });
   written.push('phone-editor.png');

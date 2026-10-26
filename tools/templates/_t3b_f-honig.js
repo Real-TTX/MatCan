@@ -35,7 +35,7 @@ const waben = {
     text('Zusatz', 5, 25.6, 60, 4.6, '{{Zusatz}}', { f: 'Lora', s: 8.5, i: true, c: BROWN, min: 6, showIf: 'Zusatz' }),
     line('Trenner', 5, 33.4, 36, 33.4, BROWN, 0.4, { opacity: 0.6 }),
     text('Imker', 5, 35, 38, 4.4, '{{Imker}}', { f: 'Montserrat', s: 7.5, w: 700, c: BROWN, min: 5.5, showIf: 'Imker' }),
-    text('MHD', 5, 40, 38, 4, '{{MHD}}', { f: 'Montserrat', s: 7, w: 500, c: '#6b4a1c', min: 5.5, showIf: 'MHD' }),
+    text('MHD', 5, 38, 38, 4, '{{MHD}}', { f: 'Montserrat', s: 7, w: 500, c: '#6b4a1c', min: 5.5, showIf: 'MHD' }),
     shape('hexagon', 'Gewicht Sechseck', 47, 30.6, 18, 18, BROWN, { locked: true }),
     text('Gewicht', 47.6, 35.4, 16.8, 8.6, '{{Gewicht}}', { f: 'Oswald', s: 14, w: 600, c: '#ffd34d', a: 'center', lh: 1, min: 8 }),
   ])],
@@ -50,12 +50,12 @@ const natur = {
   pages: [page('#fffdf3', [
     deko('Wiese', 'deko-blumen-wiese', 0, 25.4, 70, undefined, { locked: true }),
     text('Kopf', 5, 4.6, 60, 3.4, 'Honig aus der Region', { f: 'Montserrat', s: 7, w: 600, c: GREEN, a: 'center', up: true, ls: 0.2, min: 5.5 }),
-    text('Sorte', 4, 8.4, 62, 12, '{{Sorte}}', { f: 'Caveat', s: 32, w: 700, c: '#3a2a0e', a: 'center', lh: 1, min: 13 }),
+    text('Sorte', 5, 8.4, 60, 12, '{{Sorte}}', { f: 'Caveat', s: 32, w: 700, c: '#3a2a0e', a: 'center', lh: 1, min: 13 }),
     text('Zusatz', 5, 20.2, 60, 4.4, '{{Zusatz}}', { f: 'Lora', s: 8, i: true, c: '#6b5a3a', a: 'center', min: 6, showIf: 'Zusatz' }),
-    rect('Fußband', 0, 40, 70, 10, '#fffdf3', { opacity: 0.88, locked: true }),
+    rect('Fußband', 0, 39.4, 70, 10.6, '#fffdf3', { opacity: 0.95, locked: true }),
     text('Gewicht', 5, 41.4, 16, 6, '{{Gewicht}}', { f: 'Montserrat', s: 10, w: 800, c: '#3a2a0e', min: 7 }),
     text('Imker', 21, 40.8, 44, 4.2, '{{Imker}}', { f: 'Montserrat', s: 7, w: 700, c: GREEN, a: 'right', min: 5.5, showIf: 'Imker' }),
-    text('MHD', 21, 45, 44, 3.6, '{{MHD}}', { f: 'Montserrat', s: 7, w: 500, c: '#6b5a3a', a: 'right', min: 5.5, showIf: 'MHD' }),
+    text('MHD', 21, 43.4, 44, 3.6, '{{MHD}}', { f: 'Montserrat', s: 7, w: 500, c: '#6b5a3a', a: 'right', min: 5.5, showIf: 'MHD' }),
   ])],
 };
 
@@ -69,7 +69,7 @@ const siegel = {
     rect('Rahmen', 2.2, 2.2, 65.6, 45.6, null, { stroke: GOLD, sw: 0.5, locked: true }),
     text('Imker', 5, 5.4, 60, 4, '{{Imker}}', { f: 'Cinzel', s: 7.5, w: 600, c: GOLD, a: 'center', ls: 0.14, min: 5.5, showIf: 'Imker' }),
     line('Linie oben', 20, 10.8, 50, 10.8, GOLD, 0.3, { locked: true }),
-    text('Sorte', 5, 13, 60, 14, '{{Sorte}}', { f: 'Playfair Display', s: 22, w: 600, i: true, c: '#fff4dc', a: 'center', lh: 1.05, min: 10 }),
+    text('Sorte', 6, 13, 58, 14, '{{Sorte}}', { f: 'Playfair Display', s: 22, w: 600, i: true, c: '#fff4dc', a: 'center', lh: 1.05, min: 10 }),
     text('Zusatz', 6, 28, 58, 4.4, '{{Zusatz}}', { f: 'Raleway', s: 7.5, w: 500, c: '#d8c49a', a: 'center', min: 6, showIf: 'Zusatz' }),
     line('Linie unten', 20, 34.4, 50, 34.4, GOLD, 0.3, { locked: true }),
     ellipse('Siegel Ring', 16.4, 35.4, 11.4, 11.4, null, { stroke: GOLD, sw: 0.6, locked: true }),

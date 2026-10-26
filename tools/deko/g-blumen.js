@@ -107,7 +107,7 @@ const pieces = [
     },
   },
   {
-    slug: 'tannenzweig', name: 'Tannenzweig', w: 1200, h: 520, palettes: ['salbei', 'gold', 'navy', 'weiss'], fit: 20,
+    slug: 'tannenzweig', name: 'Tannenzweig', w: 1200, h: 520, palettes: ['salbei', 'tanne', 'gold', 'navy', 'weiss'], fit: 20,
     tags: ['Tanne', 'Tannenzweig', 'Weihnachten', 'Advent', 'Winter', 'Nadeln'],
     draw(c) {
       const curve = new Curve([[60, 430], [380, 400], [700, 320], [980, 210], [1140, 140]]);

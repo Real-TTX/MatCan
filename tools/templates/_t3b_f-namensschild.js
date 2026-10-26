@@ -46,7 +46,7 @@ const hallo = {
     rect('Rahmen', 1.2, 1.2, 87.6, 52.6, '#ffffff', { stroke: RED, sw: 1.4, radius: 3, locked: true }),
     rect('Kopf', 1.2, 1.2, 87.6, 17, RED, { radius: 3, locked: true }),
     rect('Kopf unten', 1.2, 12, 87.6, 6.2, RED, { locked: true }),
-    text('Hallo', 6, 2.4, 78, 8, 'HALLO', { f: 'Anton', s: 24, c: '#ffffff', a: 'center', lh: 1, min: 14 }),
+    text('Hallo', 6, 3.4, 78, 8, 'HALLO', { f: 'Anton', s: 24, c: '#ffffff', a: 'center', lh: 1, min: 14 }),
     text('Ich bin', 6, 10.6, 78, 6, 'ich bin', { f: 'Montserrat', s: 9, w: 700, c: '#ffffff', a: 'center', up: true, ls: 0.3, min: 6.5 }),
     text('Name', 5, 19.4, 80, 18, '{{Name}}', { f: 'Permanent Marker', s: 24, c: '#111111', a: 'center', lh: 1.05, wrap: true, fit: 'shrink', v: 'middle', min: 9 }),
     line('Linie', 14, 38.4, 76, 38.4, '#d7d7d7', 0.3, { locked: true }),

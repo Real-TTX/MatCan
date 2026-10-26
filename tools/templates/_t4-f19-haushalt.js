@@ -57,8 +57,8 @@ module.exports = family({
   formatKey: 'a4-portrait',
   width: 210,
   height: 297,
-  fields: [field('Monat', 'Monat', 'text', 'November 2026')],
-  sampleRows: [{ Monat: 'November 2026' }, { Monat: 'Dezember 2026' }, { Monat: 'Januar 2027' }, { Monat: '' }],
+  fields: [field('Monat', 'Monat', 'text', 'November 2027')],
+  sampleRows: [{ Monat: 'November 2027' }, { Monat: 'Dezember 2027' }, { Monat: 'Januar 2028' }, { Monat: '' }],
 }, [
   {
     slug: 'haushaltsbuch-klassisch', variant: 'Klassisch',

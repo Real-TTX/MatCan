@@ -74,8 +74,8 @@ module.exports = family({
   formatKey: 'a4-portrait',
   width: 210,
   height: 297,
-  fields: [field('Titel', 'Titel', 'text', 'Umzug im Oktober'), field('Datum', 'Datum', 'text', '3. Oktober 2026')],
-  sampleRows: [{ Titel: 'Umzug im Oktober', Datum: '3. Oktober 2026' }, { Titel: 'Sommerfest des Kindergartens – Aufbau, Verpflegung und Aufräumen', Datum: '27. Juni 2027' }, { Titel: '', Datum: '' }],
+  fields: [field('Titel', 'Titel', 'text', 'Umzug im Oktober'), field('Datum', 'Datum', 'text', '3. Oktober 2027')],
+  sampleRows: [{ Titel: 'Umzug im Oktober', Datum: '3. Oktober 2027' }, { Titel: 'Sommerfest des Kindergartens – Aufbau, Verpflegung und Aufräumen', Datum: '27. Juni 2027' }, { Titel: '', Datum: '' }],
 }, [
   {
     slug: 'checkliste-klassisch', variant: 'Klassisch',
