@@ -12,7 +12,7 @@ namespace DesignThix.Tests.Core;
 /// </summary>
 public sealed partial class DekoPackTests
 {
-    private static readonly string[] Groups = ["Rahmen", "Ornamente", "Blumen & Blätter", "Konfetti & Ballons", "Herzen", "Bänder & Siegel", "Trenner", "Ecken", "Muster", "Sterne", "Formen"];
+    private static readonly string[] Groups = ["Rahmen", "Ornamente", "Blumen & Blätter", "Konfetti & Ballons", "Herzen", "Bänder & Siegel", "Trenner", "Ecken", "Muster", "Sterne", "Formen", "Motive"];
 
     private sealed record Entry(string Key, string Name, string Category, string File, string[] Tags);
 
@@ -103,7 +103,7 @@ public sealed partial class DekoPackTests
         var folder = Path.Combine(root, "deko");
         var files = Directory.GetFiles(folder);
         var size = files.Sum(f => new FileInfo(f).Length);
-        Assert.True(size < 3L * 1024 * 1024, $"the Deko folder is {size / 1024} KB");
+        Assert.True(size < 5L * 1024 * 1024, $"the Deko folder is {size / 1024} KB");
         Assert.True(File.Exists(Path.Combine(folder, "LICENSE.txt")));
         var listed = deko.Select(e => Path.GetFileName(e.File)).ToHashSet(StringComparer.Ordinal);
         foreach (var f in files.Select(Path.GetFileName))

@@ -32,12 +32,24 @@ const listFile = path.join(wwwroot, 'builtin', 'builtin.json');
 
 const GROUPS = ['rahmen', 'ornamente', 'blumen', 'konfetti', 'herzen', 'baender', 'trenner', 'ecken', 'muster', 'sterne', 'formen'];
 
+// The group "Motive" (themed illustrations: racing car, crown, horse, guitar ...) is made of every file m-<batch>.js (each exports { pieces }),
+// so several people can add motifs at the same time without touching one file; slugs must be unique across those files.
+function loadMotive() {
+  const files = fs.readdirSync(__dirname).filter((f) => /^m-[a-z0-9-]+\.js$/.test(f)).sort();
+  if (!files.length) return null;
+  const pieces = files.flatMap((f) => require(path.join(__dirname, f)).pieces || []);
+  return { id: 'motive', name: 'Motive', slug: 'motive', tags: ['Motiv', 'Illustration'], pieces };
+}
+
 function loadGroups() {
-  return GROUPS.map((id) => {
+  const groups = GROUPS.map((id) => {
     const file = path.join(__dirname, `g-${id}.js`);
     if (!fs.existsSync(file)) return null;
     return { id, ...require(file) };
   }).filter(Boolean);
+  const motive = loadMotive();
+  if (motive) groups.push(motive);
+  return groups;
 }
 
 function render(group, piece, pal) {
