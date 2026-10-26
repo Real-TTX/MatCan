@@ -159,6 +159,33 @@ public class Design : AuditedEntity, ISoftDeletable
 
     public string DocumentJson { get; set; } = "{}";
 
+    /// <summary>
+    /// The slug of the built-in template file this design was made from (plan 6): the metadata below is owned by that file and written again at start-up while the design is a system template.
+    /// Null for every other design.
+    /// </summary>
+    public string? TemplateKey { get; set; }
+
+    /// <summary>The family of a template: the variants of one kind ("geburtstagskarte") share it; the gallery shows one tile per family.</summary>
+    public string? TemplateFamily { get; set; }
+
+    /// <summary>The name of the family ("Geburtstagskarte"), shown on the tile; the variants have their own <see cref="Name"/>.</summary>
+    public string? TemplateFamilyName { get; set; }
+
+    /// <summary>The style of this variant ("Klassisch", "Modern", "Verspielt").</summary>
+    public string? TemplateVariant { get; set; }
+
+    /// <summary>One of <c>TemplateMeta.Occasions</c> (Geburtstag, Hochzeit ...).</summary>
+    public string? TemplateOccasion { get; set; }
+
+    /// <summary>German search words, comma separated (never a comma inside a tag).</summary>
+    public string? TemplateTags { get; set; }
+
+    /// <summary>The key of the <c>FormatPresets</c> entry the template is made for ("card-a6-portrait").</summary>
+    public string? TemplateFormat { get; set; }
+
+    /// <summary>The order of the template in its family and in the gallery (the number of the source file).</summary>
+    public int TemplateOrder { get; set; }
+
     /// <summary>Counts every save of the document; a save is only accepted against the revision it started from.</summary>
     public int Revision { get; set; } = 1;
 

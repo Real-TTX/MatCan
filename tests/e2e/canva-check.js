@@ -170,6 +170,8 @@ async function fresh(page, body) {
   await page.click('#dt-ctx .dt-tb--font');
   await page.waitForSelector('.dt-fontlist__item');
   const fontCount = await page.$$eval('.dt-fontlist__item', l => l.length);
+  // a line gets its font when it comes into view (a list of 50 families does not load 50 files): the first one is in view
+  await page.waitForFunction(() => /dt-ff-/.test(document.querySelector('.dt-fontlist__name').className));
   const fontClass = await page.$eval('.dt-fontlist__name', n => n.className);
   check('the font list shows every family in its own font', fontCount >= 10 && /dt-ff-/.test(fontClass), fontCount + ' ' + fontClass);
   await page.fill('.dt-fontpop input[type=search]', 'Mont');
@@ -468,7 +470,7 @@ async function fresh(page, body) {
   await page.click('#dt-ctx .dt-slotchip[data-slot="0"]');
   await page.waitForSelector('dialog.dt-media[open]');
   const tabs = await page.$$eval('.dt-media__tab', t => t.map(x => x.textContent));
-  check('the media browser has the tabs Uploads, Flaggen, Siegel, Logos and Alle', tabs.join('|') === 'Uploads|Flaggen|Siegel|Logos|Alle', tabs.join('|'));
+  check('the media browser has the tabs Uploads, Flaggen, Siegel, Logos, Deko and Alle', tabs.join('|') === 'Uploads|Flaggen|Siegel|Logos|Deko|Alle', tabs.join('|'));
   check('it has a search field, an upload button and a hint for drop and paste', await page.isVisible('.dt-media__search') && await page.isVisible('.dt-media__upload') && /Strg\+V/.test(await page.textContent('.dt-media__hint')));
   await page.waitForSelector('.dt-media__tile');
   await shot(page, 'canva-1440-media.png');

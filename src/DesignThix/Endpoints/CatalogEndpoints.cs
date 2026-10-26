@@ -60,6 +60,8 @@ public static class CatalogEndpoints
                     sourceUrl = i.SourceUrl,
                     licence = i.Licence is { } l ? new { code = l.Code, name = l.Name, url = l.Url, attributionRequired = l.AttributionRequired } : null,
                     assetKey = i.AssetKey,
+                    collection = i.Collection,
+                    icon = i.Icon is { } ic ? new { body = ic.Body, width = ic.Width, height = ic.Height } : null,
                 }),
             }, Web);
         })).RequireAuthorization("SignedIn");
@@ -90,7 +92,7 @@ public static class CatalogEndpoints
                     svc.Limiter.TakeThumb(biz.UserId);
                     var headers = row.Catalog.ThumbsNeedAuth ? await CatalogLogic.ThumbHeadersAsync(biz, row.Catalog, http.RequestAborted) : null;
                     bytes = (await svc.GetThumbAsync(row.Catalog, uri, headers, http.RequestAborted)).Bytes;
-                    if (FileSniffer.Sniff(bytes).IsImage)
+                    if (FileSniffer.Sniff(bytes) is { } kept && (kept.IsImage || (kept.IsFont && row.Catalog.Kinds.HasFlag(CatalogKinds.Font))))
                     {
                         svc.Thumbs.Put(row.Id, uri.AbsoluteUri, bytes);
                     }
@@ -108,13 +110,14 @@ public static class CatalogEndpoints
             }
 
             var sniffed = bytes is null ? null : FileSniffer.Sniff(bytes);
-            if (bytes is null || sniffed is not { IsImage: true })
+            // a picture, or (the catalogue of fonts) the file of a font the dialog draws its preview with: nothing else is ever served
+            if (bytes is null || sniffed is not { } found || !(found.IsImage || (found.IsFont && row.Catalog.Kinds.HasFlag(CatalogKinds.Font))))
             {
                 return Results.NotFound();
             }
 
             http.Response.Headers.CacheControl = "private, max-age=86400";
-            if (sniffed.Kind == FileKind.Svg)
+            if (found.Kind == FileKind.Svg)
             {
                 // a picture from outside is cleaned like an upload, and an SVG opened as a page of its own may run and load nothing
                 var clean = SvgSafe.Sanitize(bytes);
@@ -127,7 +130,7 @@ public static class CatalogEndpoints
                 return Results.File(clean.Bytes, "image/svg+xml");
             }
 
-            return Results.File(bytes, sniffed.ContentType);
+            return Results.File(bytes, found.ContentType);
         })).RequireAuthorization("SignedIn");
 
         // { itemId, spaceId?, folderId?, designId?, preferSpace? } -> { key, name, url, width, height, contentType, category, reused }
@@ -139,10 +142,29 @@ public static class CatalogEndpoints
                 return Results.Json(new { error = "Die Anfrage braucht itemId." }, statusCode: StatusCodes.Status400BadRequest);
             }
 
-            var result = await CatalogLogic.ImportAsync(biz, id, body.ItemId, body.SpaceId, body.FolderId, body.DesignId, body.PreferSpace, http.RequestAborted);
-            var a = result.Asset;
-            return Results.Json(new { key = a.Key, name = a.Name, url = a.Url, width = a.Width, height = a.Height, contentType = a.ContentType, category = a.Category, spaceId = a.SpaceId, reused = result.Reused }, Web);
+            var result = await CatalogLogic.ImportItemAsync(biz, id, body.ItemId, body.SpaceId, body.FolderId, body.DesignId, body.PreferSpace, http.RequestAborted);
+            if (result.Icon is { } icon)
+            {
+                return Results.Json(new { kind = "icon", name = icon.Name, body = icon.Body, width = icon.Width, height = icon.Height, reused = icon.Reused }, Web);
+            }
+
+            if (result.Font is { } font)
+            {
+                return Results.Json(new { kind = "font", family = font.Family, faces = font.Faces, spaceId = font.SpaceId, reused = font.Reused }, Web);
+            }
+
+            var a = result.Picture!.Asset;
+            return Results.Json(new { kind = "picture", key = a.Key, name = a.Name, url = a.Url, width = a.Width, height = a.Height, contentType = a.ContentType, category = a.Category, spaceId = a.SpaceId, reused = result.Picture.Reused }, Web);
         }))).RequireAuthorization("SignedIn");
+
+        // the bodies of the icons of catalogues a design names: GET /api/icons?names=mdi:home,tabler:star -> { "mdi:home": { body, width, height } } (what is not stored is left out)
+        app.MapGet("/api/icons", async (string? names, Biz biz) =>
+        {
+            biz.RequireSignedIn();
+            var wanted = (names ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Take(IconLogic.MaxNames);
+            var found = await IconLogic.ResolveAsync(biz.Db, wanted);
+            return Results.Json(found.ToDictionary(k => k.Key, k => new { body = k.Value.Body, width = k.Value.Width, height = k.Value.Height }), Web);
+        }).RequireAuthorization("SignedIn");
 
         // { items: [{ key, name, catalog, catalogName, title, author, authorUrl, sourceUrl, licence: { code, name, url }, attribution }] }
         app.MapGet("/api/designs/{id:long}/credits", async (long id, Biz biz) =>

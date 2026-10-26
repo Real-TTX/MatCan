@@ -15,6 +15,12 @@ module.exports = {
   name: 'Grußkarte A6 quer (2 Seiten)',
   category: 'Karten',
   description: 'Klappkarte im Format A6 quer mit zwei Seiten: vorne „Alles Gute“ mit Konfetti und Symbolen, innen Platz für deinen persönlichen Text. Zum Verschenken oder als Kundenkarte.',
+  family: 'grusskarte-alles-gute',
+  familyName: 'Grußkarte „Alles Gute“',
+  variant: 'Konfetti',
+  occasion: 'Geburtstag',
+  tags: ['Grußkarte', 'Glückwunsch', 'Alles Gute', 'Geburtstag', 'Konfetti', 'Karte'],
+  formatKey: 'a6-landscape',
   width: 148,
   height: 105,
   pages: [

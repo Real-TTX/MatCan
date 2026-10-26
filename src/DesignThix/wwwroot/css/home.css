@@ -152,3 +152,25 @@ a.dt-fact:hover { color: var(--mat-accent-text); text-decoration: none; }
   .dt-aip__spacer { display: none; }
 }
 .dt-aip[hidden] { display: none; }
+
+/* ---- "Mehr Formate" of the dialog "Design erstellen": the sizes that are no tile, in groups (plan 6) ---- */
+.dt-moreformats { border: 1px solid var(--mat-border); border-radius: var(--mat-radius-lg); background: var(--mat-surface); }
+.dt-moreformats__summary { display: flex; align-items: center; gap: var(--mat-space-2); padding: var(--mat-space-3) var(--mat-space-4); cursor: pointer; font-weight: 650; list-style: none; border-radius: var(--mat-radius-lg); }
+.dt-moreformats__summary::-webkit-details-marker { display: none; }
+.dt-moreformats__summary:hover { background: var(--mat-surface-3); }
+.dt-moreformats__summary:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-moreformats__summary .mat-icon { width: 1rem; height: 1rem; transition: transform var(--mat-dur) var(--mat-ease); }
+.dt-moreformats[open] > .dt-moreformats__summary .mat-icon { transform: rotate(90deg); }
+.dt-moreformats__count { color: var(--mat-text-muted); font-weight: 500; font-size: var(--mat-fs-sm); }
+.dt-moreformats__groups { display: grid; gap: var(--mat-space-4); padding: 0 var(--mat-space-4) var(--mat-space-4); max-height: 22rem; overflow-y: auto; }
+.dt-moreformats__title { margin: 0 0 var(--mat-space-2); font-size: var(--mat-fs-xs); font-weight: 650; letter-spacing: .04em; text-transform: uppercase; color: var(--mat-text-muted); }
+.dt-moreformats__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--mat-space-2); list-style: none; margin: 0; padding: 0; }
+.dt-moreformats__item { display: flex; align-items: center; gap: var(--mat-space-3); padding: var(--mat-space-2) var(--mat-space-3); border: 1px solid var(--mat-border); border-radius: var(--mat-radius); color: var(--mat-text); text-decoration: none; min-width: 0; }
+.dt-moreformats__item:hover { border-color: var(--mat-accent); background: var(--mat-accent-soft); text-decoration: none; }
+.dt-moreformats__item:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); border-color: var(--mat-accent); }
+.dt-moreformats__item[aria-busy="true"] { opacity: .6; pointer-events: none; }
+.dt-moreformats__icon { display: grid; place-items: center; width: 2rem; height: 2rem; flex: none; border-radius: var(--mat-radius-xs); background: var(--mat-surface-3); color: var(--mat-text-muted); }
+.dt-moreformats__icon .mat-icon { width: 1rem; height: 1rem; }
+.dt-moreformats__text { display: grid; min-width: 0; }
+.dt-moreformats__name { font-weight: 600; font-size: var(--mat-fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-moreformats__size { color: var(--mat-text-muted); font-size: var(--mat-fs-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

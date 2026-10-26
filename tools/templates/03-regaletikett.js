@@ -10,6 +10,12 @@ module.exports = {
   name: 'Regaletikett mit EAN',
   category: 'Etiketten',
   description: 'Schmales Regaletikett (100 × 30 mm): Artikelname, Inhalt, Grundpreis, großer Preis und ein EAN-13-Strichcode, dessen Prüfziffer automatisch stimmt. Alle Werte sind Felder für eine Datenliste.',
+  family: 'regaletikett',
+  familyName: 'Regaletikett',
+  variant: 'Mit Strichcode',
+  occasion: 'Handel & Preise',
+  tags: ['Regal', 'Etikett', 'EAN', 'Strichcode', 'Preis', 'Grundpreis', 'Supermarkt', 'Laden'],
+  formatKey: 'shelf-strip',
   width: 100,
   height: 30,
   fields: [

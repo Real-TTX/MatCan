@@ -29,6 +29,7 @@ public static partial class DocumentValidator
 
     private static readonly string[] FieldTypes = ["text", "multiline", "number", "price", "image"];
     private static readonly string[] ElementTypes = ["text", "image", "imageStrip", "shape", "icon", "qr", "barcode", "group"];
+    private static readonly string[] Folds = ["none", "vertical", "horizontal"];
     private static readonly string[] Aligns = ["left", "center", "right"];
     private static readonly string[] Fits = ["cover", "contain", "fill"];
     private static readonly string[] Lists = ["none", "bullet", "number"];
@@ -47,7 +48,7 @@ public static partial class DocumentValidator
     [GeneratedRegex("^(?:[A-Za-z]{2,3}|[A-Za-z]{5,8})(?:-[A-Za-z0-9]{2,8})*\\z", RegexOptions.CultureInvariant)]
     private static partial Regex LocalePattern();
 
-    [GeneratedRegex("^[a-z0-9-]{1,64}\\z", RegexOptions.CultureInvariant)]
+    [GeneratedRegex("^(?:[a-z0-9-]{1,64}:)?[a-z0-9-]{1,64}\\z", RegexOptions.CultureInvariant)]
     private static partial Regex IconNamePattern();
 
     /// <summary>An empty document of the given size with the defaults (one white page, 300 dpi).</summary>
@@ -236,7 +237,8 @@ public static partial class DocumentValidator
             (int)Math.Floor(Num(source, "dpi", 300, 72, 1200, notes) + 0.5),
             ValidLocale(Str(source, "locale", "de-DE", 35, null)),
             fields,
-            pages);
+            pages,
+            OneOf(source, "fold", Folds, "none", notes));
     }
 
     private static DesignPage ReadPage(JsonElement raw, int index, bool upgraded, HashSet<string> usedPageIds, Context context)
@@ -580,7 +582,7 @@ public static partial class DocumentValidator
             return "";
         }
 
-        // exactly as written: the names of Lucide are lower case, anything else is no icon
+        // exactly as written: the names of Lucide are lower case; "prefix:name" is an icon of a catalogue (Iconify); anything else is no icon
         if (!IconNamePattern().IsMatch(text))
         {
             notes.Add(Notes.BadValue);
@@ -971,6 +973,11 @@ public static partial class DocumentValidator
             w.WriteNumber("height", Fix(document.Height));
             w.WriteNumber("dpi", document.Dpi);
             w.WriteString("locale", document.Locale);
+            if (document.Fold is "vertical" or "horizontal")
+            {
+                w.WriteString("fold", document.Fold);
+            }
+
             w.WriteStartArray("fields");
             foreach (var f in document.Fields)
             {

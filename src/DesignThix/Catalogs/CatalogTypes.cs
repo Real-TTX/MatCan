@@ -45,13 +45,15 @@ public sealed record CatalogLink(string Text, string Url);
 /// <param name="DefaultPerHour">The budget of the key per hour (0 = no budget).</param>
 /// <param name="Notice">One short German sentence shown under the results of the catalogue (what the provider's rules ask us to say, e.g. "Fotos von Pexels ...").</param>
 /// <param name="Rules">The provider's rules and limits in German, one sentence each: shown on the administration page of the catalogue.</param>
-/// <param name="KeyLabel">The name of the key field when it is not simply "Schlüssel des Anbieters".</param>
+/// <param name="KeyLabel">The name of the key field when it is not simply "Schlüssel des Anbieters"; an empty text says that the catalogue takes no key at all (the page has no card for it).</param>
 /// <param name="KeyHint">How the key is written and where it comes from, German.</param>
 /// <param name="HasSafeSearch">The provider can leave out pictures that are not for all ages (the switch on the administration page applies).</param>
 /// <param name="HasLicenceChoice">The catalogue lets through several licences and the administrator may narrow them (the list on the administration page applies).</param>
 /// <param name="KeyPerMinute">The requests per minute the provider allows the key (0 = no such limit); the brake of the catalogue stays below it.</param>
+/// <param name="SetChoiceLabel">The catalogue is made of sets the administrator may narrow (Iconify: icon sets); the name of the list on the administration page (null = no such list).</param>
+/// <param name="SetChoiceHint">What to write into that list, German.</param>
 public sealed record CatalogInfo(string Homepage, string? KeyHelpUrl, CatalogLink? ProviderLink, string LicenceSummary, string Description, int DefaultPerUserPerMinute = 30, int DefaultPerHour = 0,
-    string? Notice = null, IReadOnlyList<string>? Rules = null, string? KeyLabel = null, string? KeyHint = null, bool HasSafeSearch = false, bool HasLicenceChoice = false, int KeyPerMinute = 0);
+    string? Notice = null, IReadOnlyList<string>? Rules = null, string? KeyLabel = null, string? KeyHint = null, bool HasSafeSearch = false, bool HasLicenceChoice = false, int KeyPerMinute = 0, string? SetChoiceLabel = null, string? SetChoiceHint = null);
 
 /// <summary>A collection (a category, an area, a folder) a browsable catalogue lists.</summary>
 public sealed record CatalogCollection(string Id, string Name, int? Count = null);
@@ -117,7 +119,16 @@ public sealed record CatalogItem
     public string? FontFamily { get; init; }
 
     public string? IconName { get; init; }
+
+    /// <summary>The set, folder or family the item belongs to, by name (Iconify: "Material Design Icons"); empty when there is none.</summary>
+    public string Collection { get; init; } = "";
+
+    /// <summary>An icon of a catalogue: the checked body, so the tile can be drawn without another request (null for everything else).</summary>
+    public CatalogIcon? Icon { get; init; }
 }
+
+/// <summary>The checked body of an icon (markup of flat shapes, see <c>IconBodies</c>) and the grid it is drawn on.</summary>
+public sealed record CatalogIcon(string Body, int Width, int Height);
 
 /// <summary>One page of results. <see cref="Message"/> is the empty state of a search-only catalogue ("Gib einen Suchbegriff ein.").</summary>
 public sealed record CatalogPage(IReadOnlyList<CatalogItem> Items, int Page, int PerPage, int? Total, bool HasMore, string? Message = null)
@@ -126,7 +137,7 @@ public sealed record CatalogPage(IReadOnlyList<CatalogItem> Items, int Page, int
 }
 
 /// <summary>A file of a font family to import (a weight and style of it).</summary>
-public sealed record CatalogFontFile(string FileName, byte[] Bytes);
+public sealed record CatalogFontFile(string FileName, byte[] Bytes, string Weight = "400", string Style = "normal");
 
 /// <summary>What <see cref="ICatalog.FetchAsync"/> brings for the import: the bytes of a picture (or the files of a font) and everything known about the item.</summary>
 public sealed record CatalogFetch
@@ -138,6 +149,12 @@ public sealed record CatalogFetch
     public byte[]? Bytes { get; init; }
 
     public IReadOnlyList<CatalogFontFile> FontFiles { get; init; } = [];
+
+    /// <summary>An icon: the body that passed the allowlist (Iconify).</summary>
+    public DesignThix.Core.Media.IconBodyParsed? Icon { get; init; }
+
+    /// <summary>A font: the family the files belong to.</summary>
+    public string FontFamily { get; init; } = "";
 
     /// <summary>The credit line as the provider's rules want it ("Foto von Anna auf Pexels"); empty = the standard line is made from author, catalogue and licence.</summary>
     public string Attribution { get; init; } = "";

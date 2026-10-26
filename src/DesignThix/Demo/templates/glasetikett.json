@@ -2,6 +2,13 @@
   "name": "Glasetikett – Marmelade & Honig",
   "category": "Etiketten",
   "description": "Etikett für Gläser (70 × 50 mm) mit rundem Bildrahmen für ein Foto, Produktname in Schreibschrift, Inhalt, Abfülldatum und einem QR-Code zu einer Internetadresse. Produkt, Sorte, Inhalt, Datum und Adresse sind Felder.",
+  "family": "glasetikett",
+  "familyName": "Glasetikett",
+  "variant": "Mit Foto",
+  "occasion": "Handel & Preise",
+  "tags": ["Marmelade","Honig","Glas","Etikett","Hofladen","Selbstgemacht","QR-Code","Abfülldatum"],
+  "formatKey": "label-70x50",
+  "number": 4,
   "document": {
     "schema":2,"unit":"mm","width":70,"height":50,"dpi":300,"locale":"de-DE",
     "fields": [

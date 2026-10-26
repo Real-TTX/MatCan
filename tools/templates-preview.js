@@ -52,7 +52,7 @@ const builtinFile = new Map(builtin.map(a => [a.key.toLowerCase(), a.file]));
 const fontList = JSON.parse(fs.readFileSync(path.join(wwwroot, 'fonts', 'fonts.json'), 'utf8'))
   .map(f => ({ family: f.family, weight: f.weight, style: f.style, url: '/fonts/' + f.file }));
 
-const types = { '.js': 'text/javascript', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.ttf': 'font/ttf', '.html': 'text/html', '.webp': 'image/webp', '.jpg': 'image/jpeg' };
+const types = { '.js': 'text/javascript', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.woff': 'font/woff', '.otf': 'font/otf', '.html': 'text/html', '.webp': 'image/webp', '.jpg': 'image/jpeg' };
 
 const page = `<!doctype html><meta charset="utf-8"><title>templates</title><body><script src="/js/dt-engine.js"></script>`;
 

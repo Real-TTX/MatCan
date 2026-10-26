@@ -25,7 +25,6 @@
   };
   var MM_PER_PX = 25.4 / 96;
   var viewSeq = 0;
-  var iconsPromise = null;
   var cleanup = [];       // what the current view has to take away again (observers, listeners)
 
   // ================================================================================================ helpers
@@ -64,13 +63,6 @@
     }, function () { return { ok: false, status: 0, data: null }; });
   }
 
-  function loadIcons() {
-    if (!iconsPromise) {
-      iconsPromise = fetch('/lib/icons.json', { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : { icons: {} }; }).then(function (j) { return j.icons || {}; }).catch(function () { return {}; });
-    }
-    return iconsPromise;
-  }
-
   function safeName(text) {
     var n = String(text || 'Design').replace(/[\\/:*?"<>|\u0000-\u001f]/g, '-').replace(/\s+/g, ' ').replace(/[ .]+$/g, '').trim();
     return n || 'Design';
@@ -82,7 +74,7 @@
       mode: 'output',
       assetUrl: function (key) { return assets[String(key).trim().toLowerCase()] || null; },
       fonts: (payload.fonts || []).map(function (f) { return { family: f.family, weight: f.weight, style: f.style, url: f.url }; }),
-      icon: function (name) { return loadIcons().then(function (icons) { return icons[name] ? icons[name].b : null; }); },
+      icon: window.DtEngine.iconSource({ extra: payload.icons || {} }),
     };
   }
 

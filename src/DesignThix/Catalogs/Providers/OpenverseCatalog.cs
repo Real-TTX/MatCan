@@ -118,17 +118,7 @@ public sealed partial class OpenverseCatalog : ICatalog
     }
 
     /// <summary>Whether a licence code is one the catalogue offers now: usable at all (no NC, no ND), and in the list of the administrator (the defaults when it is empty).</summary>
-    internal static bool Allowed(string code, IReadOnlyList<string> chosen)
-    {
-        if (!CatalogLicences.IsUsable(code))
-        {
-            return false;
-        }
-
-        var normalized = CatalogLicences.Normalize(code);
-        var list = chosen.Count == 0 ? DefaultLicences : chosen;
-        return list.Select(CatalogLicences.Normalize).Any(a => a.Length > 0 && (normalized == a || (normalized.StartsWith(a + "-", StringComparison.Ordinal) && char.IsAsciiDigit(normalized[a.Length + 1]))));
-    }
+    internal static bool Allowed(string code, IReadOnlyList<string> chosen) => CatalogLicences.Allowed(code, chosen, DefaultLicences);
 
     /// <summary>The words of the "license" parameter for the licences the administrator allows (empty = leave it to license_type).</summary>
     private static string LicenceParameter(IReadOnlyList<string> chosen)

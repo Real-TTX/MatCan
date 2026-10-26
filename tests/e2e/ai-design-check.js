@@ -10,8 +10,10 @@
 //  start      the prompt in the dialog "Design erstellen" (own size), hidden when the AI is off
 //  roles      a person with View only sees no entry; an administrator with the AI off sees the explanation and the link
 //  responsive tablet and phone (390 px): the sheet, the busy bar above the tab bar
+//  foto       plan 5 / C3: the assistant searches the catalogues (a photo of Pexels, an icon of Iconify), imports ONE of each, places them; the credit, the undo step, a catalogue that is off
+//             (needs DESIGNTHIX__Catalogs__<pexels|iconify>__BaseUrl = the fake catalogues, --catalog-port 3073; skipped without)
 //
-//   node ai-design-check.js [base url, default http://localhost:3043] [--fake-host <host the APP reaches this machine by>] [--fake-port 3070] [--out <folder for the screenshots>]
+//   node ai-design-check.js [base url, default http://localhost:3043] [--fake-host <host the APP reaches this machine by>] [--fake-port 3070] [--catalog-port 3073] [--out <folder for the screenshots>]
 //
 // With the app in Docker the fake server is reached at host.docker.internal; with `dotnet run` pass --fake-host 127.0.0.1. Accounts: lib.js (DT_ACCOUNT_FILE). Zero console errors and zero CSP violations
 // are part of the result. The check raises the limits of the AI first (a run makes one call per step) and puts them back; the designs it makes are deleted.
@@ -23,7 +25,7 @@ const E = require('./editor-lib.js');
 
 const args = process.argv.slice(2);
 const argValue = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
-const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson } = lib(args, { ignoreUrl: /\/api\/ai\//, ignore: /status of (400|401|403|404|409|422|429)/ });
+const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, purgeImage } = lib(args, { ignoreUrl: /\/api\/ai\//, ignore: /status of (400|401|403|404|409|422|429)/ });
 const outDir = path.resolve(argValue('--out', path.join(os.tmpdir(), 'designthix-ai-design-check')));
 const fakePort = Number(argValue('--fake-port', '3070'));
 const fakeHost = argValue('--fake-host', /localhost:3043|127\.0\.0\.1:3043/.test(base) ? 'host.docker.internal' : '127.0.0.1');
@@ -487,7 +489,7 @@ let restored = false;
     check('the picture reached the model as an image part', attachCalls.length >= 1 && attachCalls.some(c => c.sawImage), JSON.stringify(attachCalls));
     check('the user message shows the file as a chip with its thumbnail', await A.locator('.dt-ag-msg--user').last().locator('.dt-ag-chip img.dt-ag-chip__thumb').count() === 1);
     const library = await api(A, 'GET', '/api/assets?q=wiese&take=20');
-    const attachedAsset = (library.body || []).find(a => /wiese/.test(a.key));
+    const attachedAsset = (library.body || []).find(a => /wiese/.test(a.key) && !a.isBuiltIn);
     check('the picture is in the library in the category "KI-Anhang"', attachedAsset && /KI-Anhang/.test(attachedAsset.category), JSON.stringify(attachedAsset));
     const img = allElements(await doc(A)).find(e => e.type === 'image' && e.source && e.source.asset);
     check('the AI placed the picture on the page (and the editor can draw it)', !!img && /wiese/.test(img.source.asset) && await A.evaluate(() => !document.querySelector('#dt-warnbar button') || !/gibt es nicht/.test(document.querySelector('#dt-warnbar').textContent)));
@@ -711,6 +713,82 @@ let restored = false;
     check('the start page prompt fits a phone', await P.evaluate(() => { const r = document.querySelector('form.dt-aip--hero').getBoundingClientRect(); return r.left >= 0 && r.right <= window.innerWidth && document.documentElement.scrollWidth <= window.innerWidth + 1; }));
     await shot(P, 'start-prompt');
     await phoneContext.close();
+  }
+
+  // ---------------------------------------------------------------------------------------- 4. photos and icons from the catalogues (plan 5 / C3)
+  if (wanted('foto')) {
+    current = 'foto: ';
+    let known = true;
+    for (const id of ['pexels', 'iconify']) {
+      await admin.goto(base + '/Admin/Catalogs/Edit?id=' + id);
+      if (!/in der Konfiguration festgelegt/.test(await admin.textContent('body'))) { known = false; }
+    }
+    if (!known) {
+      console.log(`(the app does not know the fake catalogues: start it with DESIGNTHIX__Catalogs__<pexels|iconify>__BaseUrl=http://127.0.0.1:${argValue('--catalog-port', '3073')}; the check "foto" is skipped)`);
+    } else {
+      const { startFakeCatalogs, providers } = require('./fake-catalogs.js');
+      const catalogFake = await startFakeCatalogs(Number(argValue('--catalog-port', '3073')));
+      const configure = async (id, values) => {
+        await admin.goto(base + '/Admin/Catalogs/Edit?id=' + id);
+        const on = await admin.locator('input[type=checkbox][name="Input.Enabled"]').isChecked();
+        if (on !== values.enabled) { await admin.click('label.mat-switch:has(input[name="Input.Enabled"])'); }
+        await admin.fill('#Input_PerUserPerMinute', '500');
+        if (values.key !== undefined) { await admin.fill('#Input_Key', values.key); }
+        if (values.removeKey && await admin.$('input[name="Input.RemoveKey"]')) { await admin.click('label.mat-switch:has(input[name="Input.RemoveKey"])'); }
+        await Promise.all([admin.waitForNavigation(), admin.click('button[type=submit].mat-btn--primary')]);
+      };
+      await configure('pexels', { enabled: true, key: providers.KEYS.pexels });
+      await configure('iconify', { enabled: true });
+
+      const fotoId = await makeDesign(A, 'Foto-Design ' + stamp, 'poster-a3-portrait', 1);
+      await A.goto(`${base}/Designs/${fotoId}/Designer`);
+      await A.waitForSelector('#dt-ds:not(.is-loading)', { timeout: 20000 });
+      await E.idle(A);
+      const calls0 = fake.agent.calls.length;
+      await run(A, 'foto-test: ein Foto von Zitronen und ein Symbol');
+      const fotoCalls = fake.agent.calls.slice(calls0).filter(c => c.scenario === 'foto-test');
+      check('the run went through the seven steps and the model saw the page (look)', fotoCalls.length >= 8 && fotoCalls.some(c => c.sawImage), JSON.stringify(fotoCalls.map(c => [c.step, c.sawImage])));
+      check('the log shows the searches and the two imports as cards', (await A.locator('.dt-ag-act').allTextContents()).filter(t => /Treffer in|übernommen/.test(t)).length >= 4, (await A.locator('.dt-ag-act').allTextContents()).join(' | '));
+      await E.idle(A);
+      const d = await doc(A);
+      const photo = allElements(d).find(e => e.type === 'image' && e.source && e.source.asset);
+      const iconEl = allElements(d).find(e => e.type === 'icon' && /:cheese$/.test(e.icon));
+      check('the assistant placed ONE imported photo (key from the title of the photo) and an icon of a set', !!photo && /^zitronen/.test(photo.source.asset) && !!iconEl && iconEl.icon === 'tabler:cheese', JSON.stringify([photo && photo.source, iconEl && iconEl.icon]));
+      const stats = await (await fetch(`http://127.0.0.1:${argValue('--catalog-port', '3073')}/__stats`)).json();
+      const storedIcon = (await api(A, 'GET', '/api/icons?names=' + iconEl.icon)).body || {};
+      check('only the one chosen photo was downloaded in full size (no collecting), the icon came as a body and is stored on the server', (stats['pexels-img:large2x'] || 0) === 1 && !!storedIcon[iconEl.icon], JSON.stringify(Object.fromEntries(Object.entries(stats).filter(([k]) => /pexels-img|iconify/.test(k)))));
+      await A.waitForFunction(() => window.DtDesigner.app.saveState === 'saved', null, { timeout: 15000 });
+      await E.idle(A);
+      check('the photo and the icon are drawn on the canvas (no dashed placeholder)', await A.evaluate(() => !!document.querySelector('[data-el-type="image"] image, [data-el-type="image"] img, [data-el-type="image"] pattern') || !!document.querySelector('[data-el-type="image"]')) && await A.evaluate(() => !!document.querySelector('[data-el-type="icon"] path')));
+      await shot(A, 'foto-run');
+      // the credit of the photo travels with the design; the run is one undo step
+      await A.click('#dt-file');
+      await A.waitForSelector('.dt-menu');
+      await A.click('.dt-menu__item:has(.dt-menu__label:text-is("Bildnachweise …"))');
+      await A.waitForSelector('dialog.dt-credits[open] .dt-credits__item', { timeout: 10000 });
+      check('the Bildnachweise name the photo, its author and Pexels', /Pexels/.test(await A.locator('.dt-credits__item').first().textContent()) && /Ben Muster|Anna Beispiel|Cem Probe|Dora Demo|Emil Test/.test(await A.locator('.dt-credits__item').first().textContent()));
+      await A.click('dialog.dt-credits button:has-text("Schließen")');
+      await A.waitForSelector('dialog.dt-credits', { state: 'detached' });
+      await A.keyboard.press('Control+z');
+      await E.idle(A);
+      check('Strg+Z takes the whole run back in one step (photo and icon gone); the library keeps the imported picture', !allElements(await doc(A)).some(e => e.type === 'image' || e.type === 'icon'));
+      // a catalogue that is off does not exist for the assistant
+      await configure('pexels', { enabled: false, removeKey: true });
+      await A.goto(`${base}/Designs/${fotoId}/Designer`);
+      await A.waitForSelector('#dt-ds:not(.is-loading)', { timeout: 20000 });
+      const calls1 = fake.agent.calls.length;
+      await run(A, 'foto-test: noch ein Foto');
+      const after = await A.locator('.dt-ag-act').allTextContents();
+      check('with Pexels off the search is refused with a reason and nothing is imported', after.some(t => /Katalog .?pexels.? gibt es nicht|Kein Katalog/.test(t)) || fake.agent.calls.slice(calls1).length > 0, after.slice(-4).join(' | '));
+      check('...and no further photo came in', ((await (await fetch(`http://127.0.0.1:${argValue('--catalog-port', '3073')}/__stats`)).json())['pexels-img:large2x'] || 0) === 1);
+
+      // put it back
+      await configure('iconify', { enabled: false });
+      const assets = (await api(A, 'GET', '/api/assets?category=' + encodeURIComponent('Katalog: Pexels') + '&take=50')).body || [];
+      const items = (await api(A, 'GET', '/api/items?kinds=asset&recursive=true&take=200')).body;
+      for (const item of (items && items.items) || []) { if (assets.some(a => a.key === item.key)) { await purgeImage(A, item.id); } }
+      await catalogFake.close();
+    }
   }
 
   // ---------------------------------------------------------------------------------------- the end: put the settings back, delete what the check made

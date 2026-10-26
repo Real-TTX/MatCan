@@ -137,6 +137,16 @@
         ? ['Die Schriften kommen aus deiner Marke. ', D.el('a', { href: D.brandHref || '/Brand', target: '_blank', rel: 'noopener', text: 'Marke bearbeiten' })]
         : ['Lege unter ', D.el('a', { href: D.brandHref || '/Brand', target: '_blank', rel: 'noopener', text: 'Marke' }), ' deine Schriften fest: dann nutzen die Textvorlagen sie.']));
 
+      // "Weitere Schriften" (plan 5): only when the administrator switched the catalogue of fonts on
+      if (app.canEdit && window.DtFontsMore) {
+        var moreHost = D.el('div', { class: 'dt-pbar' });
+        host.appendChild(moreHost);
+        window.DtFontsMore.available().then(function (yes) {
+          if (!yes || !document.contains(moreHost)) { return; }
+          moreHost.appendChild(D.ui.textButton('plus', 'Weitere Schriften …', function () { D.io.moreFonts(null); }, { cls: 'dt-textmore', disabled: !app.editable(), title: 'Freie Schriften aus Google Fonts hinzufügen' }));
+        });
+      }
+
       var combos = D.el('div', { class: 'dt-combos', role: 'list', 'aria-label': 'Schriftkombinationen' });
       host.appendChild(D.el('section', { class: 'dt-psec dt-psec--gap' }, [D.el('h3', { class: 'dt-psec__title', text: 'Schriftkombinationen' }), combos]));
       COMBOS.forEach(function (combo) {

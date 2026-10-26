@@ -48,7 +48,7 @@ public static partial class AiDesignCatalog
     [GeneratedRegex("^[A-Za-z][A-Za-z0-9_]{0,39}$")]
     private static partial Regex KeyPattern();
 
-    [GeneratedRegex("^[a-z0-9-]{1,64}$")]
+    [GeneratedRegex("^(?:[a-z0-9-]{1,64}:)?[a-z0-9-]{1,64}$")]
     private static partial Regex IconPattern();
 
     public static bool IsColour(string? text) => text is not null && ColourPattern().IsMatch(text.Trim());

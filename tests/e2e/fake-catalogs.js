@@ -64,7 +64,7 @@ function png(w, h, hue) {
   return Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), chunk('IHDR', ihdr), chunk('IDAT', zlib.deflateSync(raw)), chunk('IEND', Buffer.alloc(0))]);
 }
 
-function makeItems() {
+function makeItems(authors) {
   const items = [];
   let n = 0;
   for (const c of COLLECTIONS) {
@@ -72,7 +72,7 @@ function makeItems() {
       n++;
       const id = 'f' + String(n).padStart(2, '0');
       const by = n % 3 === 0;   // every third one needs the credit
-      items.push({ id, title, collection: c.id, width: i % 3 === 0 ? 1200 : i % 3 === 1 ? 800 : 900, height: i % 3 === 0 ? 800 : i % 3 === 1 ? 1200 : 900, author: AUTHORS[n % AUTHORS.length], licence: by ? 'CC-BY-4.0' : 'CC0-1.0', hue: (n * 29) % 360 });
+      items.push({ id, title, collection: c.id, width: i % 3 === 0 ? 1200 : i % 3 === 1 ? 800 : 900, height: i % 3 === 0 ? 800 : i % 3 === 1 ? 1200 : 900, author: (authors || AUTHORS)[n % (authors || AUTHORS).length], licence: by ? 'CC-BY-4.0' : 'CC0-1.0', hue: (n * 29) % 360 });
     });
   }
   // what must never be offered
@@ -90,8 +90,9 @@ const LICENCES = {
   'CC-BY-ND-4.0': { code: 'CC-BY-ND-4.0', name: 'CC BY-ND 4.0', url: 'https://creativecommons.org/licenses/by-nd/4.0/' },
 };
 
-function startFakeCatalogs(port) {
-  const items = makeItems();
+/** options.authors: other names for the photographers (the shots of the README use names that do not say "Beispiel"). */
+function startFakeCatalogs(port, options) {
+  const items = makeItems(options && options.authors);
   const stats = {};
   const server = http.createServer((req, res) => {
     const url = new URL(req.url, 'http://127.0.0.1');

@@ -307,7 +307,12 @@ for (const i of icons) {
   fs.writeFileSync(path.join(iconDir, `${i.name}.svg`), svgFile(200, 200, i.title, body), 'utf8');
   catalogue.push({ key: `icon-${i.name}`, name: i.title, category: 'Siegel', file: `icons/${i.name}.svg`, tags: i.tags });
 }
-fs.writeFileSync(path.join(root, 'builtin', 'builtin.json'), JSON.stringify(catalogue, null, 2) + '\n', 'utf8');
+// The Deko pack (category "Deko") is owned by tools/deko/build.js: its entries are kept as they are.
+const listPath = path.join(root, 'builtin', 'builtin.json');
+if (fs.existsSync(listPath)) {
+  for (const entry of JSON.parse(fs.readFileSync(listPath, 'utf8'))) if (entry.category === 'Deko') catalogue.push(entry);
+}
+fs.writeFileSync(listPath, JSON.stringify(catalogue, null, 2) + '\n', 'utf8');
 
 // ---------------------------------------------------------------- fonts.json
 const gf = 'https://github.com/google/fonts/blob/main/';
@@ -331,6 +336,44 @@ const fonts = [
   font('Permanent Marker', 'PermanentMarker-Regular.ttf', '400', 'normal', 'apache/permanentmarker', 'PermanentMarker-Regular.ttf', 'Apache-2.0'),
   font('Source Sans 3', 'SourceSans3-Variable.ttf', '200 900', 'normal', 'ofl/sourcesans3', 'SourceSans3[wght].ttf'),
   font('Source Sans 3', 'SourceSans3-Italic-Variable.ttf', '200 900', 'italic', 'ofl/sourcesans3', 'SourceSans3-Italic[wght].ttf'),
+  // plan 6 / T1: more families. woff2 = Latin + Latin Extended subset made by tools/fonts-subset.js (families without a Reserved Font Name),
+  // ttf = the unmodified file of the repository (families that reserve their name: the OFL counts a changed format as a modification)
+  font('Great Vibes', 'GreatVibes-Regular.woff2', '400', 'normal', 'ofl/greatvibes', 'GreatVibes-Regular.ttf'),
+  font('Parisienne', 'Parisienne-Regular.ttf', '400', 'normal', 'ofl/parisienne', 'Parisienne-Regular.ttf'),
+  font('Allura', 'Allura-Regular.woff2', '400', 'normal', 'ofl/allura', 'Allura-Regular.ttf'),
+  font('Dancing Script', 'DancingScript-Variable.ttf', '400 700', 'normal', 'ofl/dancingscript', 'DancingScript[wght].ttf'),
+  font('Cormorant Garamond', 'CormorantGaramond-Variable.woff2', '300 700', 'normal', 'ofl/cormorantgaramond', 'CormorantGaramond[wght].ttf'),
+  font('Cormorant Garamond', 'CormorantGaramond-Italic-Variable.woff2', '300 700', 'italic', 'ofl/cormorantgaramond', 'CormorantGaramond-Italic[wght].ttf'),
+  font('Libre Baskerville', 'LibreBaskerville-Variable.ttf', '400 700', 'normal', 'ofl/librebaskerville', 'LibreBaskerville[wght].ttf'),
+  font('Libre Baskerville', 'LibreBaskerville-Italic-Variable.ttf', '400 700', 'italic', 'ofl/librebaskerville', 'LibreBaskerville-Italic[wght].ttf'),
+  font('Cinzel', 'Cinzel-Variable.woff2', '400 900', 'normal', 'ofl/cinzel', 'Cinzel[wght].ttf'),
+  font('Fredoka', 'Fredoka-Variable.woff2', '300 700', 'normal', 'ofl/fredoka', 'Fredoka[wdth,wght].ttf'),
+  font('Baloo 2', 'Baloo2-Variable.woff2', '400 800', 'normal', 'ofl/baloo2', 'Baloo2[wght].ttf'),
+  font('Patrick Hand', 'PatrickHand-Regular.woff2', '400', 'normal', 'ofl/patrickhand', 'PatrickHand-Regular.ttf'),
+  font('Gochi Hand', 'GochiHand-Regular.ttf', '400', 'normal', 'ofl/gochihand', 'GochiHand-Regular.ttf'),
+  font('Abril Fatface', 'AbrilFatface-Regular.ttf', '400', 'normal', 'ofl/abrilfatface', 'AbrilFatface-Regular.ttf'),
+  font('Anton', 'Anton-Regular.woff2', '400', 'normal', 'ofl/anton', 'Anton-Regular.ttf'),
+  font('Righteous', 'Righteous-Regular.ttf', '400', 'normal', 'ofl/righteous', 'Righteous-Regular.ttf'),
+  font('Amatic SC', 'AmaticSC-Regular.woff2', '400', 'normal', 'ofl/amaticsc', 'AmaticSC-Regular.ttf'),
+  font('Amatic SC', 'AmaticSC-Bold.woff2', '700', 'normal', 'ofl/amaticsc', 'AmaticSC-Bold.ttf'),
+  font('Inter', 'Inter-Variable.woff2', '100 900', 'normal', 'ofl/inter', 'Inter[opsz,wght].ttf'),
+  font('Inter', 'Inter-Italic-Variable.woff2', '100 900', 'italic', 'ofl/inter', 'Inter-Italic[opsz,wght].ttf'),
+  font('Nunito', 'Nunito-Variable.woff2', '200 900', 'normal', 'ofl/nunito', 'Nunito[wght].ttf'),
+  font('Nunito', 'Nunito-Italic-Variable.woff2', '200 900', 'italic', 'ofl/nunito', 'Nunito-Italic[wght].ttf'),
+  font('Josefin Sans', 'JosefinSans-Variable.ttf', '100 700', 'normal', 'ofl/josefinsans', 'JosefinSans[wght].ttf'),
+  font('Josefin Sans', 'JosefinSans-Italic-Variable.ttf', '100 700', 'italic', 'ofl/josefinsans', 'JosefinSans-Italic[wght].ttf'),
+  font('Raleway', 'Raleway-Variable.ttf', '100 900', 'normal', 'ofl/raleway', 'Raleway[wght].ttf'),
+  font('Raleway', 'Raleway-Italic-Variable.ttf', '100 900', 'italic', 'ofl/raleway', 'Raleway-Italic[wght].ttf'),
+  font('Poppins', 'Poppins-Regular.woff2', '400', 'normal', 'ofl/poppins', 'Poppins-Regular.ttf'),
+  font('Poppins', 'Poppins-Medium.woff2', '500', 'normal', 'ofl/poppins', 'Poppins-Medium.ttf'),
+  font('Poppins', 'Poppins-SemiBold.woff2', '600', 'normal', 'ofl/poppins', 'Poppins-SemiBold.ttf'),
+  font('Poppins', 'Poppins-Bold.woff2', '700', 'normal', 'ofl/poppins', 'Poppins-Bold.ttf'),
+  font('Poppins', 'Poppins-Italic.woff2', '400', 'italic', 'ofl/poppins', 'Poppins-Italic.ttf'),
+  font('Poppins', 'Poppins-BoldItalic.woff2', '700', 'italic', 'ofl/poppins', 'Poppins-BoldItalic.ttf'),
+  font('IBM Plex Mono', 'IBMPlexMono-Regular.ttf', '400', 'normal', 'ofl/ibmplexmono', 'IBMPlexMono-Regular.ttf'),
+  font('IBM Plex Mono', 'IBMPlexMono-Bold.ttf', '700', 'normal', 'ofl/ibmplexmono', 'IBMPlexMono-Bold.ttf'),
+  font('IBM Plex Mono', 'IBMPlexMono-Italic.ttf', '400', 'italic', 'ofl/ibmplexmono', 'IBMPlexMono-Italic.ttf'),
+  font('IBM Plex Mono', 'IBMPlexMono-BoldItalic.ttf', '700', 'italic', 'ofl/ibmplexmono', 'IBMPlexMono-BoldItalic.ttf'),
 ];
 fs.writeFileSync(path.join(root, 'fonts', 'fonts.json'), JSON.stringify(fonts, null, 2) + '\n', 'utf8');
 console.log(`${flags.length} flags, ${icons.length} seals, ${fonts.length} font files written`);

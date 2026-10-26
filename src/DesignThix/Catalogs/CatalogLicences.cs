@@ -11,7 +11,7 @@ public static class CatalogLicences
     /// <summary>The licences Iconify and Openverse let through unless the administrator chooses others.</summary>
     public static readonly IReadOnlyList<string> DefaultAllowed = ["CC0-1.0", "MIT", "Apache-2.0", "ISC", "CC-BY-4.0", "OFL-1.1"];
 
-    private static readonly string[] Families = ["CC0", "PDM", "CC-BY", "MIT", "APACHE", "ISC", "OFL", "BSD", "PEXELS", "PIXABAY", "UNSPLASH", "PUBLIC"];
+    private static readonly string[] Families = ["CC0", "PDM", "CC-BY", "MIT", "APACHE", "ISC", "OFL", "BSD", "PEXELS", "PIXABAY", "UNSPLASH", "PUBLIC", "UFL", "UNLICENSE"];
 
     /// <summary>"cc by-nc 4.0" becomes "CC-BY-NC-4.0".</summary>
     public static string Normalize(string? code)
@@ -40,6 +40,22 @@ public static class CatalogLicences
     {
         var normalized = Normalize(code);
         return normalized.StartsWith("CC-BY", StringComparison.Ordinal) || normalized.StartsWith("APACHE", StringComparison.Ordinal) || normalized.StartsWith("MIT", StringComparison.Ordinal) || normalized.StartsWith("OFL", StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Whether a licence code is one a catalogue offers now: usable at all (no NC, no ND), and in the list of the administrator (the <paramref name="defaults"/> of the catalogue when it is empty). A code in the
+    /// list matches itself and the same licence with a version ("CC-BY" matches "CC-BY-4.0" but never "CC-BY-SA-4.0").
+    /// </summary>
+    public static bool Allowed(string? code, IReadOnlyList<string> chosen, IReadOnlyList<string> defaults)
+    {
+        if (!IsUsable(code))
+        {
+            return false;
+        }
+
+        var normalized = Normalize(code);
+        var list = chosen.Count == 0 ? defaults : chosen;
+        return list.Select(Normalize).Any(a => a.Length > 0 && (normalized == a || (normalized.StartsWith(a + "-", StringComparison.Ordinal) && char.IsAsciiDigit(normalized[a.Length + 1]))));
     }
 
     /// <summary>The licence of an item as the pages show it: the code as the provider wrote it, a name, a link when the provider gave one (http or https only).</summary>

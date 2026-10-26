@@ -5,7 +5,7 @@
     var d = Model.Design;
     var edit = Model.CanEdit;
     // somebody who may only look gets "Kopie erstellen", which asks where the copy goes (the dialog of the file browser: its style sheet and scripts are only loaded for them)
-    ViewData["Styles"] = edit ? new[] { "/css/designer.css", "/css/designer-comments.css", "/css/designer-ai.css", "/css/dt-media.css", "/css/ai.css" } : new[] { "/css/designer.css", "/css/designer-comments.css", "/css/designer-ai.css", "/css/dt-media.css", "/css/ai.css", "/css/browser.css" };
+    ViewData["Styles"] = edit ? new[] { "/css/designer.css", "/css/designer-comments.css", "/css/designer-ai.css", "/css/dt-media.css", "/css/dt-fonts-more.css", "/css/ai.css" } : new[] { "/css/designer.css", "/css/designer-comments.css", "/css/designer-ai.css", "/css/dt-media.css", "/css/dt-fonts-more.css", "/css/ai.css", "/css/browser.css" };
     var back = $"/Designs/Edit/{d.Id}";
 }
 
@@ -106,6 +106,7 @@
     <script src="~/js/ai.js" asp-append-version="true"></script>
     <script src="~/js/ai-attach.js" asp-append-version="true"></script>
     <script src="~/js/dt-media.js" asp-append-version="true"></script>
+    <script src="~/js/dt-fonts-more.js" asp-append-version="true"></script>
     <script src="~/js/designer.core.js" asp-append-version="true"></script>
     <script src="~/js/designer.canvas.js" asp-append-version="true"></script>
     <script src="~/js/designer.menu.js" asp-append-version="true"></script>
@@ -116,6 +117,7 @@
     <script src="~/js/designer.toolbar-parts.js" asp-append-version="true"></script>
     <script src="~/js/designer.crop.js" asp-append-version="true"></script>
     <script src="~/js/designer.toolbar.js" asp-append-version="true"></script>
+    <script src="~/js/designer.fold.js" asp-append-version="true"></script>
     <script src="~/js/designer.panels.js" asp-append-version="true"></script>
     <script src="~/js/designer.icons-de.js" asp-append-version="true"></script>
     <script src="~/js/designer.panel-elements.js" asp-append-version="true"></script>

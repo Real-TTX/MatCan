@@ -31,6 +31,8 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
         public string? Folders { get; set; }
 
+        public string? Sets { get; set; }
+
         public string? Key { get; set; }
 
         public bool RemoveKey { get; set; }
@@ -68,6 +70,7 @@ public sealed class EditModel(Biz biz) : PageModelBase
             SafeSearch = s.SafeSearch,
             AllowedLicences = string.Join(Environment.NewLine, s.AllowedLicences),
             Folders = string.Join(Environment.NewLine, s.Folders),
+            Sets = string.Join(Environment.NewLine, s.Sets),
         };
         return Page();
     }
@@ -79,7 +82,7 @@ public sealed class EditModel(Biz biz) : PageModelBase
         {
             try
             {
-                await CatalogLogic.SaveAsync(biz, Id, new CatalogInput(Input.Enabled, Input.Order, Input.PerUserPerMinute, Input.PerHour, Input.SafeSearch, Lines(Input.AllowedLicences), Lines(Input.Folders)));
+                await CatalogLogic.SaveAsync(biz, Id, new CatalogInput(Input.Enabled, Input.Order, Input.PerUserPerMinute, Input.PerHour, Input.SafeSearch, Lines(Input.AllowedLicences), Lines(Input.Folders), Lines(Input.Sets)));
                 await CatalogLogic.SetKeyAsync(biz, Id, Input.Key, Input.RemoveKey);
                 Flash("Der Katalog ist gespeichert.");
                 return RedirectToPage(new { id = Id });

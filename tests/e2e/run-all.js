@@ -34,7 +34,7 @@ const checks = [
   { name: 'comments', file: 'comments-check.js', takesBase: true, what: 'comments in the editor: panel, pins, replies, resolve, mentions and notifications, read-only editor, deep link, phone' },
   { name: 'teams', file: 'teams-check.js', takesBase: true, what: 'teams, invitations, registration, administration, the bell and the notifications, mail settings, the phone' },
   { name: 'ai', file: 'ai-check.js', takesBase: true, extra: [...passOn('--fake-host'), ...passOn('--fake-port')], what: 'AI actions against a fake provider' },
-  { name: 'aidesign', file: 'ai-design-check.js', takesBase: true, extra: [...passOn('--fake-host'), ...passOn('--fake-port')], what: 'the design assistant in the editor: create from a prompt, live canvas, steps, Stopp, undo, attachments, references, roles, phone' },
+  { name: 'aidesign', file: 'ai-design-check.js', takesBase: true, extra: [...passOn('--fake-host'), ...passOn('--fake-port'), ...passOn('--catalog-port')], what: 'the design assistant in the editor: create from a prompt, live canvas, steps, Stopp, undo, attachments, references, roles, phone, stock photos and icons from the catalogues' },
   { name: 'catalogs', file: 'catalogs-check.js', takesBase: true, extra: [...passOn('--data'), ...passOn('--catalog-port')], what: 'the catalogues: admin pages, the media browser with catalogue tabs, the panel Fotos, imports, Bildnachweise, the server folder, roles, phone' },
 ];
 

@@ -30,6 +30,14 @@ internal static partial class EngineAgreementData
 {"schema":2,"unit":"px","width":800,"height":800,"dpi":300,"locale":"xx-YY","fields":[],"pages":[{"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[{"id":"e1","type":"shape","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#000000","strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},{"id":"e2","type":"text","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"","fontFamily":"sans-serif","fontSize":12,"fontWeight":400,"italic":false,"color":"#000000","align":"left","valign":"top","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":4,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}]}]}
 """;
 
+    public const string CatalogIconsInput = """
+{"schema":2,"unit":"mm","width":50,"height":50,"pages":[{"id":"p","elements":[{"id":"a","type":"icon","icon":"mdi:home","x":1,"y":1,"w":10,"h":10},{"id":"b","type":"icon","icon":"fa7-solid:house-chimney","color":"#E11D48","strokeWidth":3},{"id":"c","type":"icon","icon":"MDI:home"},{"id":"d","type":"icon","icon":"mdi:"},{"id":"e","type":"icon","icon":":home"},{"id":"f","type":"icon","icon":"a:b:c"},{"id":"g","type":"icon","icon":"mdi:Home"},{"id":"h","type":"icon","icon":"mdi/home"},{"id":"i","type":"icon","icon":"heart"},{"id":"j","type":"icon","icon":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"},{"id":"k","type":"icon","icon":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:y"},{"id":"l","type":"icon","icon":"x:yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"},{"id":"m","type":"icon","icon":"mdi:home "},{"id":"n","type":"icon","icon":5}]}]}
+""";
+
+    public const string CatalogIconsEngine = """
+{"schema":2,"unit":"mm","width":50,"height":50,"dpi":300,"locale":"de-DE","fields":[],"pages":[{"id":"p","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[{"id":"a","type":"icon","name":"","x":1,"y":1,"w":10,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"mdi:home","color":"#000000","strokeWidth":2},{"id":"b","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"fa7-solid:house-chimney","color":"#e11d48","strokeWidth":3},{"id":"c","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"","color":"#000000","strokeWidth":2},{"id":"d","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"","color":"#000000","strokeWidth":2},{"id":"e","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"","color":"#000000","strokeWidth":2},{"id":"f","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"","color":"#000000","strokeWidth":2},{"id":"g","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"","color":"#000000","strokeWidth":2},{"id":"h","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"","color":"#000000","strokeWidth":2},{"id":"i","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"heart","color":"#000000","strokeWidth":2},{"id":"j","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy","color":"#000000","strokeWidth":2},{"id":"k","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"","color":"#000000","strokeWidth":2},{"id":"l","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"","color":"#000000","strokeWidth":2},{"id":"m","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"","color":"#000000","strokeWidth":2},{"id":"n","type":"icon","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"","color":"#000000","strokeWidth":2}]}]}
+""";
+
     public const string PagesInput = """
 {"schema":2,"unit":"mm","width":85,"height":55,"dpi":300,"locale":"de-DE","fields":[{"key":"Name","label":"Name","type":"text","sample":"Anna"},{"key":"Url","label":"Adresse","type":"text","sample":"https://example.org"},{"key":"Ean","label":"EAN","type":"text","sample":"400638133393"}],"pages":[{"id":"front","name":"Vorderseite","background":{"color":null,"gradient":{"type":"linear","angle":90,"stops":[{"offset":0,"color":"#18D4C0"},{"offset":1,"color":"#2f86f6"}]},"asset":"bg","fit":"contain"},"elements":[{"id":"t1","type":"text","name":"Titel","x":5,"y":5,"w":60,"h":10,"text":"{{Name}}","fontFamily":"Montserrat","fontSize":18,"fontWeight":700,"underline":true,"strike":true,"list":"bullet","outline":{"color":"#FFFFFF","width":0.5},"background":{"color":"#112233","radius":1,"padding":2},"curve":40,"shadow":{"color":"#000","opacity":0.4,"blur":1,"x":0.5,"y":0.5},"flipX":true},{"id":"g1","type":"group","name":"Gruppe","x":0,"y":0,"w":50,"h":20,"rotation":10,"opacity":0.8,"shadow":{"color":"#000000","opacity":0.3,"blur":2,"x":1,"y":1},"children":[{"id":"s1","type":"shape","shape":"star","points":8,"innerRadius":0.4,"fill":{"type":"linear","angle":45,"stops":[{"offset":0,"color":"#f00"},{"offset":0.5,"color":"#0f0"},{"offset":1,"color":"#00f"}]},"stroke":"#000000","strokeWidth":0.3},{"id":"g2","type":"group","x":1,"y":1,"w":10,"h":10,"children":[{"id":"g3","type":"group","children":[{"id":"i1","type":"icon","icon":"heart","color":"#E11D48","strokeWidth":1.5,"x":2,"y":2,"w":8,"h":8}]}]}]},{"id":"f1","type":"image","source":null,"mask":"circle","crop":{"x":0.1,"y":0.1,"w":0.5,"h":0.5},"border":{"color":"#ffffff","width":2},"filters":{"brightness":10,"contrast":-10,"saturation":100,"blur":2,"grayscale":true,"sepia":false},"x":60,"y":5,"w":20,"h":20},{"id":"ln","type":"shape","shape":"line","x":5,"y":30,"w":70,"h":0,"stroke":"#ffffff","strokeWidth":0.4,"dash":"dashed","startCap":"circle","endCap":"arrow"}]},{"id":"back","name":"Rückseite","background":{"color":"#FFFFFF","gradient":null,"asset":null,"fit":"cover"},"elements":[{"id":"q1","type":"qr","value":"{{Url}}","color":"#000000","background":null,"ecc":"H","quiet":false,"x":5,"y":5,"w":25,"h":25},{"id":"b1","type":"barcode","format":"ean13","value":"{{Ean}}","color":"#000000","background":"#ffffff","showText":false,"fontFamily":"Roboto","x":35,"y":5,"w":40,"h":20},{"id":"b2","type":"barcode","format":"code128","value":"ABC-123","x":35,"y":30,"w":40,"h":15}]}]}
 """;
@@ -62,6 +70,62 @@ internal static partial class EngineAgreementData
 {"schema":2,"unit":"mm","width":20,"height":20,"dpi":300,"locale":"de-DE","fields":[],"pages":[{"id":"p1","name":"","background":{"color":"#123456","gradient":null,"asset":null,"fit":"cover"},"elements":[{"id":"e1","type":"shape","name":"","x":0,"y":0,"w":0,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#abcdef","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"}]}]}
 """;
 
+    public const string FoldVerticalInput = """
+{"schema":2,"unit":"mm","width":210,"height":148,"fold":"vertical","pages":[{"id":"a","name":"Außen (Rückseite | Vorderseite)"},{"id":"b","name":"Innen"}]}
+""";
+
+    public const string FoldVerticalEngine = """
+{"schema":2,"unit":"mm","width":210,"height":148,"dpi":300,"locale":"de-DE","fold":"vertical","fields":[],"pages":[{"id":"a","name":"Außen (Rückseite | Vorderseite)","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[]},{"id":"b","name":"Innen","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[]}]}
+""";
+
+    public const string FoldHorizontalInput = """
+{"schema":2,"unit":"mm","width":148,"height":210,"fold":"horizontal","pages":[{"id":"a"}]}
+""";
+
+    public const string FoldHorizontalEngine = """
+{"schema":2,"unit":"mm","width":148,"height":210,"dpi":300,"locale":"de-DE","fold":"horizontal","fields":[],"pages":[{"id":"a","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[]}]}
+""";
+
+    public const string FoldNoneInput = """
+{"schema":2,"unit":"mm","width":100,"height":100,"fold":"none","pages":[{"id":"a"}]}
+""";
+
+    public const string FoldNoneEngine = """
+{"schema":2,"unit":"mm","width":100,"height":100,"dpi":300,"locale":"de-DE","fields":[],"pages":[{"id":"a","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[]}]}
+""";
+
+    public const string FoldHostileInput = """
+{"schema":2,"unit":"mm","width":100,"height":100,"fold":"diagonal","pages":[{"id":"a"}]}
+""";
+
+    public const string FoldHostileEngine = """
+{"schema":2,"unit":"mm","width":100,"height":100,"dpi":300,"locale":"de-DE","fields":[],"pages":[{"id":"a","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[]}]}
+""";
+
+    public const string FoldWrongCaseInput = """
+{"schema":2,"unit":"mm","width":100,"height":100,"fold":"Vertical","pages":[{"id":"a"}]}
+""";
+
+    public const string FoldWrongCaseEngine = """
+{"schema":2,"unit":"mm","width":100,"height":100,"dpi":300,"locale":"de-DE","fields":[],"pages":[{"id":"a","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[]}]}
+""";
+
+    public const string FoldNumberInput = """
+{"schema":2,"unit":"px","width":100,"height":100,"fold":5,"pages":[{"id":"a"}]}
+""";
+
+    public const string FoldNumberEngine = """
+{"schema":2,"unit":"px","width":100,"height":100,"dpi":300,"locale":"de-DE","fields":[],"pages":[{"id":"a","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[]}]}
+""";
+
+    public const string FoldOnSchemaOneInput = """
+{"schema":1,"unit":"mm","width":100,"height":100,"fold":"horizontal","elements":[]}
+""";
+
+    public const string FoldOnSchemaOneEngine = """
+{"schema":2,"unit":"mm","width":100,"height":100,"dpi":300,"locale":"de-DE","fold":"horizontal","fields":[],"pages":[{"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[]}]}
+""";
+
     /// <summary>The names of the documents above (the fields NameInput and NameEngine exist for each).</summary>
-    public static readonly string[] DocumentNames = ["HostileOne", "Demo", "Garbage", "Pages", "HostileTwo", "NoPages", "TopLevel"];
+    public static readonly string[] DocumentNames = ["HostileOne", "Demo", "Garbage", "CatalogIcons", "Pages", "HostileTwo", "NoPages", "TopLevel", "FoldVertical", "FoldHorizontal", "FoldNone", "FoldHostile", "FoldWrongCase", "FoldNumber", "FoldOnSchemaOne"];
 }

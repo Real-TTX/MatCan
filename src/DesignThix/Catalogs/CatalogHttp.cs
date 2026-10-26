@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Sockets;
 using DesignThix.Logic;
 
 namespace DesignThix.Catalogs;
@@ -73,26 +74,106 @@ public sealed class CatalogHttp : IDisposable
                 AutomaticDecompression = DecompressionMethods.All,
                 ConnectTimeout = TimeSpan.FromSeconds(10),
                 PooledConnectionLifetime = TimeSpan.FromMinutes(5),
+                ConnectCallback = ConnectAsync,
             };
         _client = new HttpClient(handler, disposeHandler: true) { Timeout = Timeout.InfiniteTimeSpan };
     }
 
     public void Dispose() => _client.Dispose();
 
+    private static readonly HttpRequestOptionsKey<bool> GuardPrivate = new("dt-guard-private");
+
+    /// <summary>
+    /// Whether an address is one of this machine or of a private network: loopback, link-local (the metadata service of a cloud lives at 169.254.169.254), private ranges, shared address space
+    /// (100.64.0.0/10), unspecified, multicast and the same behind an IPv4-mapped IPv6 address. A catalogue that is built in (Pexels, Iconify ...) is a service on the internet: its name must not lead there.
+    /// </summary>
+    public static bool IsPrivateAddress(IPAddress address)
+    {
+        if (address.IsIPv4MappedToIPv6)
+        {
+            address = address.MapToIPv4();
+        }
+
+        if (IPAddress.IsLoopback(address) || address.Equals(IPAddress.Any) || address.Equals(IPAddress.IPv6Any) || address.IsIPv6LinkLocal || address.IsIPv6SiteLocal || address.IsIPv6Multicast)
+        {
+            return true;
+        }
+
+        var b = address.GetAddressBytes();
+        if (b.Length == 16)
+        {
+            // unique local fc00::/7
+            return (b[0] & 0xFE) == 0xFC;
+        }
+
+        return b[0] switch
+        {
+            0 or 10 or 127 => true,
+            100 => b[1] is >= 64 and <= 127,
+            169 => b[1] == 254,
+            172 => b[1] is >= 16 and <= 31,
+            192 => (b[1] == 168) || (b[1] == 0 && b[2] == 0),
+            198 => b[1] is 18 or 19,
+            >= 224 => true,
+            _ => false,
+        };
+    }
+
+    /// <summary>
+    /// The connection of the real client: the name is resolved HERE and a host that is guarded (a built-in catalogue's own host) is only connected to when none of its addresses is private, so a
+    /// name that has been turned to point inside the network (DNS rebinding, a poisoned record) reaches nothing. Through a proxy the proxy resolves the name and cannot be checked.
+    /// </summary>
+    private static async ValueTask<Stream> ConnectAsync(SocketsHttpConnectionContext context, CancellationToken ct)
+    {
+        var guard = context.InitialRequestMessage.Options.TryGetValue(GuardPrivate, out var g) && g
+            && string.Equals(context.InitialRequestMessage.RequestUri?.Host, context.DnsEndPoint.Host, StringComparison.OrdinalIgnoreCase);
+        var addresses = IPAddress.TryParse(context.DnsEndPoint.Host, out var literal) ? [literal] : await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, ct);
+        if (guard)
+        {
+            addresses = [.. addresses.Where(a => !IsPrivateAddress(a))];
+            if (addresses.Length == 0)
+            {
+                throw new HttpRequestException("The host resolves to a private address.");
+            }
+        }
+
+        Exception? last = null;
+        foreach (var address in addresses)
+        {
+            var socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp) { NoDelay = true };
+            try
+            {
+                await socket.ConnectAsync(new IPEndPoint(address, context.DnsEndPoint.Port), ct);
+                return new NetworkStream(socket, ownsSocket: true);
+            }
+            catch (Exception ex) when (ex is SocketException or OperationCanceledException)
+            {
+                socket.Dispose();
+                last = ex;
+                if (ex is OperationCanceledException)
+                {
+                    throw;
+                }
+            }
+        }
+
+        throw new HttpRequestException("No address could be reached.", last);
+    }
+
     /// <summary>
     /// Asks for <paramref name="url"/>. <paramref name="allowedHosts"/> are the hosts this catalogue may reach; a redirect to another host is refused (the key is only sent to the host it was meant for),
     /// plain http is only allowed with <paramref name="allowHttp"/> (an address the operator set by hand). Throws <see cref="CatalogException"/>.
     /// </summary>
-    public Task<CatalogHttpResult> GetAsync(Uri url, IReadOnlyCollection<string> allowedHosts, bool allowHttp, string provider, IReadOnlyDictionary<string, string>? headers, TimeSpan timeout, long maxBytes, CancellationToken ct)
-        => SendAsync(HttpMethod.Get, null, url, allowedHosts, allowHttp, provider, headers, timeout, maxBytes, ct);
+    public Task<CatalogHttpResult> GetAsync(Uri url, IReadOnlyCollection<string> allowedHosts, bool allowHttp, string provider, IReadOnlyDictionary<string, string>? headers, TimeSpan timeout, long maxBytes, CancellationToken ct, IReadOnlyCollection<string>? publicHosts = null)
+        => SendAsync(HttpMethod.Get, null, url, allowedHosts, allowHttp, provider, headers, timeout, maxBytes, ct, publicHosts);
 
     /// <summary>
     /// A POST of a small form (the token request of a provider): the same rules as <see cref="GetAsync"/>, but it is never redirected (a form with a secret goes to the address the catalogue built and nowhere else).
     /// </summary>
-    public Task<CatalogHttpResult> PostFormAsync(Uri url, IReadOnlyCollection<string> allowedHosts, bool allowHttp, string provider, IReadOnlyDictionary<string, string> form, TimeSpan timeout, long maxBytes, CancellationToken ct)
-        => SendAsync(HttpMethod.Post, form, url, allowedHosts, allowHttp, provider, null, timeout, maxBytes, ct);
+    public Task<CatalogHttpResult> PostFormAsync(Uri url, IReadOnlyCollection<string> allowedHosts, bool allowHttp, string provider, IReadOnlyDictionary<string, string> form, TimeSpan timeout, long maxBytes, CancellationToken ct, IReadOnlyCollection<string>? publicHosts = null)
+        => SendAsync(HttpMethod.Post, form, url, allowedHosts, allowHttp, provider, null, timeout, maxBytes, ct, publicHosts);
 
-    private async Task<CatalogHttpResult> SendAsync(HttpMethod method, IReadOnlyDictionary<string, string>? form, Uri url, IReadOnlyCollection<string> allowedHosts, bool allowHttp, string provider, IReadOnlyDictionary<string, string>? headers, TimeSpan timeout, long maxBytes, CancellationToken ct)
+    private async Task<CatalogHttpResult> SendAsync(HttpMethod method, IReadOnlyDictionary<string, string>? form, Uri url, IReadOnlyCollection<string> allowedHosts, bool allowHttp, string provider, IReadOnlyDictionary<string, string>? headers, TimeSpan timeout, long maxBytes, CancellationToken ct, IReadOnlyCollection<string>? publicHosts)
     {
         using var limit = CancellationTokenSource.CreateLinkedTokenSource(ct);
         limit.CancelAfter(timeout);
@@ -107,6 +188,9 @@ public sealed class CatalogHttp : IDisposable
             }
 
             request.Headers.UserAgent.ParseAdd(AiProfileLogic.UserAgent);
+            // the hosts the catalogue brings itself (not the one the operator typed) are public services: a connection to one of them never goes to a private address.
+            // Without a list every host is guarded unless the operator allowed plain http (a fake provider on this machine).
+            request.Options.Set(GuardPrivate, publicHosts is null ? !allowHttp : publicHosts.Contains(current.Host, StringComparer.OrdinalIgnoreCase));
             if (headers is not null && string.Equals(current.Host, url.Host, StringComparison.OrdinalIgnoreCase))
             {
                 foreach (var (name, value) in headers)

@@ -11,7 +11,7 @@ public sealed record PublicFont(string Family, string Weight, string Style, stri
 
 /// <summary>One design for the public viewer: the document (its own sample values, no data list rows), the faces of the fonts it uses and the addresses of the images it uses.</summary>
 public sealed record PublicDesignPayload(long Id, string Name, bool AllowDownload, long? FolderId, int Pages, string DocumentJson, IReadOnlyList<PublicFont> Fonts, IReadOnlyDictionary<string, string> Assets,
-    IReadOnlyList<string> Warnings, IReadOnlyList<CreditRow> Credits);
+    IReadOnlyList<string> Warnings, IReadOnlyList<CreditRow> Credits, IReadOnlyDictionary<string, IconView>? Icons = null);
 
 public sealed record PublicCrumb(long Id, string Name);
 
@@ -143,7 +143,12 @@ public static class PublicShareLogic
         // the Bildnachweise: author, licence and source of the pictures that came from a catalogue on the internet (the attribution of CC BY material has to travel with the design); only for the images
         // this payload delivers
         var credits = assets.Count == 0 ? [] : await CatalogLogic.CreditsOfKeysAsync(biz, [.. assets.Keys]);
-        return new PublicDesignPayload(design.Id, design.Name, target.AllowDownload, design.FolderId, document.Pages.Count, DocumentValidator.ToJson(document), fonts, assets, warnings, credits);
+        // the icons of catalogues the design uses: their bodies travel with the payload (an anonymous viewer cannot ask /api/icons), and the sets that need a credit join the Bildnachweise
+        var documentJson = DocumentValidator.ToJson(document);
+        var iconNames = IconLogic.NamesIn(documentJson);
+        var icons = await IconLogic.ResolveAsync(db, iconNames);
+        credits = [.. credits, .. await CatalogLogic.CreditsOfIconsAsync(biz, icons.Keys)];
+        return new PublicDesignPayload(design.Id, design.Name, target.AllowDownload, design.FolderId, document.Pages.Count, documentJson, fonts, assets, warnings, credits, icons);
     }
 
     /// <summary>Whether the design sits in the folder or below it, and no folder on the way is in the trash.</summary>

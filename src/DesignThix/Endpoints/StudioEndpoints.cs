@@ -31,10 +31,40 @@ public static class StudioEndpoints
             return Results.Json(tiles.Cast<object>().Append(custom).Concat(rest), Web);
         }).RequireAuthorization("SignedIn");
 
-        // [{ id, name, category, description, width, height, unit, size, thumbnailUrl }]: the designs marked as Vorlage.
+        // [{ id, name, category, description, width, height, unit, size, thumbnailUrl, family, familyName, variant, occasion, tags: [], format, formatName, order }]: the designs marked as Vorlage
+        // (the editor's panel filters them itself; the metadata of plan 6 is null for a template without it).
         app.MapGet("/api/templates", async (Biz biz) =>
-            Results.Json((await DesignLogic.TemplatesAsync(biz)).Select(t => new { id = t.Id, name = t.Name, category = t.Category, description = t.Description, width = t.Width, height = t.Height, unit = t.Unit, size = t.Size, thumbnailUrl = t.ThumbnailUrl }), Web))
+            Results.Json((await TemplateLogic.FamiliesAsync(biz)).SelectMany(f => f.Variants).Select(t => TemplateShape(t)), Web))
             .RequireAuthorization("SignedIn");
+
+        // ?occasion=&format=&q=&skip=&take= -> { total, templates, occasions: [{ key, name, count }], formats: [{ key, name, count, group }], families: [{ key, name, occasion, category, variants: [template + canEdit] }] }
+        // the gallery of templates: one entry per family (docs/PLAN-TEMPLATES.md section 2), the filter lists counted with the other filter applied.
+        app.MapGet("/api/templates/gallery", async (Biz biz, string? occasion, string? format, string? q, int? skip, int? take) =>
+        {
+            var gallery = await TemplateLogic.GalleryAsync(biz, new TemplateFilter(occasion, format, q), skip ?? 0, take ?? TemplateLogic.PageSize);
+            var manageable = await DesignLogic.ManageableAsync(biz, gallery.Families.SelectMany(f => f.Variants).Select(v => v.Id));
+            return Results.Json(new
+            {
+                total = gallery.Total,
+                templates = gallery.Templates,
+                occasions = gallery.Occasions,
+                formats = gallery.Formats,
+                families = gallery.Families.Select(f => FamilyShape(f, manageable)),
+            }, Web);
+        }).RequireAuthorization("SignedIn");
+
+        // -> { key, name, occasion, category, variants: [template + canEdit] }: the family a template belongs to (for "Vorlage ansehen" on the start page); 404 when the person may not see the template.
+        app.MapGet("/api/templates/{id:long}/family", async (long id, Biz biz) =>
+        {
+            var family = await TemplateLogic.FamilyOfAsync(biz, id);
+            if (family is null)
+            {
+                return Results.NotFound();
+            }
+
+            var manageable = await DesignLogic.ManageableAsync(biz, family.Variants.Select(v => v.Id));
+            return Results.Json(FamilyShape(family, manageable), Web);
+        }).RequireAuthorization("SignedIn");
 
         // ---------------------------------------------------------------------------------------- designs
 
@@ -192,7 +222,42 @@ public static class StudioEndpoints
     // ------------------------------------------------------------------------------------------------ shapes
 
     private static object Shape(FormatPreset p, bool tile)
-        => new { key = p.Key, name = p.Name, title = p.ShortName, group = p.Group, width = (double?)p.Width, height = (double?)p.Height, unit = p.Unit, icon = p.Icon, tile, custom = false };
+        => new { key = p.Key, name = p.Name, title = p.ShortName, group = p.Group, width = (double?)p.Width, height = (double?)p.Height, unit = p.Unit, icon = p.Icon, tile, custom = false, fold = p.Fold, note = p.Note };
+
+    private static object FamilyShape(TemplateFamilyRow f, ISet<long> manageable) => new
+    {
+        key = f.Key,
+        name = f.Name,
+        occasion = f.Occasion,
+        category = f.Category,
+        variants = f.Variants.Select(v => TemplateShape(v, manageable.Contains(v.Id))).ToList(),
+    };
+
+    /// <summary>A template as the gallery and the editor's panel read it.</summary>
+    private static object TemplateShape(DesignRow t, bool? canEdit = null) => new
+    {
+        id = t.Id,
+        name = t.Name,
+        category = t.Category,
+        description = t.Description,
+        width = t.Width,
+        height = t.Height,
+        unit = t.Unit,
+        size = t.Size,
+        thumbnailUrl = t.ThumbnailUrl,
+        family = t.TemplateFamily,
+        familyName = t.TemplateFamilyName,
+        variant = t.TemplateVariant,
+        occasion = t.TemplateOccasion,
+        tags = TemplateMeta.SplitTags(t.TemplateTags),
+        format = t.TemplateFormat,
+        formatName = FormatPresets.Find(t.TemplateFormat)?.ShortName,
+        formatNote = FormatPresets.Find(t.TemplateFormat) is { Note.Length: > 0 } preset ? preset.Note : null,
+        fold = FormatPresets.Find(t.TemplateFormat)?.Fold ?? "none",
+        order = t.TemplateOrder,
+        variants = t.Variants,
+        canEdit,
+    };
 
     private static object Shape(BrandView view) => new
     {

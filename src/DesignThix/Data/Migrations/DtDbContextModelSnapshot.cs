@@ -904,6 +904,37 @@ namespace DesignThix.Data.Migrations
                     b.Property<long?>("SpaceId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("TemplateFamily")
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<string>("TemplateFamilyName")
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<string>("TemplateFormat")
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<string>("TemplateKey")
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<string>("TemplateOccasion")
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<int>("TemplateOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TemplateTags")
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
+
+                    b.Property<string>("TemplateVariant")
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
                     b.Property<string>("ThumbnailHash")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
@@ -939,6 +970,8 @@ namespace DesignThix.Data.Migrations
                     b.HasIndex("FolderId");
 
                     b.HasIndex("IsTemplate");
+
+                    b.HasIndex("TemplateKey");
 
                     b.HasIndex("UpdateDate");
 
@@ -1130,6 +1163,63 @@ namespace DesignThix.Data.Migrations
                     b.HasIndex("SpaceId");
 
                     b.ToTable("Font");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.IconBody", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LicenceCode")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Prefix")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("SourceJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Prefix", "Name")
+                        .IsUnique();
+
+                    b.ToTable("IconBody");
                 });
 
             modelBuilder.Entity("DesignThix.Data.Entities.Invitation", b =>

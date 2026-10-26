@@ -11,7 +11,7 @@
  * element lives inside the exported SVG string (@font-face data URIs).
  *
  * DOCUMENT (schema 2; schema 1 is upgraded by normalize()):
- *   { schema: 2, unit: 'mm'|'px', width, height, dpi, locale, fields: [...],
+ *   { schema: 2, unit: 'mm'|'px', width, height, dpi, locale, fold?: 'vertical'|'horizontal' (a folded card, written only when set), fields: [...],
  *     pages: [ { id, name, background: { color: '#rrggbb'|null, gradient: Gradient|null, asset: key|null, fit }, elements: [...] } ] }
  *   Upgrade 1 -> 2: pages = [{ id: 'p1', name: '', background: doc.background, elements: doc.elements }]. normalize() never mutates, is
  *   idempotent, clamps and defaults every property, drops unknown ones. The result also carries the NON-ENUMERABLE legacy aliases
@@ -23,12 +23,12 @@
  *   curve -100..100), image (+ crop {x,y,w,h} fractions of the natural image, mask none|rounded|circle|heart|star|hexagon|triangle,
  *   border {color,width pt}, filters {brightness,contrast,saturation -100..100, blur 0..20, grayscale, sepia}; no source = frame),
  *   imageStrip (+ mask, border), shape (rect|ellipse|line|triangle|diamond|pentagon|hexagon|star|heart|arrow|speech, points,
- *   innerRadius, fill = Fill, startCap/endCap), icon (Lucide name, color, strokeWidth), qr (value, color, background, ecc, quiet),
+ *   innerRadius, fill = Fill, startCap/endCap), icon (Lucide name or prefix:name of a catalogue icon, color, strokeWidth), qr (value, color, background, ecc, quiet),
  *   barcode (format ean13|ean8|code128, value, color, background, showText, fontFamily), group (children in PAGE coordinates;
  *   rotation, flip, opacity and shadow apply to the whole group around the centre of its box; nesting depth <= 3).
  *   Limits: 50 pages, 500 elements per page and 2000 in total (group children count), 100 fields.
  *
- * Public API: window.DtEngine = { normalize, pageCount, fieldsUsed, assetKeysUsed, sampleValues, formatValue, resolveText,
+ * Public API: window.DtEngine = { normalize, pageCount, fieldsUsed, assetKeysUsed, iconNamesUsed, iconSource, sampleValues, formatValue, resolveText,
  *   render, renderInto, toStandaloneSvg, rasterize, zip, layoutText, qrEncode, barcodeInfo, ptToUnit, unitToPx, unitToInch,
  *   SCHEMA, version }.
  *
@@ -36,7 +36,7 @@
  *   page            0-based page index (default 0, clamped).
  *   assetUrl(key)   asset key -> URL or null (null/unknown: nothing is drawn, a warning is reported).
  *   fonts           [{ family, weight, style, url }] faces to register and embed.
- *   icon(name)      Lucide icon name -> SVG body string (the inner markup of the 24 x 24 icon) or a Promise of it; parsed with an allowlist.
+ *   icon(name)      icon name (Lucide `star`, or `prefix:name` of a catalogue) -> SVG body string (the inner markup of the 24 x 24 icon) or { body, width, height } (any grid) or a Promise of it; parsed with an allowlist. DtEngine.iconSource() makes one.
  *   mode            'editor' | 'output' (default output): the editor draws dashed placeholders (empty image frame "Bild hierher
  *                   ziehen", unknown icon, invalid code with its reason); output draws nothing for them.
  *   missing         'empty' | 'token' (missing values render empty (default) or as {{Key}}).
@@ -67,6 +67,7 @@
   const SCHEMA = Object.freeze({
     version: 2,
     units: Object.freeze(['mm', 'px']),
+    folds: Object.freeze(['none', 'vertical', 'horizontal']),
     fieldTypes: Object.freeze(['text', 'multiline', 'number', 'price', 'image']),
     elementTypes: Object.freeze(['text', 'image', 'imageStrip', 'shape', 'icon', 'qr', 'barcode', 'group']),
     limits: Object.freeze({
@@ -163,7 +164,7 @@
   const SHAPE_KINDS = ['rect', 'ellipse', 'line', 'triangle', 'diamond', 'pentagon', 'hexagon', 'star', 'heart', 'arrow', 'speech'];
   const MASK_KINDS = ['none', 'rounded', 'circle', 'heart', 'star', 'hexagon', 'triangle'];
   const CAP_KINDS = ['none', 'arrow', 'circle', 'square'];
-  const ICON_NAME_PATTERN = /^[a-z0-9-]{1,64}$/;
+  const ICON_NAME_PATTERN = /^(?:[a-z0-9-]{1,64}:)?[a-z0-9-]{1,64}$/;
   const FULL_CROP = Object.freeze({ x: 0, y: 0, w: 1, h: 1 });
 
   function validLocale(value) {
@@ -446,9 +447,12 @@
       height: num(src.height, defaultSize, 0.1, 100000),
       dpi: Math.round(num(src.dpi, 300, 72, 1200)),
       locale: validLocale(src.locale),
-      fields,
-      pages,
     };
+    // a folded card (fold line in the middle of every page); 'none' is the default and not written, so older documents stay as they are
+    const fold = oneOf(src.fold, SCHEMA.folds, 'none');
+    if (fold !== 'none') doc.fold = fold;
+    doc.fields = fields;
+    doc.pages = pages;
     Object.defineProperty(doc, 'elements', { get() { return pages[0].elements; }, set(v) { pages[0].elements = v; }, enumerable: false, configurable: true });
     Object.defineProperty(doc, 'background', { get() { return pages[0].background; }, set(v) { pages[0].background = v; }, enumerable: false, configurable: true });
     return doc;
@@ -531,6 +535,71 @@
       });
     }
     return keys;
+  }
+
+/**
+   * The icons a document names that come from a catalogue (`prefix:name`), unique, in order of first use. Lucide icons (no prefix) are not
+   * listed: they are in lib/icons.json.
+   * @param {object} input document
+   * @returns {string[]}
+   */
+  function iconNamesUsed(input) {
+    const doc = normalize(input);
+    const seen = new Set();
+    for (const page of doc.pages) {
+      walkElements(page.elements, e => { if (e.type === 'icon' && e.icon && e.icon.indexOf(':') > 0) seen.add(e.icon); });
+    }
+    return Array.from(seen);
+  }
+
+  let lucideLibrary = null;
+
+  /**
+   * A function for `opts.icon`: Lucide icons come from lib/icons.json (loaded once), icons of a catalogue (`prefix:name`) from `config.extra`
+   * (`{ 'mdi:home': { body, width, height } }`, what a payload carries) and, with `config.remote`, from `GET /api/icons?names=` (a signed-in
+   * page; names asked for within a few milliseconds go in one request). A name nobody knows gives null (the engine reports it).
+   * @param {{extra?:object, remote?:boolean}} [config]
+   * @returns {(name:string)=>(object|string|null|Promise<object|string|null>)}
+   */
+  function iconSource(config) {
+    const cfg = config || {};
+    const extra = cfg.extra || {};
+    const known = new Map();
+    let batch = null;
+    const shape = v => (v && typeof v.body === 'string' ? { body: v.body, width: v.width, height: v.height } : null);
+    const lucide = () => {
+      if (!lucideLibrary) {
+        lucideLibrary = fetch('/lib/icons.json', { credentials: 'same-origin' })
+          .then(r => (r.ok ? r.json() : { icons: {} })).then(j => (j && j.icons ? j.icons : {})).catch(() => ({}));
+      }
+      return lucideLibrary;
+    };
+    const ask = name => {
+      if (!batch) {
+        const entry = { names: new Map() };
+        batch = entry;
+        setTimeout(() => {
+          batch = null;
+          const names = Array.from(entry.names.keys());
+          fetch('/api/icons?names=' + encodeURIComponent(names.join(',')), { credentials: 'same-origin', headers: { Accept: 'application/json' } })
+            .then(r => (r.ok ? r.json() : {})).catch(() => ({}))
+            .then(found => { for (const [n, resolve] of entry.names) resolve(shape(found && found[n])); });
+        }, 15);
+      }
+      return new Promise(resolve => {
+        const resolvers = batch.names;
+        if (resolvers.size >= 50) { resolve(null); return; }
+        resolvers.set(name, resolve);
+      });
+    };
+    return name => {
+      if (typeof name !== 'string' || name === '') return null;
+      if (name.indexOf(':') < 0) return lucide().then(icons => (icons[name] ? icons[name].b : null));
+      if (extra[name]) return shape(extra[name]);
+      if (!cfg.remote || !ICON_NAME_PATTERN.test(name)) return null;
+      if (!known.has(name)) known.set(name, ask(name));
+      return known.get(name);
+    };
   }
 
   /**
@@ -1592,7 +1661,9 @@
   const ICON_POINTS = /^[0-9eE+\-.,\s]*$/;
   const iconCache = new Map();
 
-  const ICON_ATTRIBUTES = new Set(['d', 'cx', 'cy', 'r', 'rx', 'ry', 'x', 'y', 'width', 'height', 'x1', 'y1', 'x2', 'y2', 'points']);
+  // Presentation attributes of the icons of catalogues (Iconify): a paint is only currentColor or none (the colour of the element), the rest small numbers and keywords. Lucide bodies have none of them.
+  const ICON_PAINT_ATTRIBUTES = ['fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'fill-rule', 'opacity', 'fill-opacity', 'stroke-opacity'];
+  const ICON_ATTRIBUTES = new Set(['d', 'cx', 'cy', 'r', 'rx', 'ry', 'x', 'y', 'width', 'height', 'x1', 'y1', 'x2', 'y2', 'points'].concat(ICON_PAINT_ATTRIBUTES));
 
   /**
    * Text-level pass before parsing: every start tag keeps only the allowed geometry attributes. The allowlist below stays the
@@ -1610,9 +1681,16 @@
   }
 
   function validIconAttribute(name, value) {
-    if (name === 'd') return value.length <= 8000 && ICON_PATH.test(value);
-    if (name === 'points') return value.length <= 4000 && ICON_POINTS.test(value);
-    return ICON_NUMBER.test(value.trim());
+    if (name === 'd') return value.length <= 20000 && ICON_PATH.test(value);
+    if (name === 'points') return value.length <= 20000 && ICON_POINTS.test(value);
+    if (name === 'fill' || name === 'stroke') return value === 'currentColor' || value === 'none';
+    if (name === 'stroke-linecap') return value === 'butt' || value === 'round' || value === 'square';
+    if (name === 'stroke-linejoin') return value === 'miter' || value === 'round' || value === 'bevel';
+    if (name === 'fill-rule') return value === 'nonzero' || value === 'evenodd';
+    if (name === 'opacity' || name === 'fill-opacity' || name === 'stroke-opacity') return ICON_NUMBER.test(value.trim()) && Number(value) >= 0 && Number(value) <= 1;
+    if (name === 'stroke-width') return ICON_NUMBER.test(value.trim()) && Number(value) >= 0 && Number(value) <= 64;
+    if (name === 'stroke-miterlimit') return ICON_NUMBER.test(value.trim()) && Number(value) >= 1 && Number(value) <= 100;
+    return ICON_NUMBER.test(value.trim()) && Number.isFinite(Number(value)) && Math.abs(Number(value)) <= 1000000;
   }
 
   /**
@@ -1621,7 +1699,7 @@
    * foreignObject, g, use, href, on*, style, ...) is dropped silently. Returns null for a body that is not well-formed.
    */
   function parseIconBody(body) {
-    if (typeof body !== 'string' || body.length > 20000) return null;
+    if (typeof body !== 'string' || body.length > 60000) return null;
     if (iconCache.has(body)) return iconCache.get(body);
     let result = null;
     try {
@@ -1634,7 +1712,7 @@
           const allowed = child.namespaceURI === SVG_NS ? ICON_TAGS[child.localName] : null;
           if (!allowed) continue;
           const attrs = {};
-          for (const name of allowed) {
+          for (const name of allowed.concat(ICON_PAINT_ATTRIBUTES)) {
             const value = child.getAttribute(name);
             if (value !== null && validIconAttribute(name, value)) attrs[name] = value.trim();
           }
@@ -2125,13 +2203,26 @@
       if (state.mode === 'editor') drawPlaceholder(state, g, boxOf(e), e.icon || 'Icon');
       return;
     }
-    const scale = Math.min(e.w, e.h) / 24;
+    // the grid of the icon: 24 x 24 for Lucide, whatever the set uses for an icon of a catalogue (576 x 512 for a wide Font Awesome icon); the icon is centred in its box
+    const [gw, gh] = item.grid || [24, 24];
+    const scale = Math.min(e.w, e.h) / Math.max(gw, gh);
     if (!(scale > 0)) return;
     const group = svgElement('g', {
-      transform: 'translate(' + fmt(e.x + (e.w - 24 * scale) / 2) + ' ' + fmt(e.y + (e.h - 24 * scale) / 2) + ') scale(' + fmt6(scale) + ')',
+      transform: 'translate(' + fmt(e.x + (e.w - gw * scale) / 2) + ' ' + fmt(e.y + (e.h - gh * scale) / 2) + ') scale(' + fmt6(scale) + ')',
       fill: 'none', stroke: e.color, 'stroke-width': fmt(e.strokeWidth), 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
     }, g);
-    for (const part of parts) svgElement(part.tag, part.attrs, group);
+    for (const part of parts) {
+      const attrs = part.attrs;
+      let drawn = attrs;
+      if (attrs.fill !== undefined || attrs.stroke !== undefined) {
+        // a part of a catalogue icon says what it is: currentColor is the colour of the element, a stroke width is relative to the usual 2
+        drawn = Object.assign({}, attrs);
+        if (drawn.fill === 'currentColor') drawn.fill = e.color;
+        if (drawn.stroke === 'currentColor') drawn.stroke = e.color;
+        if (drawn['stroke-width'] !== undefined) drawn['stroke-width'] = fmt6(Number(drawn['stroke-width']) * e.strokeWidth / 2);
+      }
+      svgElement(part.tag, drawn, group);
+    }
   }
 
   function buildQr(state, item, g) {
@@ -2313,10 +2404,24 @@
       ensureFonts(faces, opts.fonts),
       ...Array.from(imageUrls, url => loadImageInfo(url).then(info => infos.set(url, info))),
       ...Array.from(iconNames, async name => {
+        // opts.icon gives the body of a 24 x 24 Lucide icon as text, or { body, width, height } for an icon of a catalogue (any grid up to 2048)
         let body = null;
-        if (typeof opts.icon === 'function') { try { body = await opts.icon(name); } catch (e) { body = null; } }
+        let iw = 24;
+        let ih = 24;
+        if (typeof opts.icon === 'function') {
+          try {
+            body = await opts.icon(name);
+            if (body && typeof body === 'object') {
+              const w = Number(body.width);
+              const h = Number(body.height);
+              iw = w >= 1 && w <= 2048 ? w : 24;
+              ih = h >= 1 && h <= 2048 ? h : 24;
+              body = body.body;
+            }
+          } catch (e) { body = null; }
+        }
         const parsed = parseIconBody(body);
-        icons.set(name, parsed && parsed.length ? parsed : null);
+        icons.set(name, parsed && parsed.length ? { parts: parsed, w: iw, h: ih } : null);
       }),
     ]);
 
@@ -2336,7 +2441,7 @@
       else if (e.type === 'image') buildImage(state, item, g);
       else if (e.type === 'imageStrip') buildStrip(state, item, g);
       else if (e.type === 'shape') buildShape(state, item, g);
-      else if (e.type === 'icon') { item.parts = icons.get(e.icon) || null; buildIcon(state, item, g); }
+      else if (e.type === 'icon') { const icon = icons.get(e.icon) || null; item.parts = icon && icon.parts; item.grid = icon ? [icon.w, icon.h] : [24, 24]; buildIcon(state, item, g); }
       else if (e.type === 'qr') buildQr(state, item, g);
       else if (e.type === 'barcode') buildBarcode(state, item, g);
       else for (const child of item.children) buildItem(child, g);
@@ -2702,6 +2807,8 @@
     pageCount,
     fieldsUsed,
     assetKeysUsed,
+    iconNamesUsed,
+    iconSource,
     sampleValues,
     formatValue,
     resolveText,

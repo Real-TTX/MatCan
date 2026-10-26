@@ -40,6 +40,12 @@ internal static class ProviderSupport
     public static IEnumerable<JsonElement> Array(JsonElement e, string name)
         => e.ValueKind == JsonValueKind.Object && e.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.Array ? v.EnumerateArray().Take(CatalogQuery.MaxPerPage * 2) : [];
 
+    /// <summary>All the strings of an array property (a list of names; at most 50 000), without the small cap of <see cref="Array"/>.</summary>
+    public static IEnumerable<string> AllStrings(JsonElement e, string name)
+        => e.ValueKind == JsonValueKind.Object && e.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.Array
+            ? v.EnumerateArray().Where(x => x.ValueKind == JsonValueKind.String).Select(x => x.GetString() ?? "").Take(50_000)
+            : [];
+
     /// <summary>The colour of a request if the colour filter knows it ("blue", or "violet" for a provider that has it), else empty: never anything a person typed ends up in an address unchecked.</summary>
     public static string Colour(string? text)
     {

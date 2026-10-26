@@ -2,6 +2,13 @@
   "name": "Instagram-Story – Neu im Laden",
   "category": "Social Media",
   "description": "Hochformat-Story (1080 × 1920 px) für eine Neuheit: großer Bildrahmen für dein Foto, „NEU“-Aufkleber, Überschrift, Preis und Adresse. Ziehe ein Foto in den Rahmen und ändere die Texte.",
+  "family": "instagram-story-neu",
+  "familyName": "Instagram-Story Neuheit",
+  "variant": "Mit Foto",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Story","Neu","Neuheit","Social Media","Foto","Ankündigung"],
+  "formatKey": "instagram-story",
+  "number": 9,
   "document": {
     "schema":2,"unit":"px","width":1080,"height":1920,"dpi":96,"locale":"de-DE",
     "fields": [],

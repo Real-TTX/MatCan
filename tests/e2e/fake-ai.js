@@ -13,6 +13,7 @@
 //   limit-test    keeps reading the design and never says it is done: the run ends "Limit erreicht" (with a small AgentMaxCallsPerRun)
 //   fehler-test   first a tool call that fails (a symbol that does not exist), then the repair
 //   bereich-test  tries to write on a page outside the scope (fails), then writes on the page of the scope
+//   foto-test     (plan 5 / C3) looks for a photo (search_catalog pexels "zitron") and an icon (iconify "cheese"), imports ONE of each (import_from_catalog), places both, looks and says it is done
 //   anhang-test   places the picture that came with the message (the key stands in the line "[Anhang: ... in der Bibliothek als <key>"), says whether it SAW a picture
 //   referenz-test says what the references of the message were (a design: "[Referenz: Design ...]", a data list: reads it with read_datalist)
 //   uebersetze    ("übersetze", "english"): reads the design, translates every text with a small dictionary
@@ -91,6 +92,7 @@ function batches(msgs, start) {
   return out;
 }
 
+const resultsOf = (list, tool) => list.flatMap(batch => batch.filter(r => r.tool === tool));
 const resultOf = (list, tool) => { for (const batch of list) { for (const r of batch) { if (r.tool === tool) { return r; } } } return null; };
 const ptToUnit = (pt, unit) => (unit === 'px' ? pt * 96 / 72 : pt * 25.4 / 72);
 
@@ -105,6 +107,7 @@ function scenarioOf(text) {
   if (t.includes('limit-test')) { return 'limit-test'; }
   if (t.includes('fehler-test')) { return 'fehler-test'; }
   if (t.includes('bereich-test')) { return 'bereich-test'; }
+  if (t.includes('foto-test')) { return 'foto-test'; }
   if (t.includes('anhang-test') || t.includes('[anhang:')) { return 'anhang-test'; }
   if (t.includes('referenz-test') || t.includes('[referenz:')) { return 'referenz-test'; }
   if (t.includes('mach weiter')) { return 'weiter'; }
@@ -159,6 +162,27 @@ function agentAnswer(system, msgs) {
       }
       if (step === 2) { return { body: say('Das war nicht erlaubt, ich schreibe auf die Seite des Bereichs.', false, ['add_elements', { page: scopeId, elements: [{ type: 'text', x: 10, y: 10, w: 100, h: 10, text: 'Im Bereich' }] }]) }; }
       return { body: say('Fertig: nur im Bereich geändert.', true) };
+    }
+    case 'foto-test': {
+      const searches = resultsOf(list, 'search_catalog');
+      const imports = resultsOf(list, 'import_from_catalog');
+      const firstId = r => (r && r.result && r.result.items && r.result.items[0] ? r.result.items[0].itemId : null);
+      if (step === 0) { return { body: say('Ich schaue mir das Design an.', false, ['read_design']) }; }
+      if (step === 1) { return { body: say('Ich suche ein Foto in den Katalogen.', false, ['search_catalog', { catalog: 'pexels', q: 'zitron', orientation: 'landscape' }]) }; }
+      if (step === 2 && firstId(searches[0])) { return { body: say('Ich übernehme das erste Foto.', false, ['import_from_catalog', { catalog: 'pexels', itemId: firstId(searches[0]) }]) }; }
+      if (step === 3) { return { body: say('Dazu suche ich ein Symbol.', false, ['search_catalog', { catalog: 'iconify', q: 'cheese' }]) }; }
+      if (step === 4 && firstId(searches[1])) { return { body: say('Ich übernehme das Symbol.', false, ['import_from_catalog', { catalog: 'iconify', itemId: firstId(searches[1]) }]) }; }
+      if (step === 5) {
+        const photo = imports[0] && imports[0].result ? imports[0].result.key : null;
+        const icon = imports[1] && imports[1].result ? imports[1].result.icon : null;
+        const elements = [];
+        if (photo) { elements.push({ type: 'image', name: 'Foto', x: W * 0.08, y: H * 0.1, w: W * 0.84, h: H * 0.5, source: { asset: photo }, fit: 'cover' }); }
+        if (icon) { elements.push({ type: 'icon', name: 'Symbol', icon, x: W * 0.08, y: H * 0.68, w: W * 0.16, h: W * 0.16, color: '#0b3d5c' }); }
+        elements.push({ type: 'text', name: 'Titel', x: W * 0.3, y: H * 0.68, w: W * 0.62, h: H * 0.1, text: 'Frisch und zitronig', fontFamily: 'Montserrat', fontSize: 24, fontWeight: 700, color: '#0b3d5c' });
+        return { body: say('Ich setze Foto, Symbol und Titel ein.', false, ['add_elements', { page: 'p1', elements }]) };
+      }
+      if (step === 6) { return { body: say('Ich sehe mir das Ergebnis an.', false, ['look', { page: 'p1' }]) }; }
+      return { body: say('Fertig: ein Foto, ein Symbol und ein Titel stehen.', true) };
     }
     case 'anhang-test': {
       const key = (person.text.match(/in der Bibliothek als ([a-z0-9][a-z0-9_-]*)/) || [])[1];

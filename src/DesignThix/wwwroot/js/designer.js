@@ -227,6 +227,7 @@
         D.toolbar.init(app, $('#dt-ctx'));
         D.panels.init(app, { root: rootEl, rail: $('#dt-rail'), panel: $('#dt-panel'), body: $('#dt-panel-body'), title: $('#dt-panel-title'), back: $('#dt-panel-back'), close: $('#dt-panel-close') });
         D.pages.init(app, { strip: $('#dt-pages'), zoom: $('#dt-zoombar'), toggle: $('#dt-pages-toggle'), root: rootEl });
+        if (D.cardFold) { D.cardFold.init(app); }
         if (D.comments) { D.comments.init(app, config); }
         initResponsive();
         // the design assistant: its rail entry appears when the server says so; a run that is going on (or ?ai=<conversation> after "Mit KI entwerfen") is followed from the start

@@ -88,7 +88,7 @@ const stamp = String(Date.now()).slice(-6);
   await page.click('.mat-nav a.mat-nav__item--primary');
   await page.waitForSelector('#dt-create[open]');
   check('the menu item opens the dialog "Design erstellen" (not the page)', new URL(page.url()).pathname === '/');
-  check('the dialog has ten format tiles and fields for an own size', (await page.$$('#dt-create [data-format]')).length === 10 && await page.isVisible('#dt-create-width') && await page.isVisible('#dt-create-height') && await page.isVisible('#dt-create-unit'));
+  check('the dialog has ten format tiles and fields for an own size', (await page.$$('#dt-create .dt-formats [data-format]')).length === 10 && await page.isVisible('#dt-create-width') && await page.isVisible('#dt-create-height') && await page.isVisible('#dt-create-unit'));
   await page.screenshot({ path: path.join(outDir, 'dialog-desktop.png') });
   await Promise.all([page.waitForURL(/\/Designs\/\d+\/Designer/), page.click('#dt-create [data-format="instagram-story"]')]);
   let id = designIdOf(page.url());
@@ -234,7 +234,8 @@ const stamp = String(Date.now()).slice(-6);
   check('a design nobody shared with them is not even there (404)', unknown === 404, String(unknown));
   for (const made of [ownMade, usedTemplate]) { if (made.status === 200) { await postJson(viewer, `/api/designs/${made.body.id}/delete`, {}); } }
   await viewer.goto(base + '/Templates', { waitUntil: 'networkidle' });
-  check('the page Vorlagen: "Vorlage verwenden" is enabled and there is no "Bearbeiten"', (await viewer.$$('.dt-tpl button[disabled]')).length === 0 && (await viewer.$$('.dt-tpl a:has-text("Bearbeiten")')).length === 0);
+  await viewer.waitForSelector('.dt-tg');
+  check('the page Vorlagen: "Vorlage verwenden" is enabled and there is no "Bearbeiten"', (await viewer.$$('.dt-tg button[disabled]')).length === 0 && (await viewer.$$('.dt-tg [data-tile-edit]:not([hidden])')).length === 0);
 
   // ------------------------------------------------------------------------------------------------ the phone
   const phone = await newContext(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });

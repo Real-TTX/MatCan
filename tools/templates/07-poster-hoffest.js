@@ -19,6 +19,12 @@ module.exports = {
   name: 'Poster A3 – Hoffest',
   category: 'Poster',
   description: 'Plakat im Format A3 für ein Fest oder eine Veranstaltung: riesige Schrift, Datumsplakette, drei Programmpunkte mit Symbolen, Farbverlauf und ein QR-Code zum Programm.',
+  family: 'plakat-fest',
+  familyName: 'Plakat für ein Fest',
+  variant: 'Groß und bunt',
+  occasion: 'Feste & Events',
+  tags: ['Plakat', 'Poster', 'Hoffest', 'Fest', 'Veranstaltung', 'Einladung', 'Programm', 'Aushang'],
+  formatKey: 'poster-a3-portrait',
   width: 297,
   height: 420,
   pages: [page(gradient(165, '#150e48', '#4a1d8f'), [

@@ -534,6 +534,7 @@
         mode: 'output',
         assetUrl: function (key) { return assets[String(key).trim().toLowerCase()] || null; },
         fonts: (payload.fonts || []).map(function (f) { return { family: f.family, weight: f.weight, style: f.style, url: f.url }; }),
+        icon: window.DtEngine.iconSource({ extra: payload.icons || {} }),
       };
       var run = payload.format === 'png' ? runPng : runPrint;
       return run(payload, engineDoc, options, labels).then(function () { setProgress(1, 1); setState('ready'); });

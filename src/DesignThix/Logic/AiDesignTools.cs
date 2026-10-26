@@ -103,6 +103,11 @@ public sealed class AiToolSession
     /// <summary>The ids of library images that came with the messages of this conversation (listed by <c>list_media</c>).</summary>
     public HashSet<long> AttachmentAssets { get; } = [];
 
+    /// <summary>Searches and imports of catalogues in this run (the tools allow only a few: no collecting).</summary>
+    public int CatalogSearches { get; set; }
+
+    public int CatalogImports { get; set; }
+
     /// <summary>The first write of the run happened: the journal has its entry.</summary>
     public bool Wrote { get; set; }
 
@@ -141,6 +146,8 @@ public static partial class AiDesignTools
         ("list_fonts", "{}", "Die Schriftfamilien, die dieses Design nutzen darf, mit den Gewichten. Nur diese Familien verwenden.", false),
         ("list_media", "{\"q\"?: \"text\", \"category\"?: \"Logos\", \"limit\"?: 30}", "Bilder der Bibliothek, die dieses Design nutzen darf (eingebaute, die des Bereichs, angehängte): Schlüssel, Name, Kategorie, Pixelgröße. Bilder NUR von hier.", false),
         ("search_icons", "{\"q\": \"käse\", \"limit\"?: 20}", "Sucht Symbole (Lucide) nach englischen und deutschen Wörtern; gibt Namen für ein icon-Element.", false),
+        ("search_catalog", "{\"catalog\"?: \"pexels\", \"q\"?: \"cheese\", \"collection\"?, \"orientation\"?: \"landscape\", \"limit\"?: 10}", "Sucht in den Katalogen, die die Administration eingeschaltet hat: Fotos (Pexels, Pixabay, Openverse), Symbolsätze (iconify) und Schriften (googlefonts). Ohne catalog: welche Kataloge es gibt. Treffer mit itemId, Titel, Größe, Urheber, Lizenz. Fotos am besten mit englischen Wörtern suchen. Höchstens 12 Suchen je Auftrag.", false),
+        ("import_from_catalog", "{\"catalog\": \"pexels\", \"itemId\": \"1001\"}", "Übernimmt EINEN gewählten Treffer in die Bibliothek: ein Foto (gibt den Schlüssel für image.source.asset), ein Symbol (gibt den Namen prefix:name für icon) oder eine Schrift (gibt die Familie für fontFamily). Die Urheberangabe steht danach in den Bildnachweisen. Höchstens 8 je Auftrag; nur Treffer, die du wirklich einsetzt.", true),
         ("read_brand", "{}", "Die Marke des Bereichs: Farben, Schriften für Überschrift, Zwischenüberschrift und Fließtext, Logos.", false),
         ("list_templates", "{\"q\"?: \"text\", \"category\"?: \"Etiketten\"}", "Vorlagen, die die Person nutzen darf: id, Name, Kategorie, Beschreibung, Größe (höchstens 30).", false),
         ("list_formats", "{}", "Die Formate (preset) für resize_design: Schlüssel, Name, Größe.", false),
@@ -199,6 +206,8 @@ public static partial class AiDesignTools
                 "list_fonts" => await ListFontsAsync(inner, session),
                 "list_media" => await ListMediaAsync(inner, session, args),
                 "search_icons" => SearchIcons(inner, args),
+                "search_catalog" => await SearchCatalogAsync(inner, session, args, ct),
+                "import_from_catalog" => await ImportFromCatalogAsync(inner, session, args, ct),
                 "read_brand" => await ReadBrandAsync(inner, session),
                 "list_templates" => await ListTemplatesAsync(inner, args),
                 "list_formats" => ListFormats(),

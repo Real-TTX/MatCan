@@ -20,7 +20,11 @@ const colourOf = item => COLOURS[Math.floor(item.hue / 30) % 12];
 const usable = item => /^(CC0-1\.0|CC-BY-4\.0)$/.test(item.licence) && !item.foreignThumb;
 const slug = text => text.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
+const icons = require('./fake-icons.js');
+
 function handle(req, res, ctx) {
+  // Iconify and Fontsource (plan 5 / C3) have a file of their own
+  if (icons.handle(req, res, ctx)) { return true; }
   const { items, base, png, stats, collectionNames } = ctx;
   const url = new URL(req.url, 'http://127.0.0.1');
   const path = url.pathname;

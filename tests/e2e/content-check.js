@@ -350,7 +350,7 @@ sections.texttoolbar = async ({ page }) => {
   await page.click('#dt-ctx .dt-tb--font');
   await page.waitForSelector('.dt-fontpop');
   const names = await page.$$eval('.dt-fontlist__item .dt-fontlist__name', n => n.map(x => x.textContent));
-  check('the font picker lists the fonts of the library, each name in its own font (a class per font)', names.length >= 12 && await page.$$eval('.dt-fontlist__name', n => n.every(x => /dt-ff-\d+/.test(x.className))), names.length + ' fonts');
+  check('the font picker lists the fonts of the library, each name in its own font (a class per font)', names.length >= 12 && await page.$$eval('.dt-fontlist__name', n => n.every(x => /dt-ff-\d+/.test(x.getAttribute('data-ff')))), names.length + ' fonts');
   await page.fill('.dt-fontpop input[type=search]', 'mont');
   const filtered = await page.$$eval('.dt-fontlist__item .dt-fontlist__name', n => n.map(x => x.textContent));
   check('the font picker has a search field', filtered.length === 1 && filtered[0] === 'Montserrat', filtered.join(','));
@@ -1290,11 +1290,11 @@ sections.templates = async ({ page }) => {
   check('the panel lists the templates (at least the ten built-in ones)', n >= 10, String(n));
   await page.waitForFunction(() => document.querySelectorAll('.dt-tpl__thumb svg, .dt-tpl__thumb img').length >= 6, null, { timeout: 30000 });
   check('the tiles show previews (stored thumbnails or drawn by the engine)', (await page.$$('.dt-tpl__thumb svg, .dt-tpl__thumb img')).length >= 6);
-  const chips = await page.$$eval('.dt-tplchips .dt-chipbtn', c => c.map(x => x.textContent));
-  check('there are category chips (Alle, Etiketten, Flyer, Karten, Poster, Social Media)', chips[0] === 'Alle' && chips.includes('Etiketten') && chips.includes('Poster'), chips.join('|'));
-  await page.click('.dt-tplchips .dt-chipbtn[data-category="Poster"]');
-  check('a category chip filters the list', (await page.$$('.dt-tpl__item')).length < n && (await page.$$('.dt-tpl__item')).length >= 1);
-  await page.click('.dt-tplchips .dt-chipbtn[data-category=""]');
+  const occasions = await page.$$eval('.dt-tplfilter[data-filter=occasion] option', o => o.map(x => x.textContent));
+  check('there are filters: Anlass (Alle Anlässe, Geburtstag, Business, Feste & Events, Handel & Preise, Social Media) and Format', occasions[0] === 'Alle Anlässe' && ['Business', 'Social Media', 'Feste & Events'].every(o => occasions.includes(o)) && (await page.$$('.dt-tplfilter')).length === 2, occasions.join('|'));
+  await page.selectOption('.dt-tplfilter[data-filter=occasion]', 'Feste & Events');
+  check('an occasion filters the list', (await page.$$('.dt-tpl__item')).length < n && (await page.$$('.dt-tpl__item')).length >= 1);
+  await page.selectOption('.dt-tplfilter[data-filter=occasion]', '');
   await page.fill('.dt-psearch', 'käse');
   await page.waitForFunction(() => document.querySelectorAll('.dt-tpl__item').length === 1);
   check('the search finds a template by name (käse)', (await page.getAttribute('.dt-tpl__item', 'title')).includes('Käsetheke'));
@@ -1378,7 +1378,7 @@ sections.resize = async ({ page }) => {
   check('the current format is marked', (await page.$$('.dt-resizedlg .dt-format[aria-checked="true"]')).length === 1);
   check('"Inhalt mitskalieren" is a switch (on)', await page.isChecked('.dt-resizedlg .mat-switch input'));
   await shot(page, 'content-1440-resize-dialog.png');
-  const square = page.locator('.dt-resizedlg .dt-format', { hasText: 'Quadrat' });
+  const square = page.locator('.dt-resizedlg .dt-format[data-key="square-100"]');
   await square.click();
   check('a tile fills the own-size fields', (await page.inputValue('.dt-resizedlg input[aria-label="Breite"]')) === '100' && (await page.inputValue('.dt-resizedlg input[aria-label="Höhe"]')) === '100');
   await page.click('.dt-resizedlg .mat-btn--primary');

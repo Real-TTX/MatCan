@@ -267,7 +267,10 @@ public sealed record GroupElement : DesignElement
 /// <summary>One page of a design: a name (optional), its background and its elements, bottom first.</summary>
 public sealed record DesignPage(string Id, string Name, BackgroundDef Background, IReadOnlyList<DesignElement> Elements);
 
-/// <summary>A design as the application stores it (docs/PLAN-CANVA.md section 2). Build it through <see cref="DocumentValidator"/>, which clamps and fixes everything.</summary>
+/// <summary>
+/// A design as the application stores it (docs/PLAN-CANVA.md section 2). Build it through <see cref="DocumentValidator"/>, which clamps and fixes everything.
+/// <see cref="Fold"/> is <c>none</c>, <c>vertical</c> or <c>horizontal</c>: a folded card has its fold line in the middle of every page (plan 6: the editor draws guides, nothing else ever shows it); only written when set.
+/// </summary>
 public sealed record DesignDocument(
     int Schema,
     string Unit,
@@ -276,7 +279,8 @@ public sealed record DesignDocument(
     int Dpi,
     string Locale,
     IReadOnlyList<FieldDef> Fields,
-    IReadOnlyList<DesignPage> Pages)
+    IReadOnlyList<DesignPage> Pages,
+    string Fold = "none")
 {
     /// <summary>Every element of every page, groups included, with their children (depth first, parents before children).</summary>
     public IEnumerable<DesignElement> AllElements => Pages.SelectMany(p => p.Elements).SelectMany(Flatten);

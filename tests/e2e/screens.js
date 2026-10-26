@@ -4,13 +4,14 @@
 // that file must hold the administrator. The script changes nothing that lasts: the copy of a template that it needs for the text effects is deleted again, the AI profile is removed.
 //
 //   cd tests/e2e && npm install
-//   node screens.js [base url, default http://localhost:3043] [--out ../../docs/images] [--fake-host <host the APP reaches this machine by>] [--fake-port 3066] [--no-ai]
+//   node screens.js [base url, default http://localhost:3043] [--out ../../docs/images] [--fake-host <host the APP reaches this machine by>] [--fake-port 3066] [--no-ai] [--catalog-port 3073]
 //
 // Shots: start, create-dialog, templates, datalist, media, output, output-job, phone-start, then the editor (editor, context-menu, text-combinations, download, media-browser, editor-data,
 // text-effects, phone-editor), then the platform (projects, share, team-members, public-view, comments, notifications), ai-import and the design assistant (ai-prompt, ai-design, ai-phone). The shot of the AI preview needs a provider: the script starts
 // the fake server of ai-check.js, makes a profile through the admin pages, shows the preview of an import (nothing is applied) and removes the profile again. The shots of the design assistant
 // (plan 4) use the same fake model: the prompt on the start page, the editor after a run (the panel KI with its log) and the sheet on a phone; the design they make is deleted again. With --no-ai all
-// of these are skipped; --ai-only makes just the three shots of the design assistant (for a stack that is clean otherwise; the other shots stay as they are).
+// of these are skipped; --ai-only makes just the three shots of the design assistant (for a stack that is clean otherwise; the other shots stay as they are). --catalogs-only makes just the four shots of the
+// catalogues (catalogs-admin, catalogs-icons, catalogs-fonts, catalogs-photos; plan 5): the app needs DESIGNTHIX__Catalogs__<pexels|iconify|googlefonts>__BaseUrl = the fake of fake-catalogs.js (port 3073).
 //
 // The platform shots (docs/PLAN-PLATFORM.md) need people: the administrator makes four members (Mia Hofmann, Jonas Weber, Lea Schneider, Tim Brandt), Mia makes the team "Team Marketing", folders and
 // designs from the templates, the others share, comment and ask for access. Everything the platform shots made is removed again at the end (the team by its owner, the accounts by the administrator
@@ -30,6 +31,7 @@ const fakeHost = argValue('--fake-host', /localhost:3043|127\.0\.0\.1:3043/.test
 const withAi = !args.includes('--no-ai');
 const platformOnly = args.includes('--platform-only');
 const aiOnly = args.includes('--ai-only');
+const catalogsOnly = args.includes('--catalogs-only');
 const accountFile = process.env.DT_ACCOUNT_FILE || path.join(__dirname, 'test-account.json'); // DT_ACCOUNT_FILE: another file, for checks that run side by side
 
 const written = [];
@@ -297,6 +299,112 @@ async function aiShots(page, admin, browser, listId, shot) {
   fake.server.close();
 }
 
+// ---------------------------------------------------------------------------------------- the catalogues (plan 5)
+// Needs the app to know the fake catalogues: DESIGNTHIX__Catalogs__<pexels|iconify|googlefonts>__BaseUrl = http://127.0.0.1:<catalog port, 3073> (--catalog-port). Without them the shots are skipped.
+// The script starts fake-catalogs.js itself, switches the three catalogues on through the admin pages and off again, and removes the copy of the template it made.
+async function catalogShots(browser, page) {
+  const catalogPort = Number(argValue('--catalog-port', '3073'));
+  for (const id of ['pexels', 'iconify', 'googlefonts']) {
+    await page.goto(base + '/Admin/Catalogs/Edit?id=' + id);
+    if (!/in der Konfiguration festgelegt/.test(await page.textContent('body'))) {
+      console.log(`(the app does not know the fake catalogues: start it with DESIGNTHIX__Catalogs__<pexels|iconify|googlefonts>__BaseUrl=http://127.0.0.1:${catalogPort}; the shots of the catalogues are skipped)`);
+      return;
+    }
+  }
+
+  const { startFakeCatalogs, providers } = require('./fake-catalogs.js');
+  const fakeCatalogs = await startFakeCatalogs(catalogPort, { authors: ['Lena Hoffmann', 'Jonas Weber', 'Mara Klein', 'Paul Schäfer', 'Sofia Braun'] });
+  const configure = async (id, enabled, key) => {
+    await page.goto(base + '/Admin/Catalogs/Edit?id=' + id);
+    const on = await page.locator('input[type=checkbox][name="Input.Enabled"]').isChecked();
+    if (on !== enabled) { await page.click('label.mat-switch:has(input[name="Input.Enabled"])'); }
+    await page.fill('#Input_PerUserPerMinute', '500');
+    if (key !== undefined) { await page.fill('#Input_Key', key); }
+    if (!enabled && await page.$('input[name="Input.RemoveKey"]')) { await page.click('label.mat-switch:has(input[name="Input.RemoveKey"])'); }
+    await Promise.all([page.waitForNavigation(), page.click('button[type=submit].mat-btn--primary')]);
+  };
+  const shotOf = async (file, target) => {
+    await page.waitForTimeout(600);
+    await (target || page).screenshot({ path: path.join(out, file) });
+    written.push(file);
+    console.log('wrote ' + file);
+  };
+  await configure('pexels', true, providers.KEYS.pexels);
+  await configure('iconify', true);
+  await configure('googlefonts', true);
+  await page.setViewportSize({ width: 1440, height: 900 });
+
+  // the administration: the page of the icons with its rules, the sets and the licences
+  await page.setViewportSize({ width: 1440, height: 1250 });
+  await page.goto(base + '/Admin/Catalogs/Edit?id=iconify');
+  await page.waitForSelector('#Input_Sets');
+  await page.evaluate(() => { document.querySelector('[data-catalog-rules]').closest('.mat-card, .dt-card, section, div').scrollIntoView({ block: 'start' }); });
+  await shotOf('catalogs-admin.png');
+  await page.setViewportSize({ width: 1440, height: 900 });
+
+  // the editor: a new business card, four icons of four sets side by side (Lucide is the first choice of the switch; the sets are stroked and filled, one is wide), the panel Elemente
+  const made = await postJson(page, '/api/designs', { preset: 'business-card' });
+  const designId = made.body.id;
+  await postJson(page, `/api/designs/${designId}/rename`, { name: 'Käse-Karte' });
+  await page.evaluate(() => { try { window.localStorage.removeItem('dt-icon-set'); } catch (e) { /* none */ } });
+  await openDesigner(page, base, designId);
+  await openPanel(page, 'elements');
+  await page.waitForSelector('.dt-psec[data-section="icons"] [data-icon-set]');
+  const colours = ['#1fb3d6', '#e08a1e', '#5b8c3a', '#b3365a'];
+  let n = 0;
+  for (const [set, name] of [['tabler', 'tabler:cheese'], ['ph', 'ph:cheese'], ['mdi', 'mdi:cheese'], ['fa7-solid', 'fa7-solid:cheese']]) {
+    await page.selectOption('.dt-psec[data-section="icons"] [data-icon-set]', 'iconify:' + set);
+    await page.fill('.dt-psearch', 'cheese');
+    await page.waitForSelector(`.dt-icongrid--set .dt-icontile[data-icon="${name}"]`);
+    await page.click(`.dt-icongrid--set .dt-icontile[data-icon="${name}"]`);
+    await page.waitForFunction(i => window.DtDesigner.app.elements().some(e => e.icon === i), name, { timeout: 15000 });
+    await page.evaluate(({ i, x, colour }) => {
+      const app = window.DtDesigner.app;
+      const e = app.elements().find(el => el.icon === i);
+      app.setProps([e.id], { x, y: 12, w: 16, h: 16, color: colour }, { merge: false });
+    }, { i: name, x: 6 + n * 19, colour: colours[n] });
+    n++;
+  }
+  await page.evaluate(() => {
+    const app = window.DtDesigner.app;
+    const id = app.addElement('text', { text: 'Käse aus der Region' });
+    app.setProps([id], { x: 6, y: 34, w: 73, h: 12, fontSize: 16, fontWeight: 700, color: '#1b2733', align: 'left' }, { merge: false });
+    app.select([app.elements().find(e => e.icon === 'tabler:cheese').id]);
+  });
+  await idle(page);
+  await page.fill('.dt-psearch', '');
+  await page.selectOption('.dt-psec[data-section="icons"] [data-icon-set]', 'iconify:mdi');
+  await page.waitForSelector('.dt-icongrid--set .dt-icontile');
+  await page.waitForTimeout(600);
+  await raf2(page);
+  await shotOf('catalogs-icons.png');
+
+  // "Weitere Schriften"
+  await page.evaluate(id => window.DtFontsMore.open({ designId: id }), designId);
+  await page.waitForSelector('dialog.dt-fm[open] .dt-fm__row');
+  await page.waitForFunction(() => document.querySelectorAll('.dt-fm__preview.is-loaded').length >= 8, null, { timeout: 15000 });
+  await shotOf('catalogs-fonts.png');
+  await page.keyboard.press('Escape');
+  await page.waitForSelector('dialog.dt-fm', { state: 'detached' });
+
+  // the photos of a stock catalogue in the media browser
+  await page.evaluate(() => { window.DtMedia.pick({ title: 'Bild wählen', tab: 'cat-pexels' }, function () {}); });
+  await page.waitForSelector('dialog.dt-media[open] .dt-media__tile--item');
+  await page.waitForFunction(() => Array.from(document.querySelectorAll('.dt-media__tile--item img')).slice(0, 8).every(i => i.complete && i.naturalWidth > 0), null, { timeout: 15000 });
+  await shotOf('catalogs-photos.png');
+  await page.keyboard.press('Escape');
+  await page.waitForSelector('dialog.dt-media', { state: 'detached' });
+
+  // put it back: the copy goes, the catalogues are off again
+  await postJson(page, '/api/items/trash', { items: [{ kind: 'design', id: designId }] });
+  await postJson(page, '/api/items/purge', { items: [{ kind: 'design', id: designId }] });
+  await page.evaluate(() => { try { window.localStorage.removeItem('dt-icon-set'); } catch (e) { /* none */ } });
+  await configure('pexels', false);
+  await configure('iconify', false);
+  await configure('googlefonts', false);
+  await fakeCatalogs.close();
+}
+
 (async () => {
   fs.mkdirSync(out, { recursive: true });
   const browser = await launch();
@@ -314,6 +422,14 @@ async function aiShots(page, admin, browser, listId, shot) {
       written.push(file);
       console.log('wrote ' + file);
     });
+    await browser.close();
+    console.log(`\n${written.length} screenshots in ${out}`);
+    if (problems.length) { console.log('problems:\n' + problems.join('\n')); process.exit(1); }
+    return;
+  }
+
+  if (catalogsOnly) {
+    await catalogShots(browser, page);
     await browser.close();
     console.log(`\n${written.length} screenshots in ${out}`);
     if (problems.length) { console.log('problems:\n' + problems.join('\n')); process.exit(1); }
@@ -474,6 +590,9 @@ async function aiShots(page, admin, browser, listId, shot) {
 
   // 9. The platform: Projekte with folders, Teilen, a team, the public view, comments and the bell (made with four people who are removed again).
   await platformShots(browser, page);
+
+  // 10. The catalogues (plan 5): the administration of the icons, the set switch with an icon on the page, "Weitere Schriften", the photos of a stock catalogue (against fake-catalogs.js; skipped when the app does not know it).
+  await catalogShots(browser, page);
 
   // The AI shots, against the fake provider (last: they leave runs in the log).
   if (withAi) {

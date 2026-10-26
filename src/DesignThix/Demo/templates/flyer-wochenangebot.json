@@ -2,6 +2,13 @@
   "name": "Flyer A5 – Wochenangebot",
   "category": "Flyer",
   "description": "Flyer im Format A5 für die Angebote der Woche: Überschrift, drei Angebotskarten mit Bildrahmen und Preisaufkleber, Fußzeile mit Adresse, Öffnungszeiten und Telefon.",
+  "family": "flyer-wochenangebot",
+  "familyName": "Flyer Wochenangebot",
+  "variant": "Angebotskarten",
+  "occasion": "Handel & Preise",
+  "tags": ["Flyer","Angebot","Wochenangebot","Sonderangebot","Laden","Werbung","Preis"],
+  "formatKey": "a5-portrait",
+  "number": 6,
   "document": {
     "schema":2,"unit":"mm","width":148,"height":210,"dpi":300,"locale":"de-DE",
     "fields": [],

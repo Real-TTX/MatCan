@@ -10,6 +10,12 @@ module.exports = {
   name: 'Obst & Gemüse – Preisschild',
   category: 'Etiketten',
   description: 'Preisschild im Kreidetafel-Look (100 × 70 mm) für Obst und Gemüse: Name, Herkunft mit Flagge, Klasse, Bio-Siegel und ein großer Preis. Die Felder kannst du aus einer Datenliste füllen.',
+  family: 'preisschild-obst-gemuese',
+  familyName: 'Preisschild Obst & Gemüse',
+  variant: 'Kreidetafel',
+  occasion: 'Handel & Preise',
+  tags: ['Preisschild', 'Obst', 'Gemüse', 'Markt', 'Hofladen', 'Preis', 'Etikett', 'Herkunft'],
+  formatKey: 'label-100x70',
   width: 100,
   height: 70,
   fields: [

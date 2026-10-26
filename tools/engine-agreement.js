@@ -57,6 +57,25 @@ const documents = {
   }),
   // garbage of every kind (no schema, wrong types)
   Garbage: JSON.stringify({ unit: 'px', width: 'abc', height: null, locale: 'xx-YY', fields: 'nope', elements: [{ type: 'shape', shape: 'line' }, { type: 'text', fontSize: 'abc', color: '#12', text: 123 }] }),
+  // icons of catalogues (plan 5, C3): "prefix:name" is an icon of a set, everything else that has a colon, a capital, a path or a second colon is no icon
+  CatalogIcons: JSON.stringify({
+    schema: 2, unit: 'mm', width: 50, height: 50, pages: [{ id: 'p', elements: [
+      { id: 'a', type: 'icon', icon: 'mdi:home', x: 1, y: 1, w: 10, h: 10 },
+      { id: 'b', type: 'icon', icon: 'fa7-solid:house-chimney', color: '#E11D48', strokeWidth: 3 },
+      { id: 'c', type: 'icon', icon: 'MDI:home' },
+      { id: 'd', type: 'icon', icon: 'mdi:' },
+      { id: 'e', type: 'icon', icon: ':home' },
+      { id: 'f', type: 'icon', icon: 'a:b:c' },
+      { id: 'g', type: 'icon', icon: 'mdi:Home' },
+      { id: 'h', type: 'icon', icon: 'mdi/home' },
+      { id: 'i', type: 'icon', icon: 'heart' },
+      { id: 'j', type: 'icon', icon: 'x'.repeat(64) + ':' + 'y'.repeat(64) },
+      { id: 'k', type: 'icon', icon: 'x'.repeat(65) + ':y' },
+      { id: 'l', type: 'icon', icon: 'x:' + 'y'.repeat(65) },
+      { id: 'm', type: 'icon', icon: 'mdi:home ' },
+      { id: 'n', type: 'icon', icon: 5 },
+    ] }],
+  }),
   // schema 2: two pages, a group in a group, every new element type with legal values
   Pages: JSON.stringify({
     schema: 2, unit: 'mm', width: 85, height: 55, dpi: 300, locale: 'de-DE',
@@ -117,6 +136,14 @@ const documents = {
   NoPages: JSON.stringify({ schema: 2, unit: 'mm', width: 10, height: 10, pages: [] }),
   // schema 2 that still carries its elements at the top level (the engine reads them as the one page)
   TopLevel: JSON.stringify({ schema: 2, width: 20, height: 20, background: { color: '#123456' }, elements: [{ type: 'shape', shape: 'ellipse', fill: '#abcdef' }] }),
+  // folded cards (plan 6): fold is written only when it is vertical or horizontal; everything else is none (not written)
+  FoldVertical: JSON.stringify({ schema: 2, unit: 'mm', width: 210, height: 148, fold: 'vertical', pages: [{ id: 'a', name: 'Außen (Rückseite | Vorderseite)' }, { id: 'b', name: 'Innen' }] }),
+  FoldHorizontal: JSON.stringify({ schema: 2, unit: 'mm', width: 148, height: 210, fold: 'horizontal', pages: [{ id: 'a' }] }),
+  FoldNone: JSON.stringify({ schema: 2, unit: 'mm', width: 100, height: 100, fold: 'none', pages: [{ id: 'a' }] }),
+  FoldHostile: JSON.stringify({ schema: 2, unit: 'mm', width: 100, height: 100, fold: 'diagonal', pages: [{ id: 'a' }] }),
+  FoldWrongCase: JSON.stringify({ schema: 2, unit: 'mm', width: 100, height: 100, fold: 'Vertical', pages: [{ id: 'a' }] }),
+  FoldNumber: JSON.stringify({ schema: 2, unit: 'px', width: 100, height: 100, fold: 5, pages: [{ id: 'a' }] }),
+  FoldOnSchemaOne: JSON.stringify({ schema: 1, unit: 'mm', width: 100, height: 100, fold: 'horizontal', elements: [] }),
 };
 
 // ---------------------------------------------------------------------------------------------------- the file

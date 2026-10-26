@@ -164,6 +164,9 @@
       var list = D.el('ul', { class: 'dt-fontlist', role: 'listbox', 'aria-label': 'Schriften' });
       var weightsRow = D.el('div', { class: 'dt-fontpop__weights', role: 'group', 'aria-label': 'Schriftstärke' });
       var current = function () { var e = ctx0.first(); return e ? e.fontFamily : ''; };
+      var lazyFonts = 'IntersectionObserver' in window ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { if (en.isIntersecting) { lazyFonts.unobserve(en.target); en.target.classList.add(en.target.getAttribute('data-ff')); } });
+      }, { rootMargin: '100px' }) : null;
       var applyFamily = function (family) {
         var info = app.fontIndex.find(function (x) { return x.family === family; });
         app.setProps(ctx0.ids, textPatch(function (e) {
@@ -181,7 +184,10 @@
         var add = function (family, note) {
           var li = D.el('li', { role: 'presentation' });
           var b = D.el('button', { type: 'button', class: 'dt-fontlist__item', role: 'option', 'aria-selected': String(family === current()), 'data-family': family });
-          b.appendChild(D.el('span', { class: 'dt-fontlist__name ' + D.fontClass(family), text: family }));
+          // the line is set in its own font only when it comes into view: a list of 50 families does not load 50 font files at once
+          var nameEl = D.el('span', { class: 'dt-fontlist__name', 'data-ff': D.fontClass(family), text: family });
+          if (lazyFonts) { lazyFonts.observe(nameEl); } else { nameEl.classList.add(nameEl.getAttribute('data-ff')); }
+          b.appendChild(nameEl);
           if (note) { b.appendChild(D.el('span', { class: 'dt-fontlist__note', text: note })); }
           b.addEventListener('click', function () { applyFamily(family); });
           li.appendChild(b);
@@ -224,7 +230,16 @@
       el.appendChild(D.el('div', { class: 'dt-fontpop__top' }, search));
       el.appendChild(list);
       el.appendChild(weightsRow);
-      if (upload) { el.appendChild(D.el('div', { class: 'dt-fontpop__foot' }, upload)); }
+      var foot = D.el('div', { class: 'dt-fontpop__foot' });
+      if (upload) { foot.appendChild(upload); }
+      el.appendChild(foot);
+      // "Weitere Schriften": only when the administrator switched the catalogue of fonts on
+      if (app.canEdit && window.DtFontsMore) {
+        window.DtFontsMore.available().then(function (yes) {
+          if (!yes || !document.contains(foot)) { return; }
+          foot.appendChild(D.ui.textButton('plus', 'Weitere Schriften …', function () { api.close(false); D.io.moreFonts(ctx0.ids); }, { cls: 'dt-fontpop__more', title: 'Freie Schriften aus Google Fonts hinzufügen' }));
+        });
+      }
       draw();
       var active = D.$('.dt-fontlist__item[aria-selected="true"]', list);
       if (active && active.scrollIntoView) { active.scrollIntoView({ block: 'center' }); }

@@ -81,7 +81,8 @@ public sealed record OutputPayload(
     long UnitCount,
     IReadOnlyList<PayloadFont> Fonts,
     IReadOnlyDictionary<string, string> Assets,
-    IReadOnlyList<string> Warnings);
+    IReadOnlyList<string> Warnings,
+    IReadOnlyDictionary<string, IconView>? Icons = null);
 
 /// <summary>What a single print (<c>/Designs/{id}/Print</c>) asks for: typed values for the fields of a design, copies and how to lay them out.</summary>
 public sealed record AdhocRequest(
@@ -581,7 +582,7 @@ public static class OutputLogic
         }
 
         return new OutputPayload(id, name, designName, mode, format, dpi, cropMarks, scale, startPosition, string.IsNullOrWhiteSpace(pattern) ? DefaultFileNamePattern : pattern,
-            DocumentValidator.ToJson(document), sheet, labels, count, pages, OutputPlan.Units(count, pages), fonts, assets, warnings);
+            DocumentValidator.ToJson(document), sheet, labels, count, pages, OutputPlan.Units(count, pages), fonts, assets, warnings, await IconLogic.ForDocumentAsync(biz.Db, DocumentValidator.ToJson(document)));
     }
 
     // ------------------------------------------------------------------------------------------------ small helpers

@@ -76,6 +76,8 @@ public static class OutputEndpoints
             unitCount = p.UnitCount,
             fonts = p.Fonts,
             assets = p.Assets,
+            // the bodies of the icons of catalogues the design uses (the run page has no /api/icons to ask: it may be a print of somebody who only runs jobs)
+            icons = p.Icons ?? new Dictionary<string, IconView>(),
             warnings = p.Warnings,
         };
     }

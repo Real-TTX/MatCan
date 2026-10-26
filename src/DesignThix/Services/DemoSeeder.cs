@@ -85,6 +85,13 @@ public static class DemoSeeder
         db.Design.Add(design);
     }
 
+    /// <summary>The metadata of the demo design as the template seeder writes it (key <c>kaesetheke</c>), or null without the demo file.</summary>
+    public static TemplateSeeder.TemplateInfo? Info()
+    {
+        using var file = ReadFile(Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance);
+        return file is null ? null : TemplateSeeder.ReadInfo("kaesetheke", file.RootElement, root => root.GetProperty("design"));
+    }
+
     /// <summary>The name of the demo design (it tells the demo template from other templates when a database is migrated).</summary>
     public static string? DesignName()
     {

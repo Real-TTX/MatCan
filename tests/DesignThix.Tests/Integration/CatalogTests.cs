@@ -159,12 +159,12 @@ public sealed class CatalogTests(AppTests.AppFactory factory) : PlatformTestBase
         }
 
         var ids = Svc.Registry.All.Select(c => c.Id).ToList();
-        Assert.Equal(["builtin", "uploads", "folder", "pexels", "pixabay", "openverse", "example-browse", "example-search"], ids);
+        Assert.Equal(["builtin", "uploads", "folder", "pexels", "pixabay", "openverse", "iconify", "googlefonts", "example-browse", "example-search"], ids);
         Assert.Equal(ids.Count, ids.Distinct().Count());
 
         var plain = new ConfigStore(Path.Combine(Path.GetTempPath(), "designthix-registry-" + Guid.NewGuid().ToString("N")));
         plain.Current.Catalogs.Clear();
-        Assert.Equal(["builtin", "uploads", "folder", "pexels", "pixabay", "openverse"], new CatalogRegistry(plain).All.Select(c => c.Id));
+        Assert.Equal(["builtin", "uploads", "folder", "pexels", "pixabay", "openverse", "iconify", "googlefonts"], new CatalogRegistry(plain).All.Select(c => c.Id));
         await Task.CompletedTask;
     }
 

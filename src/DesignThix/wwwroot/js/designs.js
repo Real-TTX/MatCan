@@ -1,7 +1,8 @@
 /* DesignThix: previews of designs without a saved thumbnail. A box with data-dt-preview and data-dt-preview-url (GET /api/designs/{id}) is drawn
    with the render engine (DtEngine) once it comes into view. Everything is built with DOM APIs; the size of the box follows the page of the design
    through the custom property --dt-ar (set through the CSSOM, no inline styles). A design that cannot be drawn leaves a calm placeholder.
-   Boxes that a script adds later (the file browser draws its tiles after the page is loaded) are handed over with window.DtPreviews.add(box). */
+   Boxes that a script adds later (the file browser draws its tiles after the page is loaded) are handed over with window.DtPreviews.add(box).
+   data-dt-preview-page="1" draws the second page (0-based; default the first). */
 (function () {
   'use strict';
 
@@ -12,7 +13,6 @@
   var engine = window.DtEngine;
   var documents = new Map();
   var fontCache = new Map();
-  var iconsPromise = null;
   var running = 0;
   var waiting = [];
   var LIMIT = 3;
@@ -54,15 +54,11 @@
       .then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; });
   }
 
-  /** The icon library (lib/icons.json, cached by the service worker), loaded once and only when a design on the page has an icon. */
-  function loadIcons() {
-    if (!iconsPromise) {
-      iconsPromise = fetch('/lib/icons.json', { credentials: 'same-origin' })
-        .then(function (r) { return r.ok ? r.json() : { icons: {} }; })
-        .then(function (data) { return data && data.icons ? data.icons : {}; })
-        .catch(function () { return {}; });
-    }
-    return iconsPromise;
+  /** Lucide icons come from lib/icons.json (cached by the service worker), icons of a catalogue from /api/icons: loaded only when a design on the page has such an icon. */
+  var iconSourceFn = null;
+  function iconSource() {
+    if (!iconSourceFn) { iconSourceFn = engine.iconSource({ remote: true }); }
+    return iconSourceFn;
   }
 
   function loadDocument(url) {
@@ -84,14 +80,16 @@
     }).then(function (prepared) {
       var normalized = prepared.normalized;
       box.style.setProperty('--dt-ar', normalized.width + ' / ' + normalized.height);
+      var pageIndex = Math.max(0, Math.min(normalized.pages.length - 1, Number(box.getAttribute('data-dt-preview-page')) || 0));
       return engine.renderInto(box, normalized, engine.sampleValues(normalized), {
         mode: 'output',
+        page: pageIndex,
         assetUrl: function (key) {
           var found = prepared.assets[String(key).toLowerCase()];
           return found && found.url ? found.url : '/media/' + encodeURIComponent(String(key).toLowerCase());
         },
         fonts: prepared.fonts,
-        icon: function (name) { return loadIcons().then(function (icons) { return icons[name] ? icons[name].b : null; }); },
+        icon: iconSource(),
         idPrefix: 'dtp' + (box.getAttribute('data-dt-preview') || '0') + '-' + (box.__dtpSeq || (box.__dtpSeq = ++sequence)) + '-',
       });
     }).then(function () { box.classList.add('is-ready'); }).catch(function () { placeholder(box); });
@@ -128,6 +126,7 @@
     if (observer) { observer.observe(box); } else { enqueue(box); }
   }
 
-  window.DtPreviews = { add: add };
+  // document(url) = the (cached) answer of GET /api/designs/{id}: the preview dialog of the templates asks how many pages a template has.
+  window.DtPreviews = { add: add, document: loadDocument };
   boxes.forEach(add);
 })();

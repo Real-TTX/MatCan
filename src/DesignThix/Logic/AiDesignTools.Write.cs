@@ -235,7 +235,7 @@ public static partial class AiDesignTools
 
     // ------------------------------------------------------------------------------------------------ building and changing elements
 
-    private sealed class Build(AiToolSession session, JsonObject doc, Func<string> nextId, HashSet<string> families, string defaultFamily, IconLibrary icons)
+    private sealed class Build(AiToolSession session, JsonObject doc, Func<string> nextId, HashSet<string> families, string defaultFamily, IconLibrary icons, HashSet<string> catalogIcons)
     {
         public AiToolSession Session { get; } = session;
 
@@ -248,6 +248,9 @@ public static partial class AiDesignTools
         public string DefaultFamily { get; } = defaultFamily;
 
         public IconLibrary Icons { get; } = icons;
+
+        /// <summary>The icons of catalogues (<c>prefix:name</c>) this installation has stored: only those can be used (import_from_catalog stores one).</summary>
+        public HashSet<string> CatalogIcons { get; } = catalogIcons;
 
         public string Unit => AiDocOps.Unit(Doc);
 
@@ -267,7 +270,8 @@ public static partial class AiDesignTools
         var (kit, _) = await BrandAsync(biz, head.SpaceId);
         var body = kit.Fonts.Body is { } b && families.Contains(b) ? b : fallback;
         var icons = IconSearch.Load(biz.Service<IWebHostEnvironment>().WebRootPath);
-        return new Build(s, doc, AiDocOps.IdMaker(doc), families, body, icons);
+        var catalogIcons = (await biz.Db.IconBody.AsNoTracking().Select(i => i.Prefix + ":" + i.Name).ToListAsync()).ToHashSet(StringComparer.Ordinal);
+        return new Build(s, doc, AiDocOps.IdMaker(doc), families, body, icons, catalogIcons);
     }
 
     private static readonly Dictionary<string, string> Aliases = new(StringComparer.OrdinalIgnoreCase)
@@ -330,6 +334,14 @@ public static partial class AiDesignTools
         if ((key is "fontFamily") && value is JsonValue fv && fv.TryGetValue<string>(out var family))
         {
             value = FamilyOf(c, family, where);
+        }
+        else if (key == "icon" && value is JsonValue civ && civ.TryGetValue<string>(out var catalogIcon) && catalogIcon.Contains(':', StringComparison.Ordinal))
+        {
+            // an icon of a catalogue: it has to be in the library of this installation (import_from_catalog puts it there)
+            if (!c.CatalogIcons.Contains(catalogIcon))
+            {
+                throw new ToolError("Symbol ist nicht in der Bibliothek", $"{where}: das Symbol „{catalogIcon}“ ist nicht in der Bibliothek. Hole es zuerst mit import_from_catalog (catalog: \"iconify\", itemId: \"{catalogIcon}\").");
+            }
         }
         else if (key == "icon" && value is JsonValue iv && iv.TryGetValue<string>(out var icon) && !c.Icons.Exists(icon))
         {

@@ -128,11 +128,12 @@ public sealed class TemplateTests(AppTests.AppFactory factory) : PlatformTestBas
     }
 
     [Fact]
-    public void There_are_the_nine_templates_of_the_plan_next_to_the_demo_and_every_one_has_a_name_a_category_and_a_description()
+    public void There_are_at_least_the_nine_first_templates_next_to_the_demo_and_every_one_has_a_name_a_category_and_a_description()
     {
         var slugs = TemplateSeeder.Slugs();
         Assert.True(slugs.Count >= 9, "the plan names ten templates, the Käsetheke is the demo: " + string.Join(", ", slugs));
-        Assert.Equal(["flyer-wochenangebot", "glasetikett", "grusskarte", "instagram-sale", "instagram-story", "obst-gemuese", "poster-hoffest", "regaletikett", "visitenkarte-modern"], slugs);
+        // plan 6 adds many more: the nine of the first plans stay
+        Assert.All(new[] { "flyer-wochenangebot", "glasetikett", "grusskarte", "instagram-sale", "instagram-story", "obst-gemuese", "poster-hoffest", "regaletikett", "visitenkarte-modern" }, slug => Assert.Contains(slug, slugs));
 
         var names = new List<string>();
         foreach (var slug in slugs)
@@ -378,7 +379,7 @@ public sealed class TemplateTests(AppTests.AppFactory factory) : PlatformTestBas
     }
 
     [Fact]
-    public async Task Recent_designs_leave_out_templates_the_newest_first_and_featured_templates_show_every_category()
+    public async Task Recent_designs_leave_out_templates_the_newest_first_and_featured_templates_show_the_variety()
     {
         if (!Enabled)
         {
@@ -405,8 +406,9 @@ public sealed class TemplateTests(AppTests.AppFactory factory) : PlatformTestBas
             Assert.Equal(Math.Min(6, templates.Count), featured.Count);
             Assert.Equal(featured.Count, featured.Select(t => t.Id).Distinct().Count());
             Assert.All(featured, t => Assert.True(t.IsTemplate));
-            var categories = templates.Select(t => t.Category).Distinct().Count();
-            Assert.True(featured.Select(t => t.Category).Distinct().Count() >= Math.Min(categories, 6), "the row shows the variety of the categories");
+            // plan 6: one template per family, the first of each occasion first
+            var occasions = templates.Select(t => t.TemplateOccasion).Distinct().Count();
+            Assert.True(featured.Select(t => t.TemplateOccasion).Distinct().Count() >= Math.Min(occasions, 6), "the row shows the variety of the occasions");
             Assert.Contains("Etiketten", await DesignLogic.TemplateCategoriesAsync(biz));
             Assert.Empty(await DesignLogic.FeaturedTemplatesAsync(biz, 0));
         });

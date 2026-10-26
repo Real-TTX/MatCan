@@ -1,5 +1,5 @@
 {
-  "design": {"name":"Käsetheke – Preisschild","category":"Etiketten","description":"Preisschild für die Käsetheke (150 × 100 mm): Herkunftsland und Siegel in einer Bildleiste, Name, Ort und Region, Reifezeit, Fettgehalt und Milchart (leere Zeilen verschwinden), Preis mit Einheit."},
+  "design": {"name":"Käsetheke – Preisschild","category":"Etiketten","description":"Preisschild für die Käsetheke (150 × 100 mm): Herkunftsland und Siegel in einer Bildleiste, Name, Ort und Region, Reifezeit, Fettgehalt und Milchart (leere Zeilen verschwinden), Preis mit Einheit.","family":"preisschild-kaesetheke","familyName":"Preisschild Käsetheke","variant":"Käsetheke","occasion":"Handel & Preise","tags":["Käse","Käsetheke","Preisschild","Feinkost","Delikatessen","Preis","Etikett"],"formatKey":"price-tag","number":1},
   "list": {"name":"Käsetheke (Beispiel)","description":"Sechs Käse als Beispiel für das Preisschild. Die Spalten stammen aus dem Design."},
   "output": {"name":"Käsetheke – A4 mit 4 Etiketten","sheet":"a4-2x2-a6"},
   "document": {

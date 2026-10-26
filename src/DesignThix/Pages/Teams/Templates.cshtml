@@ -2,6 +2,7 @@
 @model DesignThix.Pages.Teams.TemplatesModel
 
 <link rel="stylesheet" href="~/css/designs.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/templates.css" asp-append-version="true" />
 <partial name="_TeamHeader" model="Model.Header" />
 
 @if (Model.Items.Count == 0)
@@ -60,6 +61,8 @@ else
 }
 
 @section Scripts {
+    <script src="~/js/dt-ui.js" asp-append-version="true"></script>
     <script src="~/js/dt-engine.js" asp-append-version="true"></script>
     <script src="~/js/designs.js" asp-append-version="true"></script>
+    <script src="~/js/template-preview.js" asp-append-version="true"></script>
 }

@@ -15,6 +15,12 @@ module.exports = {
   name: 'Visitenkarte modern (2 Seiten)',
   category: 'Karten',
   description: 'Moderne Visitenkarte (85 × 55 mm) mit zwei Seiten: vorne Name, Funktion und ein Rahmen für dein Logo, hinten die Kontaktdaten mit Symbolen. Alle Angaben sind Felder, damit du Karten für ein ganzes Team aus einer Liste drucken kannst.',
+  family: 'visitenkarte',
+  familyName: 'Visitenkarte',
+  variant: 'Modern',
+  occasion: 'Business',
+  tags: ['Visitenkarte', 'Kontakt', 'Firma', 'Logo', 'Business', 'Netzwerk'],
+  formatKey: 'business-card',
   width: 85,
   height: 55,
   fields: [

@@ -2,41 +2,48 @@
 @model DesignThix.Pages.Templates.IndexModel
 
 <link rel="stylesheet" href="~/css/designs.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/templates.css" asp-append-version="true" />
 
-<div class="mat-list" data-view-scope>
-    <partial name="_Toolbar" model="Model.Toolbar" />
-    @if (Model.Items.Count == 0)
-    {
-        <div class="mat-empty" data-templates-empty>
-            <span class="mat-empty__icon">@Ui.Icon("template")</span>
-            <div class="mat-empty__title">Keine Vorlagen gefunden</div>
-            <p>@(Model.Toolbar.Total == 0 ? "Es gibt noch keine Vorlagen. Markiere ein Design in seinen Eigenschaften als Vorlage." : "Ändere die Suche oder den Filter.")</p>
+@*
+    The gallery of templates (plan 6): the shell is rendered here, the tiles come from GET /api/templates/gallery (js/templates.js): one tile per family with its variants, the occasions as chips,
+    the format and the search as fields, more tiles when the end of the list comes into view. The address keeps the state (?occasion=&format=&q=).
+*@
+<section class="dt-gallery" data-gallery data-endpoint="/api/templates/gallery" data-start-q="@Model.Q" data-start-occasion="@Model.Occasion" data-start-format="@Model.Format" aria-label="Vorlagen">
+    <div class="dt-gallery__bar" role="search">
+        <div class="mat-input-icon dt-gallery__search">
+            @Ui.Icon("search")
+            <input class="mat-input" type="search" id="gallery-q" value="@Model.Q" placeholder="Zum Beispiel Hochzeit, Einladung, Flyer, Speisekarte ..." aria-label="Vorlagen durchsuchen" autocomplete="off" enterkeyhint="search" maxlength="100" data-gallery-search />
         </div>
-    }
-    else
-    {
-        var number = 0;
-        @foreach (var group in Model.Groups)
-        {
-            number++;
-            <section class="dt-category" aria-labelledby="cat-@number" data-category="@group.Key">
-                <h2 class="dt-category__title" id="cat-@number">@group.Key<span class="dt-category__count">@group.Count()</span></h2>
-                <div class="dt-tplgrid">
-                    @foreach (var t in group)
-                    {
-                        <partial name="_TemplateTile" model="(t, true, Model.Manageable.Contains(t.Id))" />
-                    }
-                </div>
-            </section>
-        }
-    }
-    <partial name="_Pager" model="Model.Pager" />
-    <div class="mat-actions">
-        <a class="mat-btn mat-btn--primary" href="/Designs/Create">@Ui.Icon("plus")<span>Design erstellen</span></a>
-        <a class="mat-btn mat-btn--secondary" href="/Designs">@Ui.Icon("layers")<span>Meine Designs</span></a>
-        <span class="mat-hint">Eigene Vorlagen entstehen, wenn du ein Design in seinen Eigenschaften als Vorlage anbietest.</span>
+        <label class="dt-gallery__format">
+            <span class="mat-label">Format</span>
+            <select class="mat-select" id="gallery-format" aria-label="Format" data-gallery-format>
+                <option value="">Alle Formate</option>
+            </select>
+        </label>
     </div>
+    <div class="dt-gallery__chips" role="group" aria-label="Anlass" data-gallery-occasions></div>
+    <p class="dt-gallery__info" role="status" aria-live="polite" data-gallery-info>Vorlagen werden geladen …</p>
+    <div class="dt-gallery__body" data-gallery-body></div>
+    <div class="dt-gallery__more" data-gallery-more hidden>
+        <button type="button" class="mat-btn mat-btn--secondary" data-gallery-load>@Ui.Icon("chevron-down")<span>Mehr laden</span></button>
+    </div>
+    <div class="mat-empty" data-templates-empty hidden>
+        <span class="mat-empty__icon">@Ui.Icon("template")</span>
+        <div class="mat-empty__title">Keine Vorlagen gefunden</div>
+        <p>Ändere die Suche oder wähle einen anderen Anlass oder ein anderes Format.</p>
+        <button type="button" class="mat-btn mat-btn--secondary" data-gallery-reset>Filter zurücksetzen</button>
+    </div>
+    <noscript><p class="mat-hint">Die Galerie braucht JavaScript. Ohne Skript kannst du über <a href="/Designs/Create">Design erstellen</a> ein leeres Design anlegen.</p></noscript>
+</section>
+
+<div class="mat-actions">
+    <a class="mat-btn mat-btn--primary" href="/Designs/Create">@Ui.Icon("plus")<span>Design erstellen</span></a>
+    <a class="mat-btn mat-btn--secondary" href="/Designs">@Ui.Icon("layers")<span>Meine Designs</span></a>
+    <span class="mat-hint">Eigene Vorlagen entstehen, wenn du ein Design in seinen Eigenschaften als Vorlage anbietest.</span>
 </div>
 
+<script src="~/js/dt-ui.js" asp-append-version="true"></script>
 <script src="~/js/dt-engine.js" asp-append-version="true"></script>
 <script src="~/js/designs.js" asp-append-version="true"></script>
+<script src="~/js/template-preview.js" asp-append-version="true"></script>
+<script src="~/js/templates.js" asp-append-version="true"></script>

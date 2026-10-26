@@ -2,6 +2,13 @@
   "name": "Instagram-Beitrag – SALE −30 %",
   "category": "Social Media",
   "description": "Quadratischer Beitrag für Instagram (1080 × 1080 px): große Schrift „SALE“, Preisaufkleber mit Rabatt, Farbverlauf und Fußzeile. Passe Rabatt und Zeitraum an und lade das Bild als PNG herunter.",
+  "family": "instagram-sale",
+  "familyName": "Instagram-Beitrag Sale",
+  "variant": "Quadratisch",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Beitrag","Sale","Rabatt","Angebot","Social Media","Facebook"],
+  "formatKey": "instagram-post",
+  "number": 8,
   "document": {
     "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
     "fields": [],

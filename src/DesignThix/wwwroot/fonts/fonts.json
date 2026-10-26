@@ -134,5 +134,293 @@
     "style": "italic",
     "license": "OFL-1.1",
     "source": "https://github.com/google/fonts/blob/main/ofl/sourcesans3/SourceSans3-Italic[wght].ttf"
+  },
+  {
+    "family": "Great Vibes",
+    "file": "GreatVibes-Regular.woff2",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/greatvibes/GreatVibes-Regular.ttf"
+  },
+  {
+    "family": "Parisienne",
+    "file": "Parisienne-Regular.ttf",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/parisienne/Parisienne-Regular.ttf"
+  },
+  {
+    "family": "Allura",
+    "file": "Allura-Regular.woff2",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/allura/Allura-Regular.ttf"
+  },
+  {
+    "family": "Dancing Script",
+    "file": "DancingScript-Variable.ttf",
+    "weight": "400 700",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/dancingscript/DancingScript[wght].ttf"
+  },
+  {
+    "family": "Cormorant Garamond",
+    "file": "CormorantGaramond-Variable.woff2",
+    "weight": "300 700",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/cormorantgaramond/CormorantGaramond[wght].ttf"
+  },
+  {
+    "family": "Cormorant Garamond",
+    "file": "CormorantGaramond-Italic-Variable.woff2",
+    "weight": "300 700",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/cormorantgaramond/CormorantGaramond-Italic[wght].ttf"
+  },
+  {
+    "family": "Libre Baskerville",
+    "file": "LibreBaskerville-Variable.ttf",
+    "weight": "400 700",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/librebaskerville/LibreBaskerville[wght].ttf"
+  },
+  {
+    "family": "Libre Baskerville",
+    "file": "LibreBaskerville-Italic-Variable.ttf",
+    "weight": "400 700",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/librebaskerville/LibreBaskerville-Italic[wght].ttf"
+  },
+  {
+    "family": "Cinzel",
+    "file": "Cinzel-Variable.woff2",
+    "weight": "400 900",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/cinzel/Cinzel[wght].ttf"
+  },
+  {
+    "family": "Fredoka",
+    "file": "Fredoka-Variable.woff2",
+    "weight": "300 700",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/fredoka/Fredoka[wdth,wght].ttf"
+  },
+  {
+    "family": "Baloo 2",
+    "file": "Baloo2-Variable.woff2",
+    "weight": "400 800",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/baloo2/Baloo2[wght].ttf"
+  },
+  {
+    "family": "Patrick Hand",
+    "file": "PatrickHand-Regular.woff2",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/patrickhand/PatrickHand-Regular.ttf"
+  },
+  {
+    "family": "Gochi Hand",
+    "file": "GochiHand-Regular.ttf",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/gochihand/GochiHand-Regular.ttf"
+  },
+  {
+    "family": "Abril Fatface",
+    "file": "AbrilFatface-Regular.ttf",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/abrilfatface/AbrilFatface-Regular.ttf"
+  },
+  {
+    "family": "Anton",
+    "file": "Anton-Regular.woff2",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/anton/Anton-Regular.ttf"
+  },
+  {
+    "family": "Righteous",
+    "file": "Righteous-Regular.ttf",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/righteous/Righteous-Regular.ttf"
+  },
+  {
+    "family": "Amatic SC",
+    "file": "AmaticSC-Regular.woff2",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/amaticsc/AmaticSC-Regular.ttf"
+  },
+  {
+    "family": "Amatic SC",
+    "file": "AmaticSC-Bold.woff2",
+    "weight": "700",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/amaticsc/AmaticSC-Bold.ttf"
+  },
+  {
+    "family": "Inter",
+    "file": "Inter-Variable.woff2",
+    "weight": "100 900",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/inter/Inter[opsz,wght].ttf"
+  },
+  {
+    "family": "Inter",
+    "file": "Inter-Italic-Variable.woff2",
+    "weight": "100 900",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/inter/Inter-Italic[opsz,wght].ttf"
+  },
+  {
+    "family": "Nunito",
+    "file": "Nunito-Variable.woff2",
+    "weight": "200 900",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/nunito/Nunito[wght].ttf"
+  },
+  {
+    "family": "Nunito",
+    "file": "Nunito-Italic-Variable.woff2",
+    "weight": "200 900",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/nunito/Nunito-Italic[wght].ttf"
+  },
+  {
+    "family": "Josefin Sans",
+    "file": "JosefinSans-Variable.ttf",
+    "weight": "100 700",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/josefinsans/JosefinSans[wght].ttf"
+  },
+  {
+    "family": "Josefin Sans",
+    "file": "JosefinSans-Italic-Variable.ttf",
+    "weight": "100 700",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/josefinsans/JosefinSans-Italic[wght].ttf"
+  },
+  {
+    "family": "Raleway",
+    "file": "Raleway-Variable.ttf",
+    "weight": "100 900",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/raleway/Raleway[wght].ttf"
+  },
+  {
+    "family": "Raleway",
+    "file": "Raleway-Italic-Variable.ttf",
+    "weight": "100 900",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/raleway/Raleway-Italic[wght].ttf"
+  },
+  {
+    "family": "Poppins",
+    "file": "Poppins-Regular.woff2",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/poppins/Poppins-Regular.ttf"
+  },
+  {
+    "family": "Poppins",
+    "file": "Poppins-Medium.woff2",
+    "weight": "500",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/poppins/Poppins-Medium.ttf"
+  },
+  {
+    "family": "Poppins",
+    "file": "Poppins-SemiBold.woff2",
+    "weight": "600",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/poppins/Poppins-SemiBold.ttf"
+  },
+  {
+    "family": "Poppins",
+    "file": "Poppins-Bold.woff2",
+    "weight": "700",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/poppins/Poppins-Bold.ttf"
+  },
+  {
+    "family": "Poppins",
+    "file": "Poppins-Italic.woff2",
+    "weight": "400",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/poppins/Poppins-Italic.ttf"
+  },
+  {
+    "family": "Poppins",
+    "file": "Poppins-BoldItalic.woff2",
+    "weight": "700",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/poppins/Poppins-BoldItalic.ttf"
+  },
+  {
+    "family": "IBM Plex Mono",
+    "file": "IBMPlexMono-Regular.ttf",
+    "weight": "400",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/ibmplexmono/IBMPlexMono-Regular.ttf"
+  },
+  {
+    "family": "IBM Plex Mono",
+    "file": "IBMPlexMono-Bold.ttf",
+    "weight": "700",
+    "style": "normal",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/ibmplexmono/IBMPlexMono-Bold.ttf"
+  },
+  {
+    "family": "IBM Plex Mono",
+    "file": "IBMPlexMono-Italic.ttf",
+    "weight": "400",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/ibmplexmono/IBMPlexMono-Italic.ttf"
+  },
+  {
+    "family": "IBM Plex Mono",
+    "file": "IBMPlexMono-BoldItalic.ttf",
+    "weight": "700",
+    "style": "italic",
+    "license": "OFL-1.1",
+    "source": "https://github.com/google/fonts/blob/main/ofl/ibmplexmono/IBMPlexMono-BoldItalic.ttf"
   }
 ]

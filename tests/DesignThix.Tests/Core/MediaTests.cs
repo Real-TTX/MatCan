@@ -219,7 +219,7 @@ public sealed class FileSnifferTests
     }
 
     [Fact]
-    public void Every_bundled_font_is_a_ttf()
+    public void Every_bundled_font_is_a_ttf_or_a_woff2()
     {
         var folder = Path.Combine(RepoFiles.WwwRoot(), "fonts");
         using var json = JsonDocument.Parse(File.ReadAllText(Path.Combine(folder, "fonts.json")));
@@ -227,7 +227,7 @@ public sealed class FileSnifferTests
         Assert.NotEmpty(files);
         foreach (var file in files)
         {
-            Assert.Equal(FileKind.Ttf, FileSniffer.Sniff(File.ReadAllBytes(Path.Combine(folder, file))).Kind);
+            Assert.Contains(FileSniffer.Sniff(File.ReadAllBytes(Path.Combine(folder, file))).Kind, new[] { FileKind.Ttf, FileKind.Woff2 });
         }
     }
 

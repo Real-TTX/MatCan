@@ -34,6 +34,7 @@ DesignThix ist ein Docker-Container mit einer PostgreSQL-Datenbank. Es läuft au
 - **Teilen:** mit Personen und Teams (*Kann ansehen* / *Kann bearbeiten*), per Link für Angemeldete oder als **öffentlicher Link** ohne Konto; wer keinen Zugriff hat, kann ihn anfordern.
 - **Zusammenarbeit:** Kommentare mit Pins direkt auf der Fläche, `@`-Erwähnungen, Benachrichtigungen (Glocke, auf Wunsch per Mail) und die Anzeige, wer ein Design gerade geöffnet hat.
 - **KI-Design (optional):** Beschreibe, was du brauchst („ein Plakat für unser Sommerfest“), und ein Assistent entwirft das Design oder passt ein vorhandenes an, **während du zusiehst**: jeder Schritt steht im Protokoll, die Fläche verändert sich live, ein Strg+Z nimmt alles zurück. Siehe *KI-Design* unten.
+- **Kataloge (optional):** Fotos von Pexels, Pixabay und Openverse, über 200 offene Icon-Sätze (Material Design, Tabler, Phosphor, Font Awesome Free …) und freie Schriften aus Google Fonts, direkt im Designer durchsuchen. Was du benutzt, wird **mit Urheber und Lizenz auf den Server kopiert**: Designs drucken auch ohne Internet, und die Bildnachweise stehen unter *Datei*. Siehe *Kataloge* unten.
 - **Konten:** Administrator und Mitglied; Registrierung aus, offen oder mit Freigabe, Einladungen per Link oder Mail. Oberfläche auf Deutsch, hell und dunkel.
 - **Installierbare App (PWA)** mit Offline-Anzeige zuletzt geöffneter Seiten; der Designer behält ungespeicherte Änderungen und speichert, sobald die Verbindung zurück ist.
 
@@ -84,6 +85,15 @@ Beim ersten Start sind die zehn Vorlagen da, dazu ein Beispiel für die Serien m
 |---|---|---|
 | ![Mit KI entwerfen](docs/images/ai-prompt.png) | ![KI-Assistent im Designer](docs/images/ai-design.png) | ![KI-Assistent auf dem Handy](docs/images/ai-phone.png) |
 | **Mit KI entwerfen:** ein Satz auf der Startseite, Format „Automatisch“ oder ein gewähltes | **Assistent im Designer:** das Protokoll jedes Schritts, das Plakat entsteht live, *Rückgängig* | **Auf dem Handy:** dasselbe Gespräch als Fenster unten |
+
+**Kataloge (optional)**
+
+| | |
+|---|---|
+| ![Icon-Sätze](docs/images/catalogs-icons.png) | ![Weitere Schriften](docs/images/catalogs-fonts.png) |
+| **Icon-Sätze:** vier Käse-Icons aus vier Sätzen (Tabler, Phosphor, Material Design, Font Awesome) mit der Farbe des Elements; im Panel *Elemente* wechselst du den Satz | **Weitere Schriften:** freie Schriften aus Google Fonts, jede in ihren eigenen Buchstaben, mit eigenem Vorschautext |
+| ![Fotos in der Medienauswahl](docs/images/catalogs-photos.png) | ![Verwaltung der Kataloge](docs/images/catalogs-admin.png) |
+| **Fotos:** ein Reiter je Katalog mit Sammlungen, Format- und Farbfilter und dem Hinweis des Anbieters; ein Klick übernimmt das Foto | **Verwaltung > Kataloge:** einschalten, Schlüssel, Grenzen, erlaubte Lizenzen und Sätze; die Regeln des Anbieters stehen dabei |
 
 **Serien (Zusatz)**
 
@@ -225,6 +235,39 @@ Ohne Profil fehlt der Assistent: Mitglieder sehen dann keinen Eintrag, der Admin
 Sie kann **nur dieses Design** ändern (und Bilder in deine Bibliothek zeichnen): nichts teilen, verschieben, löschen oder versenden, und kein anderes Design anfassen. Jede Änderung geht durch dieselben Prüfungen und Rechte wie deine eigene;
 wer nur ansehen darf, sieht den Assistenten nicht. Fotos kann sie nicht erzeugen (nur Formen, Symbole, Farbflächen, gezeichnete Grafik und Bildrahmen für deine Fotos). Jeder Auftrag mit allen Schritten steht unter *Verwaltung > KI > Läufe*.
 
+## Kataloge
+
+Bilder, Symbole und Schriften kommen nicht nur aus deiner Bibliothek: **Kataloge** sind Quellen, die der Administrator unter *Verwaltung > Kataloge* einschaltet. Alles, was jemand benutzt, wird **auf den Server kopiert** und behält Quelle, Urheber und Lizenz. So bleiben Designs ohne Internet druckbar,
+die öffentliche Ansicht und die Serienausgaben fragen nie bei einem Anbieter nach, und nichts bricht, wenn ein Anbieter verschwindet. **Der Browser spricht nie mit einem Anbieter:** Suche, Vorschaubilder und Downloads laufen über den Server, die Schlüssel stehen nur dort.
+
+| Katalog | Inhalt | Schlüssel |
+|---|---|---|
+| **Mitgeliefert**, **Uploads**, **Ordner auf dem Server** | Flaggen und Siegel; eigene Bilder (Meine Uploads, Teams, Freigegeben); Bilder aus einem Ordner im Datenvolume (`catalogs/`), den der Administrator benennt | nein |
+| **Pexels** | Fotos, mit „Kuratiert“ und den Sammlungen von Pexels | ja (Pexels vergibt im Moment keine neuen Schlüssel) |
+| **Pixabay** | Fotos, Illustrationen, Vektoren, mit Kategorien | ja |
+| **Openverse** | Fotos aus vielen Quellen, nur CC0, gemeinfrei, CC BY und CC BY-SA | nein (optional Zugangsdaten für höhere Grenzen) |
+| **Icons (Iconify)** | über 200 offene Icon-Sätze, ausgewählt vom Administrator: Material Design, Tabler, Phosphor, Font Awesome Free, Bootstrap, Carbon … | nein |
+| **Google Fonts** | freie Schriften (SIL OFL, Apache, Ubuntu-Lizenz), über Fontsource | nein |
+
+**Einschalten (Administrator):** *Verwaltung > Kataloge*, den Katalog öffnen, einschalten, bei Pexels und Pixabay den Schlüssel eintragen (er wird verschlüsselt im Datenvolume gespeichert und nie wieder angezeigt), mit *Testen* prüfen. Jede Seite nennt die Regeln des Anbieters und wie sein Schlüssel zu bekommen ist. Die Adresse eines Anbieters
+stellt nur der Betreiber ein (`DESIGNTHIX__Catalogs__<id>__BaseUrl`, zum Beispiel für einen eigenen Iconify-Server), nie eine Seite. Ohne Schlüssel erscheint ein Katalog, der einen braucht, nirgends.
+
+**Benutzen:**
+
+- **Fotos:** In jeder Bildauswahl (*Bild wählen*, *Ersetzen*, Hintergrund, Logos …) hat jeder eingeschaltete Katalog mit Bildern einen Reiter; im Designer gibt es dafür den Reiter **Fotos**. Ein Klick (oder Ziehen auf die Fläche, auf ein Bild oder einen Rahmen) übernimmt das Foto in die Bibliothek deines Bereichs.
+  Ein Foto, das schon übernommen wurde, wird nicht doppelt gespeichert.
+- **Icons:** Im Panel *Elemente* wählst du bei *Icons* den **Icon-Satz** (zuerst „Lucide“, dann die Sätze des Administrators); die Suche gilt für den gewählten Satz, *Alle anzeigen* blättert durch ihn. Dasselbe Auswahlfeld hat *Icon ersetzen*. Ein Klick übernimmt das Icon; es hat die Farbe und die
+  Strichstärke des Elements wie jedes andere Symbol.
+- **Schriften:** *Weitere Schriften …* im Panel *Text* und in der Schriftauswahl der Werkzeugleiste (auch unter *Schriften*): suchen, nach Art filtern, einen eigenen Text ausprobieren, *Hinzufügen*. Die Schrift kommt mit normal, fett und (wenn es sie gibt) kursiv in deinen Bereich und steht sofort in der Schriftauswahl.
+- **Bildnachweise:** *Datei > Bildnachweise …* listet jede Quelle des Designs mit Urheber, Lizenz und Link und kopiert den Text; die öffentliche Ansicht hat dasselbe als Link im Fuß. Bei Icons erscheint nur ein Satz, dessen Lizenz die Nennung verlangt (CC BY, zum Beispiel Font Awesome Free), **einmal je Satz**.
+- **KI-Design:** Der Assistent kann in den eingeschalteten Katalogen suchen und **ein** gewähltes Foto, Icon oder eine Schrift übernehmen (höchstens zwölf Suchen und acht Übernahmen je Auftrag), danach damit gestalten; die Nachweise stehen wie immer unter *Datei*.
+
+**Lizenzen:** Designs dürfen gedruckt, verändert und kommerziell genutzt werden, deshalb bietet DesignThix **nie** Bilder, Icons oder Schriften mit **NC** (nicht kommerziell) oder **ND** (keine Bearbeitung) an, und nichts ohne erkennbare Lizenz. Bei Icons nur einfarbige Sätze unter MIT, Apache 2.0, ISC, CC0, CC BY 4.0 und OFL;
+Sätze unter CC BY-SA, GPL oder MPL erscheinen nur, wenn der Administrator sie ausdrücklich erlaubt. Der Administrator kann die Lizenzen und die Sätze enger fassen. Die Lizenz eines Anbieters ist dessen Aussage: wer Gewissheit braucht, betreibt einen eigenen Iconify-Server mit geprüften Sätzen.
+
+**Grenzen:** Jede Person darf je Minute nur eine begrenzte Zahl von Suchen machen (einstellbar), der Schlüssel eines Anbieters hat ein Stundenbudget, Antworten werden einen Tag zwischengespeichert (Pixabay verlangt das), und sagt ein Anbieter „zu viele Anfragen“, wird er in Ruhe gelassen, bis seine Wartezeit um ist; du liest dann in Worten, wie lange.
+Übernommene Bilder und Schriften zählen zum Speicherplatz deines Bereichs; ein übernommenes Icon (ein paar Hundert Byte) gehört der ganzen Installation. Der Export einer Design-Datei (`.dtx.json`) trägt Bilder und Schriften mit, **nicht** die Icons der Kataloge: auf einer anderen Installation muss dasselbe Icon dort einmal übernommen werden.
+
 ## KI-Aktionen
 
 Die KI ist ein Angebot, kein Zwang: Ohne Profil fehlen nur die KI-Knöpfe. Unter *Verwaltung > KI* legt der Administrator ein Profil an (jeder **OpenAI-kompatible Anbieter** mit
@@ -259,7 +302,7 @@ Verbindung zurück, lädt die Seite sich selbst neu, damit nichts Altes stehen b
 
 - **Schriften** (zwölf Familien, nichts wird aus dem Internet geladen): Montserrat, Bebas Neue, Oswald, Kaushan Script, Caveat, Playfair Display, Lora, Open Sans, Pacifico, Source Sans 3 unter der
   **SIL Open Font License 1.1**; Roboto Slab und Permanent Marker unter der **Apache License 2.0**. Die Lizenztexte liegen in `src/DesignThix/wwwroot/fonts/LICENSES`.
-- **Symbole der Oberfläche:** [Lucide](https://lucide.dev) (ISC-Lizenz), über MatUi.
+- **Symbole der Oberfläche:** [Lucide](https://lucide.dev) (ISC-Lizenz), über MatUi. Dieselben Lucide-Symbole (rund 1 900) gibt es im Designer; weitere Sätze kommen nur über den Katalog *Icons (Iconify)* und behalten ihre Lizenz (siehe *Kataloge*).
 - **Flaggen und Siegel** sind eigene Zeichnungen (keine geschützten Zeichen; die echten Bio- oder g.t.S.-Siegel lädst du selbst unter *Medien* hoch).
 - Das Aussehen kommt von **MatUi** aus MatDesign. DesignThix selbst: Matthias Schmoldt.
 

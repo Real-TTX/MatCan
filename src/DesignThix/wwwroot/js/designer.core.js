@@ -322,7 +322,23 @@
   // ================================================================================================ icon library (wwwroot/lib/icons.json)
 
   var iconLib = { promise: null, data: null };
+  // icons of catalogues (Iconify, "prefix:name"): their bodies come from /api/icons (the library of this installation) or from an import that just happened
+  var catalogIcons = {};
+  var catalogSource = null;
   D.icons = {
+    /** The body of an icon of a catalogue that is known in this editor ({ body, width, height }), or null. */
+    view: function (name) { return catalogIcons[name] || null; },
+    /** An import brought the body: the engine and the tiles can draw it at once. */
+    remember: function (name, view) { if (view && typeof view.body === 'string') { catalogIcons[name] = { body: view.body, width: view.width, height: view.height }; } },
+    /** What the engine's opts.icon gets for a name: Lucide through the library, "prefix:name" from the memory or /api/icons (a Promise of { body, width, height }). */
+    body: function (name) {
+      if (typeof name === 'string' && name.indexOf(':') > 0) {
+        if (catalogIcons[name]) { return catalogIcons[name]; }
+        if (!catalogSource) { catalogSource = window.DtEngine.iconSource({ remote: true }); }
+        return Promise.resolve(catalogSource(name)).then(function (v) { if (v) { catalogIcons[name] = v; } return v; });
+      }
+      return D.icons.lucide(name);
+    },
     /** Loads the library once (the service worker caches it). Resolves with { categories, icons } or null when it is not available. */
     load: function () {
       if (!iconLib.promise) {
@@ -330,8 +346,8 @@
       }
       return iconLib.promise;
     },
-    /** For the engine's opts.icon: the body of a Lucide icon (a Promise while the library loads). */
-    body: function (name) {
+    /** The body of a Lucide icon (a Promise while the library loads). */
+    lucide: function (name) {
       if (iconLib.data) { var i = iconLib.data.icons[name]; return i ? i.b : null; }
       return D.icons.load().then(function (data) { var i = data && data.icons[name]; return i ? i.b : null; });
     },

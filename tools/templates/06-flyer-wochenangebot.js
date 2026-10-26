@@ -34,6 +34,12 @@ module.exports = {
   name: 'Flyer A5 – Wochenangebot',
   category: 'Flyer',
   description: 'Flyer im Format A5 für die Angebote der Woche: Überschrift, drei Angebotskarten mit Bildrahmen und Preisaufkleber, Fußzeile mit Adresse, Öffnungszeiten und Telefon.',
+  family: 'flyer-wochenangebot',
+  familyName: 'Flyer Wochenangebot',
+  variant: 'Angebotskarten',
+  occasion: 'Handel & Preise',
+  tags: ['Flyer', 'Angebot', 'Wochenangebot', 'Sonderangebot', 'Laden', 'Werbung', 'Preis'],
+  formatKey: 'a5-portrait',
   width: 148,
   height: 210,
   pages: [page(CREAM, [

@@ -1,14 +1,14 @@
 /* DesignThix media browser: ONE place to choose a picture, used everywhere an image is chosen (the editor: replace image, frame, background, every slot of an image strip, Beispielbild
    of a field; the brand page: logos; later the data list grid and the single print).
      window.DtMedia.pick({ title, tab, category, current }, callback)
-   opens a dialog (a full-screen sheet on phones) with the tabs Uploads / Flaggen / Siegel / Logos / Alle, a search field, thumbnails (contain, on a checkerboard), an upload button, a
+   opens a dialog (a full-screen sheet on phones) with the tabs Uploads / Flaggen / Siegel / Logos / Deko / Alle, a search field, thumbnails (contain, on a checkerboard), an upload button, a
    drop zone (files dropped anywhere in the dialog) and paste (Ctrl+V while it is open). A click (or Enter on the focused thumbnail) chooses; the grid is keyboard navigable (arrows,
    Home, End). callback(key, asset) runs with the asset key (lower case, as designs hold it) and the asset { key, name, category, url, width, height, contentType }; it is not called when
-   the dialog is cancelled. options.tab: 'uploads' | 'flags' | 'seals' | 'logos' | 'all'; options.category (a library category such as 'Logos' or 'Flaggen') picks the tab.
+   the dialog is cancelled. options.tab: 'uploads' | 'flags' | 'seals' | 'logos' | 'deko' | 'all'; options.category (a library category such as 'Logos' or 'Flaggen') picks the tab.
    options.allowNone adds a button "Kein Bild" (options.noneLabel): the callback then gets ('', null), so a caller that only wants a picture checks the asset. A category that has no tab of its own
    (a column of a data list asks for "Fotos") gets one.
    The tabs after "Alle" are the catalogues of plan 5 (docs/PLAN-CATALOGS.md): every catalogue with pictures that the administrator switched on (GET /api/catalogs) except Mitgeliefert and Uploads,
-   which the first five tabs already show. A browsable catalogue shows its collections as chips and a first page, a search-only one a field with suggestion chips and "Gib einen Suchbegriff ein."
+   which the first six tabs already show. The tab Deko (plan 6, the Deko pack of the app) has chips for its groups (the part of the name before " · ": Rahmen, Ornamente ...). A browsable catalogue shows its collections as chips and a first page, a search-only one a field with suggestion chips and "Gib einen Suchbegriff ein."
    Results come in pages (Mehr laden + IntersectionObserver). A click on a result of a catalogue IMPORTS it (POST /api/catalogs/{id}/import: into the area of the open design, else the personal area),
    shows a spinner on the tile, and then calls the callback like for any other image, so every place that picks an image gets the catalogues for free.
    window.DtMedia.upload(files, category) uploads files (POST /api/assets/upload) and resolves { uploaded, errors }. Nothing here builds HTML from data. */
@@ -20,9 +20,10 @@
     { id: 'flags', label: 'Flaggen', query: 'category=Flaggen', empty: 'Keine Flaggen gefunden.' },
     { id: 'seals', label: 'Siegel', query: 'category=Siegel', empty: 'Keine Siegel gefunden.' },
     { id: 'logos', label: 'Logos', query: 'category=Logos&sort=new', empty: 'Noch keine Logos. Lade ein Logo hoch und ordne es der Kategorie „Logos“ zu.' },
+    { id: 'deko', label: 'Deko', query: 'category=Deko', groups: true, take: 500, empty: 'Keine Dekoration gefunden.' },
     { id: 'all', label: 'Alle', query: 'sort=new', empty: 'Nichts gefunden.' },
   ];
-  var CATEGORY_TAB = { uploads: 'uploads', flaggen: 'flags', siegel: 'seals', logos: 'logos' };
+  var CATEGORY_TAB = { uploads: 'uploads', flaggen: 'flags', siegel: 'seals', logos: 'logos', deko: 'deko' };
   var IMAGE_EXT = /\.(png|jpe?g|gif|webp|svg)$/i;
   var SVG_NS = 'http://www.w3.org/2000/svg';
   var counter = 0;
@@ -45,7 +46,7 @@
     return catalogPromise;
   }
 
-  /** The catalogues that get a tab of their own: the ones with pictures that are not the two the first five tabs show. */
+  /** The catalogues that get a tab of their own: the ones with pictures that are not the two the first six tabs show. */
   function extraTabs(list) {
     return list.filter(function (c) { return c.hasPictures && !LOCAL_CATALOGS[c.id]; }).map(function (c) {
       return { id: 'cat-' + c.id, label: c.name, kind: 'catalog', catalog: c, empty: 'Hier gibt es noch nichts.' };
@@ -130,7 +131,7 @@
     var o = options || {};
     var id = 'dt-media-' + (++counter);
     var TABLIST = tabsFor(o).slice();
-    var state = { tab: tabFor(o, TABLIST), q: '', token: 0, items: [], loading: true, failed: false, uploading: false, done: false, page: 1, hasMore: false, collection: '', orientation: 'any', colour: 'any', error: '', message: '', importing: false };
+    var state = { tab: tabFor(o, TABLIST), q: '', token: 0, items: [], loading: true, failed: false, uploading: false, done: false, page: 1, hasMore: false, collection: '', group: '', orientation: 'any', colour: 'any', error: '', message: '', importing: false };
     var dlg = el('dialog', { class: 'mat-dialog mat-dialog--xl dt-media', 'data-static': '', 'aria-labelledby': id + '-t' });
     var close = el('button', { type: 'button', class: 'mat-btn mat-btn--ghost mat-btn--icon mat-dialog__close', 'aria-label': 'Schließen', 'data-dialog-close': '' }, icon('x'));
     var head = el('div', { class: 'mat-dialog__head' }, [icon('images'), el('h2', { class: 'mat-dialog__title', id: id + '-t', text: o.title || 'Bild wählen' }), close]);
@@ -157,7 +158,7 @@
     var search = el('input', { type: 'search', class: 'mat-input dt-media__search', placeholder: 'Bilder suchen', 'aria-label': 'Bilder suchen', autocomplete: 'off' });
     var uploadBtn = el('button', { type: 'button', class: 'mat-btn mat-btn--secondary dt-media__upload' }, [icon('upload'), el('span', { text: 'Hochladen' })]);
     var tools = el('div', { class: 'dt-media__tools' }, [search, uploadBtn]);
-    // the bar of a catalogue: the provider's link, the format filter, the collections or the suggestions (hidden on the first five tabs)
+    // the bar of a catalogue: the provider's link, the format filter, the collections or the suggestions (hidden on the first six tabs; the tab Deko uses the chips for its groups)
     var provider = el('a', { class: 'dt-media__provider', target: '_blank', rel: 'noopener noreferrer', hidden: true });
     // the format filter is only in the page while a catalogue that has one is shown (the library tabs have no dropdown)
     var orient = el('select', { class: 'mat-select dt-media__orient', 'aria-label': 'Format' }, ORIENTATIONS.map(function (p) { return el('option', { value: p[0], text: p[1] }); }));
@@ -233,6 +234,32 @@
       return state.q ? 'Nichts gefunden.' : t.empty;
     }
 
+    /** The group of a Deko piece: the part of its name before " · " ("Rahmen · Goldene Ranke" is in "Rahmen"). */
+    function groupOf(a) { var i = String(a.name || '').indexOf(' \u00b7 '); return i > 0 ? a.name.slice(0, i) : ''; }
+
+    /** The items of the tab: all, or (tab Deko with a chosen group) the ones of that group. */
+    function shownItems(t) { return t.groups && state.group ? state.items.filter(function (a) { return groupOf(a) === state.group; }) : state.items; }
+
+    /** The chips of the groups of the tab Deko: "Alle" and one per group with its number of pieces. */
+    function drawGroups() {
+      var t = currentTab();
+      if (!t || !t.groups) { return; }
+      chips.textContent = '';
+      chips.setAttribute('aria-label', 'Gruppen');
+      var counts = {};
+      var order = [];
+      state.items.forEach(function (a) { var g = groupOf(a); if (g) { if (!counts[g]) { counts[g] = 0; order.push(g); } counts[g]++; } });
+      if (state.group && !counts[state.group]) { state.group = ''; }
+      var addChip = function (label, value) {
+        var b = el('button', { type: 'button', class: 'dt-media__chip', 'aria-pressed': state.group === value ? 'true' : 'false', 'data-chip': value, text: label });
+        b.addEventListener('click', function () { state.group = value; drawGroups(); draw(); });
+        chips.appendChild(b);
+      };
+      addChip('Alle (' + state.items.length + ')', '');
+      order.forEach(function (g) { addChip(g + ' (' + counts[g] + ')', g); });
+      catbar.hidden = order.length < 2;
+    }
+
     function draw() {
       grid.textContent = '';
       var t = currentTab();
@@ -246,10 +273,10 @@
         state.items.forEach(function (item, i) { grid.appendChild(catalogTile(item, t.catalog, i === 0)); });
         return;
       }
-      state.items.forEach(function (a, i) {
+      shownItems(t).forEach(function (a, i) {
         var tile = el('button', { type: 'button', class: 'dt-media__tile' + (o.current && String(o.current).toLowerCase() === a.key ? ' is-current' : ''), role: 'option', 'data-key': a.key, 'aria-selected': o.current && String(o.current).toLowerCase() === a.key ? 'true' : 'false', title: a.name + ' (' + a.key + ')', tabindex: i === 0 ? '0' : '-1' }, [
           el('span', { class: 'dt-media__thumb' }, el('img', { src: a.url, alt: '', loading: 'lazy', decoding: 'async', draggable: 'false' })),
-          el('span', { class: 'dt-media__name', text: a.name }),
+          el('span', { class: 'dt-media__name', text: t.groups && state.group && groupOf(a) === state.group ? a.name.slice(state.group.length + 3) : a.name }),
         ]);
         tile.addEventListener('click', function () { finish(a); });
         grid.appendChild(tile);
@@ -266,11 +293,12 @@
       state.failed = false;
       state.hasMore = false;
       draw();
-      var url = '/api/assets?take=300&' + t.query + (state.q ? '&q=' + encodeURIComponent(state.q) : '');
+      var url = '/api/assets?take=' + (t.take || 300) + '&' + t.query + (state.q ? '&q=' + encodeURIComponent(state.q) : '');
       fetch(url, { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(function (r) { if (!r.ok) { throw new Error('HTTP ' + r.status); } return r.json(); }).then(function (list) {
         if (token !== state.token) { return; }
         state.items = Array.isArray(list) ? list : [];
         state.loading = false;
+        drawGroups();
         draw();
       }, function () { if (token !== state.token) { return; } state.items = []; state.loading = false; state.failed = true; draw(); });
     }
@@ -279,6 +307,7 @@
     function drawBar(t) {
       var isCatalog = t.kind === 'catalog';
       catbar.hidden = !isCatalog;
+      if (!isCatalog) { provider.hidden = true; notice.hidden = true; if (t.groups) { drawGroups(); } else { chips.textContent = ''; } }
       if (!isCatalog) { orient.remove(); colour.remove(); }
       search.placeholder = isCatalog ? t.catalog.name + ' durchsuchen' : 'Bilder suchen';
       search.setAttribute('aria-label', search.placeholder);
@@ -403,7 +432,7 @@
       if (focusSearch === true) { /* keep the focus on the tab */ }
     }
 
-    // the catalogues arrive a moment after the dialog opens: their tabs are added at the end (the first five tabs never move)
+    // the catalogues arrive a moment after the dialog opens: their tabs are added at the end (the first six tabs never move)
     loadCatalogs().then(function (list) {
       if (state.done) { return; }
       extraTabs(list).forEach(function (t) {

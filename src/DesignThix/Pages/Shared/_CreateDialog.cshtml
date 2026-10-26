@@ -38,6 +38,7 @@
                 <p class="mat-muted">Wähle ein Format: Das neue Design öffnet sich gleich im Designer.</p>
             }
             <partial name="_FormatTiles" model="(FormatPresets.Tiles, false)" />
+            <partial name="_FormatList" model="FormatPresets.All.Where(p => !FormatPresets.IsTile(p.Key)).OrderBy(p => FormatPresets.GroupOrder(p.Group)).ToList()" />
             <h3 class="dt-subhead">Eigene Größe</h3>
             <form class="dt-create__custom" id="dt-create-custom" novalidate>
                 <div class="mat-field">

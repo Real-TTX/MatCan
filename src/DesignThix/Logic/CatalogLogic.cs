@@ -1,6 +1,7 @@
 using System.Text.Json;
 using DesignThix.Catalogs;
 using DesignThix.Catalogs.Providers;
+using DesignThix.Core.Media;
 using DesignThix.Core.Text;
 using DesignThix.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ public sealed record CatalogAdminRow(ICatalog Catalog, CatalogSetting Setting, b
 }
 
 /// <summary>What the administrator may change of one catalogue.</summary>
-public sealed record CatalogInput(bool Enabled, int Order, int PerUserPerMinute, int PerHour, bool SafeSearch, IReadOnlyList<string> AllowedLicences, IReadOnlyList<string> Folders);
+public sealed record CatalogInput(bool Enabled, int Order, int PerUserPerMinute, int PerHour, bool SafeSearch, IReadOnlyList<string> AllowedLicences, IReadOnlyList<string> Folders, IReadOnlyList<string>? Sets = null);
 
 /// <summary>The image an import made (or found): what the media browser hands to its callback.</summary>
 public sealed record CatalogImportResult(AssetRow Asset, bool Reused);
@@ -314,6 +315,204 @@ public static class CatalogLogic
         }
     }
 
+    // ------------------------------------------------------------------------------------------------ icons and fonts
+
+    /// <summary>What an import of any kind made (or found): a picture, an icon of a set, or the faces of a font family. The endpoint turns it into one JSON answer.</summary>
+    public sealed record CatalogImported(string Kind, CatalogImportResult? Picture = null, CatalogIconResult? Icon = null, CatalogFontResult? Font = null);
+
+    /// <summary>The icon an import stored (or found): its name for a design, the body for the editor to draw it at once.</summary>
+    public sealed record CatalogIconResult(string Name, string Body, int Width, int Height, bool Reused);
+
+    /// <summary>The font an import added (or found): the family for the font select, the faces that were added ("400 normal" ...).</summary>
+    public sealed record CatalogFontResult(string Family, IReadOnlyList<string> Faces, bool Reused, long SpaceId);
+
+    /// <summary>
+    /// Takes an item of any catalogue into the library: a picture (<see cref="ImportAsync"/>), an icon (its checked body is stored platform-wide) or a font (its faces become fonts of the area). The
+    /// kind follows the catalogue.
+    /// </summary>
+    public static async Task<CatalogImported> ImportItemAsync(Biz biz, string? catalogId, string? itemId, long? spaceId = null, long? folderId = null, long? designId = null, long? preferSpace = null, CancellationToken ct = default)
+    {
+        var catalog = await RequireUsableAsync(biz, catalogId);
+        if (catalog.Kinds.HasFlag(CatalogKinds.Icon))
+        {
+            return new CatalogImported("icon", Icon: await ImportIconAsync(biz, catalog, itemId, ct));
+        }
+
+        if (catalog.Kinds.HasFlag(CatalogKinds.Font))
+        {
+            return new CatalogImported("font", Font: await ImportFontAsync(biz, catalog, itemId, spaceId, designId, preferSpace, ct));
+        }
+
+        return new CatalogImported("picture", Picture: await ImportAsync(biz, catalogId, itemId, spaceId, folderId, designId, preferSpace, ct));
+    }
+
+    private static string SourceRecord(Biz biz, ICatalog catalog, string item, CatalogFetch fetched, string title, string? set = null)
+        => JsonSerializer.Serialize(new
+        {
+            catalog = catalog.Id,
+            itemId = item,
+            title,
+            set,
+            author = fetched.Item.Author ?? "",
+            authorUrl = fetched.Item.AuthorUrl ?? "",
+            sourceUrl = fetched.Item.SourceUrl ?? "",
+            licence = fetched.Item.Licence is { } l ? new { code = l.Code, name = l.Name, url = l.Url ?? "", attributionRequired = l.AttributionRequired } : null,
+            attribution = CatalogLicences.Attribution(fetched.Item, catalog.Name, fetched.Attribution),
+            importedDate = biz.Now.ToString("o", System.Globalization.CultureInfo.InvariantCulture),
+        }, Camel);
+
+    private static async Task<CatalogIconResult> ImportIconAsync(Biz biz, ICatalog catalog, string? itemId, CancellationToken ct)
+    {
+        var item = (itemId ?? "").Trim();
+        if (!IconLogic.IsCatalogName(item))
+        {
+            throw new BizException("Das Icon gibt es nicht (mehr).");
+        }
+
+        var colon = item.IndexOf(':');
+        var prefix = item[..colon];
+        var name = item[(colon + 1)..];
+        // an icon that is stored needs no provider: the same icon is never imported twice
+        if ((await IconLogic.ResolveAsync(biz.Db, [item])).TryGetValue(item, out var known))
+        {
+            return new CatalogIconResult(item, known.Body, known.Width, known.Height, true);
+        }
+
+        var ctx = await ContextAsync(biz, catalog, ct);
+        Svc(biz).Limiter.TakePerson(biz.UserId, catalog, CatalogServices.EffectivePerMinute(catalog, ctx.Settings));
+        var fetched = await catalog.FetchAsync(ctx, item, ct);
+        // the body is checked again here, whatever the catalogue did: only what passed the allowlist is stored
+        var parsed = fetched.Icon is { } icon ? IconBodies.Parse(icon.Markup, icon.Width, icon.Height, out _) : null;
+        if (parsed is null)
+        {
+            throw new BizException("Dieses Icon kann DesignThix nicht zeichnen.");
+        }
+
+        if (fetched.Item.Licence is not { } licence || !CatalogLicences.IsUsable(licence.Code))
+        {
+            throw new BizException("Die Lizenz dieses Icons erlaubt keine Nutzung in Designs.");
+        }
+
+        biz.Db.IconBody.Add(new IconBody
+        {
+            Prefix = prefix,
+            Name = name,
+            Body = parsed.Markup,
+            Width = parsed.Width,
+            Height = parsed.Height,
+            LicenceCode = licence.Code,
+            SourceJson = SourceRecord(biz, catalog, item, fetched, name, fetched.Item.Collection),
+        });
+        try
+        {
+            await biz.Db.SaveChangesAsync(ct);
+            await biz.Log.LogAsync("Katalog-Icon übernommen", nameof(IconBody), null, $"{item} ({catalog.Name})");
+        }
+        catch (DbUpdateException)
+        {
+            // somebody stored the same icon at the same moment: theirs is the one
+            foreach (var entry in biz.Db.ChangeTracker.Entries<IconBody>().Where(e => e.State == EntityState.Added).ToList())
+            {
+                entry.State = EntityState.Detached;
+            }
+        }
+
+        return new CatalogIconResult(item, parsed.Markup, parsed.Width, parsed.Height, false);
+    }
+
+    /// <summary>Whether a font of the library with this weight (a number, or a range "100 900" of a variable font) has the weight asked for.</summary>
+    private static bool CoversWeight(string have, string wanted)
+    {
+        var range = have.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return int.TryParse(wanted, out var w) && range.Length is 1 or 2 && int.TryParse(range[0], out var low) && int.TryParse(range[^1], out var high) && w >= low && w <= high;
+    }
+
+    private static async Task<CatalogFontResult> ImportFontAsync(Biz biz, ICatalog catalog, string? itemId, long? spaceId, long? designId, long? preferSpace, CancellationToken ct)
+    {
+        var item = (itemId ?? "").Trim();
+        if (item.Length is 0 or > 100 || item.Any(char.IsControl))
+        {
+            throw new BizException("Die Schrift gibt es nicht (mehr).");
+        }
+
+        var (space, _) = await TargetAsync(biz, spaceId, null, designId, preferSpace);
+        var ctx = await ContextAsync(biz, catalog, ct);
+        var svc = Svc(biz);
+        // a family this area already has from this catalogue is used again
+        var imported = await biz.Db.Font.FromSqlInterpolated($"""SELECT * FROM "Font" WHERE "SpaceId" = {space} AND "SourceJson" IS NOT NULL AND "SourceJson"->>'catalog' = {catalog.Id} AND "SourceJson"->>'itemId' = {item}""")
+            .AsNoTracking().Select(f => new { f.Family, f.Weight, f.Style }).ToListAsync(ct);
+        if (imported.Count > 0)
+        {
+            return new CatalogFontResult(imported[0].Family, [.. imported.Select(f => $"{f.Weight} {f.Style}")], true, space);
+        }
+
+        svc.Limiter.TakePerson(biz.UserId, catalog, CatalogServices.EffectivePerMinute(catalog, ctx.Settings));
+        var fetched = await catalog.FetchAsync(ctx, item, ct);
+        var family = FontLogic.CssName(CatalogLicences.Clean(fetched.FontFamily, 100));
+        if (family.Length == 0 || fetched.FontFiles.Count == 0)
+        {
+            throw new BizException("Zu dieser Schrift gibt es keine Dateien.");
+        }
+
+        if (fetched.Item.Licence is not { } licence || !CatalogLicences.IsUsable(licence.Code))
+        {
+            throw new BizException("Die Lizenz dieser Schrift erlaubt keine Nutzung in Designs.");
+        }
+
+        // faces of this family that the person can use already (a bundled font, an upload) are not added a second time: they would only be doubled
+        var have = await FontLogic.Query(biz).Where(f => f.Family.ToLower() == family.ToLower()).Select(f => new { f.Weight, f.Style }).ToListAsync(ct);
+        var added = new List<string>();
+        var rows = new List<Font>();
+        long total = 0;
+        foreach (var file in fetched.FontFiles)
+        {
+            var sniffed = FileSniffer.Sniff(file.Bytes);
+            if (!sniffed.IsFont || file.Bytes.LongLength > FontLogic.MaxFontBytes)
+            {
+                throw new BizException("Die Datei der Schrift ist keine Schriftdatei.");
+            }
+
+            var weight = FontLogic.IsValidWeight(file.Weight) ? file.Weight : "400";
+            var style = file.Style == "italic" ? "italic" : "normal";
+            if (have.Any(h => h.Style == style && CoversWeight(h.Weight, weight)))
+            {
+                continue;
+            }
+
+            total += file.Bytes.LongLength;
+            rows.Add(new Font
+            {
+                Family = family,
+                Weight = weight,
+                Style = style,
+                Format = sniffed.Extension,
+                Bytes = file.Bytes,
+                ContentHash = AssetLogic.Sha256Hex(file.Bytes),
+                SizeBytes = file.Bytes.LongLength,
+                License = licence.Code,
+                Source = catalog.Name + " (" + catalog.Info.Homepage + ")",
+                SpaceId = space,
+                SourceJson = SourceRecord(biz, catalog, item, fetched, family),
+            });
+            added.Add($"{weight} {style}");
+        }
+
+        if (rows.Count == 0)
+        {
+            return new CatalogFontResult(family, [], true, space);
+        }
+
+        await StorageLogic.RequireRoomAsync(biz, space, total);
+        foreach (var row in rows)
+        {
+            biz.Db.Font.Add(row);
+        }
+
+        await biz.Db.SaveChangesAsync(ct);
+        await biz.Log.LogAsync("Katalog-Schrift übernommen", nameof(Font), rows[0].Id, $"{family} ({catalog.Name}): {string.Join(", ", added)}");
+        return new CatalogFontResult(family, added, false, space);
+    }
+
     // ------------------------------------------------------------------------------------------------ the credits
 
     /// <summary>
@@ -324,7 +523,72 @@ public static class CatalogLogic
     {
         await Access.RequireAsync(biz, ItemKind.Design, designId, AccessLevel.View);
         var keys = await biz.Db.ItemAssetRef.AsNoTracking().Where(r => r.ItemKind == ItemKind.Design && r.ItemId == designId).Select(r => r.AssetKey).ToListAsync();
-        return await CreditsOfKeysAsync(biz, keys);
+        var rows = await CreditsOfKeysAsync(biz, keys);
+        var document = await biz.Db.Design.AsNoTracking().Where(d => d.Id == designId).Select(d => d.DocumentJson).FirstOrDefaultAsync() ?? "{}";
+        rows.AddRange(await CreditsOfIconsAsync(biz, IconLogic.NamesIn(document)));
+        return rows;
+    }
+
+    /// <summary>
+    /// The credit lines of the icon SETS these icons belong to, for the sets whose licence asks that the author is named (CC BY: Font Awesome Free, Solar ...): one line per set, however many of its icons
+    /// are used. MIT, Apache, ISC, CC0 and OFL sets need no line (an icon in a design is no copy of the software). Like <see cref="CreditsOfKeysAsync"/> it has no permission check of its own.
+    /// </summary>
+    public static async Task<List<CreditRow>> CreditsOfIconsAsync(Biz biz, IEnumerable<string> names)
+    {
+        var wanted = names.Where(IconLogic.IsCatalogName).Distinct(StringComparer.Ordinal).Take(IconLogic.MaxNames * 5).ToList();
+        var rows = new List<CreditRow>();
+        if (wanted.Count == 0)
+        {
+            return rows;
+        }
+
+        var stored = await biz.Db.IconBody.AsNoTracking().Where(i => wanted.Contains(i.Prefix + ":" + i.Name)).Select(i => new { i.Prefix, i.Name, i.SourceJson }).ToListAsync();
+        var registry = Svc(biz).Registry;
+        foreach (var set in stored.GroupBy(i => i.Prefix, StringComparer.Ordinal).OrderBy(g => g.Key, StringComparer.Ordinal))
+        {
+            var first = SourceOf(registry, set.Key, set.Key, set.First().SourceJson);
+            if (first is null || !SourceLicenceNeedsCredit(set.First().SourceJson))
+            {
+                continue;
+            }
+
+            string setName;
+            try
+            {
+                using var doc = JsonDocument.Parse(set.First().SourceJson);
+                setName = Str(doc.RootElement, "set");
+            }
+            catch (JsonException)
+            {
+                continue;
+            }
+
+            setName = setName.Length > 0 ? setName : set.Key;
+            var count = set.Count();
+            rows.Add(first with
+            {
+                Key = set.Key,
+                Name = setName,
+                Title = count == 1 ? $"{setName}: 1 Icon" : $"{setName}: {count} Icons",
+                Attribution = CatalogLicences.Clean($"Icons aus „{setName}“{(first.Author.Length > 0 ? " von " + first.Author : "")} ({first.LicenceName}), über Iconify", 300),
+                SourceUrl = CatalogLicences.SafeUrl($"https://icon-sets.iconify.design/{set.Key}/"),
+            });
+        }
+
+        return rows;
+    }
+
+    private static bool SourceLicenceNeedsCredit(string? sourceJson)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(sourceJson ?? "{}");
+            return doc.RootElement.TryGetProperty("licence", out var l) && l.ValueKind == JsonValueKind.Object && l.TryGetProperty("attributionRequired", out var a) && a.ValueKind == JsonValueKind.True;
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
     }
 
     /// <summary>
@@ -450,6 +714,25 @@ public static class CatalogLogic
             throw new BizException("Es sind höchstens 20 Ordner möglich.", "Input.Folders");
         }
 
+        var sets = new List<string>();
+        foreach (var set in (input.Sets ?? []).Select(x => x.Trim().ToLowerInvariant()).Where(x => x.Length > 0))
+        {
+            if (set.Length > 40 || !System.Text.RegularExpressions.Regex.IsMatch(set, "^[a-z0-9]+(-[a-z0-9]+)*$"))
+            {
+                throw new BizException($"„{set}“ ist keine Kennung eines Icon-Satzes (kleine Buchstaben, Ziffern, Bindestriche).", "Input.Sets");
+            }
+
+            if (!sets.Contains(set, StringComparer.Ordinal))
+            {
+                sets.Add(set);
+            }
+        }
+
+        if (sets.Count > 60)
+        {
+            throw new BizException("Es sind höchstens 60 Sätze möglich.", "Input.Sets");
+        }
+
         var licences = new List<string>();
         foreach (var code in input.AllowedLicences.Select(c => c.Trim()).Where(c => c.Length > 0))
         {
@@ -475,6 +758,7 @@ public static class CatalogLogic
             SafeSearch = input.SafeSearch,
             AllowedLicences = licences,
             Folders = row.Catalog is FolderCatalog ? folders : row.Setting.Folders,
+            Sets = row.Catalog.Info.SetChoiceLabel is not null ? sets : row.Setting.Sets,
         };
         await SettingLogic.SaveAsync(biz, SettingStore.Catalogs, all, "Katalog-Einstellungen geändert");
         await biz.Log.LogAsync("Katalog eingestellt", "Catalog", null, $"{row.Id}: {(input.Enabled ? "an" : "aus")}");
@@ -527,7 +811,14 @@ public static class CatalogLogic
             // one request, whatever the provider said before: if it still says "not now" the pause starts again
             Svc(biz).Limiter.Unblock(catalog);
             var ctx = await ContextAsync(biz, catalog, ct);
-            var page = await catalog.SearchAsync(ctx, new CatalogQuery { Text = catalog.Caps.HasFlag(CatalogCaps.Browse) ? "" : "natur", PerPage = 10 }, ct);
+            var probe = new CatalogQuery { Text = catalog.Caps.HasFlag(CatalogCaps.Browse) ? "" : "natur", PerPage = 10 };
+            var page = await catalog.SearchAsync(ctx, probe, ct);
+            if (page.Items.Count == 0 && catalog.Caps.HasFlag(CatalogCaps.Browse) && catalog.Caps.HasFlag(CatalogCaps.Collections) && (await catalog.CollectionsAsync(ctx, ct)).FirstOrDefault() is { } first)
+            {
+                // a catalogue made of sets (Iconify) shows nothing without one: ask for the first
+                page = await catalog.SearchAsync(ctx, probe with { Collection = first.Id }, ct);
+            }
+
             return page.Items.Count == 0
                 ? $"{catalog.Name} antwortet, hat aber nichts gefunden."
                 : $"Verbindung steht: {catalog.Name} hat {(page.Total is { } total ? total + " Treffer" : page.Items.Count + " Treffer auf der ersten Seite")}.";

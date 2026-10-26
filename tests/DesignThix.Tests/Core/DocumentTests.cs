@@ -555,7 +555,66 @@ public sealed class FormatPresetTests
         {
             var doc = DocumentValidator.Create(p.Width, p.Height, p.Unit);
             Assert.Equal((p.Width, p.Height, p.Unit), (doc.Width, doc.Height, doc.Unit));
+            var started = FormatPresets.NewDocument(p);
+            Assert.Equal((p.Width, p.Height, p.Unit, p.Fold), (started.Width, started.Height, started.Unit, started.Fold));
+            Assert.Equal(DocumentValidator.ToJson(started), DocumentValidator.ToJson(DocumentValidator.Parse(DocumentValidator.ToJson(started))!));
         }
+    }
+
+    [Fact]
+    public void The_formats_of_plan_6_exist_and_a_folded_card_is_the_open_sheet_with_two_named_pages()
+    {
+        string[] wanted =
+        [
+            "card-a6-portrait", "card-a6-landscape", "card-square-145", "card-dl-portrait", "table-card", "postcard-a6-landscape", "postcard-a6-portrait", "letterhead-a4", "certificate-a4", "voucher-dl",
+            "menu-dl", "table-number", "tearoff-a4", "name-badge", "bookmark", "label-round-60", "facebook-cover", "poster-a2-portrait",
+        ];
+        Assert.All(wanted, key => Assert.NotNull(FormatPresets.Find(key)));
+        Assert.Equal(("vertical", 210d, 148d), (FormatPresets.Find("card-a6-portrait")!.Fold, FormatPresets.Find("card-a6-portrait")!.Width, FormatPresets.Find("card-a6-portrait")!.Height));
+        Assert.Equal(("horizontal", 148d, 210d), (FormatPresets.Find("card-a6-landscape")!.Fold, FormatPresets.Find("card-a6-landscape")!.Width, FormatPresets.Find("card-a6-landscape")!.Height));
+        Assert.Equal((290d, 145d), (FormatPresets.Find("card-square-145")!.Width, FormatPresets.Find("card-square-145")!.Height));
+        Assert.Equal((99d, 210d), (FormatPresets.Find("menu-dl")!.Width, FormatPresets.Find("menu-dl")!.Height));
+
+        foreach (var p in FormatPresets.All.Where(p => p.Fold != "none"))
+        {
+            var doc = FormatPresets.NewDocument(p);
+            Assert.Equal(2, doc.Pages.Count);
+            Assert.Equal(FormatPresets.FoldPageNames(p.Fold), doc.Pages.Select(page => page.Name));
+            Assert.False(string.IsNullOrEmpty(p.Note), p.Key + " says the folded size");
+            Assert.Equal(2, new HashSet<string>(doc.Pages.Select(page => page.Id)).Count);
+        }
+
+        var postcard = FormatPresets.NewDocument(FormatPresets.Find("postcard-a6-landscape")!);
+        Assert.Equal(["Vorderseite", "Rückseite"], postcard.Pages.Select(page => page.Name));
+        Assert.Equal("none", postcard.Fold);
+        Assert.Single(FormatPresets.NewDocument(FormatPresets.Find("a4-portrait")!).Pages);
+        Assert.True(FormatPresets.All.Select(p => p.Group).Distinct().Count() >= 6);
+        Assert.Equal(FormatPresets.All.Count(p => !FormatPresets.IsTile(p.Key)), FormatPresets.All.Where(p => !FormatPresets.IsTile(p.Key)).Select(p => p.Key).Distinct().Count());
+        // the tiles of the start page stay few
+        Assert.Equal(10, FormatPresets.Tiles.Count);
+    }
+
+    [Fact]
+    public void The_fold_is_written_only_when_it_is_set_and_everything_else_is_none()
+    {
+        string Json(string fold) => "{\"schema\":2,\"unit\":\"mm\",\"width\":210,\"height\":148,\"fold\":" + fold + ",\"pages\":[{\"id\":\"a\"}]}";
+        Assert.Equal("vertical", DocumentValidator.Parse(Json("\"vertical\""))!.Fold);
+        Assert.Equal("horizontal", DocumentValidator.Parse(Json("\"horizontal\""))!.Fold);
+        foreach (var bad in new[] { "\"none\"", "\"diagonal\"", "\"Vertical\"", "5", "null", "true", "{}" })
+        {
+            var result = DocumentValidator.Validate(Json(bad));
+            Assert.Equal("none", result.Document!.Fold);
+            Assert.DoesNotContain("\"fold\"", result.Json);
+        }
+
+        var folded = DocumentValidator.Validate(Json("\"vertical\"")).Json!;
+        Assert.Contains("\"fold\":\"vertical\"", folded);
+        Assert.Contains("\"locale\":\"de-DE\",\"fold\":\"vertical\",\"fields\"", folded);
+        Assert.Equal(folded, DocumentValidator.Validate(folded).Json);
+        // resizing keeps the fold, a document without one stays without
+        var resized = DocumentResize.Resize(DocumentValidator.Parse(folded)!, 420, 296, "mm", true);
+        Assert.Equal("vertical", resized.Fold);
+        Assert.DoesNotContain("\"fold\"", DocumentValidator.ToJson(DocumentValidator.Create(10, 10)));
     }
 }
 

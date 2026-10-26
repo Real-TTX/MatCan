@@ -26,6 +26,8 @@ public sealed class CatalogRegistry
             new PexelsCatalog(),
             new PixabayCatalog(),
             new OpenverseCatalog(),
+            new IconifyCatalog(),
+            new GoogleFontsCatalog(),
             new ExampleCatalog("example-browse", "Beispiel-Katalog", browsable: true),
             new ExampleCatalog("example-search", "Beispiel-Suche", browsable: false),
         ];
@@ -99,7 +101,7 @@ public sealed class CatalogServices(CatalogRegistry registry, CatalogHttp http, 
         Limiter.CheckBlock(ctx.Catalog);
         Limiter.TakePerson(ctx.Biz.UserId, ctx.Catalog, EffectivePerMinute(ctx.Catalog, ctx.Settings));
         Limiter.TakeBudget(ctx.Catalog, EffectivePerHour(ctx.Catalog, ctx.Settings), ctx.Catalog.Info.KeyPerMinute);
-        var result = await RequestAsync(ctx.Catalog, () => Http.GetAsync(url, AllowedHosts(ctx.Catalog), AllowsHttp(ctx.Catalog), ctx.Catalog.Name, headers, CatalogHttp.SearchTimeout, CatalogHttp.MaxJsonBytes, ct));
+        var result = await RequestAsync(ctx.Catalog, () => Http.GetAsync(url, AllowedHosts(ctx.Catalog), AllowsHttp(ctx.Catalog), ctx.Catalog.Name, headers, CatalogHttp.SearchTimeout, CatalogHttp.MaxJsonBytes, ct, ctx.Catalog.AllowedHosts));
         var text = Encoding.UTF8.GetString(result.Bytes);
         try
         {
@@ -129,14 +131,14 @@ public sealed class CatalogServices(CatalogRegistry registry, CatalogHttp http, 
     }
 
     public Task<CatalogHttpResult> DownloadAsync(CatalogContext ctx, Uri url, IReadOnlyDictionary<string, string>? headers, long maxBytes, CancellationToken ct)
-        => RequestAsync(ctx.Catalog, () => Http.GetAsync(url, AllowedHosts(ctx.Catalog), AllowsHttp(ctx.Catalog), ctx.Catalog.Name, headers, CatalogHttp.DownloadTimeout, Math.Min(maxBytes, CatalogHttp.MaxDownloadBytes), ct));
+        => RequestAsync(ctx.Catalog, () => Http.GetAsync(url, AllowedHosts(ctx.Catalog), AllowsHttp(ctx.Catalog), ctx.Catalog.Name, headers, CatalogHttp.DownloadTimeout, Math.Min(maxBytes, CatalogHttp.MaxDownloadBytes), ct, ctx.Catalog.AllowedHosts));
 
     /// <summary>A thumbnail for the proxy: the same door as every other request (a provider that said "not now" is left alone), with the size limit of a thumbnail.</summary>
     public Task<CatalogHttpResult> GetThumbAsync(ICatalog catalog, Uri url, IReadOnlyDictionary<string, string>? headers, CancellationToken ct)
-        => RequestAsync(catalog, () => Http.GetAsync(url, AllowedHosts(catalog), AllowsHttp(catalog), catalog.Name, headers, CatalogHttp.SearchTimeout, CatalogHttp.MaxThumbBytes, ct));
+        => RequestAsync(catalog, () => Http.GetAsync(url, AllowedHosts(catalog), AllowsHttp(catalog), catalog.Name, headers, CatalogHttp.SearchTimeout, CatalogHttp.MaxThumbBytes, ct, catalog.AllowedHosts));
 
     public Task<CatalogHttpResult> PostFormAsync(CatalogContext ctx, Uri url, IReadOnlyDictionary<string, string> form, CancellationToken ct)
-        => RequestAsync(ctx.Catalog, () => Http.PostFormAsync(url, AllowedHosts(ctx.Catalog), AllowsHttp(ctx.Catalog), ctx.Catalog.Name, form, CatalogHttp.SearchTimeout, 64 * 1024, ct));
+        => RequestAsync(ctx.Catalog, () => Http.PostFormAsync(url, AllowedHosts(ctx.Catalog), AllowsHttp(ctx.Catalog), ctx.Catalog.Name, form, CatalogHttp.SearchTimeout, 64 * 1024, ct, ctx.Catalog.AllowedHosts));
 
     /// <summary>
     /// Every request to a provider goes through here: a provider that asked for a pause is left alone until it is over (the person is told in German how long), a 429 starts such a pause with the

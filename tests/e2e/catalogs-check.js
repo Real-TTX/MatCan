@@ -13,6 +13,10 @@
 //  folder     the server folder (needs --data <the data folder of the app>): collections, only pictures, the import, nothing outside the folder, the proxy refuses a changed token
 //  roles      read-only editor (no Fotos, credits readable), the page of the asset shows its source
 //  phone      the media browser and the panel Fotos at 390 px
+//  providers  Pexels, Pixabay, Openverse (needs their base addresses, see below)
+//  icons      plan 5 / C3, Iconify and Google Fonts (needs DESIGNTHIX__Catalogs__<iconify|googlefonts>__BaseUrl too): the administration, the set switch of the panel Elemente and of the picker
+//             "Icon ersetzen", paging, import on a click, the body stored on the server, stroked and wide icons, the credits of a CC BY set, the public view and the run page, "Weitere Schriften"
+//             in the panel Text, the font select and on /Fonts, the four faces of a family, a phone
 //
 //   node catalogs-check.js [base url, default http://localhost:3043] [--data <data folder of the app, for the folder catalogue>] [--catalog-port 3073] [--out <folder for the screenshots>]
 //
@@ -160,7 +164,7 @@ async function purgeImported(page) {
   await A.waitForSelector('dialog.dt-media[open]');
   await A.evaluate(() => window.DtMedia.catalogs());
   await A.waitForTimeout(300);
-  check('the media browser has the five tabs of the library and nothing else (a catalogue without its key is not offered)', (await A.$$eval('.dt-media__tab', t => t.map(x => x.textContent))).join('|') === 'Uploads|Flaggen|Siegel|Logos|Alle');
+  check('the media browser has the six tabs of the library and nothing else (a catalogue without its key is not offered)', (await A.$$eval('.dt-media__tab', t => t.map(x => x.textContent))).join('|') === 'Uploads|Flaggen|Siegel|Logos|Deko|Alle');
   await A.keyboard.press('Escape');
   await A.waitForSelector('dialog.dt-media', { state: 'detached' });
 
@@ -199,9 +203,9 @@ async function purgeImported(page) {
   await openPanel(A, 'uploads');
   await A.click('.dt-pbar button:has-text("Alle Medien")');
   await A.waitForSelector('dialog.dt-media[open]');
-  await A.waitForFunction(() => document.querySelectorAll('.dt-media__tab').length >= 7);
+  await A.waitForFunction(() => document.querySelectorAll('.dt-media__tab').length >= 8);
   const tabs = await A.$$eval('.dt-media__tab', t => t.map(x => x.textContent));
-  check('the five tabs of the library stay in front, the catalogues follow', tabs.slice(0, 5).join('|') === 'Uploads|Flaggen|Siegel|Logos|Alle' && tabs.includes('Beispiel-Katalog') && tabs.includes('Beispiel-Suche'), tabs.join('|'));
+  check('the six tabs of the library stay in front, the catalogues follow', tabs.slice(0, 6).join('|') === 'Uploads|Flaggen|Siegel|Logos|Deko|Alle' && tabs.includes('Beispiel-Katalog') && tabs.includes('Beispiel-Suche'), tabs.join('|'));
   check('the folder catalogue has no tab while it is off', !tabs.includes('Ordner'));
 
   // browsable
@@ -250,7 +254,7 @@ async function purgeImported(page) {
   // a provider that is down and one that is over its limit: a message, no loop
   await A.fill('.dt-media__search', 'down');
   await A.waitForFunction(() => /nicht erreichbar/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
-  check('a provider that is down is "nicht erreichbar" in the browser, the rest still works', (await A.$$('.dt-media__tab')).length >= 7);
+  check('a provider that is down is "nicht erreichbar" in the browser, the rest still works', (await A.$$('.dt-media__tab')).length >= 8);
   await A.fill('.dt-media__search', 'limit');
   await A.waitForFunction(() => /bremst gerade/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
   check('a provider over its limit says so (no retry loop: one request per search)', true);
@@ -265,7 +269,7 @@ async function purgeImported(page) {
   await configure('example-browse', { enabled: true, fields: { PerUserPerMinute: 2 } });
   await A.fill('.dt-media__search', 'sonnenaufgang');
   await A.waitForFunction(() => /viele Suchen/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
-  check('a person who searches too much gets a message and the tab stays usable', (await A.$$('.dt-media__tab')).length >= 7);
+  check('a person who searches too much gets a message and the tab stays usable', (await A.$$('.dt-media__tab')).length >= 8);
   await configure('example-browse', { enabled: true, fields: { PerUserPerMinute: 500 } });
   await A.fill('.dt-media__search', '');
   await A.waitForTimeout(500);
@@ -304,7 +308,7 @@ async function purgeImported(page) {
   await openPanel(A, 'uploads');
   await A.click('.dt-pbar button:has-text("Alle Medien")');
   await A.waitForSelector('dialog.dt-media[open]');
-  await A.waitForFunction(() => document.querySelectorAll('.dt-media__tab').length >= 7);
+  await A.waitForFunction(() => document.querySelectorAll('.dt-media__tab').length >= 8);
   await A.click('.dt-media__tab[data-tab="cat-example-browse"]');
   await searchMedia(A, 'berglandschaft', ['Berglandschaft']);
   await A.click('.dt-media__tile--item');
@@ -487,7 +491,7 @@ async function purgeImported(page) {
   const outsider = await api(B, 'GET', `/api/designs/${made.id + 99999}/credits`);
   check('the credits of a design that does not exist are a 404', outsider.status === 404);
   await admin.goto(base + '/Assets');
-  const assetPage = await A.goto(base + '/Assets');
+  const assetPage = await A.goto(base + '/Assets?q=Berglandschaft');
   await A.waitForSelector('main');
   const link = await A.$(`a[href*="/Assets/Edit"]:has-text("Berglandschaft")`);
   if (link) {
@@ -520,7 +524,7 @@ async function purgeImported(page) {
   check('a tap puts the photo on the page and closes the drawer', await tablet.evaluate(() => !document.getElementById('dt-panel') || document.getElementById('dt-panel').hidden || !document.getElementById('dt-panel').offsetParent));
   await tablet.evaluate(() => window.DtMedia.pick({ title: 'Bild wählen', tab: 'cat-example-browse' }, function () {}));
   await tablet.waitForSelector('dialog.dt-media[open]');
-  await tablet.waitForFunction(() => document.querySelectorAll('.dt-media__tab').length >= 7);
+  await tablet.waitForFunction(() => document.querySelectorAll('.dt-media__tab').length >= 8);
   await tablet.waitForSelector('.dt-media__tile--item', { timeout: 10000 });
   check('the media browser fits a tablet without scrolling sideways', await tablet.evaluate(() => { const d = document.querySelector('dialog.dt-media').getBoundingClientRect(); return d.width <= 900 && document.documentElement.scrollWidth <= 902 && d.height <= 800; }));
   await shot(tablet, 'media-catalogue');
@@ -547,7 +551,7 @@ async function purgeImported(page) {
   await phone.evaluate(() => window.DtDesigner.panels.close());
   await phone.evaluate(() => window.DtMedia.pick({ title: 'Bild wählen', tab: 'cat-example-browse' }, function () {}));
   await phone.waitForSelector('dialog.dt-media[open]');
-  await phone.waitForFunction(() => document.querySelectorAll('.dt-media__tab').length >= 7);
+  await phone.waitForFunction(() => document.querySelectorAll('.dt-media__tab').length >= 8);
   await phone.tap('.dt-media__tab[data-tab="cat-example-browse"]');
   await phone.waitForSelector('.dt-media__tile--item', { timeout: 10000 });
   check('the media browser is full screen on a phone and does not scroll sideways', await phone.evaluate(() => { const d = document.querySelector('dialog.dt-media').getBoundingClientRect(); return d.width >= 385 && d.height >= 600 && document.documentElement.scrollWidth <= 392; }));
@@ -628,7 +632,7 @@ async function purgeImported(page) {
     await openMedia(A, 'pexels');
     await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile--item').length >= 30);
     const allTabs = await A.$$eval('.dt-media__tab', t => t.map(x => x.textContent));
-    check('the three providers are tabs behind the five of the library', allTabs.slice(0, 5).join('|') === 'Uploads|Flaggen|Siegel|Logos|Alle' && ['Pexels', 'Pixabay', 'Openverse'].every(n => allTabs.includes(n)), allTabs.join('|'));
+    check('the three providers are tabs behind the six of the library', allTabs.slice(0, 6).join('|') === 'Uploads|Flaggen|Siegel|Logos|Deko|Alle' && ['Pexels', 'Pixabay', 'Openverse'].every(n => allTabs.includes(n)), allTabs.join('|'));
     check('Pexels: the first page is the curated one (30 tiles, more to come)', (await tileCount(A)) === 30 && await A.isVisible('.dt-media__more'));
     check('Pexels: the collections are chips: Alle, Kuratiert and the featured ones of Pexels', (await A.$$eval('.dt-media__chip', c => c.map(x => x.textContent.trim()))).join('|') === 'Alle|Kuratiert|Käse & Co (15)|Natur pur (15)');
     check('Pexels: the visible link to Pexels and the notice are there (their rule)', /Fotos von Pexels/.test(await A.textContent('.dt-media__provider')) && (await A.getAttribute('.dt-media__provider', 'href')) === 'https://www.pexels.com' && /Fotografin oder des Fotografen/.test(await A.textContent('.dt-media__notice')));
@@ -878,6 +882,297 @@ async function purgeImported(page) {
     await configure('openverse', { enabled: false });
     await admin.goto(base + '/Admin/Catalogs');
     check('all three are off again', /aus/.test(await pill('pexels')) && /aus/.test(await pill('pixabay')) && /aus/.test(await pill('openverse')));
+  }
+
+  // ---------------------------------------------------------------------------------------- icons and fonts (plan 5 / C3)
+  current = 'icons: ';
+  const NEW_IDS = ['iconify', 'googlefonts'];
+  let pointedNew = true;
+  for (const id of NEW_IDS) {
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=' + id);
+    if (!/in der Konfiguration festgelegt/.test(await admin.textContent('body'))) { pointedNew = false; }
+  }
+  if (!pointedNew) {
+    console.log(`(the app does not know the fake of Iconify and Google Fonts: start it with DESIGNTHIX__Catalogs__<iconify|googlefonts>__BaseUrl=http://127.0.0.1:${fakePort}; the checks of icons and fonts are skipped)`);
+  } else {
+    const stats = async () => (await (await fetch(`http://127.0.0.1:${fakePort}/__stats`)).json());
+    const until = async (fn, what) => { const end = Date.now() + 10000; while (Date.now() < end) { if (await fn()) { return true; } await sleep(150); } throw new Error('timeout: ' + what); };
+    const pill = id => admin.$eval(`[data-catalog="${id}"] .mat-item__end`, e => e.textContent.replace(/\s+/g, ' ').trim());
+    const dropImportedFonts = async () => {
+      const fonts = ((await api(A, 'GET', '/api/fonts')).body || []).filter(f => !f.isBuiltIn && /^(Lobster|Fira Sans|Plakat Kompakt)$/.test(f.family));
+      for (const id of new Set(fonts.map(f => f.id))) {
+        await A.goto(`${base}/Fonts/Edit/${id}`);
+        await A.click('button.mat-btn--danger');
+        await Promise.all([A.waitForNavigation(), A.click('dialog[open] button[value="ok"]')]);
+      }
+    };
+    await dropImportedFonts();
+    for (const id of NEW_IDS) { await configure(id, { enabled: false }); }
+
+    // ---- the administration
+    await admin.goto(base + '/Admin/Catalogs');
+    const newNames = await admin.$$eval('[data-catalog] .mat-item__title', t => t.map(x => x.textContent.trim()));
+    check('the list names Icons (Iconify) and Google Fonts, both off and without a key to ask for', ['Icons (Iconify)', 'Google Fonts'].every(n => newNames.includes(n)) && /aus/.test(await pill('iconify')) && /aus/.test(await pill('googlefonts')) && !/Schlüssel/.test(await pill('iconify')) && !/Schlüssel/.test(await pill('googlefonts')), await pill('iconify'));
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=iconify');
+    check('Iconify: the rules, the list of sets and of licences, and no key', (await admin.$$eval('[data-catalog-rules] li', l => l.length)) >= 4 && !!(await admin.$('#Input_Sets')) && !!(await admin.$('#Input_AllowedLicences')) && !(await admin.$('#Input_Key')));
+    await shot(admin, 'admin-iconify');
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=googlefonts');
+    check('Google Fonts: the rules name Fontsource, licences can be narrowed, no list of sets and no key', /Fontsource/.test(await admin.textContent('[data-catalog-rules]')) && !!(await admin.$('#Input_AllowedLicences')) && !(await admin.$('#Input_Sets')) && !(await admin.$('#Input_Key')));
+    await shot(admin, 'admin-googlefonts');
+    check('before they are switched on nobody sees them: no set switch, no "Weitere Schriften"', await (async () => {
+      const g = await createDesign(A, postJson, { preset: 'price-tag' });
+      cleanup.designs.push(g.id);
+      await openDesigner(A, base, g.id);
+      await openPanel(A, 'elements');
+      await A.waitForSelector('.dt-psec[data-section="icons"] .dt-icongrid .dt-icontile');
+      const noSwitch = !(await A.$('[data-icon-set]'));
+      await openPanel(A, 'text');
+      await A.waitForSelector('.dt-textadd');
+      await sleep(400);
+      return noSwitch && !(await A.$('.dt-textmore'));
+    })());
+
+    for (const id of NEW_IDS) { await configure(id, { enabled: true, fields: { PerUserPerMinute: 500 } }); }
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=iconify');
+    await admin.click('[data-catalog-test]');
+    await admin.waitForLoadState();
+    await admin.waitForSelector('.mat-toast');
+    check('Iconify: "Testen" finds icons', /Verbindung steht/.test(await admin.textContent('.mat-toast')), await admin.textContent('.mat-toast'));
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=googlefonts');
+    await admin.click('[data-catalog-test]');
+    await admin.waitForLoadState();
+    await admin.waitForSelector('.mat-toast');
+    check('Google Fonts: "Testen" finds fonts', /Verbindung steht/.test(await admin.textContent('.mat-toast')), await admin.textContent('.mat-toast'));
+    check('the media browser does not get a tab for them (no pictures)', await (async () => {
+      await A.evaluate(() => { window.DtMedia.pick({ title: 'Bild wählen' }, function () {}); });
+      await A.waitForSelector('dialog.dt-media[open]');
+      await sleep(600);
+      const tabs = await A.$$eval('.dt-media__tab', t => t.map(x => x.textContent.trim()));
+      await A.click('dialog.dt-media button:has-text("Abbrechen")');
+      await A.waitForSelector('dialog.dt-media', { state: 'detached' });
+      return !tabs.some(t => /Iconify|Google/.test(t));
+    })());
+
+    // ---- the editor: the set switch in the panel Elemente
+    const idesign = await createDesign(A, postJson, { preset: 'price-tag' });
+    cleanup.designs.push(idesign.id);
+    await openDesigner(A, base, idesign.id);
+    await A.evaluate(() => { try { window.localStorage.removeItem('dt-icon-set'); } catch (e) { /* none */ } });
+    await openPanel(A, 'elements');
+    await A.waitForSelector('.dt-psec[data-section="icons"] [data-icon-set]');
+    const setOptions = await A.$$eval('.dt-psec[data-section="icons"] [data-icon-set] option', o => o.map(x => x.textContent));
+    check('the switch offers Lucide and the sets the licence rule lets through, in the order of the list (no set with colours, share-alike, non-commercial or GPL)', setOptions.join('|') === 'Lucide (eingebaut)|Tabler Icons|Phosphor|Material Design Icons|Font Awesome Solid', setOptions.join('|'));
+    check('Lucide is the first choice: its icons are drawn as before', (await A.$$('.dt-psec[data-section="icons"] .dt-icongrid:not(.dt-icongrid--set) .dt-icontile')).length === 10);
+    await shot(A, 'icon-sets-lucide');
+    await A.selectOption('.dt-psec[data-section="icons"] [data-icon-set]', 'iconify:mdi');
+    await A.waitForSelector('.dt-icongrid--set .dt-icontile');
+    await until(async () => (await A.$$('.dt-icongrid--set .dt-icontile')).length === 10, '10 tiles');
+    check('a set shows its first ten icons, drawn from the bodies of the answer (shapes inside, no image request)', await A.$$eval('.dt-icongrid--set .dt-icontile', t => t.every(x => x.querySelector('svg') && x.querySelector('svg').children.length > 0)));
+    await shot(A, 'icon-sets-mdi');
+    await A.click('[data-show-all="icons"]');
+    await until(async () => (await A.$$('.dt-icongrid--set .dt-icontile')).length >= 48, '48 tiles');
+    await A.evaluate(() => { const more = document.querySelector('.dt-icongrid__more'); if (more && !more.hidden) { more.scrollIntoView(); } });
+    await until(async () => (await A.$$('.dt-icongrid--set .dt-icontile')).length === 84, '84 tiles');
+    check('"Alle anzeigen" pages through the set (pages of 48 until all 84 icons of mdi are there)', await A.evaluate(() => document.querySelector('.dt-icongrid__more').hidden));
+    await A.click('.dt-backbtn');
+    await A.fill('.dt-psearch', 'cheese');
+    await until(async () => (await A.$$('.dt-icongrid--set .dt-icontile')).length === 1, 'one tile');
+    check('the search covers the chosen set', !!(await A.$('.dt-icongrid--set .dt-icontile[data-icon="mdi:cheese"]')));
+    const before = await stats();
+    await A.click('.dt-icongrid--set .dt-icontile[data-icon="mdi:cheese"]');
+    await A.waitForFunction(() => window.DtDesigner.app.elements().some(e => e.icon === 'mdi:cheese'), null, { timeout: 15000 });
+    await idle(A);
+    const cheese = (await state(A)).elements.find(e => e.icon === 'mdi:cheese');
+    const drawn = await A.evaluate(id => { const g = document.querySelector(`[data-el-id="${id}"]`); const p = g && g.querySelector('path'); return p ? { fill: p.getAttribute('fill'), stroke: p.getAttribute('stroke'), dashed: !!g.querySelector('[stroke-dasharray]') } : null; }, cheese.id);
+    check('a click imports the icon and puts it on the page, drawn in the colour of the element (no placeholder)', !!drawn && drawn.fill === cheese.color && drawn.stroke === 'none' && !drawn.dashed, JSON.stringify(drawn));
+    const stored = await api(A, 'GET', '/api/icons?names=mdi:cheese,mdi:nope');
+    check('the body is stored on the server: /api/icons has it, and only it', stored.status === 200 && Object.keys(stored.body).join() === 'mdi:cheese' && /currentColor/.test(stored.body['mdi:cheese'].body) && stored.body['mdi:cheese'].width === 24);
+    await shot(A, 'icon-on-canvas');
+
+    // a stroked set, the wide Font Awesome icon, and the colour and stroke width of the element
+    await A.selectOption('.dt-psec[data-section="icons"] [data-icon-set]', 'iconify:tabler');
+    await A.fill('.dt-psearch', 'home');
+    await A.waitForSelector('.dt-icongrid--set .dt-icontile[data-icon="tabler:home"]');
+    await A.click('.dt-icongrid--set .dt-icontile[data-icon="tabler:home"]');
+    await A.waitForFunction(() => window.DtDesigner.app.elements().some(e => e.icon === 'tabler:home'), null, { timeout: 15000 });
+    await idle(A);
+    const tabler = (await state(A)).elements.find(e => e.icon === 'tabler:home');
+    await A.evaluate(id => window.DtDesigner.app.setProps([id], { color: '#e11d48', strokeWidth: 3 }, { merge: false }), tabler.id);
+    await idle(A);
+    const stroked = await A.evaluate(id => { const p = document.querySelector(`[data-el-id="${id}"] path`); return { stroke: p.getAttribute('stroke'), fill: p.getAttribute('fill'), width: Number(p.getAttribute('stroke-width')) }; }, tabler.id);
+    check('a stroked icon takes its colour for the stroke and its stroke width (3 instead of 2: one and a half times the width of the set)', stroked.stroke === '#e11d48' && stroked.fill === 'none' && Math.abs(stroked.width - 3) < 0.01, JSON.stringify(stroked));
+    await A.selectOption('.dt-psec[data-section="icons"] [data-icon-set]', 'iconify:fa7-solid');
+    await A.fill('.dt-psearch', 'house');
+    await A.waitForSelector('.dt-icongrid--set .dt-icontile[data-icon="fa7-solid:house"]');
+    await A.click('.dt-icongrid--set .dt-icontile[data-icon="fa7-solid:house"]');
+    await A.waitForFunction(() => window.DtDesigner.app.elements().some(e => e.icon === 'fa7-solid:house'), null, { timeout: 15000 });
+    await idle(A);
+    const house = (await state(A)).elements.find(e => e.icon === 'fa7-solid:house');
+    const fit = await A.evaluate(id => { const g = document.querySelector(`[data-el-id="${id}"]`); const inner = g.querySelector('g[transform]'); const box = g.getBoundingClientRect(); const ink = inner.getBoundingClientRect(); return { box: box.width, ink: ink.width, h: ink.height }; }, house.id);
+    check('a wide icon (576 x 512) is scaled by its longer side and centred in its box', fit.ink <= fit.box + 1.5 && fit.ink >= fit.box * 0.85 && fit.h <= fit.box + 1.5, JSON.stringify(fit));
+    await A.waitForFunction(() => window.DtDesigner.app.saveState === 'saved', null, { timeout: 15000 });
+
+    // the picker of the toolbar
+    await A.evaluate(id => window.DtDesigner.app.select([id]), cheese.id);
+    await A.waitForSelector('button[aria-label="Icon ersetzen"]');
+    await A.click('button[aria-label="Icon ersetzen"]');
+    await A.waitForSelector('.dt-iconpick .dt-iconsets');
+    check('the picker "Icon ersetzen" has the switch too and remembers the set that was chosen last', (await A.inputValue('.dt-iconpick .dt-iconsets')) === 'iconify:fa7-solid');
+    await A.selectOption('.dt-iconpick .dt-iconsets', 'iconify:ph');
+    await A.fill('.dt-iconpick__search', 'cheese');
+    await A.waitForSelector('.dt-iconpick .dt-icontile[data-icon="ph:cheese"]');
+    await shot(A, 'icon-picker-sets');
+    await A.click('.dt-iconpick .dt-icontile[data-icon="ph:cheese"]');
+    await A.waitForFunction(id => window.DtDesigner.app.element(id).icon === 'ph:cheese', cheese.id, { timeout: 15000 });
+    check('a click in the picker imports the icon and replaces it', (await A.$$('.dt-iconpick')).length === 0);
+    await idle(A);
+    await A.waitForFunction(() => window.DtDesigner.app.saveState === 'saved', null, { timeout: 15000 });
+    const iconRequests = [];
+    A.on('request', r => { if (r.url().includes('/api/icons')) { iconRequests.push(r.url()); } });
+    await openDesigner(A, base, idesign.id);
+    await A.waitForFunction(() => Array.from(document.querySelectorAll('[data-el-type="icon"]')).filter(g => g.querySelector('path, circle')).length >= 3, null, { timeout: 15000 });
+    check('after a reload the editor reads the bodies from /api/icons and draws all four icons (the document only holds the names)', iconRequests.length >= 1 && iconRequests.some(u => /ph%3Acheese|ph:cheese/.test(u)), iconRequests.join(' '));
+    check('Lucide icons still work in the same document', await A.evaluate(() => { window.DtDesigner.app.addElement('icon', { icon: 'star' }); return true; }));
+    await idle(A);
+    check('...and they are drawn (a Lucide icon has no presentation attributes of its own)', await A.evaluate(() => { const g = Array.from(document.querySelectorAll('[data-el-type="icon"]')).pop(); return !!g.querySelector('path, polygon') && g.querySelector('g').getAttribute('fill') === 'none'; }));
+
+    // ---- the thumbnails and the credits
+    await A.waitForFunction(() => window.DtDesigner.app.saveState === 'saved', null, { timeout: 15000 });
+    await A.click('#dt-file');
+    await A.waitForSelector('.dt-menu');
+    await A.click('.dt-menu__item:has(.dt-menu__label:text-is("Bildnachweise …"))');
+    await A.waitForSelector('dialog.dt-credits[open] .dt-credits__item', { timeout: 10000 });
+    const iconCredits = await A.$$eval('.dt-credits__item', c => c.map(x => x.textContent.replace(/\s+/g, ' ').trim()));
+    check('the credits name the set of the CC BY icons once (Font Awesome Solid, Dave Gandy), not the MIT and Apache sets', iconCredits.length === 1 && /Font Awesome Solid/.test(iconCredits[0]) && /CC BY 4\.0/.test(iconCredits[0]) && /Dave Gandy/.test(iconCredits[0]), iconCredits.join(' || '));
+    await shot(A, 'credits-icons');
+    await A.click('dialog.dt-credits button:has-text("Schließen")');
+    await A.waitForSelector('dialog.dt-credits', { state: 'detached' });
+
+    // the public view: an anonymous visitor cannot ask /api/icons, the payload carries the bodies
+    await api(A, 'POST', `/api/share/design/${idesign.id}/link`, { audience: 'Public', permission: 'View', allowDownload: false });
+    const itoken = ((await api(A, 'GET', `/api/share/design/${idesign.id}`)).body.link || {}).token;
+    const ictx = await newContext(browser, { viewport: { width: 1440, height: 900 } });
+    const P2 = await ictx.newPage();
+    watch(P2, 'public-icons');
+    const publicIconRequests = [];
+    P2.on('request', r => { if (r.url().includes('/api/icons')) { publicIconRequests.push(r.url()); } const u = r.url(); if (!u.startsWith(base) && !/^(data|blob):/.test(u)) { outside.push(u); } });
+    await P2.goto(`${base}/s/${itoken}`);
+    await P2.waitForSelector('#dt-pv[data-state="ready"]', { timeout: 15000 });
+    await P2.waitForFunction(() => document.querySelectorAll('#dt-pv svg [data-el-type="icon"] path, #dt-pv svg [data-el-type="icon"] circle').length >= 4, null, { timeout: 15000 });
+    check('the public view draws the icons of the sets from the payload, without asking /api/icons', publicIconRequests.length === 0);
+    check('...and shows the credit of the CC BY set (and no other)', (await P2.getAttribute('#dt-pv', 'data-credits')) === '1');
+    await shot(P2, 'public-icons');
+    await ictx.close();
+
+    // the run page: a single print draws the icons too
+    const run = await A.evaluate(async id => {
+      const token = 'icons' + Date.now();
+      sessionStorage.setItem('dt-adhoc-' + token, JSON.stringify({ designId: id, values: {}, copies: 1 }));
+      return token;
+    }, idesign.id);
+    await A.goto(`${base}/Outputs/Run?design=${idesign.id}&adhoc=${run}`);
+    await A.waitForFunction(() => (document.querySelector('[data-state]') || {}).getAttribute && ['ready', 'error'].includes(document.querySelector('[data-state]').getAttribute('data-state')), null, { timeout: 30000 });
+    check('the run page draws the icons of the sets and the Lucide star (payload bodies, no editor)', await A.evaluate(() => document.querySelectorAll('.dt-olabel [data-el-type="icon"] path, .dt-olabel [data-el-type="icon"] circle, .dt-olabel [data-el-type="icon"] polygon').length >= 4), await A.evaluate(() => document.querySelector('[data-state]').getAttribute('data-state')));
+
+    // the AI and every catalogue: nothing in the browser talked to Iconify or Fontsource
+    const after = await stats();
+    check('Iconify was asked by the server only: one list of sets (a day in the cache), searches and bodies', (after['iconify:collections'] || 0) >= 1 && (after['iconify:bodies'] || 0) >= 1 && (before['iconify:collections'] || 0) >= 1);
+
+    // ---- fonts
+    current = 'fonts: ';
+    await openDesigner(A, base, idesign.id);
+    await openPanel(A, 'text');
+    await A.waitForSelector('.dt-textmore', { timeout: 10000 });
+    check('with the catalogue on, the panel Text has "Weitere Schriften …"', true);
+    await A.click('.dt-textmore');
+    await A.waitForSelector('dialog.dt-fm[open] .dt-fm__row', { timeout: 15000 });
+    const rows = await A.$$eval('.dt-fm__row .dt-fm__name', r => r.map(x => x.textContent));
+    check('the dialog lists the families under OFL, Apache and the Ubuntu licence in alphabetical order, none under NC or GPL, from another source or without Latin letters', rows.length === 12 && rows[0] === 'Antiqua Fein' && rows.includes('Ubuntu') && !rows.some(r => /Nur privat|Gnu|Andere|Koreanisch/.test(r)), rows.join('|'));
+    await A.waitForFunction(() => document.querySelectorAll('.dt-fm__preview.is-loaded').length >= 10, null, { timeout: 15000 });
+    check('every family is drawn in its own letters (the preview file comes through the proxy of the app and is loaded as a FontFace of this origin)', await A.evaluate(() => { const fams = Array.from(document.querySelectorAll('.dt-fm__preview.is-loaded')).map(p => getComputedStyle(p).fontFamily); return new Set(fams).size === fams.length; }));
+    await shot(A, 'fonts-dialog');
+    await A.click('.dt-fm__chip[data-collection="handwriting"]');
+    await until(async () => (await A.$$('.dt-fm__row')).length === 2, 'two handwriting fonts');
+    check('a category filters (Handschrift: Kritzelschrift and Tintenfluss)', (await A.$$eval('.dt-fm__name', n => n.map(x => x.textContent))).join('|') === 'Kritzelschrift|Tintenfluss');
+    await A.click('.dt-fm__chip[data-collection=""]');
+    await A.fill('.dt-fm__search', 'lobs');
+    await until(async () => (await A.$$('.dt-fm__row')).length === 1, 'one font');
+    await A.fill('.dt-fm__sample', 'Käse Brot Wein');
+    check('the sample text can be changed', (await A.textContent('.dt-fm__preview')) === 'Käse Brot Wein');
+    await A.click('.dt-fm__add');
+    await A.waitForSelector('.dt-fm__row.is-added', { timeout: 15000 });
+    check('"Hinzufügen" imports the family (one face for Lobster) and says so', /Hinzugefügt/.test(await A.textContent('.dt-fm__add')));
+    const fonts1 = ((await api(A, 'GET', '/api/fonts?design=' + idesign.id)).body || []).filter(f => f.family === 'Lobster');
+    check('the font is a font of the area of the person: stored, not built in, with its licence and a file of its own', fonts1.length === 1 && !fonts1[0].isBuiltIn && fonts1[0].license === 'OFL-1.1' && /^\/fonts\/\d+-[0-9a-f]{12}\./.test(fonts1[0].url), JSON.stringify(fonts1));
+    await A.fill('.dt-fm__search', 'fira');
+    await until(async () => (await A.$$eval('.dt-fm__name', n => n.map(x => x.textContent))).join() === 'Fira Sans', 'Fira Sans');
+    await A.click('.dt-fm__add');
+    await A.waitForSelector('.dt-fm__row.is-added', { timeout: 15000 });
+    const fira = ((await api(A, 'GET', '/api/fonts?design=' + idesign.id)).body || []).filter(f => f.family === 'Fira Sans');
+    check('a family with an italic gets the four faces regular, bold, italic and bold italic', fira.length === 4 && fira.filter(f => f.style === 'italic').length === 2, JSON.stringify(fira.map(f => f.weight + f.style)));
+    const files = (await stats())['fontsource:file'] || 0;
+    check('the server fetched the files (and Fontsource was asked for its list once a day)', files >= 5 && (await stats())['fontsource:list'] === 1, String(files) + ' / ' + (await stats())['fontsource:list']);
+    await A.click('dialog.dt-fm button:has-text("Fertig")');
+    await A.waitForSelector('dialog.dt-fm', { state: 'detached' });
+    // the new family is in the font select of the editor at once, and /fonts.css has it
+    await A.evaluate(() => { const app = window.DtDesigner.app; const id = app.addElement('text', { text: 'Käse' }); app.select([id]); });
+    await idle(A);
+    await A.waitForSelector('.dt-tb--font');
+    await A.click('.dt-tb--font');
+    await A.waitForSelector('.dt-fontpop .dt-fontlist__item[data-family="Lobster"]');
+    check('the font select of the editor lists the new families', !!(await A.$('.dt-fontpop .dt-fontlist__item[data-family="Fira Sans"]')));
+    await A.waitForSelector('.dt-fontpop__more', { timeout: 10000 });
+    check('...and has "Weitere Schriften …" at its foot', true);
+    await A.click('.dt-fontpop .dt-fontlist__item[data-family="Lobster"]');
+    await idle(A);
+    check('a click applies the family to the text', (await state(A)).elements.some(e => e.type === 'text' && e.fontFamily === 'Lobster'));
+    const css = await A.evaluate(async () => (await fetch('/fonts.css')).text());
+    check('/fonts.css has the family and the editor loads the file from the app itself', /font-family:'Lobster'/.test(css) && /font-family:'Fira Sans'/.test(css));
+    await A.keyboard.press('Escape');
+
+    // "Weitere Schriften" from the list of fonts
+    await A.goto(base + '/Fonts');
+    await A.waitForSelector('[data-fonts-more]:not([hidden])', { timeout: 10000 });
+    await A.click('[data-fonts-more]');
+    await A.waitForSelector('dialog.dt-fm[open] .dt-fm__row');
+    await A.fill('.dt-fm__search', 'plakat');
+    await until(async () => (await A.$$eval('.dt-fm__name', n => n.map(x => x.textContent))).join() === 'Plakat Kompakt', 'Plakat Kompakt');
+    await A.click('.dt-fm__add');
+    await A.waitForSelector('.dt-fm__row.is-added', { timeout: 15000 });
+    await Promise.all([A.waitForNavigation(), A.click('dialog.dt-fm button:has-text("Fertig")')]);
+    check('on /Fonts the button opens the same dialog and the page is read again afterwards (the family is in the fonts of the person)', ((await api(A, 'GET', '/api/fonts')).body || []).some(f => f.family === 'Plakat Kompakt') && !!(await A.$('[data-fonts-more]')), '');
+    await shot(A, 'fonts-list');
+
+    // a design with a catalogue font: the assistant, the run page and the public view get the file as for any font of the area (checked in the integration tests)
+
+    // ---- a phone
+    current = 'icons+fonts/phone: ';
+    const pctx = await newContext(browser, { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+    const Q = await pctx.newPage();
+    watch(Q, 'phone-icons');
+    Q.on('request', r => { const u = r.url(); if (!u.startsWith(base) && !/^(data|blob):/.test(u)) { outside.push(u); } });
+    await login(Q, accounts.designer);
+    await openDesigner(Q, base, idesign.id);
+    await Q.tap('.dt-tabbar__btn[data-panel="elements"]');
+    await Q.waitForSelector('.dt-psec[data-section="icons"] [data-icon-set]', { timeout: 10000 });
+    await Q.selectOption('.dt-psec[data-section="icons"] [data-icon-set]', 'iconify:mdi');
+    await Q.waitForSelector('.dt-icongrid--set .dt-icontile');
+    check('on a phone the set switch and the grid fit and nothing scrolls sideways', await Q.evaluate(() => document.documentElement.scrollWidth <= 392 && document.querySelector('.dt-icongrid--set').getBoundingClientRect().width <= 392));
+    await Q.evaluate(() => document.querySelector('.dt-psec[data-section="icons"] [data-icon-set]').scrollIntoView({ block: 'start' }));
+    await shot(Q, 'icon-sets');
+    await Q.evaluate(() => window.DtFontsMore.open({}));
+    await Q.waitForSelector('dialog.dt-fm[open] .dt-fm__row');
+    check('on a phone the font dialog is a sheet that fits (name, button, then the sample)', await Q.evaluate(() => { const d = document.querySelector('dialog.dt-fm').getBoundingClientRect(); return d.width <= 392 && document.documentElement.scrollWidth <= 392; }));
+    await shot(Q, 'fonts-dialog');
+    await pctx.close();
+
+    // ---- put it back
+    current = 'icons+fonts/cleanup: ';
+    await dropImportedFonts();
+    for (const id of NEW_IDS) { await configure(id, { enabled: false }); }
+    await admin.goto(base + '/Admin/Catalogs');
+    check('both are off again', /aus/.test(await pill('iconify')) && /aus/.test(await pill('googlefonts')));
+    await A.evaluate(() => { try { window.localStorage.removeItem('dt-icon-set'); } catch (e) { /* none */ } });
   }
 
   // ---------------------------------------------------------------------------------------- put it back

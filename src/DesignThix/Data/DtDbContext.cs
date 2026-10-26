@@ -75,6 +75,8 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
 
     public DbSet<CatalogCacheEntry> CatalogCacheEntry => Set<CatalogCacheEntry>();
 
+    public DbSet<IconBody> IconBody => Set<IconBody>();
+
     protected override void OnModelCreating(ModelBuilder b)
     {
         // Tables are PascalCase and named like the entity; enums are stored as text; JSON documents are jsonb.
@@ -196,6 +198,14 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
             e.HasIndex(x => x.IsTemplate);
             e.Property(x => x.Name).HasMaxLength(200);
             e.Property(x => x.Category).HasMaxLength(80);
+            e.Property(x => x.TemplateKey).HasMaxLength(80);
+            e.Property(x => x.TemplateFamily).HasMaxLength(80);
+            e.Property(x => x.TemplateFamilyName).HasMaxLength(120);
+            e.Property(x => x.TemplateVariant).HasMaxLength(60);
+            e.Property(x => x.TemplateOccasion).HasMaxLength(60);
+            e.Property(x => x.TemplateTags).HasMaxLength(600);
+            e.Property(x => x.TemplateFormat).HasMaxLength(60);
+            e.HasIndex(x => x.TemplateKey);
             e.Property(x => x.Unit).HasMaxLength(8);
             e.Property(x => x.ThumbnailHash).HasMaxLength(64);
         });
@@ -349,6 +359,15 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
             e.Property(x => x.KeyHash).HasMaxLength(64);
             e.HasIndex(x => new { x.Catalog, x.KeyHash }).IsUnique();
             e.HasIndex(x => x.ExpiresDate);
+        });
+
+        b.Entity<IconBody>(e =>
+        {
+            e.Property(x => x.Prefix).HasMaxLength(64);
+            e.Property(x => x.Name).HasMaxLength(64);
+            e.Property(x => x.LicenceCode).HasMaxLength(40);
+            e.Property(x => x.SourceJson).HasColumnType("jsonb");
+            e.HasIndex(x => new { x.Prefix, x.Name }).IsUnique();
         });
 
         b.Entity<ItemAssetRef>(e =>

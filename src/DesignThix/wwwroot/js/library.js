@@ -29,12 +29,26 @@
     return Math.min(Math.max(400, low), high);
   }
 
-  $$('[data-dt-specimen]').forEach(function (el) {
+  /** Sets one specimen in its font. A line gets its font only when it comes near the screen (the browser then loads that one file): a list of 50 fonts does not load 50 files at once. */
+  function setSpecimen(el) {
     var family = el.getAttribute('data-family') || '';
     el.style.setProperty('font-family', "'" + family.replace(/['"\\]/g, '') + "', sans-serif");
     el.style.setProperty('font-weight', String(specimenWeight(el.getAttribute('data-weight'))));
     el.style.setProperty('font-style', el.getAttribute('data-style') === 'italic' ? 'italic' : 'normal');
-  });
+    el.setAttribute('data-specimen-set', '');
+  }
+
+  var specimens = $$('[data-dt-specimen]');
+  if ('IntersectionObserver' in window && specimens.length > 12) {
+    var specimenObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { specimenObserver.unobserve(entry.target); setSpecimen(entry.target); }
+      });
+    }, { rootMargin: '300px' });
+    specimens.forEach(function (el) { specimenObserver.observe(el); });
+  } else {
+    specimens.forEach(setSpecimen);
+  }
 
   // ================================================================================================ sheet preview
 

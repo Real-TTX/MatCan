@@ -8,10 +8,10 @@
     var t = Model.Template;
 }
 <article class="mat-tile dt-designtile dt-tpl" data-template="@t.Id">
-    <a class="mat-tile__media dt-tpl__media" href="/Designs/Create?template=@t.Id" data-use-template="@t.Id" tabindex="-1" aria-hidden="true">@LibraryUi.DesignThumb(t)</a>
+    <a class="mat-tile__media dt-tpl__media dt-tg__media" href="/Designs/Create?template=@t.Id" data-preview-template="@t.Id" tabindex="-1" aria-hidden="true">@LibraryUi.DesignThumb(t)@if (t.Variants > 1) {<span class="dt-tg__badge">@t.Variants Varianten</span>}</a>
     <div class="mat-tile__body">
-        <span class="dt-tile__title" title="@t.Name">@t.Name</span>
-        <span class="mat-tile__meta">@t.Size@(string.IsNullOrEmpty(t.Category) ? "" : " · " + t.Category)</span>
+        <span class="dt-tile__title" title="@t.Name">@(t.Variants > 1 && !string.IsNullOrEmpty(t.TemplateFamilyName) ? t.TemplateFamilyName : t.Name)</span>
+        <span class="mat-tile__meta">@t.Size@(string.IsNullOrEmpty(t.TemplateOccasion) ? (string.IsNullOrEmpty(t.Category) ? "" : " · " + t.Category) : " · " + t.TemplateOccasion)</span>
     </div>
     <div class="dt-tpl__actions">
         <a class="mat-btn mat-btn--primary mat-btn--sm" href="/Designs/Create?template=@t.Id" data-use-template="@t.Id" aria-label="Vorlage „@t.Name“ verwenden">@Ui.Icon("plus")<span>Vorlage verwenden</span></a>

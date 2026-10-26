@@ -22,6 +22,9 @@ public sealed class CatalogSetting
 
     /// <summary>The folder catalogue: the names of the folders below <c>{data}/catalogs</c> that are offered.</summary>
     public List<string> Folders { get; set; } = [];
+
+    /// <summary>A catalogue made of sets (Iconify): the sets that are offered (prefixes); empty = the catalogue own list.</summary>
+    public List<string> Sets { get; set; } = [];
 }
 
 /// <summary>The setting <see cref="Logic.SettingStore.Catalogs"/>: the settings of the catalogues by id.</summary>

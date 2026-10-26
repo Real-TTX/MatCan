@@ -558,6 +558,10 @@ html.dt-designer-page, .dt-designer-body { height: 100%; margin: 0; overflow: hi
 .dt-icontile:disabled { opacity: .5; cursor: not-allowed; }
 .dt-icontile .dt-iconsvg { width: 58%; height: 58%; max-width: none; max-height: none; pointer-events: none; }
 .dt-icongrid__more { height: 1px; }
+.dt-icontile.is-busy { pointer-events: none; opacity: 0.55; }
+.dt-iconsets { width: 100%; margin-bottom: var(--mat-space-2); }
+.dt-iconpick > .dt-iconsets { width: auto; margin: var(--mat-space-2) var(--mat-space-3) 0; }
+.dt-icongrid--set .dt-iconsvg { width: 62%; height: 62%; }
 .dt-dragghost .dt-dragicon { width: 3rem; height: 3rem; max-width: none; padding: 6px; border-radius: var(--mat-radius); background: var(--mat-surface); color: var(--mat-text); box-shadow: var(--mat-shadow-2); }
 .dt-iconpick { padding: 0; display: flex; flex-direction: column; }
 .dt-iconpick__scroll { overflow-y: auto; max-height: 21rem; padding: var(--mat-space-3); overscroll-behavior: contain; }
@@ -697,3 +701,28 @@ html.dt-designer-page, .dt-designer-body { height: 100%; margin: 0; overflow: hi
 .dt-credits__item { display: grid; gap: 2px; padding: var(--mat-space-3); border: 1px solid var(--mat-border); border-radius: var(--mat-radius); background: var(--mat-surface); }
 .dt-credits__meta { font-size: var(--mat-fs-sm); color: var(--mat-text-muted); overflow-wrap: anywhere; }
 .dt-credits__meta a { color: var(--mat-accent-text); text-decoration: underline; }
+
+/* ---- folded cards (plan 6, js/designer.fold.js): NON-PRINTING guides in the editor: the fold line and the safe margin of every half. Percentages of the sheet; never in the document. ---- */
+.dt-fold { position: absolute; inset: 0; pointer-events: none; }
+.dt-fold[hidden] { display: none; }
+.dt-fold__line { position: absolute; border: 0 dashed var(--mat-accent-text); opacity: .85; }
+.dt-fold__line--vertical { top: 0; bottom: 0; left: 50%; border-left-width: 1.5px; transform: translateX(-0.75px); }
+.dt-fold__line--horizontal { left: 0; right: 0; top: 50%; border-top-width: 1.5px; transform: translateY(-0.75px); }
+.dt-fold__tag { position: absolute; padding: 0 5px; border-radius: var(--mat-radius-pill); background: var(--mat-accent-text); color: var(--mat-surface); font-size: 10px; font-weight: 650; line-height: 15px; letter-spacing: .04em; text-transform: uppercase; }
+.dt-fold__tag--vertical { top: 4px; left: 50%; transform: translateX(-50%); }
+.dt-fold__tag--horizontal { left: 4px; top: 50%; transform: translateY(-50%); }
+.dt-fold__safe { position: absolute; left: var(--dt-fx); top: var(--dt-fy); width: var(--dt-fw); height: var(--dt-fh); border: 1px dashed var(--mat-accent-text); opacity: .45; box-sizing: border-box; }
+
+/* ---- the panel Vorlagen: one cell per family with dots for the variants, compact filters (plan 6) ---- */
+.dt-tplfilters { display: grid; grid-template-columns: 1fr 1fr; gap: var(--mat-space-2); }
+.dt-tplfilters[hidden] { display: none; }
+.dt-tplfilter.mat-select { min-width: 0; font-size: var(--mat-fs-sm); }
+.dt-tpl__cell { display: grid; gap: 2px; align-content: start; min-width: 0; }
+.dt-tpl__frame { display: grid; }
+.dt-tpl__frame > .dt-tpl__thumb[hidden] { display: none; }
+.dt-tpl__dots { display: flex; flex-wrap: wrap; gap: 0; }
+.dt-tpl__dot { position: relative; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
+.dt-tpl__dot::after { content: ""; position: absolute; inset: 6px; border-radius: 50%; border: 1.5px solid var(--mat-text-faint); background: var(--mat-surface); }
+.dt-tpl__dot:hover::after { border-color: var(--mat-accent); }
+.dt-tpl__dot.is-active::after { background: var(--mat-accent); border-color: var(--mat-accent); }
+.dt-tpl__dot:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }

@@ -1,5 +1,6 @@
-/* DesignThix editor, part 8d: the panel "Vorlagen". The templates of /api/templates as tiles (a stored thumbnail, else the template drawn by the engine when the tile comes into view,
-   three at a time), a search field and category chips. A click opens a dialog: "Aktuelle Seite ersetzen" (the first page of the template replaces the page you are on) or "Als neue Seite
+/* DesignThix editor, part 8d: the panel "Vorlagen". The templates of /api/templates as tiles, one per FAMILY (the variants of one kind: small dots switch between them; a stored thumbnail, else the
+   template drawn by the engine when the tile comes into view, three at a time), a search field (names, tags, description) and the compact filters Anlass and Format ("Passend zur Seite" keeps the
+   templates of the proportions of the current page). A click opens a dialog: "Aktuelle Seite ersetzen" (the first page of the template replaces the page you are on) or "Als neue Seite
    hinzufügen" (all pages of the template come after the current page). Both are one undo step; the fields of the template are added to the design. A template of another size or unit is
    scaled to fit and centred on the page (the dialog says so). D.templates = { list(), apply(template, mode) } is what the browser checks use. */
 (function () {
@@ -144,26 +145,90 @@
     id: 'templates', title: 'Vorlagen', label: 'Vorlagen', icon: 'layout-template', order: 10,
     build: function (host, api) {
       app = api.app;
-      var state = { q: '', category: '' };
+      var state = { q: '', occasion: '', format: '' };
       var search = D.el('input', { type: 'search', class: 'mat-input dt-psearch', placeholder: 'Vorlagen suchen', 'aria-label': 'Vorlagen suchen', autocomplete: 'off' });
-      var chips = D.el('div', { class: 'dt-tplchips', role: 'group', 'aria-label': 'Kategorie' });
-      host.appendChild(D.el('div', { class: 'dt-pbar' }, [search, chips]));
+      var occasionSelect = D.el('select', { class: 'mat-select dt-tplfilter', 'aria-label': 'Anlass', 'data-filter': 'occasion' });
+      var formatSelect = D.el('select', { class: 'mat-select dt-tplfilter', 'aria-label': 'Format', 'data-filter': 'format' });
+      var filters = D.el('div', { class: 'dt-tplfilters' }, [occasionSelect, formatSelect]);
+      host.appendChild(D.el('div', { class: 'dt-pbar' }, [search, filters]));
       var grid = D.el('div', { class: 'dt-tpl' });
       host.appendChild(grid);
       var observer = null;
       var token = 0;
 
-      var drawChips = function (list) {
-        D.empty(chips);
-        var cats = [];
-        list.forEach(function (t) { if (t.category && cats.indexOf(t.category) < 0) { cats.push(t.category); } });
-        chips.hidden = cats.length < 2;
-        ['Alle'].concat(cats).forEach(function (c) {
-          var value = c === 'Alle' ? '' : c;
-          var b = D.el('button', { type: 'button', class: 'dt-chipbtn', 'data-category': value, text: c, 'aria-pressed': String(state.category === value) });
-          b.addEventListener('click', function () { state.category = value; drawChips(list); draw(); });
-          chips.appendChild(b);
+      /** The filter lists: the occasions and formats the templates have (with counts), the format "Passend zur Seite" first when something fits. */
+      var drawFilters = function (list) {
+        var occasions = [];
+        var formats = [];
+        list.forEach(function (t) {
+          if (t.occasion && occasions.indexOf(t.occasion) < 0) { occasions.push(t.occasion); }
+          if (t.format && !formats.some(function (f) { return f.key === t.format; })) { formats.push({ key: t.format, name: t.formatName || t.format }); }
         });
+        filters.hidden = !occasions.length && !formats.length;
+        D.empty(occasionSelect);
+        occasionSelect.appendChild(D.el('option', { value: '', text: 'Alle Anlässe' }));
+        occasions.forEach(function (o) { occasionSelect.appendChild(D.el('option', { value: o, text: o })); });
+        occasionSelect.value = state.occasion;
+        D.empty(formatSelect);
+        formatSelect.appendChild(D.el('option', { value: '', text: 'Alle Formate' }));
+        formatSelect.appendChild(D.el('option', { value: '@page', text: 'Passend zur Seite' }));
+        formats.forEach(function (f) { formatSelect.appendChild(D.el('option', { value: f.key, text: f.name })); });
+        formatSelect.value = state.format;
+      };
+
+      var fits = function (t) {
+        var a = t.width / t.height;
+        var b = app.doc.width / app.doc.height;
+        return Math.abs(a - b) / b < 0.03;
+      };
+
+      var matches = function (t, words) {
+        if (state.occasion && t.occasion !== state.occasion) { return false; }
+        if (state.format === '@page' ? !fits(t) : (state.format && t.format !== state.format)) { return false; }
+        if (!words.length) { return true; }
+        var hay = D.fold([t.name, t.familyName || '', t.category || '', t.description || '', t.occasion || '', t.variant || '', (t.tags || []).join(' ')].join(' '));
+        return words.every(function (w) { return hay.indexOf(w) >= 0; });
+      };
+
+      /** One cell per family: the first variant, small dots to switch to the others (a hover or click). */
+      var cell = function (variants) {
+        var shown = 0;
+        var boxes = {};
+        var name = D.el('span', { class: 'dt-tpl__name' });
+        var meta = D.el('span', { class: 'dt-tpl__meta' });
+        var thumbHost = D.el('span', { class: 'dt-tpl__frame' });
+        var item = D.el('button', { type: 'button', class: 'dt-tpl__item', disabled: !app.editable() }, [thumbHost, name, meta]);
+        var dots = variants.length > 1 ? D.el('span', { class: 'dt-tpl__dots', role: 'group', 'aria-label': 'Varianten' }) : null;
+        var wrap = D.el('div', { class: 'dt-tpl__cell', 'data-family': variants[0].family || '' }, dots ? [item, dots] : [item]);
+        var makeBox = function (t) {
+          var box = D.el('span', { class: 'dt-tpl__thumb', 'data-dt-preview': String(t.id) });
+          box._template = t;
+          if (t.thumbnailUrl) { box.appendChild(D.el('img', { src: t.thumbnailUrl, alt: '', loading: 'lazy', draggable: 'false' })); box.classList.add('is-ready'); }
+          else if (observer) { observer.observe(box); } else { queuePreview(box, t); }
+          return box;
+        };
+        var show = function (i) {
+          shown = i;
+          var t = variants[i];
+          if (!boxes[t.id]) { boxes[t.id] = makeBox(t); thumbHost.appendChild(boxes[t.id]); }
+          Object.keys(boxes).forEach(function (k) { boxes[k].hidden = Number(k) !== t.id; });
+          item.setAttribute('data-template', String(t.id));
+          item.setAttribute('title', t.name + ' (' + t.size + ')' + (variants.length > 1 ? ', ' + variants.length + ' Varianten' : ''));
+          name.textContent = variants.length > 1 ? (t.familyName || t.name) : t.name;
+          meta.textContent = (variants.length > 1 && t.variant ? t.variant + ' · ' : '') + t.size;
+          if (dots) { Array.prototype.forEach.call(dots.children, function (d, k) { d.classList.toggle('is-active', k === i); d.setAttribute('aria-pressed', String(k === i)); }); }
+        };
+        if (dots) {
+          variants.forEach(function (t, i) {
+            var d = D.el('button', { type: 'button', class: 'dt-tpl__dot', 'aria-label': t.variant || ('Variante ' + (i + 1)), title: t.variant || ('Variante ' + (i + 1)), 'aria-pressed': 'false', 'data-variant-id': String(t.id) });
+            d.addEventListener('click', function () { show(i); });
+            d.addEventListener('mouseenter', function () { show(i); });
+            dots.appendChild(d);
+          });
+        }
+        item.addEventListener('click', function () { templateDialog(variants[shown]); });
+        show(0);
+        return wrap;
       };
 
       var draw = function () {
@@ -173,33 +238,33 @@
         D.empty(grid);
         var list = templates.list;
         if (!list) { grid.appendChild(D.el('p', { class: 'dt-empty', text: 'Vorlagen werden geladen …' })); return; }
-        var q = D.fold(state.q).trim();
-        var items = list.filter(function (t) { return (!state.category || t.category === state.category) && (!q || D.fold(t.name + ' ' + (t.category || '') + ' ' + (t.description || '')).indexOf(q) >= 0); });
-        if (!items.length) { grid.appendChild(D.el('p', { class: 'dt-empty', text: templates.failed ? 'Die Vorlagen konnten nicht geladen werden.' : (q || state.category ? 'Nichts gefunden.' : 'Es gibt noch keine Vorlagen. Markiere ein Design in den Eigenschaften als Vorlage.') })); return; }
+        var words = D.fold(state.q).split(/[ \t]+/).filter(Boolean);
+        var items = list.filter(function (t) { return matches(t, words); });
+        if (!items.length) { grid.appendChild(D.el('p', { class: 'dt-empty', text: templates.failed ? 'Die Vorlagen konnten nicht geladen werden.' : (words.length || state.occasion || state.format ? 'Nichts gefunden.' : 'Es gibt noch keine Vorlagen. Markiere ein Design in den Eigenschaften als Vorlage.') })); return; }
         if ('IntersectionObserver' in window) {
           observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) { if (entry.isIntersecting) { observer.unobserve(entry.target); var t = entry.target._template; if (t) { queuePreview(entry.target, t); } } });
           }, { rootMargin: '160px' });
         }
+        var families = [];
+        var byKey = {};
         items.forEach(function (t) {
-          var box = D.el('span', { class: 'dt-tpl__thumb', 'data-dt-preview': String(t.id) });
-          box._template = t;
-          if (t.thumbnailUrl) { box.appendChild(D.el('img', { src: t.thumbnailUrl, alt: '', loading: 'lazy', draggable: 'false' })); box.classList.add('is-ready'); }
-          else if (observer) { observer.observe(box); } else { queuePreview(box, t); }
-          var b = D.el('button', { type: 'button', class: 'dt-tpl__item', title: t.name + ' (' + t.size + ')', 'data-template': t.id, disabled: !app.editable() }, [
-            box, D.el('span', { class: 'dt-tpl__name', text: t.name }), D.el('span', { class: 'dt-tpl__meta', text: t.size + (t.category ? ' · ' + t.category : '') }),
-          ]);
-          b.addEventListener('click', function () { templateDialog(t); });
-          grid.appendChild(b);
+          var key = t.family || ('t' + t.id);
+          if (!byKey[key]) { byKey[key] = []; families.push(byKey[key]); }
+          byKey[key].push(t);
         });
+        families.forEach(function (variants) { grid.appendChild(cell(variants)); });
       };
 
       var timer = 0;
       search.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(function () { state.q = search.value; draw(); }, 150); });
+      occasionSelect.addEventListener('change', function () { state.occasion = occasionSelect.value; draw(); });
+      formatSelect.addEventListener('change', function () { state.format = formatSelect.value; draw(); });
       api.cleanup(function () { clearTimeout(timer); if (observer) { observer.disconnect(); } waiting = []; });
       api.on('readonly', function () { api.rebuild(); });
+      filters.hidden = true;
       draw();
-      loadList().then(function (list) { if (D.panels.current() === 'templates') { drawChips(list); draw(); } });
+      loadList().then(function (list) { if (D.panels.current() === 'templates') { drawFilters(list); draw(); } });
     },
   });
 

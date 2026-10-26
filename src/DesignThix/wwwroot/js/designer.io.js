@@ -188,6 +188,26 @@
     }, function () { hideProgress(); D.toast('Keine Verbindung: Die Schrift konnte nicht hochgeladen werden.', 'warning'); return null; });
   }
 
+  /** "Weitere Schriften": the dialog over the catalogue of fonts; every family that is added is known to the editor at once (and applied to the given texts). */
+  function moreFonts(textIds) {
+    if (!window.DtFontsMore) { return; }
+    window.DtFontsMore.open({
+      designId: app.id, spaceId: app.spaceId || null,
+      onAdded: function (result) {
+        refreshFonts().then(function () {
+          var ids = (textIds || []).filter(function (id) { var e = app.element(id); return e && e.type === 'text' && !e.locked; });
+          if (!ids.length || !result.family) { return; }
+          var info = app.fontIndex.find(function (x) { return x.family === result.family; });
+          app.setProps(ids, function (e) {
+            var p = { fontFamily: result.family };
+            if (info && info.weights.indexOf(e.fontWeight) < 0) { p.fontWeight = info.weights.reduce(function (b, w) { return Math.abs(w - e.fontWeight) < Math.abs(b - e.fontWeight) ? w : b; }, info.weights[0]); }
+            return D.canvas.textPatch(e, p);
+          }, { merge: false });
+        });
+      },
+    });
+  }
+
   function classify(files) {
     var out = { images: [], fonts: [], other: [] };
     files.forEach(function (f) {
@@ -264,6 +284,8 @@
   D.io = {
     uploadImages: uploadImages,
     uploadFonts: uploadFonts,
+    refreshFonts: refreshFonts,
+    moreFonts: moreFonts,
     refreshFonts: refreshFonts,
     insertFiles: insertFiles,
     useAsset: useAsset,

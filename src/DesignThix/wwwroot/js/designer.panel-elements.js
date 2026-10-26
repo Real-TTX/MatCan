@@ -3,6 +3,9 @@
    where it is dropped; a flag, seal or icon... dropped on a frame or an image fills it (flags and seals are media of the library).
    Icons: about 1 900 Lucide icons from /lib/icons.json. The grid draws 60 tiles at a time (an IntersectionObserver asks for the next 60 when the end comes into view), so the panel stays
    fast. The bodies are parsed with the same allowlist the engine uses (path, circle, rect, line, polyline, polygon, ellipse; geometry attributes only), never as HTML.
+   Icon sets (plan 5, C3): next to the Lucide icons the section Icons has a switch "Icon-Satz" with the sets of the Iconify catalogue the administrator allows (Material Design, Tabler, Phosphor, Font Awesome ...).
+   A set is browsed and searched through /api/catalogs/iconify/search (a page of 48 at a time, the bodies come with the answer); a click or a drop IMPORTS the icon first (its body is stored on the
+   server, so the design draws offline), then the element is made with the name "prefix:name".
    D.iconSvg(name) draws one icon, D.iconGrid(options) is the grid (also used by the icon picker of the toolbar: D.iconPicker.open(anchor, options)). */
 (function () {
   'use strict';
@@ -17,8 +20,22 @@
   var ICON_TAGS = {
     path: ['d'], circle: ['cx', 'cy', 'r'], rect: ['x', 'y', 'width', 'height', 'rx', 'ry'], line: ['x1', 'y1', 'x2', 'y2'], polyline: ['points'], polygon: ['points'], ellipse: ['cx', 'cy', 'rx', 'ry'],
   };
+  var PAINT_ATTRS = ['fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'fill-rule', 'opacity', 'fill-opacity', 'stroke-opacity'];
   var NUMBER_OK = /^-?\d*\.?\d+(?:e[+-]?\d+)?$/i;
   var PATH_OK = /^[0-9eE+\-., \tMmLlHhVvCcSsQqTtAaZz]*$/;
+
+  /** The presentation attributes of a catalogue icon: the same values the engine accepts (a paint is currentColor or none). */
+  function paintOk(name, v) {
+    if (name === 'fill' || name === 'stroke') { return v === 'currentColor' || v === 'none'; }
+    if (name === 'stroke-linecap') { return v === 'butt' || v === 'round' || v === 'square'; }
+    if (name === 'stroke-linejoin') { return v === 'miter' || v === 'round' || v === 'bevel'; }
+    if (name === 'fill-rule') { return v === 'nonzero' || v === 'evenodd'; }
+    if (!NUMBER_OK.test(v.trim())) { return false; }
+    var n = Number(v);
+    if (name === 'stroke-width') { return n >= 0 && n <= 64; }
+    if (name === 'stroke-miterlimit') { return n >= 1 && n <= 100; }
+    return n >= 0 && n <= 1;
+  }
   var parsed = new Map();
 
   function parseBody(body) {
@@ -33,7 +50,11 @@
         allowed.forEach(function (name) {
           var v = child.getAttribute(name);
           if (v === null) { return; }
-          if ((name === 'd' || name === 'points') ? (v.length <= 8000 && PATH_OK.test(v)) : NUMBER_OK.test(v.trim())) { attrs[name] = v.trim(); }
+          if ((name === 'd' || name === 'points') ? (v.length <= 20000 && PATH_OK.test(v)) : NUMBER_OK.test(v.trim())) { attrs[name] = v.trim(); }
+        });
+        PAINT_ATTRS.forEach(function (name) {
+          var v = child.getAttribute(name);
+          if (v !== null && paintOk(name, v)) { attrs[name] = v.trim(); }
         });
         out.push({ tag: child.localName, attrs: attrs });
       });
@@ -42,8 +63,9 @@
     return out;
   }
 
-  /** An <svg> (24 x 24 grid, stroke in currentColor) with the icon, or an empty svg when the library does not have the name yet. */
+  /** An <svg> (24 x 24 grid, stroke in currentColor) with the icon, or an empty svg when the library does not have the name yet. An icon of a catalogue ("mdi:home") is drawn from its body on its own grid. */
   D.iconSvg = function (name, cls) {
+    if (typeof name === 'string' && name.indexOf(':') > 0) { return D.iconSvgOf(D.icons.view(name), cls); }
     var svg = document.createElementNS(SVG_NS, 'svg');
     svg.setAttribute('viewBox', '0 0 24 24');
     svg.setAttribute('class', 'dt-iconsvg' + (cls ? ' ' + cls : ''));
@@ -63,6 +85,71 @@
       svg.appendChild(node);
     });
     return svg;
+  };
+
+  /** An <svg> with the body of an icon of a catalogue ({ body, width, height }); the shapes say themselves what is filled and what is stroked (currentColor). Empty for null. */
+  D.iconSvgOf = function (view, cls) {
+    var svg = document.createElementNS(SVG_NS, 'svg');
+    var w = view && view.width >= 1 && view.width <= 2048 ? view.width : 24;
+    var h = view && view.height >= 1 && view.height <= 2048 ? view.height : 24;
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    svg.setAttribute('class', 'dt-iconsvg' + (cls ? ' ' + cls : ''));
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    if (!view || typeof view.body !== 'string') { return svg; }
+    parseBody(view.body).forEach(function (part) {
+      var node = document.createElementNS(SVG_NS, part.tag);
+      Object.keys(part.attrs).forEach(function (k) { node.setAttribute(k, part.attrs[k]); });
+      svg.appendChild(node);
+    });
+    return svg;
+  };
+
+  // ================================================================================================ icon sets of the catalogue (Iconify)
+
+  var SET_KEY = 'dt-icon-set';
+  var setsPromise = null;
+  D.iconSets = {
+    /** The sets the person can use: [{ catalog, prefix, name, count }] (empty without a usable icon catalogue). */
+    load: function () {
+      if (!setsPromise) {
+        setsPromise = D.request('GET', '/api/catalogs').then(function (res) {
+          var cat = res.ok && Array.isArray(res.data) ? res.data.filter(function (c) { return (c.kinds || []).indexOf('icon') >= 0; })[0] : null;
+          if (!cat) { return []; }
+          return D.request('GET', '/api/catalogs/' + encodeURIComponent(cat.id) + '/collections').then(function (r2) {
+            return (r2.ok && Array.isArray(r2.data) ? r2.data : []).map(function (c) { return { catalog: cat.id, prefix: c.id, name: c.name, count: c.count }; });
+          });
+        }, function () { return []; });
+      }
+      return setsPromise;
+    },
+    /** The chosen set value: "" (Lucide) or "catalog:prefix". */
+    get: function () { try { return window.localStorage.getItem(SET_KEY) || ''; } catch (e) { return ''; } },
+    set: function (value) { try { if (value) { window.localStorage.setItem(SET_KEY, value); } else { window.localStorage.removeItem(SET_KEY); } } catch (e) { /* private mode */ } },
+    /** The chosen set when it still exists, else null. */
+    current: function (sets) { var v = D.iconSets.get(); return v ? (sets.filter(function (x) { return x.catalog + ':' + x.prefix === v; })[0] || null) : null; },
+    /** A select "Icon-Satz" (Lucide first); onChange(set or null). */
+    select: function (sets, onChange) {
+      var sel = D.el('select', { class: 'mat-select mat-select--sm dt-iconsets', 'aria-label': 'Icon-Satz', 'data-icon-set': '' }, [D.el('option', { value: '', text: 'Lucide (eingebaut)' })].concat(sets.map(function (x) { return D.el('option', { value: x.catalog + ':' + x.prefix, text: x.name }); })));
+      var cur = D.iconSets.current(sets);
+      sel.value = cur ? cur.catalog + ':' + cur.prefix : '';
+      sel.addEventListener('change', function () { D.iconSets.set(sel.value); onChange(D.iconSets.current(sets)); });
+      return sel;
+    },
+  };
+
+  /** Takes the icon into the library of the server (its body is stored there) and tells the editor the body: resolves with the name for a design, or null after a message. */
+  D.iconSets.use = function (item, set, tile) {
+    if (item.icon) { D.icons.remember(item.id, item.icon); }
+    if (tile) { tile.classList.add('is-busy'); tile.setAttribute('aria-busy', 'true'); }
+    var done = function () { if (tile) { tile.classList.remove('is-busy'); tile.removeAttribute('aria-busy'); } };
+    var app = D.app;
+    return D.request('POST', '/api/catalogs/' + encodeURIComponent(set.catalog) + '/import', { itemId: item.id, preferSpace: app && app.spaceId || null, designId: app && app.id || null }).then(function (res) {
+      done();
+      if (!res.ok || !res.data || res.data.kind !== 'icon') { D.toast((res.data && res.data.error) || 'Das Icon konnte nicht übernommen werden.', 'danger'); return null; }
+      D.icons.remember(res.data.name, res.data);
+      return res.data.name;
+    }, function () { done(); D.toast('Keine Verbindung: Das Icon konnte nicht übernommen werden.', 'warning'); return null; });
   };
 
   // ================================================================================================ the grid of icons
@@ -148,6 +235,84 @@
     };
   };
 
+  /**
+   * The grid of one set of the catalogue: options host, set ({ catalog, prefix }), query, columns, limit (show only the first n, no paging), disabled, onPick(name), onDrop(name, x, y), current.
+   * A page of 48 comes from /api/catalogs/{id}/search (browsing the set alphabetically, or searching inside it); more are asked for when the end comes into view. A tile only draws the body that came
+   * with the answer; it is imported when it is used. Returns { setQuery(q), count(), destroy() } like D.iconGrid.
+   */
+  D.iconSetGrid = function (o) {
+    var grid = D.el('div', { class: 'dt-icongrid dt-icongrid--set', role: 'listbox', 'aria-label': 'Icons', 'data-icon-set-grid': o.set.prefix });
+    var status = D.el('p', { class: 'dt-empty', hidden: true, role: 'status' });
+    var sentinel = D.el('div', { class: 'dt-icongrid__more', 'aria-hidden': 'true' });
+    o.host.appendChild(grid);
+    o.host.appendChild(status);
+    o.host.appendChild(sentinel);
+    if (o.columns) { grid.style.setProperty('--dt-icon-cols', String(o.columns)); }
+    var page = 0;
+    var hasMore = false;
+    var loading = false;
+    var token = 0;
+    var query = o.query || '';
+    var observer = null;
+    var importing = false;
+
+    var addTile = function (item) {
+      if (!item.icon) { return; }
+      var tile = D.el('button', { type: 'button', class: 'dt-icontile', role: 'option', 'data-icon': item.id, title: item.title + ' (' + o.set.prefix + ')', 'aria-label': (o.label || 'Icon') + ' ' + item.title, 'aria-selected': String(o.current === item.id), disabled: o.disabled });
+      tile.appendChild(D.iconSvgOf(item.icon));
+      var take = function (then) {
+        if (importing) { return; }
+        importing = true;
+        D.iconSets.use(item, o.set, tile).then(function (name) { importing = false; if (name) { then(name); } });
+      };
+      if (o.onDrop) {
+        D.dnd.attach(tile, { ghost: function () { return D.iconSvgOf(item.icon, 'dt-dragicon'); }, onClick: function () { take(o.onPick); }, onDrop: function (x, y) { take(function (name) { o.onDrop(name, x, y); }); } });
+      } else {
+        tile.addEventListener('click', function () { take(o.onPick); });
+      }
+      grid.appendChild(tile);
+    };
+
+    var load = function (reset) {
+      if (reset) { token++; page = 0; hasMore = false; D.empty(grid); status.hidden = true; }
+      var my = token;
+      loading = true;
+      page += 1;
+      var url = '/api/catalogs/' + encodeURIComponent(o.set.catalog) + '/search?collection=' + encodeURIComponent(o.set.prefix) + '&q=' + encodeURIComponent(query) + '&page=' + page + '&perPage=48';
+      return D.request('GET', url).then(function (res) {
+        if (my !== token) { return; }
+        loading = false;
+        if (!res.ok || !res.data) {
+          status.hidden = false;
+          status.textContent = (res.data && res.data.error) || 'Die Icons konnten nicht geladen werden.';
+          hasMore = false;
+          return;
+        }
+        (res.data.items || []).forEach(function (item) { if (!o.limit || grid.children.length < o.limit) { addTile(item); } });
+        hasMore = !!res.data.hasMore && !o.limit;
+        sentinel.hidden = !hasMore;
+        // a tall panel shows the end of the grid at once: the observer only tells when the end comes INTO view, so ask again while it is near
+        requestAnimationFrame(function () { if (hasMore && !loading && my === token && document.contains(sentinel) && sentinel.getBoundingClientRect().top < window.innerHeight + 240) { load(false); } });
+        if (!grid.children.length) {
+          status.hidden = false;
+          status.textContent = query ? 'Kein Icon gefunden. Dieser Satz kennt nur englische Wörter; versuche zum Beispiel „home“, „cheese“ oder „phone“.' : 'Dieser Satz hat keine Icons, die DesignThix zeichnen kann.';
+        }
+      }, function () { if (my === token) { loading = false; status.hidden = false; status.textContent = 'Keine Verbindung.'; } });
+    };
+
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver(function (entries) { if (entries.some(function (e) { return e.isIntersecting; }) && hasMore && !loading) { load(false); } }, { rootMargin: '240px' });
+      observer.observe(sentinel);
+    }
+    load(true);
+    return {
+      setQuery: function (q) { query = String(q || '').trim(); load(true); },
+      count: function () { return grid.children.length; },
+      destroy: function () { token++; if (observer) { observer.disconnect(); } },
+      el: grid,
+    };
+  };
+
   // ================================================================================================ the picker of the toolbar ("Icon ersetzen")
 
   D.iconPicker = {
@@ -160,11 +325,26 @@
         var scroll = D.el('div', { class: 'dt-iconpick__scroll' });
         el.appendChild(D.el('div', { class: 'dt-fontpop__top' }, search));
         el.appendChild(scroll);
-        var grid = D.iconGrid({ host: scroll, query: '', columns: 6, current: o.current, label: 'Icon', onPick: function (name) { api.close(true); o.onPick(name); } });
+        var grid = null;
+        var holder = D.el('div', { class: 'dt-iconpick__grid' });
         var timer = 0;
-        search.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(function () { grid.setQuery(search.value); scroll.scrollTop = 0; }, 120); });
+        var pick = function (name) { api.close(true); o.onPick(name); };
+        var build = function (sets) {
+          if (grid) { grid.destroy(); }
+          D.empty(holder);
+          var set = D.iconSets.current(sets);
+          grid = set
+            ? D.iconSetGrid({ host: holder, set: set, query: search.value, columns: 6, current: o.current, label: 'Icon', onPick: pick })
+            : D.iconGrid({ host: holder, query: search.value, columns: 6, current: o.current, label: 'Icon', onPick: pick });
+        };
+        scroll.appendChild(holder);
+        D.iconSets.load().then(function (sets) {
+          if (sets.length) { el.insertBefore(D.iconSets.select(sets, function () { build(sets); }), scroll); }
+          build(sets);
+        });
+        search.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(function () { if (grid) { grid.setQuery(search.value); } scroll.scrollTop = 0; }, 120); });
         search.addEventListener('keydown', function (ev) { ev.stopPropagation(); if (ev.key === 'Enter') { var first = D.$('.dt-icontile', scroll); if (first) { first.click(); } } });
-        el._cleanup = function () { clearTimeout(timer); grid.destroy(); };
+        el._cleanup = function () { clearTimeout(timer); if (grid) { grid.destroy(); } };
       }, { title: 'Icon wählen', width: 340, keepEdit: false });
     },
   };
@@ -261,6 +441,22 @@
         });
       };
 
+      // the icons of a set of the catalogue: searched and paged by the server, imported when they are used
+      var iconSetTiles = function (set, limit, host2) {
+        var place = function (name, x, y) {
+          var t = D.canvas.dropTarget(x, y);
+          if (t.kind === 'page' && !t.inside) { return; }
+          var id = app.addElement('icon', { icon: name });
+          var r = id ? app.locate(id, false) : null;
+          if (r && t.point) { app.setProps([id], { x: D.round(t.point.x - r.el.w / 2, 2), y: D.round(t.point.y - r.el.h / 2, 2) }, { merge: false }); }
+        };
+        return D.iconSetGrid({
+          host: host2, set: set, query: state.q, columns: 5, limit: limit, label: 'Icon', disabled: !app.editable(),
+          onPick: function (name) { app.addElement('icon', { icon: name }); },
+          onDrop: place,
+        });
+      };
+
       var head = function (s, count, showAll) {
         var row = D.el('div', { class: 'dt-psec__head' }, D.el('h3', { class: 'dt-psec__title', text: s.title }));
         if (showAll) {
@@ -283,10 +479,14 @@
           body.appendChild(back);
         }
         var anyTiles = false;
+        D.iconSets.load().then(function (sets) {
+        if (my !== token) { return; }
+        var set = D.iconSets.current(sets);
         var pending = (view ? [view] : sections).map(function (s) {
-          return (s.icons ? D.icons.load().then(function (lib) { return lib ? (q ? D.iconSearch(lib, state.q) : popularFirst(lib)) : []; }) : s.fetch(q)).then(function (items) { return { s: s, items: items }; });
+          // a set of the catalogue is searched and paged by the server: the section only needs to know that it is there
+          return (s.icons ? (set ? Promise.resolve([{ set: set }]) : D.icons.load().then(function (lib) { return lib ? (q ? D.iconSearch(lib, state.q) : popularFirst(lib)) : []; })) : s.fetch(q)).then(function (items) { return { s: s, items: items }; });
         });
-        Promise.all(pending).then(function (results) {
+        return Promise.all(pending).then(function (results) {
           if (my !== token) { return; }
           results.forEach(function (r) {
             var s = r.s;
@@ -294,14 +494,19 @@
             anyTiles = true;
             var section = D.el('section', { class: 'dt-psec', 'data-section': s.id });
             var full = !!view;
-            var total = r.items.length;
+            var total = set && s.icons ? (set.count || s.limit + 1) : r.items.length;
             if (full) { var cnt = D.$('.dt-backbtn__count', body); if (cnt) { cnt.textContent = String(total); } }
             else { section.appendChild(head(s, total, total > s.limit)); }
             var host2 = D.el('div', { class: 'dt-psec__body' });
             section.appendChild(host2);
             if (s.icons) {
-              var list = full ? r.items : r.items.slice(0, s.limit);
-              grids.push(iconTiles(list, host2));
+              if (sets.length) { host2.appendChild(D.iconSets.select(sets, function () { draw(); })); }
+              if (set) {
+                grids.push(iconSetTiles(set, full ? 0 : s.limit, host2));
+              } else {
+                var list = full ? r.items : r.items.slice(0, s.limit);
+                grids.push(iconTiles(list, host2));
+              }
             } else {
               var grid = D.el('div', { class: 'dt-tiles dt-tiles--' + (s.cols === 4 ? '4' : (s.cols === 1 ? '1' : '3')) });
               (full ? r.items : r.items.slice(0, s.limit)).forEach(function (item) { grid.appendChild(s.tile(item)); });
@@ -312,6 +517,7 @@
           body.setAttribute('data-query', state.q);
           if (!anyTiles) { body.appendChild(D.el('p', { class: 'dt-empty', text: 'Nichts gefunden. Probiere „Herz“, „Pfeil“, „Käse“ oder „QR“.' })); }
           else if (!view) { body.appendChild(D.el('p', { class: 'dt-pnote', text: 'Ein Klick setzt das Element in die Mitte der Seite, Ziehen setzt es dorthin, wo du es loslässt. Ein Bild auf einen Rahmen gezogen füllt ihn.' })); }
+        });
         });
       };
 

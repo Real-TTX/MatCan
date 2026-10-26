@@ -171,6 +171,8 @@ public static class ShareEndpoints
             fonts = d.Fonts.Select(f => new { family = f.Family, weight = f.Weight, style = f.Style, url = f.Url }),
             assets = d.Assets,
             warnings = d.Warnings,
+            // the bodies of the icons of catalogues the design uses (an anonymous viewer cannot ask /api/icons)
+            icons = (d.Icons ?? new Dictionary<string, IconView>()).ToDictionary(i => i.Key, i => new { body = i.Value.Body, width = i.Value.Width, height = i.Value.Height }),
             credits = d.Credits.Select(c => new { title = c.Title, author = c.Author, authorUrl = c.AuthorUrl, sourceUrl = c.SourceUrl, catalogName = c.CatalogName, licence = new { name = c.LicenceName, url = c.LicenceUrl }, attribution = c.Attribution }),
         };
     }

@@ -36,6 +36,24 @@ public sealed record DesignRow
 
     public DateTime UpdateDate { get; init; }
 
+    /// <summary>Plan 6, templates only: the family (the variants of one kind share it), its name, this variant's style, the occasion, the search words (comma separated), the key of the format preset and the order.</summary>
+    public string? TemplateFamily { get; init; }
+
+    public string? TemplateFamilyName { get; init; }
+
+    public string? TemplateVariant { get; init; }
+
+    public string? TemplateOccasion { get; init; }
+
+    public string? TemplateTags { get; init; }
+
+    public string? TemplateFormat { get; init; }
+
+    public int TemplateOrder { get; init; }
+
+    /// <summary>How many variants the family of a template has (1 for a template without family); filled by the gallery and the start page, not by the queries.</summary>
+    public int Variants { get; init; } = 1;
+
     public string Size => $"{Services.Fmt.Number((decimal)Width, Width % 1 == 0 ? 0 : 1)} × {Services.Fmt.Number((decimal)Height, Height % 1 == 0 ? 0 : 1)} {Unit}";
 
     public string? ThumbnailUrl => ThumbnailHash is null ? null : $"/designs/{Id}/thumbnail.png?v={ThumbnailHash[..Math.Min(12, ThumbnailHash.Length)]}";
@@ -68,7 +86,7 @@ public static class DesignLogic
     }
 
     private static IQueryable<DesignRow> Project(IQueryable<Design> designs)
-        => designs.AsNoTracking().Select(d => new DesignRow { Id = d.Id, Name = d.Name, Category = d.Category, Description = d.Description, IsTemplate = d.IsTemplate, Revision = d.Revision, Width = d.Width, Height = d.Height, Unit = d.Unit, ThumbnailHash = d.ThumbnailHash, SpaceId = d.SpaceId, FolderId = d.FolderId, UpdateDate = d.UpdateDate });
+        => designs.AsNoTracking().Select(d => new DesignRow { Id = d.Id, Name = d.Name, Category = d.Category, Description = d.Description, IsTemplate = d.IsTemplate, Revision = d.Revision, Width = d.Width, Height = d.Height, Unit = d.Unit, ThumbnailHash = d.ThumbnailHash, SpaceId = d.SpaceId, FolderId = d.FolderId, UpdateDate = d.UpdateDate, TemplateFamily = d.TemplateFamily, TemplateFamilyName = d.TemplateFamilyName, TemplateVariant = d.TemplateVariant, TemplateOccasion = d.TemplateOccasion, TemplateTags = d.TemplateTags, TemplateFormat = d.TemplateFormat, TemplateOrder = d.TemplateOrder });
 
     /// <summary>The design as a list row, or null when it does not exist or the person may not see it.</summary>
     public static async Task<DesignRow?> GetAsync(Biz biz, long id) => await Query(biz).FirstOrDefaultAsync(d => d.Id == id);
@@ -114,26 +132,10 @@ public static class DesignLogic
         => await Query(biz).Where(d => !d.IsTemplate).OrderByDescending(d => d.UpdateDate).ThenByDescending(d => d.Id).Take(take).ToListAsync();
 
     /// <summary>
-    /// A few templates of every category for the row on the start page: the first of each category, then the second of each, and so on, until <paramref name="take"/> are found,
-    /// so the row shows the variety (labels, cards, flyers, social media) and not only the category that comes first in the alphabet.
+    /// A few templates for the row on the start page: one per family (its first variant, with the number of variants), the first of each occasion, then the second of each, and so on, until
+    /// <paramref name="take"/> are found, so the row shows the variety (cards, flyers, labels, social media) and not only what comes first in the alphabet.
     /// </summary>
-    public static async Task<List<DesignRow>> FeaturedTemplatesAsync(Biz biz, int take)
-    {
-        var groups = (await TemplatesAsync(biz)).GroupBy(d => d.Category ?? "").Select(g => g.ToList()).ToList();
-        var picked = new List<DesignRow>();
-        for (var round = 0; picked.Count < take && groups.Any(g => g.Count > round); round++)
-        {
-            foreach (var group in groups.Where(g => g.Count > round))
-            {
-                if (picked.Count < take)
-                {
-                    picked.Add(group[round]);
-                }
-            }
-        }
-
-        return picked;
-    }
+    public static async Task<List<DesignRow>> FeaturedTemplatesAsync(Biz biz, int take) => await TemplateLogic.FeaturedAsync(biz, take);
 
     /// <summary>The designs that are templates, for the gallery of templates (the list builder adds search, filters and paging).</summary>
     public static IQueryable<DesignRow> TemplateQuery(Biz biz) => Project(Templates(biz));
@@ -166,7 +168,8 @@ public static class DesignLogic
         }
 
         var like = Services.Like.Contains(clean);
-        Expression<Func<DesignRow, bool>> matches = d => EF.Functions.ILike(d.Name, like, "\\") || (d.Category != null && EF.Functions.ILike(d.Category, like, "\\")) || (d.Description != null && EF.Functions.ILike(d.Description, like, "\\"));
+        Expression<Func<DesignRow, bool>> matches = d => EF.Functions.ILike(d.Name, like, "\\") || (d.Category != null && EF.Functions.ILike(d.Category, like, "\\")) || (d.Description != null && EF.Functions.ILike(d.Description, like, "\\"))
+            || (d.TemplateTags != null && EF.Functions.ILike(d.TemplateTags, like, "\\")) || (d.TemplateFamilyName != null && EF.Functions.ILike(d.TemplateFamilyName, like, "\\")) || (d.TemplateOccasion != null && EF.Functions.ILike(d.TemplateOccasion, like, "\\"));
         var designs = await Query(biz).Where(d => !d.IsTemplate).Where(matches).OrderByDescending(d => d.UpdateDate).ThenByDescending(d => d.Id).Take(take).ToListAsync();
         var templates = await TemplateQuery(biz).Where(matches).OrderBy(d => d.Category).ThenBy(d => d.Name).ThenBy(d => d.Id).Take(take).ToListAsync();
         return new SearchResult(clean, designs, templates);
@@ -256,7 +259,7 @@ public static class DesignLogic
         }
         else if (FormatPresets.Find(input.PresetKey) is { } preset)
         {
-            document = DocumentValidator.Create(preset.Width, preset.Height, preset.Unit);
+            document = FormatPresets.NewDocument(preset);
         }
         else
         {

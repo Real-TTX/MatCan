@@ -2,6 +2,13 @@
   "name": "Poster A3 – Hoffest",
   "category": "Poster",
   "description": "Plakat im Format A3 für ein Fest oder eine Veranstaltung: riesige Schrift, Datumsplakette, drei Programmpunkte mit Symbolen, Farbverlauf und ein QR-Code zum Programm.",
+  "family": "plakat-fest",
+  "familyName": "Plakat für ein Fest",
+  "variant": "Groß und bunt",
+  "occasion": "Feste & Events",
+  "tags": ["Plakat","Poster","Hoffest","Fest","Veranstaltung","Einladung","Programm","Aushang"],
+  "formatKey": "poster-a3-portrait",
+  "number": 7,
   "document": {
     "schema":2,"unit":"mm","width":297,"height":420,"dpi":300,"locale":"de-DE",
     "fields": [],
