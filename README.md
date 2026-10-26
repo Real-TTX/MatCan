@@ -19,13 +19,13 @@ DesignThix ist ein Docker-Container mit einer PostgreSQL-Datenbank. Es läuft au
 ## Was DesignThix kann
 
 - **Start mit einem Klick:** Die Startseite fragt „Was möchtest du heute gestalten?“. Ein Klick auf ein Format (Preisschild, Etikett, Regaletikett, Visitenkarte, Flyer A5, Poster A3, Karte A6, Instagram-Beitrag
-  und -Story, Präsentation oder eine eigene Größe in mm oder px) legt das leere Design an und öffnet den Designer. Darunter stehen die Vorlagen und die zuletzt bearbeiteten Designs; die Suche findet Designs und Vorlagen.
+  und -Story, Präsentation oder eine eigene Größe in mm oder px; unter **„Mehr Formate“** weitere wie Klappkarten mit Falzlinie, Postkarte, DIN lang, Tischkarte, Urkunde, Gutschein, Lesezeichen) legt das leere Design an und öffnet den Designer. Darunter stehen die Vorlagen und die zuletzt bearbeiteten Designs; die Suche findet Designs und Vorlagen.
 - **Vorlagen:** **333 fertige Entwürfe in 110 Familien**, jede in mindestens drei Varianten: Grußkarten, Hochzeit, Kindergeburtstag, Feste, Flyer und Plakate, Visitenkarten, Etiketten, Instagram, Formulare und Planer.
   Sortiert nach Anlass, mit Suche über Namen und Stichwörter, Vorschau aller Seiten und Wechsel zwischen den Varianten. „Vorlage verwenden“ macht eine Kopie; die Vorlage bleibt, wie sie ist. Siehe *Vorlagen* unten.
-- **Designer:** Eine Leiste mit Reitern (Vorlagen, Elemente, Text, Uploads, Marke, Ebenen, Daten) und eine Werkzeugleiste, die zur Auswahl passt. Mehrere Seiten je Design, Gruppen, Ebenen, Ausrichten und Einrasten
+- **Designer:** Eine Leiste mit Reitern (Vorlagen, KI, Elemente, Text, Uploads, Fotos, Marke, Ebenen, Kommentare, Daten; KI und Fotos nur, wenn eingeschaltet) und eine Werkzeugleiste, die zur Auswahl passt. Mehrere Seiten je Design, Gruppen, Ebenen, Ausrichten und Einrasten
   mit Abstandshilfen, Kontextmenü mit der rechten Maustaste, Tastenkürzel, Rückgängig, **automatisches Speichern**. Mit Maus, Stift und Finger; auf dem Handy mit Reiterleiste unten.
-- **Elemente und Symbole:** Formen und Linien, Bildrahmen (rund, Herz, Stern …), rund 1 900 Symbole (Lucide) mit deutscher Suche, Flaggen und Siegel, **QR-Codes** und Strichcodes (EAN-13, EAN-8, Code 128).
-- **Text:** Überschrift, Zwischenüberschrift, Fließtext und zehn **Schriftkombinationen**; Effekte wie Schatten, Kontur, Hintergrund und Kreisbogen; Listen, Abstände, Unterstreichen, Großbuchstaben; zwölf Schriften.
+- **Elemente und Symbole:** Formen und Linien, Bildrahmen (rund, Herz, Stern …), rund 1 900 Symbole (Lucide) mit deutscher Suche, Flaggen und Siegel, ein **Deko-Paket** mit über 300 eigenen Grafiken (Rahmen, Kränze, Blumen, Konfetti, Ballons, Trenner, Ecken, Muster), **QR-Codes** und Strichcodes (EAN-13, EAN-8, Code 128).
+- **Text:** Überschrift, Zwischenüberschrift, Fließtext und zehn **Schriftkombinationen**; Effekte wie Schatten, Kontur, Hintergrund und Kreisbogen; Listen, Abstände, Unterstreichen, Großbuchstaben; 33 mitgelieferte Schriften (darunter Schreibschriften für Hochzeiten und verspielte für Kinder).
 - **Bilder:** Zuschneiden, Spiegeln, Masken, Rand und Filter (Helligkeit, Kontrast, Sättigung, Unschärfe, Schwarzweiß); Farben mit Verlauf, Markenfarben und Pipette.
 - **Uploads per Drag & Drop und Einfügen:** Bilder und Schriften aus dem Explorer auf die Fläche ziehen oder mit Strg+V einfügen (auch Screenshots und Text); ein **Medienbrowser** zeigt alles mit Vorschau.
 - **Marke:** Markenfarben, Markenschriften und Logos einmal festlegen, im Designer überall bereit.
