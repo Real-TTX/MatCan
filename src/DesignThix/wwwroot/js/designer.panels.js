@@ -124,6 +124,7 @@
       btn.appendChild(D.el('span', { class: 'dt-rail__label', text: d.label || d.title }));
       if (d.badge) { var badge = D.el('b', { class: 'dt-rail__badge' + (d.badgeClass ? ' ' + d.badgeClass : ''), hidden: true }); btn.appendChild(badge); d._badge = badge; }
       btn.addEventListener('click', function () { toggle(id); });
+      if (d.hidden) { btn.hidden = true; }
       refs.rail.appendChild(btn);
     });
     refs.back.addEventListener('click', back);
@@ -143,7 +144,7 @@
     var wide = window.matchMedia('(min-width: 1024px)').matches;
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem(STORE) || 'null'); } catch (e) { saved = null; }
-    var startId = saved && def(saved.id) && !def(saved.id).page ? saved.id : 'elements';
+    var startId = saved && def(saved.id) && !def(saved.id).page && !def(saved.id).hidden ? saved.id : 'elements';
     state.id = startId;
     show(startId);
     setOpen(wide && (!saved || saved.open !== false));
@@ -161,6 +162,13 @@
     current: function () { return state.open ? state.id : null; },
     isOpen: function () { return state.open; },
     refresh: function () { if (state.open && state.id) { show(state.id, true); } },
+    /** Shows or hides the rail entry of a panel (the entry KI is only there when the design assistant is on for this person). */
+    setVisible: function (id, visible) {
+      var d = def(id);
+      if (!d) { return; }
+      d.hidden = !visible;
+      D.$$('.dt-rail__btn', refs.rail).forEach(function (b) { if (b.getAttribute('data-panel') === id) { b.hidden = !visible; } });
+    },
   };
 
   // ================================================================================================ shared: small engine previews for tiles

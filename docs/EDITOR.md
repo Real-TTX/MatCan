@@ -9,9 +9,9 @@ Styles: `wwwroot/css/designer.css` (+ `dt-media.css` for the media browser), Mat
 
 ```
 .dt-top      back | Datei ▾ | undo redo | save state | name (click to rename) | people (avatars, presence) | Serie | Herunterladen | Drucken | Teilen (or "Kopie erstellen" when read-only)
-.dt-rail     Vorlagen Elemente Text Uploads Marke Ebenen Kommentare Daten (Zusatz)        .dt-panel (≈ 340 px, collapsible; context pages with a back arrow)
+.dt-rail     Vorlagen KI Elemente Text Uploads Marke Ebenen Kommentare Daten (Zusatz)        .dt-panel (≈ 340 px, collapsible; context pages with a back arrow)
 .dt-ds__center  .dt-ctx (contextual toolbar) / canvas (#dt-viewport > #dt-sheet > #dt-page + #dt-overlay) / .dt-bottom (page strip, zoom)
-.dt-tabbar   phones only: Elemente Text Uploads Ebenen Mehr
+.dt-tabbar   phones only: Elemente Text Uploads Ebenen Mehr (KI-Assistent, Vorlagen, Marke, Kommentare ...)
 ```
 
 >= 1024 px everything is side by side. 768 to 1023 px the panel is an overlay drawer next to the rail (closes on a tap on the canvas, after adding something) and the toolbar scrolls
@@ -39,6 +39,7 @@ a 44 px hit area. A person with View only (`canEdit=false`) gets the same page w
 | `designer.panel-templates.js` | The panel **Vorlagen** (previews drawn by the engine, category chips, search, the dialog "Aktuelle Seite ersetzen" / "Als neue Seite hinzufügen"); `D.templates = { list(), apply(t, mode), dialog(t) }`. |
 | `designer.panel-uploads.js`, `-layers.js`, `-data.js`, `-position.js` | Uploads, Ebenen (tree), Daten (Zusatz) (+ `D.data`, the preview state), Position (context page). |
 | `designer.panel-comments.js` (+ `css/designer-comments.css`) | `D.comments` (P5): the rail entry **Kommentare** (badge = open threads), the panel (filter, "Nur diese Seite", threads with replies, composer with `@` mentions) and the **pins** on the canvas: buttons in the layer `#dt-pins` inside `#dt-sheet` (outside `#dt-page`, so never in a download, print or thumbnail). See "Comments" below. |
+| `designer.ai.js` (+ `css/designer-ai.css`, `ai-attach.js`) | `D.ai` (plan 4, A2): the rail entry **KI** (first after Vorlagen; hidden until `GET /api/ai/designs/{id}/agent` says `showEntry`), its panel, the live canvas, the lock while a run works, the pictures for `look`. See "The design assistant" below. |
 | `designer.effects.js` | The context pages **Effekte** (text: presets and the properties shadow, outline, background, curve) and **Anpassen** (image: looks and filters); both have `reselect: true`, so they follow the selection. |
 | `designer.pages.js` | The bottom bar: page strip (thumbnails drawn by the engine, drag to reorder, menu) and the zoom controls. |
 | `designer.io.js` | `D.dnd.attach` (tiles to the canvas), uploads of images and fonts, **paste** and **drop** of files. |
@@ -61,7 +62,7 @@ elements, pages or fields were added/removed/moved) or **`app.tx()`** for a gest
 groups are fixed (`D.fixGroups`). Commands: `addElement`, `addNodes`, `setProps`, `setNodeBox`, `deleteIds`, `duplicateSelection`, `copySelection`/`paste`, `copyStyle`/`pasteStyle`,
 `nudge`, `order`, `moveNode(id, parentId, index)` (layers, also into/out of groups), `group`/`ungroup`, `align`, `distribute`, `toggleLock`/`toggleHidden`, `rename`, `flip`,
 pages (`addPage`, `duplicatePage`, `deletePage`, `movePage`, `renamePage`, `setPage`, `setBackground`), fields (`addField`, `updateField`, `deleteField`, `insertPlaceholder`),
-sources (`setSource`), `computeValues`, assets (`assetUrl`, `addAssets`).
+sources (`setSource`), `computeValues`, assets (`assetUrl`, `addAssets`), and for the design assistant **`replaceDocument(doc, { undoable, before, revision })`** (replaces the document by one the server wrote: keeps the page and the selection where they still exist, emits `doc {reason: 'history'}` so the panels and the page strip redraw as after an undo; `undoable: false` = no undo step, a string (the tag `'ai'`) = ONE undo step that leads back to `before`; `revision` = the revision the save module goes on from, nothing is unsaved), **`setBusy(on)`** (`app.editable()` is false while the AI works: the same gate as the read-only editor) and `dropHistory(tag)`.
 
 **Events** (`app.on(name, fn)`): `doc {reason, render, structure}`, `selection`, `history`, `page`, `pages`, `preview`, `state`, `fonts`, `assets`, `brand`, `datalists`, `zoom`,
 `readonly`, `editing`, `warnings`, `rendered`, `dirty`, `uploaded`, `panel`, plus `contextmenu {x, y, node}`, `node:dblclick {node}` (an image: hook for the crop UI) and `format 'b'|'i'|'u'`.

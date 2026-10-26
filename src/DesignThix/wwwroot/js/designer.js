@@ -136,6 +136,7 @@
     var more = $('#dt-tabbar-more');
     more.addEventListener('click', function () {
       var items = [
+        { label: 'KI-Assistent', icon: 'sparkles', run: function () { D.panels.open('ai'); }, hidden: !(D.ai && D.ai.entryVisible()) },
         { label: 'Vorlagen', icon: 'layout-template', run: function () { D.panels.open('templates'); } },
         { label: 'Marke', icon: 'badge-check', run: function () { D.panels.open('brand'); } },
         { label: 'Kommentare' + (D.comments && D.comments.openCount() ? ' (' + D.comments.openCount() + ')' : ''), icon: 'message-square', run: function () { D.panels.open('comments'); } },
@@ -143,8 +144,8 @@
         { type: 'separator' },
         { label: 'Herunterladen …', icon: 'download', run: D.file.downloadDialog },
         { label: 'Drucken', icon: 'printer', run: D.file.print },
-        { label: 'Größe ändern …', icon: 'scaling', run: D.file.resizeDialog, disabled: app.editable() ? false : 'Du darfst dieses Design nur ansehen.' },
-        { label: 'Seite hinzufügen', icon: 'file-plus', run: D.cmd.addPage, disabled: app.editable() ? false : 'Du darfst dieses Design nur ansehen.' },
+        { label: 'Größe ändern …', icon: 'scaling', run: D.file.resizeDialog, disabled: app.editable() ? false : D.roText() },
+        { label: 'Seite hinzufügen', icon: 'file-plus', run: D.cmd.addPage, disabled: app.editable() ? false : D.roText() },
         { type: 'separator' },
         { label: 'Datei', icon: 'file-stack', submenu: D.file.menuItems() },
         { label: 'Zur Startseite', icon: 'arrow-left', run: function () { D.file.leave('/'); } },
@@ -227,6 +228,8 @@
         D.pages.init(app, { strip: $('#dt-pages'), zoom: $('#dt-zoombar'), toggle: $('#dt-pages-toggle'), root: rootEl });
         if (D.comments) { D.comments.init(app, config); }
         initResponsive();
+        // the design assistant: its rail entry appears when the server says so; a run that is going on (or ?ai=<conversation> after "Mit KI entwerfen") is followed from the start
+        if (D.ai) { D.ai.init(app, config); }
         if (restored) { app.baseRevision = restored.revision; app.markDirty(); }
         rootEl.classList.remove('is-loading');
         refs.loading.hidden = true;

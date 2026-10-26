@@ -20,6 +20,9 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
     public bool IsAdmin => biz.IsAdmin;
 
+    /// <summary>The AI design assistant is on and set up: the prompt "Mit KI entwerfen" is shown under the heading.</summary>
+    public bool AiDesign { get; private set; }
+
     /// <summary>Everybody who is signed in makes designs (in their own area), so the tiles and buttons that make one are always there.</summary>
     public bool CanEdit => true;
 
@@ -54,6 +57,7 @@ public sealed class IndexModel(Biz biz) : PageModelBase
         Head("Start", null, ("Start", null));
         ViewData["OwnHead"] = true;
         Greeting = biz.User.Name ?? "";
+        AiDesign = await AiLogic.IsAvailableAsync(biz);
         Counts = await DesignLogic.CountsAsync(biz);
         OutputCount = await OutputLogic.CountAsync(biz);
         if (!string.IsNullOrWhiteSpace(Q))

@@ -5,7 +5,7 @@
     var d = Model.Design;
     var edit = Model.CanEdit;
     // somebody who may only look gets "Kopie erstellen", which asks where the copy goes (the dialog of the file browser: its style sheet and scripts are only loaded for them)
-    ViewData["Styles"] = edit ? new[] { "/css/designer.css", "/css/designer-comments.css", "/css/dt-media.css", "/css/ai.css" } : new[] { "/css/designer.css", "/css/designer-comments.css", "/css/dt-media.css", "/css/ai.css", "/css/browser.css" };
+    ViewData["Styles"] = edit ? new[] { "/css/designer.css", "/css/designer-comments.css", "/css/designer-ai.css", "/css/dt-media.css", "/css/ai.css" } : new[] { "/css/designer.css", "/css/designer-comments.css", "/css/designer-ai.css", "/css/dt-media.css", "/css/ai.css", "/css/browser.css" };
     var back = $"/Designs/Edit/{d.Id}";
 }
 
@@ -104,6 +104,7 @@
 @section Scripts {
     <script src="~/js/dt-engine.js" asp-append-version="true"></script>
     <script src="~/js/ai.js" asp-append-version="true"></script>
+    <script src="~/js/ai-attach.js" asp-append-version="true"></script>
     <script src="~/js/dt-media.js" asp-append-version="true"></script>
     <script src="~/js/designer.core.js" asp-append-version="true"></script>
     <script src="~/js/designer.canvas.js" asp-append-version="true"></script>
@@ -123,6 +124,7 @@
     <script src="~/js/designer.panel-uploads.js" asp-append-version="true"></script>
     <script src="~/js/designer.panel-layers.js" asp-append-version="true"></script>
     <script src="~/js/designer.panel-comments.js" asp-append-version="true"></script>
+    <script src="~/js/designer.ai.js" asp-append-version="true"></script>
     <script src="~/js/designer.panel-data.js" asp-append-version="true"></script>
     <script src="~/js/designer.panel-position.js" asp-append-version="true"></script>
     <script src="~/js/designer.effects.js" asp-append-version="true"></script>

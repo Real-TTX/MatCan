@@ -2,7 +2,7 @@
 // A LOCAL FAKE OpenAI-compatible server for the browser checks (ai-check.js, ai-design-check.js, screens.js): it answers /v1/models and /v1/chat/completions with canned JSON that
 // depends on the instruction it got (the fixed part of the instruction names the task: data import, data fill, text suggestion, test, and the design assistant). Nothing leaves the machine.
 //   const { fake, startFake } = require('./fake-ai.js');
-//   await startFake(3066);          // fake.mode = 'ok' | 'unauthorized' | 'announce' | 'nostream'; fake.requests = the bodies that were sent; fake.agent.calls = what the assistant was asked
+//   await startFake(3066);          // fake.mode = 'ok' | 'unauthorized' | 'announce' | 'nostream'; fake.requests = the bodies that were sent; fake.agent.calls = what the assistant was asked (scenario, step, sawImage ...); fake.streamDelayMs / fake.restDelayMs = the pause between the pieces of a streamed answer (the words of the message / the rest of the JSON)
 //
 // THE DESIGN ASSISTANT ("agent" mode, recognised by "ANTWORTFORMAT (technisch, immer einhalten)" in the system message): the answers are deterministic and depend on the message of the person
 // (the newest user message that is not a result of tools) and on how many results of tools came back since: a scenario is a function of (the step, the results so far, the situation).
@@ -24,7 +24,7 @@
 // Every answer is streamed in small pieces (about 12 characters, 20 ms apart) when the request says "stream": true; mode 'nostream' answers such a request with a 400 so the fall back can be tested.
 const http = require('http');
 
-const fake = { mode: 'ok', requests: [], server: null, streamDelayMs: 20, agent: { calls: [] } };
+const fake = { mode: 'ok', requests: [], server: null, streamDelayMs: 20, restDelayMs: null, agent: { calls: [] } };
 
 const slot = (text, start, end) => { const a = text.indexOf(start); if (a < 0) { return ''; } const b = text.indexOf(end, a + start.length); return text.slice(a + start.length, b < 0 ? undefined : b); };
 const norm = text => String(text || '').split(String.fromCharCode(13, 10)).join(String.fromCharCode(10));
@@ -115,7 +115,7 @@ function scenarioOf(text) {
 }
 
 const DICTIONARY = { Sommerfest: 'Summer Festival', Hoffest: 'Farm Festival', Samstag: 'Saturday', Uhr: "o'clock", Eintritt: 'Admission', frei: 'free', Käse: 'Cheese', Preis: 'Price', Herzlich: 'Warm', willkommen: 'welcome', Einladung: 'Invitation', Musik: 'Music', Essen: 'Food' };
-const translate = text => String(text).split(/(s+)/).map(w => { const bare = w.replace(/[.,!?:·]/g, ''); return /^{{/.test(w) || !DICTIONARY[bare] ? w : w.replace(bare, DICTIONARY[bare]); }).join('');
+const translate = text => String(text).split(/(\s+)/).map(w => { const bare = w.replace(/[.,!?:·]/g, ''); return /^{{/.test(w) || !DICTIONARY[bare] ? w : w.replace(bare, DICTIONARY[bare]); }).join('');
 
 function agentAnswer(system, msgs) {
   // the message of the person: the newest user message that is neither the results of tools nor a push of the loop
@@ -145,8 +145,8 @@ function agentAnswer(system, msgs) {
     case 'limit-test': return { body: say('Ich lese noch einmal.', false, ['read_design']) };
     case 'weiter': return { body: say('Alles klar, ich bin fertig. Die Arbeit ist abgeschlossen.', true) };
     case 'fehler-test':
-      if (step === 0) { return { body: say('Ich setze ein Symbol.', false, ['add_elements', { elements: [{ type: 'icon', icon: 'gibt-es-nicht-xyz', x: 10, y: 10, w: 20, h: 20 }] }]) }; }
-      if (step === 1) { return { body: say('Das Symbol gibt es nicht, ich nehme einen Stern.', false, ['add_elements', { elements: [{ type: 'icon', icon: 'star', x: 10, y: 10, w: 20, h: 20, color: '#ff8800' }] }]) }; }
+      if (step === 0) { return { body: say('Ich setze ein Symbol.', false, ['add_elements', { page: 'p1', elements: [{ type: 'icon', icon: 'gibt-es-nicht-xyz', x: 10, y: 10, w: 20, h: 20 }] }]) }; }
+      if (step === 1) { return { body: say('Das Symbol gibt es nicht, ich nehme einen Stern.', false, ['add_elements', { page: 'p1', elements: [{ type: 'icon', icon: 'star', x: 10, y: 10, w: 20, h: 20, color: '#ff8800' }] }]) }; }
       return { body: say('Fertig: der Stern steht.', true) };
     case 'bereich-test': {
       const pages = read && read.result ? read.result.pages : [];
@@ -163,7 +163,7 @@ function agentAnswer(system, msgs) {
       const key = (person.text.match(/in der Bibliothek als ([a-z0-9][a-z0-9_-]*)/) || [])[1];
       if (step === 0) { return { body: say('Ich schaue mir das Design an.', false, ['read_design']) }; }
       if (step === 1 && key) {
-        return { body: say('Ich setze das angehängte Bild ein.', false, ['add_elements', { elements: [{ type: 'image', x: W * 0.1, y: H * 0.1, w: W * 0.5, h: W * 0.5, source: { asset: key }, fit: 'contain', name: 'Anhang' }] }]) };
+        return { body: say('Ich setze das angehängte Bild ein.', false, ['add_elements', { page: 'p1', elements: [{ type: 'image', x: W * 0.1, y: H * 0.1, w: W * 0.5, h: W * 0.5, source: { asset: key }, fit: 'contain', name: 'Anhang' }] }]) };
       }
       return { body: say(`Fertig. Bild gesehen: ${person.images > 0 ? 'ja' : 'nein'}.`, true) };
     }
@@ -263,9 +263,12 @@ function startFake(port) {
           const usage = { prompt_tokens: Math.ceil(msgs.reduce((n, m) => n + m.text.length, 0) / 4), completion_tokens: Math.ceil(content.length / 4) };
           if (body.stream) {
             res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' });
+            // the words of the "message" come at streamDelayMs, the rest of the JSON (the actions) at restDelayMs (null = the same): a person watching sees the text grow and the run does not take minutes
+            const messageEnd = (/^\{"message":"(?:[^"\\]|\\.)*"/.exec(content) || [''])[0].length;
             for (let i = 0; i < content.length; i += 12) {
               res.write('data: ' + JSON.stringify({ choices: [{ delta: { content: content.slice(i, i + 12) }, finish_reason: null }] }) + '\n\n');
-              if (fake.streamDelayMs) { await sleep(fake.streamDelayMs); }
+              const pause = fake.restDelayMs !== null && i >= messageEnd ? fake.restDelayMs : fake.streamDelayMs;
+              if (pause) { await sleep(pause); }
             }
             res.write('data: ' + JSON.stringify({ choices: [{ delta: {}, finish_reason: 'stop' }] }) + '\n\n');
             res.write('data: ' + JSON.stringify({ choices: [], usage }) + '\n\n');

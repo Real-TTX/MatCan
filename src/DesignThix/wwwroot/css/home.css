@@ -99,3 +99,56 @@ a.dt-fact:hover { color: var(--mat-accent-text); text-decoration: none; }
 
 /* ---- "Speichern in" of the dialog (a person who belongs to teams) ---- */
 .dt-create__where { max-width: 24rem; margin: 0; }
+
+/* ---- the chips of files chosen for a message to the design assistant (js/ai-attach.js: the editor panel, the start page, the create dialog) ---- */
+.dt-agfiles { display: flex; flex-wrap: wrap; gap: 4px; }
+.dt-agfiles[hidden] { display: none; }
+.dt-agfile { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 2px 4px 2px 6px; border: 1px solid var(--mat-border-strong); border-radius: var(--mat-radius-pill); background: var(--mat-surface-2); color: var(--mat-text); font-size: var(--mat-fs-xs); font-weight: 600; }
+.dt-agfile .mat-icon { width: 0.95rem; height: 0.95rem; flex: none; color: var(--mat-text-muted); }
+.dt-agfile.is-ref { border-color: var(--mat-accent); background: var(--mat-accent-soft); }
+.dt-agfile.is-ref .mat-icon { color: var(--mat-accent-text); }
+.dt-agfile__thumb { width: 1.35rem; height: 1.35rem; flex: none; border-radius: 4px; object-fit: cover; background: var(--mat-surface-3); }
+.dt-agfile__name { min-width: 0; max-width: 11rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-agfile__x { display: grid; place-items: center; width: 1.3rem; height: 1.3rem; flex: none; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--mat-text-muted); cursor: pointer; }
+.dt-agfile__x:hover { background: var(--mat-surface-3); color: var(--mat-text); }
+.dt-agfile__x:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-agfile__x .mat-icon { width: 0.8rem; height: 0.8rem; }
+
+/* ---- "Mit KI entwerfen": the prompt card of the start page and of the dialog "Design erstellen" (js/create-ai.js, docs/PLAN-AI-DESIGN.md section 1 item 5) ---- */
+.dt-aip { display: grid; gap: var(--mat-space-3); max-width: 44rem; min-width: 0; }
+.dt-aip__card { display: grid; gap: var(--mat-space-2); padding: var(--mat-space-3) var(--mat-space-4) var(--mat-space-3); border: 1px solid var(--mat-border-strong); border-radius: var(--mat-radius-xl); background: var(--mat-surface); transition: border-color var(--mat-dur) var(--mat-ease), box-shadow var(--mat-dur) var(--mat-ease); }
+.dt-aip__card:focus-within { border-color: var(--mat-accent); box-shadow: var(--mat-focus-ring); }
+.dt-aip__card.is-drop { border-color: var(--mat-accent); border-style: dashed; background: var(--mat-accent-soft); }
+.dt-aip__head { display: flex; align-items: center; gap: 8px; font-size: var(--mat-fs-sm); font-weight: 650; color: var(--mat-accent-text); }
+.dt-aip__head .mat-icon { width: 1.1rem; height: 1.1rem; }
+.dt-aip__text.mat-input { display: block; width: 100%; min-height: 3.6rem; max-height: 12rem; padding: 0; border-color: transparent; background: transparent; box-shadow: none; resize: none; font-size: var(--mat-fs-lg); line-height: 1.4; box-sizing: border-box; }
+.dt-aip__text.mat-input:focus { border-color: transparent; box-shadow: none; }
+.dt-aip__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mat-space-2); }
+.dt-aip__row .mat-btn .mat-icon { width: 1rem; height: 1rem; }
+.dt-aip__format { flex: 0 1 14rem; min-width: 0; width: auto; }
+.dt-aip__custom { display: inline-flex; align-items: center; gap: 6px; }
+.dt-aip__custom[hidden] { display: none; }
+.dt-aip__custom .mat-input { width: 5rem; }
+.dt-aip__custom .mat-select { width: 5.5rem; }
+.dt-aip__spacer { flex: 1 1 auto; }
+.dt-aip__submit { min-width: 8rem; }
+.dt-aip__submit[aria-busy="true"] { opacity: .7; pointer-events: none; }
+.dt-aip__error { margin: 0; padding: 8px 10px; border-radius: var(--mat-radius); background: var(--mat-danger-bg); color: var(--mat-danger-text); font-size: var(--mat-fs-sm); }
+.dt-aip__error[hidden] { display: none; }
+.dt-aip__examples { display: flex; flex-wrap: wrap; gap: var(--mat-space-2); }
+.dt-aip__example { padding: 5px 12px; border: 1px solid var(--mat-border); border-radius: var(--mat-radius-pill); background: var(--mat-surface); color: var(--mat-text-muted); font: inherit; font-size: var(--mat-fs-sm); cursor: pointer; }
+.dt-aip__example:hover { border-color: var(--mat-accent); color: var(--mat-accent-text); background: var(--mat-accent-soft); }
+.dt-aip__example:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-aip__file { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.dt-aip--hero .dt-aip__text.mat-input { font-size: var(--mat-fs-xl); min-height: 4.2rem; }
+.dt-aip--dialog .dt-aip__card { border-radius: var(--mat-radius-lg); }
+.dt-create__ai { display: grid; gap: var(--mat-space-3); margin-bottom: var(--mat-space-5); padding-bottom: var(--mat-space-5); border-bottom: 1px solid var(--mat-border); }
+.dt-create__ai-title { margin: 0; font-size: var(--mat-fs-md); font-weight: 650; }
+.dt-create__or { margin: 0 0 var(--mat-space-3); font-size: var(--mat-fs-sm); font-weight: 650; color: var(--mat-text-muted); }
+@media (max-width: 719px) {
+  .dt-aip--hero .dt-aip__text.mat-input { font-size: var(--mat-fs-lg); }
+  .dt-aip__format { flex: 1 1 10rem; }
+  .dt-aip__submit { margin-left: auto; }
+  .dt-aip__spacer { display: none; }
+}
+.dt-aip[hidden] { display: none; }

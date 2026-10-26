@@ -6,7 +6,6 @@
 
   var D = window.DtDesigner;
   var M = D.modKey;
-  var READONLY = 'Du darfst dieses Design nur ansehen.';
   var cmd = D.cmd = {};
 
   function app() { return D.app; }
@@ -148,7 +147,7 @@
     var locked = sel.length > 0 && sel.every(function (e) { return e.locked; });
     var anyUnlocked = selectedEditable().length > 0;
     var single = a.single();
-    var dis = function (reason, cond) { return ro ? READONLY : (cond ? reason : false); };
+    var dis = function (reason, cond) { return ro ? D.roText() : (cond ? reason : false); };
     var items = [
       { label: 'Kopieren', icon: 'copy', shortcut: shortcut(M + '+C'), run: cmd.copy },
       { label: 'Ausschneiden', icon: 'scissors', shortcut: shortcut(M + '+X'), run: cmd.cut, disabled: dis('Gesperrte Elemente lassen sich nicht ausschneiden.', !anyUnlocked) },
@@ -236,7 +235,7 @@
     var a = app();
     var ro = !a.editable();
     var hasBg = !!a.page().background.asset;
-    var dis = function (reason, cond) { return ro ? READONLY : (cond ? reason : false); };
+    var dis = function (reason, cond) { return ro ? D.roText() : (cond ? reason : false); };
     return [
       { label: 'Einfügen', icon: 'clipboard-paste', shortcut: M + '+V', run: cmd.paste, disabled: dis('', false) },
       { label: 'Alles auswählen', icon: 'mouse-pointer-2', shortcut: M + '+A', run: function () { a.selectAll(); }, disabled: a.elements().length ? false : 'Auf dieser Seite ist noch nichts.' },
@@ -256,7 +255,7 @@
     var a = app();
     var ro = !a.editable();
     var n = a.doc.pages.length;
-    var dis = function (reason, cond) { return ro ? READONLY : (cond ? reason : false); };
+    var dis = function (reason, cond) { return ro ? D.roText() : (cond ? reason : false); };
     return [
       { label: 'Seite duplizieren', icon: 'copy-plus', run: function () { cmd.duplicatePage(index); }, disabled: dis('', false) },
       { label: 'Seite umbenennen …', icon: 'pencil', run: function () { D.pages.renameDialog(index); }, disabled: dis('', false) },

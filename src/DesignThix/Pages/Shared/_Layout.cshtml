@@ -169,6 +169,11 @@
     <script src="~/ui/matui.js?v=@Sprite.Hash"></script>
     <script src="~/js/app.js" asp-append-version="true"></script>
     <script src="~/js/create.js" asp-append-version="true"></script>
+    @if (shell.AiDesign)
+    {
+        <script src="~/js/ai-attach.js" asp-append-version="true"></script>
+        <script src="~/js/create-ai.js" asp-append-version="true"></script>
+    }
     <script src="~/js/share.js" asp-append-version="true"></script>
     <script src="~/js/notify.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

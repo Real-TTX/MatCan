@@ -370,7 +370,7 @@
 
   function fileMenuItems() {
     var ro = !app.editable();
-    var RO = 'Du darfst dieses Design nur ansehen.';
+    var RO = D.roText();
     return [
       { label: 'Neues Design …', icon: 'file-plus', run: newDesignDialog, disabled: ro ? RO : false },
       // somebody who may only look makes their own copy in an area they choose (the dialog of designer.share.js); an editor copies the design next to the original

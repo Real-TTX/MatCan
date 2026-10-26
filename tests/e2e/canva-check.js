@@ -75,7 +75,7 @@ async function fresh(page, body) {
 
   current = 'layout: ';
   const railLabels = await page.$$eval('.dt-rail__btn', b => b.map(x => x.textContent.trim()));
-  check('the rail has Vorlagen, Elemente, Text, Uploads, Marke, Ebenen, Kommentare and Daten (Zusatz)', railLabels.join('|') === 'Vorlagen|Elemente|Text|Uploads|Marke|Ebenen|Kommentare|Daten (Zusatz)', railLabels.join('|'));
+  check('the rail has Vorlagen, Elemente, Text, Uploads, Marke, Ebenen, Kommentare and Daten (Zusatz)', railLabels.filter(l => l !== 'KI').join('|') === 'Vorlagen|Elemente|Text|Uploads|Marke|Ebenen|Kommentare|Daten (Zusatz)', railLabels.join('|'));
   const titles = { templates: 'Vorlagen', elements: 'Elemente', text: 'Text', uploads: 'Uploads', brand: 'Marke', layers: 'Ebenen', data: 'Daten (Zusatz)' };
   for (const id of Object.keys(titles)) {
     await openPanel(page, id);

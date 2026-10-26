@@ -581,7 +581,7 @@
 
   builders.page = function (c) {
     var out = [];
-    if (c.ro) { out.push(D.el('span', { class: 'dt-tb__note', text: 'Du darfst dieses Design nur ansehen.' })); return out; }
+    if (c.ro) { out.push(D.el('span', { class: 'dt-tb__note', text: D.roText() })); return out; }
     pageBgButton = c.colourButton({ icon: 'palette', text: 'Hintergrund', label: 'Hintergrundfarbe', allowGradient: true, get: function () { var bg = app.page().background; return bg.gradient || bg.color; }, apply: function (v, final) {
       if (typeof v === 'string') { app.setBackground({ color: v, gradient: null }, { merge: final ? false : 'bgcolor' }); }
       else if (v && typeof v === 'object') { app.setBackground({ gradient: v }, { merge: final ? false : 'bggradient' }); }

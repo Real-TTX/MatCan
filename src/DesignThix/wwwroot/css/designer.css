@@ -45,6 +45,7 @@ html.dt-designer-page, .dt-designer-body { height: 100%; margin: 0; overflow: hi
 /* ---- Rail ---- */
 .dt-rail { flex: none; width: var(--dt-rail-w); display: flex; flex-direction: column; align-items: stretch; gap: 2px; padding: var(--mat-space-2) 0; background: var(--mat-surface); border-right: 1px solid var(--mat-border); overflow-y: auto; z-index: 12; }
 .dt-rail__btn { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 62px; margin: 0 var(--mat-space-1); padding: var(--mat-space-2) 2px; border: 0; border-radius: var(--mat-radius); background: transparent; color: var(--mat-text-muted); font-size: 11px; font-weight: 600; line-height: 1.15; text-align: center; cursor: pointer; }
+.dt-rail__btn[hidden] { display: none; }
 .dt-rail__btn .mat-icon { width: 1.4rem; height: 1.4rem; }
 .dt-rail__label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .dt-rail__btn:hover { color: var(--mat-text); background: var(--mat-surface-3); }

@@ -11,6 +11,10 @@
 <header class="dt-start__hero">
     <p class="dt-start__hello">Guten Tag, @Model.Greeting.</p>
     <h1 class="dt-start__title">Was möchtest du heute gestalten?</h1>
+    @if (Model.AiDesign)
+    {
+        <partial name="_AiPrompt" model='("start-ai", "hero")' />
+    }
     <form class="dt-start__search" method="get" action="/" role="search">
         <div class="mat-input-icon">
             @Ui.Icon("search")

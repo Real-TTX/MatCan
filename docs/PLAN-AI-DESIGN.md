@@ -11,7 +11,7 @@ while it is written, and the model can look at the page it drew.
 
 ## Status
 
-A1 (server) is built, see "A1 status" at the end. A2 (editor and create flow) and A3 (final pass) are open.
+A1 (server) and A2 (editor and create flow) are built, see "A1 status" and "A2 status" at the end. A3 (final pass) is open.
 
 ---
 
@@ -217,3 +217,15 @@ Built as planned: entities + migration `AiDesign`, `AiAgentRunner`, the loop, `A
 - **`look`**: only when the editor polled within 12 s (`AiRenderBroker.Touch`), else the tool answers that no editor is connected. The picture rides on the next call only.
 - **IconSearch**: `Logic/IconSearch.cs` reads `lib/icons.json` and the word list out of `designer.icons-de.js`; the fixture `tests/DesignThix.Tests/Fixtures/icon-search.json` (92 queries) is made by `tools/icon-search-fixture.js` and the test re-runs node when it is installed.
 - **Fake model**: `AiTestSeam.Script/Respond` for tests; `tests/e2e/fake-ai.js` "agent" mode for browser checks (scenarios in its header and in `tests/e2e/README.md`).
+
+## A2 status (editor and create flow built; where the result differs from the plan)
+
+Built as planned: the panel KI with the log, the compose box (Anhängen by button, drop and paste, Referenz, scope with "Nur hier ändern", Stopp, Senden), examples, Neu and Verlauf; the live canvas (read-only while a run works, the bar, the document shown after every changing action, flashes, the page of the action), ONE undo step per run, answers to `look`, the tab title, the polling and the follow after a reload or `?ai=`, the phone sheet; "Mit KI entwerfen" on the start page and in the dialog `Design erstellen`; `tests/e2e/ai-design-check.js`. Details are in `docs/EDITOR.md` ("The design assistant") and CLAUDE.md ("KI-Design (plan 4)", "The editor part (A2)"). Deviations and decisions where the plan was silent:
+
+- **The lock is the read-only gate**: `app.setBusy(true)` makes `app.editable()` false (the panels and the toolbar rebuild as for a person with View only; the texts say "Die KI arbeitet gerade an diesem Design." through `D.roText()`), not a second mechanism. Selection, zoom, pages, downloads and the comments keep working.
+- **Undo**: `app.replaceDocument(doc, { undoable: 'ai', before })` gets the document BEFORE the run as `before` (the live pictures during the run are not undo steps, so the current document at the end is not the one to go back to); `app.dropHistory('ai')` removes that step after the server's "Rückgängig". After the editor's own Strg+Z the panel still offers "Rückgängig" (it then asks the second question, the design having changed since).
+- **The scope** "Auswahl" disappears (back to "Ganzes Design") when the selection is emptied; with "Diese Seite" or "Auswahl" the message shows a chip "Diese Seite · nur hier".
+- **Words one by one**: the poll delivers pieces, the browser types them out word by word (about 25 words a second, faster with a backlog); the fake model of the checks therefore has `restDelayMs`.
+- **Create flow**: one partial (`_AiPrompt`) for the start page ("hero", under the heading, above the search) and the dialog (above the tiles, "Oder wähle selbst ein Format"); format as a select ("Automatisch", the eleven tiles, "Eigene Größe …"), no references there (they are chosen in the editor); shown only when the AI is on AND set up (`AiLogic.IsAvailableAsync`, one more query per page for the shell).
+- **Shared script** `ai-attach.js` (chosen files, the 1600 px JPEG copy, chips) is used by the editor and by `create-ai.js`.
+- **For A3**: the refused action card shows the tool's own sentence under its short headline; `rename_design` is picked up by the editor (name field, tab title); the design made by "Automatisch" is named after its first format ("Unbenannt – A4 Hochformat") even when the AI then resizes it; the fake model's scenarios that write elements need a `page` for designs with several pages.

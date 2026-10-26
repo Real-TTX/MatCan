@@ -562,4 +562,36 @@ public sealed class AiAgentEndpointTests(AppTests.AppFactory factory) : AiAgentT
             await As(Role.Admin, biz => AiProfileLogic.DeleteAsync(biz, id));
         }
     }
+
+    [Fact]
+    public async Task The_start_page_and_the_dialog_offer_the_prompt_only_when_the_AI_is_on_and_set_up()
+    {
+        if (!Enabled)
+        {
+            return;
+        }
+
+        await using var admins = await RealAdminsAsync();
+        await ResetAsync();
+        var client = await SignInAsync(await UserAsync(Role.Designer));
+
+        // no handler and no profile: no prompt on the start page, none in the dialog, no script for it
+        var without = await client.GetStringAsync("/");
+        Assert.DoesNotContain("data-ai-create", without);
+        Assert.DoesNotContain("create-ai.js", without);
+
+        Seam.Script(AiScripted.Say("Fertig.", true));
+        var with = await client.GetStringAsync("/");
+        Assert.Equal(2, Regex.Matches(with, "data-ai-create").Count);   // the card under the heading and the one in the dialog "Design erstellen"
+        Assert.Contains("dt-aip--hero", with);
+        Assert.Contains("dt-aip--dialog", with);
+        Assert.Contains("create-ai.js", with);
+        Assert.Contains("ai-attach.js", with);
+        Assert.Contains("id=\"dt-create-ai-text\"", with);
+        Assert.Contains("id=\"start-ai-text\"", with);
+
+        // every other page carries the one of the dialog only
+        var projects = await client.GetStringAsync("/Projekte");
+        Assert.Single(Regex.Matches(projects, "data-ai-create"));
+    }
 }

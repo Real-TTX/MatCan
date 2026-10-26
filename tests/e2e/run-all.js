@@ -1,8 +1,8 @@
 'use strict';
 // Runs the browser checks one after the other against a running stack and reports one line per check. The exit code is 0 only when all of them passed.
 //
-//   node run-all.js [base url, default http://localhost:3043] [--only engine,pwa,demo,home,projects,templates,designer,canva,content,output,share,comments,teams,ai] [--quiet] [--fake-host h] [--fake-port p]
-//   (--fake-host / --fake-port go to the AI check: with the app started by dotnet run on 3053 the default 127.0.0.1 is right, with Docker host.docker.internal is chosen for port 3043)
+//   node run-all.js [base url, default http://localhost:3043] [--only engine,pwa,demo,home,projects,templates,designer,canva,content,output,share,comments,teams,ai,aidesign] [--quiet] [--fake-host h] [--fake-port p]
+//   (--fake-host / --fake-port go to the AI checks: with the app started by dotnet run on 3053 the default 127.0.0.1 is right, with Docker host.docker.internal is chosen for port 3043)
 //
 // The checks make their own accounts (see lib.js): start from an empty database (./scripts/redeploy.ps1 -Clean) or put the accounts into tests/e2e/test-account.json.
 // They leave test designs, lists and jobs behind: for the screenshots of the README use screens.js on a clean stack, not after this.
@@ -32,6 +32,7 @@ const checks = [
   { name: 'comments', file: 'comments-check.js', takesBase: true, what: 'comments in the editor: panel, pins, replies, resolve, mentions and notifications, read-only editor, deep link, phone' },
   { name: 'teams', file: 'teams-check.js', takesBase: true, what: 'teams, invitations, registration, administration, the bell and the notifications, mail settings, the phone' },
   { name: 'ai', file: 'ai-check.js', takesBase: true, extra: [...passOn('--fake-host'), ...passOn('--fake-port')], what: 'AI actions against a fake provider' },
+  { name: 'aidesign', file: 'ai-design-check.js', takesBase: true, extra: [...passOn('--fake-host'), ...passOn('--fake-port')], what: 'the design assistant in the editor: create from a prompt, live canvas, steps, Stopp, undo, attachments, references, roles, phone' },
 ];
 
 const summary = [];

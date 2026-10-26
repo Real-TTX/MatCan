@@ -22,7 +22,7 @@
       var toPage = { value: single || els.length < 2 };
       var refreshers = [];
 
-      if (ro) { host.appendChild(D.el('p', { class: 'dt-pnote', text: 'Du darfst dieses Design nur ansehen.' })); }
+      if (ro) { host.appendChild(D.el('p', { class: 'dt-pnote', text: D.roText() })); }
       else if (allLocked) { host.appendChild(D.el('p', { class: 'dt-pnote', text: 'Das Element ist gesperrt. Entsperre es, um es zu verschieben.' })); }
 
       // ---- order

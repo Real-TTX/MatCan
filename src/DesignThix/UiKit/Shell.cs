@@ -33,6 +33,9 @@ public sealed class ShellModel
     /// <summary>Whether the person may start designs (designers and administrators): the menu offers "Design erstellen" and every page carries the dialog of it.</summary>
     public bool CanCreate { get; init; }
 
+    /// <summary>Whether the AI design assistant is on and set up for this person: the start page and the dialog "Design erstellen" offer "Mit KI entwerfen" only then.</summary>
+    public bool AiDesign { get; init; }
+
     /// <summary>The areas the person is a member of: their personal area first, then their teams (the menu lists the teams; the dialog "Design erstellen" offers the ones they may write in).</summary>
     public IReadOnlyList<SpaceRow> Spaces { get; init; } = [];
 
@@ -74,6 +77,7 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
             UserLine = principal?.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "",
             UserMenu = UserMenu(user.UserId is not null && (user.IsAdmin || biz.Platform.MembersMayInvite)),
             CanCreate = user.UserId is not null,
+            AiDesign = user.UserId is not null && await AiLogic.IsAvailableAsync(biz),
             Version = $"DesignThix {AppVersion.Current}",
             Theme = theme,
         };

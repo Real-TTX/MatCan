@@ -103,6 +103,9 @@
     return svg;
   };
 
+  /** Why the editor does not change: the person may only look, or the AI is working on the design right now. */
+  D.roText = function () { return D.app && D.app.busy ? 'Die KI arbeitet gerade an diesem Design.' : 'Du darfst dieses Design nur ansehen.'; };
+
   D.toast = function (message, tone) {
     if (global.MatUi && global.MatUi.toast) { global.MatUi.toast(message, { tone: tone || undefined }); }
   };
@@ -613,7 +616,17 @@
     app.selected = function () { return app.sel.map(function (id) { return app.locate(id, false); }).filter(Boolean).map(function (r) { return r.el; }); };
     app.isSelected = function (id) { return app.sel.indexOf(id) >= 0; };
     app.single = function () { return app.sel.length === 1 ? app.element(app.sel[0]) : null; };
-    app.editable = function () { return app.canEdit && !app.readOnly; };
+    /** Editable = may edit AND the AI is not working on the design right now (app.setBusy, designer.ai.js): while it works everything reads, nothing changes. */
+    app.editable = function () { return app.canEdit && !app.readOnly && !app.busy; };
+    app.busy = false;
+    /** The AI assistant works on the design: the editor is read-only (selection, zoom, pages and downloads still work). */
+    app.setBusy = function (on) {
+      on = !!on;
+      if (app.busy === on) { return; }
+      app.busy = on;
+      app.emit('readonly');
+      app.emit('history');
+    };
     app.unit = function () { return app.doc ? app.doc.unit : 'mm'; };
     /** CSS px per document unit at the current zoom. */
     app.scale = function () { return D.pxPerUnit(app.unit()) * app.zoom; };
@@ -709,6 +722,58 @@
         },
         started: function () { return started; },
       };
+    };
+
+    /**
+     * Replaces the document by one that came from the server (the AI assistant wrote it: designer.ai.js), keeping the page and the selection where they still exist.
+     * options.undoable: false = no undo step (the live pictures while a run goes on); a string (the tag, 'ai') = ONE undo step that leads back to options.before (a document or its JSON; default: the
+     * document as it is now), so the whole run is one Strg+Z; options.revision = the revision the server holds for this document (the save module goes on from it, nothing is unsaved).
+     * Emits doc {reason: 'history'} (the panels and the page strip redraw as after an undo), pages, page, selection and history. Resolves nothing; returns true when the document changed.
+     */
+    app.replaceDocument = function (doc, options) {
+      var o = options || {};
+      var next = global.DtEngine.normalize(doc);
+      var changed = JSON.stringify(next) !== JSON.stringify(app.doc);
+      if (typeof o.undoable === 'string' && o.before) {
+        var before = typeof o.before === 'string' ? o.before : JSON.stringify(o.before);
+        if (before !== JSON.stringify(next)) {
+          app.undoStack.push({ json: before, sel: [], page: app.pageIndex, tag: o.undoable });
+          if (app.undoStack.length > MAX_HISTORY) { app.undoStack.shift(); }
+          app.redoStack = [];
+          app.emit('history');
+        }
+      } else if (changed && (o.undoable === true || typeof o.undoable === 'string')) {
+        pushHistory();
+        if (typeof o.undoable === 'string') { app.undoStack[app.undoStack.length - 1].tag = o.undoable; }
+      }
+      if (o.revision) { app.revision = o.revision; app.baseRevision = o.revision; }
+      if (!changed) { return false; }
+      var pageId = app.doc && app.page() ? app.page().id : null;
+      var pageIds = app.doc ? app.doc.pages.map(function (p) { return p.id + '|' + (p.name || ''); }).join(',') : '';
+      app.doc = next;
+      var found = pageId ? app.doc.pages.findIndex(function (p) { return p.id === pageId; }) : -1;
+      var index = found >= 0 ? found : D.clamp(app.pageIndex, 0, app.doc.pages.length - 1);
+      var pageMoved = index !== app.pageIndex;
+      app.pageIndex = index;
+      var selection = app.sel.filter(function (id) { return app.has(id); });
+      var selectionChanged = !D.same(selection, app.sel);
+      app.sel = selection;
+      app.lastMerge = null;
+      if (o.revision) { app.dirty = false; app.setSaveState('saved'); }
+      app.emit('doc', { reason: 'history', render: 'now', structure: true });
+      if (next.pages.map(function (p) { return p.id + '|' + (p.name || ''); }).join(',') !== pageIds) { app.emit('pages'); }
+      if (pageMoved) { app.emit('page'); }
+      if (selectionChanged) { app.emit('selection'); }
+      app.emit('history');
+      return true;
+    };
+
+    /** Drops the undo and redo steps that carry a tag (the server took the AI's run back: its editor step would lead nowhere). */
+    app.dropHistory = function (tag) {
+      var n = app.undoStack.length + app.redoStack.length;
+      app.undoStack = app.undoStack.filter(function (s) { return s.tag !== tag; });
+      app.redoStack = app.redoStack.filter(function (s) { return s.tag !== tag; });
+      if (n !== app.undoStack.length + app.redoStack.length) { app.emit('history'); }
     };
 
     app.setDocument = function (doc, options) {

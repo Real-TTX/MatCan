@@ -205,7 +205,7 @@
    * frame or strip slot under the point); fonts are uploaded and applied to the selected text. Resolves when everything is done.
    */
   function insertFiles(files, point) {
-    if (!app.editable()) { D.toast('Du darfst dieses Design nur ansehen.', 'warning'); return Promise.resolve(); }
+    if (!app.editable()) { D.toast(D.roText(), 'warning'); return Promise.resolve(); }
     var kinds = classify(files);
     kinds.other.slice(0, 3).forEach(function (f) { D.toast('„' + (f.name || 'Datei') + '“: Dieser Dateityp wird nicht unterstützt (Bilder und Schriften gehen).', 'warning'); });
     var chain = Promise.resolve();
