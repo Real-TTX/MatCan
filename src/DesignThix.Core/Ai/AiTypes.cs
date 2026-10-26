@@ -39,6 +39,12 @@ public sealed class AiRequest
     public int? MaxTokens { get; set; }
 
     public bool Json { get; set; }
+
+    /// <summary>
+    /// Asks for the answer as a stream: called with every piece of text as the provider writes it (from whatever thread reads the stream). A provider that cannot stream is asked again
+    /// without it (the callback then never fires and the whole answer arrives at once); the caller must not rely on it being called. The returned <see cref="AiResponse"/> is complete either way.
+    /// </summary>
+    public Action<string>? OnDelta { get; set; }
 }
 
 /// <summary>The answer. <c>Ok=false</c> carries a reason a person can read; an empty answer is never <c>Ok</c>.</summary>

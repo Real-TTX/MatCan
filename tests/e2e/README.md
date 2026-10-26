@@ -46,3 +46,10 @@ Notes
 - **Console errors and CSP violations** (a `securitypolicyviolation` listener is installed in every page) are part of each result.
 - **Screenshots** of the checks go to the temp folder, never to `docs/images` (only `screens.js` writes there).
 - `lib.js` has the helpers all checks share (browser, sign-in, accounts, console watcher).
+
+## The fake model (`fake-ai.js`)
+
+`const { fake, startFake } = require('./fake-ai.js'); await startFake(3066);` starts an OpenAI-compatible server (`/v1/models`, `/v1/chat/completions`). It answers the one-shot AI actions (Test, import, fill, text suggestions) and, since plan 4, the **design assistant** ("agent" mode, recognised by "ANTWORTFORMAT (technisch, immer einhalten)" in the system message).
+`fake.mode` = `'ok' | 'unauthorized' | 'announce' | 'nostream'` (`nostream` answers `stream: true` with a 400, so the fall back to a plain call is tested); `fake.requests` = the bodies; `fake.agent.calls` = what the assistant was asked (message of the person, step, number of pictures); `fake.streamDelayMs` (20) is the pause between the pieces of a streamed answer.
+The agent answers are deterministic and depend on the newest message of the person and the results of the tools that came back; a scenario is chosen by words in the message: `stopp-test` (answers after 30 s: test "Stopp"), `frage-test` (ends with a question: the run waits), `format-test` (never speaks the protocol: "Angehalten"), `limit-test` (never done: "Limit erreicht"), `fehler-test` (a failing tool, then the repair), `bereich-test` (a write outside the scope fails, then a write inside), `anhang-test`, `referenz-test`, `uebersetze`, `serie`, `varianten`, `weiter`, and everything else = "plakat" (seven steps: read, background and title, subtitle and icon, details and QR, a change of the title, `look`, done; the canvas changes step by step). With a design that has no format yet it chooses the poster A3 first.
+The check scripts for the assistant raise the address limit in `/Admin/Ai` first (a run makes one call per step).

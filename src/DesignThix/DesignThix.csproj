@@ -18,6 +18,9 @@
     <PackageReference Include="QRCoder" Version="1.*" />
     <!-- SMTP for the mails of the platform (invitations, shares, requests, mentions): Services/Mail -->
     <PackageReference Include="MailKit" Version="4.*" />
+    <!-- The text of attachments of the AI chat (Logic/AiAttachmentLogic): PDF pages (PdfPig, Apache-2.0, the maintained successor of UglyToad.PdfPig) and Word / Excel files (Open XML SDK, MIT) -->
+    <PackageReference Include="PdfPig" Version="0.1.*" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.*" />
   </ItemGroup>
 
   <ItemGroup>

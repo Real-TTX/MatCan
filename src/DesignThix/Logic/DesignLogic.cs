@@ -42,7 +42,7 @@ public sealed record DesignRow
 }
 
 /// <summary>An earlier state of a design (history tab).</summary>
-public sealed record DesignRevisionRow(int Revision, DateTime Date, string? UserName);
+public sealed record DesignRevisionRow(int Revision, DateTime Date, string? UserName, string? Note = null);
 
 /// <summary>The outcome of a save of the document: the new revision and the normalised document.</summary>
 public sealed record DesignSaved(int Revision, string DocumentJson, IReadOnlyList<string> Warnings);
@@ -594,8 +594,12 @@ public static class DesignLogic
     /// Saves a document: validated and normalised by the Core, the revision bumped, the state written to the history (the newest 30 stay). Needs Edit. An image key that the document did not
     /// use before must be one the person may use (<see cref="AssetRefs.RequireUsableAsync"/>); the keys of the document are stored with the design.
     /// A stale revision throws <see cref="RevisionConflictException"/>; an invalid document a <see cref="BizException"/>.
+    /// <para>
+    /// <paramref name="note"/> marks the history entry with what made it ("KI: Plakat"; an autosave never joins an entry with a note). <paramref name="joinRevision"/> is for a series of writes that belong
+    /// together (one run of the AI assistant): when the revision before this save is that one, the entry of that write is brought up to date instead of a new one being made.
+    /// </para>
     /// </summary>
-    public static async Task<DesignSaved> SaveDocumentAsync(Biz biz, long id, int revision, string? documentJson, bool autosave = false)
+    public static async Task<DesignSaved> SaveDocumentAsync(Biz biz, long id, int revision, string? documentJson, bool autosave = false, string? note = null, int? joinRevision = null)
     {
         await Access.RequireAsync(biz, ItemKind.Design, id, AccessLevel.Edit);
         var result = DocumentValidator.Validate(documentJson);
@@ -623,15 +627,16 @@ public static class DesignLogic
         await AssetRefs.SyncAsync(biz.Db, ItemKind.Design, id, keys);
         // The editor saves by itself after every pause: such saves of one person in a short time refresh the newest entry of the history instead of filling it (30 entries are
         // only a few minutes of work otherwise). A save the person asked for (Ctrl+S, restore, resize, no autosave flag) is always a new entry.
-        var newest = autosave ? await biz.Db.DesignRevision.FirstOrDefaultAsync(r => r.DesignId == id && r.Revision == design.Revision - 1) : null;
-        if (newest is not null && newest.CreateUserId == biz.UserId && biz.Now - newest.CreateDate < AutosaveWindow)
+        var joins = joinRevision is { } join && join == design.Revision - 1;
+        var newest = autosave || joins ? await biz.Db.DesignRevision.FirstOrDefaultAsync(r => r.DesignId == id && r.Revision == design.Revision - 1) : null;
+        if (newest is not null && ((joins && newest.Note == note) || (autosave && note is null && newest.Note is null && newest.CreateUserId == biz.UserId && biz.Now - newest.CreateDate < AutosaveWindow)))
         {
             newest.Revision = design.Revision;
             newest.DocumentJson = result.Json;
         }
         else
         {
-            biz.Db.DesignRevision.Add(new DesignRevision { DesignId = id, Revision = design.Revision, DocumentJson = result.Json });
+            biz.Db.DesignRevision.Add(new DesignRevision { DesignId = id, Revision = design.Revision, DocumentJson = result.Json, Note = note });
         }
 
         try
@@ -664,7 +669,7 @@ public static class DesignLogic
                       join u in biz.Db.User.AsNoTracking() on r.CreateUserId equals u.Id into users
                       from u in users.DefaultIfEmpty()
                       orderby r.Revision descending
-                      select new DesignRevisionRow(r.Revision, r.CreateDate, u == null ? null : u.DisplayName)).ToListAsync();
+                      select new DesignRevisionRow(r.Revision, r.CreateDate, u == null ? null : u.DisplayName, r.Note)).ToListAsync();
     }
 
     /// <summary>Makes an earlier state the current one (as a new revision, so nothing is lost). Needs Edit.</summary>

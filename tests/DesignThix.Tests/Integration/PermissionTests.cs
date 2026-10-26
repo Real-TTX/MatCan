@@ -67,6 +67,15 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
         new("DesignLogic.ResizeAsync", ItemKind.Design, AccessLevel.Edit, (biz, id, _) => DesignLogic.ResizeAsync(biz, id, 100, 100, "mm", true)),
         new("AiTextLogic.PromptAsync", ItemKind.Design, AccessLevel.Edit, (biz, id, _) => AiTextLogic.PromptAsync(biz, id, new AiTextLogic.SuggestInput("x", null, null, null, null, null, null))),
         new("AiLogic.RunsOfAsync(design)", ItemKind.Design, AccessLevel.Edit, (biz, id, _) => AiLogic.RunsOfAsync(biz, nameof(Design), id)),
+
+        // the design assistant (plan 4): reading needs View, everything that writes or asks the AI needs Edit
+        new("AiAgentLogic.AvailabilityAsync", ItemKind.Design, AccessLevel.View, (biz, id, _) => AiAgentLogic.AvailabilityAsync(biz, id)),
+        new("AiAgentLogic.SendAsync", ItemKind.Design, AccessLevel.Edit, (biz, id, _) => AiAgentLogic.SendAsync(biz, id, new AiAgentLogic.SendInput("", null, null, null, null))),
+        new("AiAgentLogic.ConversationsAsync", ItemKind.Design, AccessLevel.Edit, (biz, id, _) => AiAgentLogic.ConversationsAsync(biz, id)),
+        new("AiAgentLogic.PromptAsync", ItemKind.Design, AccessLevel.Edit, (biz, id, _) => AiAgentLogic.PromptAsync(biz, id, null)),
+        new("AiAttachmentLogic.AcceptAsync", ItemKind.Design, AccessLevel.Edit, (biz, id, _) => AiAttachmentLogic.AcceptAsync(biz, 1, 1, id, [], [], 6)),
+        new("AiDesignTools.RunAsync(read)", ItemKind.Design, AccessLevel.View, (biz, id, _) => AiDesignTools.RunAsync(biz, new AiToolSession { DesignId = id }, "read_design", new System.Text.Json.Nodes.JsonObject())),
+        new("AiDesignTools.RunAsync(write)", ItemKind.Design, AccessLevel.Edit, (biz, id, _) => AiDesignTools.RunAsync(biz, new AiToolSession { DesignId = id }, "rename_design", new System.Text.Json.Nodes.JsonObject { ["name"] = "KI-Name" })),
         new("DesignLogic.SetTemplateAsync", ItemKind.Design, AccessLevel.Manage, (biz, id, _) => DesignLogic.SetTemplateAsync(biz, id, true)),
         new("ShareLogic.AddAsync(design)", ItemKind.Design, AccessLevel.Edit, (biz, id, other) => ShareLogic.AddAsync(biz, ItemKind.Design, id, false, other, SharePermission.View)),
         new("DesignLogic.DeleteAsync", ItemKind.Design, AccessLevel.Manage, (biz, id, _) => DesignLogic.DeleteAsync(biz, id)),
@@ -432,6 +441,124 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
         Assert.IsType<ForbiddenException>(refused);
     }
 
+    // ------------------------------------------------------------------------------------------------ the conversations of the design assistant
+
+    private sealed record ConversationMethod(string Name, Func<Biz, long, long, Task> Call, AccessLevel Needs, bool AdminMayOpen);
+
+    /// <summary>
+    /// What belongs to a conversation or to its run (the design assistant): only its person, whatever the design allows; an administrator may read, stop and delete (what they read is the run list they see anyway) but
+    /// takes back nothing without a right to the design. Undo needs Edit on the design on top.
+    /// </summary>
+    private static readonly ConversationMethod[] ConversationMethods =
+    [
+        new("AiAgentLogic.StepsAsync", (biz, conversation, _) => AiAgentLogic.StepsAsync(biz, conversation, 0), AccessLevel.View, true),
+        new("AiAgentLogic.ConversationAsync", (biz, conversation, _) => AiAgentLogic.ConversationAsync(biz, conversation), AccessLevel.View, true),
+        new("AiAgentLogic.PictureAsync", (biz, conversation, _) => AiAgentLogic.PictureAsync(biz, conversation, "x.png"), AccessLevel.View, true),
+        new("AiAgentLogic.CancelAsync", (biz, conversation, _) => AiAgentLogic.CancelAsync(biz, conversation), AccessLevel.View, true),
+        new("AiAgentLogic.DeleteAsync", (biz, conversation, _) => AiAgentLogic.DeleteAsync(biz, conversation), AccessLevel.View, true),
+        new("AiAgentLogic.UndoAsync", (biz, conversation, _) => AiAgentLogic.UndoAsync(biz, conversation, false), AccessLevel.Edit, false),
+        new("AiAttachmentLogic.ModelImagesAsync", (biz, conversation, _) => AiAttachmentLogic.ModelImagesAsync(biz, conversation, 1), AccessLevel.View, false),
+        new("AiAgentLoop.RunAsync", (biz, conversation, _) => AiAgentLoop.RunAsync(biz, conversation, null, CancellationToken.None), AccessLevel.View, false),
+        new("AiAgentLogic.RenderUploadAsync", (biz, _, run) => AiAgentLogic.RenderUploadAsync(biz, run, "token", Png()), AccessLevel.View, false),
+        new("AiAgentLogic.RenderFailedAsync", (biz, _, run) => AiAgentLogic.RenderFailedAsync(biz, run, "token"), AccessLevel.View, false),
+    ];
+
+    public static TheoryData<string> ConversationMethodNames
+    {
+        get
+        {
+            var data = new TheoryData<string>();
+            foreach (var method in ConversationMethods)
+            {
+                data.Add(method.Name);
+            }
+
+            return data;
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ConversationMethodNames))]
+    public async Task A_method_on_a_conversation_belongs_to_its_person(string name)
+    {
+        if (!Enabled)
+        {
+            return;
+        }
+
+        var method = ConversationMethods.Single(m => m.Name == name);
+        var owner = await UserAsync("owner");        // owns the design
+        var author = await UserAsync("author");      // wrote the conversation, has Edit through a share
+        var stranger = await UserAsync("stranger");
+        var administrator = await UserAsync("administrator");
+        var design = await MakeItemAsync(owner, ItemKind.Design);
+        await AsUser(owner, biz => ShareLogic.AddAsync(biz, ItemKind.Design, design, false, author, SharePermission.Edit));
+        async Task<(long Conversation, long Run)> MakeConversationAsync() => await Db(async db =>
+        {
+            var c = new AiConversation { SubjectId = design, UserId = author, Title = "Gespräch", Runs = 1 };
+            db.AiConversation.Add(c);
+            await db.SaveChangesAsync();
+            var r = new AiRun { Action = AiAction.DesignAgent, SubjectType = nameof(Design), SubjectId = design, UserId = author, ConversationId = c.Id, Number = 1, StartDate = DateTime.UtcNow, Status = AiRunStatus.Done };
+            db.AiRun.Add(r);
+            await db.SaveChangesAsync();
+            return (c.Id, r.Id);
+        });
+        var (conversation, run) = await MakeConversationAsync();
+        var (conversation2, run2) = await MakeConversationAsync();
+        var (conversation3, run3) = await MakeConversationAsync();
+
+        // the owner of the design, a stranger and (without a right to the design) an administrator: not their conversation
+        Assert.IsType<NotFoundException>(await TryAsync(owner, biz => method.Call(biz, conversation, run)));
+        Assert.IsType<NotFoundException>(await TryAsync(stranger, biz => method.Call(biz, conversation, run)));
+        Exception? asAdmin = null;
+        try
+        {
+            await AsUser(administrator, biz => method.Call(biz, conversation3, run3), UserRole.Admin);
+        }
+        catch (Exception ex) when (ex is NotFoundException or ForbiddenException)
+        {
+            asAdmin = ex;
+        }
+        catch (Exception)
+        {
+            // a message about the made-up input is fine
+        }
+
+        Assert.True(method.AdminMayOpen == (asAdmin is null), name + ": the administrator " + (method.AdminMayOpen ? "may open it" : "must not") + ", got " + (asAdmin?.GetType().Name ?? "no refusal"));
+
+        // the person: let in with Edit; with the share taken down to View only what needs Edit is refused (403)
+        Assert.True(await TryAsync(author, biz => method.Call(biz, conversation, run)) is null, name + ": the person is refused");
+        var share = await Db(db => db.Share.AsNoTracking().Where(s => s.ItemId == design && s.ItemKind == ItemKind.Design).Select(s => s.Id).FirstAsync());
+        await AsUser(owner, biz => ShareLogic.ChangeAsync(biz, share, SharePermission.View));
+        var asViewer = await TryAsync(author, biz => method.Call(biz, conversation2, run2));
+        if (method.Needs == AccessLevel.Edit)
+        {
+            Assert.IsType<ForbiddenException>(asViewer);
+        }
+        else
+        {
+            Assert.Null(asViewer);
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ConversationMethodNames))]
+    public async Task Nothing_of_a_conversation_works_without_a_sign_in(string name)
+    {
+        if (!Enabled)
+        {
+            return;
+        }
+
+        var method = ConversationMethods.Single(m => m.Name == name);
+        using var client = Factory.CreateClient();
+        using var scope = Factory.Services.CreateScope();
+        using var acting = scope.ServiceProvider.GetRequiredService<ICurrentUser>().RunAs(null, null, UserRole.Member);
+        var biz = scope.ServiceProvider.GetRequiredService<Biz>();
+        var refused = await Assert.ThrowsAnyAsync<Exception>(() => method.Call(biz, Nobody, Nobody));
+        Assert.IsType<ForbiddenException>(refused);
+    }
+
     [Fact]
     public async Task Everything_a_signed_in_member_may_do_without_an_item_is_open_to_every_member()
     {
@@ -474,6 +601,7 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
             ["InviteLogic.ListPlatformAsync"] = biz => InviteLogic.ListPlatformAsync(biz),
             ["InviteLogic.AcceptAsync"] = biz => InviteLogic.AcceptAsync(biz, Guid.NewGuid()),
             ["InviteLogic.CreateAsync(platform)"] = biz => InviteLogic.CreateAsync(biz, null, SpaceRole.Editor, null, true, 7, 1),
+            ["AiAgentLogic.StartNewAsync"] = biz => AiAgentLogic.StartNewAsync(biz, new AiAgentLogic.NewDesignInput("", null, null, null, null, null, null, null, null)),
         };
         var member = await UserAsync("member");
         foreach (var (name, call) in reading)

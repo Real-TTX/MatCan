@@ -36,6 +36,11 @@ public sealed class IndexModel(Biz biz) : PageModelBase
 
         Input.MaxTokens = Math.Clamp(Input.MaxTokens, 1000, 64_000);
         Input.TimeoutSeconds = Math.Clamp(Input.TimeoutSeconds, 30, 600);
+        Input.AgentMaxCallsPerRun = Math.Clamp(Input.AgentMaxCallsPerRun, 1, 200);
+        Input.AgentMaxTokens = Math.Clamp(Input.AgentMaxTokens, 1000, 64_000);
+        Input.AgentMaxConcurrent = Math.Clamp(Input.AgentMaxConcurrent, 1, 10);
+        Input.AgentMaxLooks = Math.Clamp(Input.AgentMaxLooks, 0, 20);
+        Input.AgentMaxFilesPerMessage = Math.Clamp(Input.AgentMaxFilesPerMessage, 1, 20);
         Input.BaseInstruction = (Input.BaseInstruction ?? "").Trim();
         Input.ActionInstructions = (Input.ActionInstructions ?? [])
             .Where(p => Enum.TryParse<AiAction>(p.Key, out _) && !string.IsNullOrWhiteSpace(p.Value))

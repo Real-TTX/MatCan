@@ -38,7 +38,7 @@ public static class AiLogic
     /// a <paramref name="Refusal"/> (the run is cancelled with this reason before anything is sent, e.g. a list with personal data) and the request as JSON (for "Weitermachen").
     /// </summary>
     internal sealed record Call(AiAction Action, string Situation, string? StepInstruction, string? SubjectType, long? SubjectId, long? UserId, string? Address,
-        string? Refusal = null, string? RequestJson = null);
+        string? Refusal = null, string? RequestJson = null, long? ProfileId = null);
 
     /// <summary>The exact text of a call: the system message and the situation. This is what the run sends and what "Vollständige Anweisung anzeigen" shows.</summary>
     internal static (string System, string Situation) Compose(IServiceProvider services, Call call)
@@ -107,48 +107,24 @@ public static class AiLogic
 
         if (!services.GetRequiredService<AiRateLimiter>().TryTake(call.Address, settings.PerMinutePerAddress))
         {
-            return await End(AiRunStatus.LimitReached, "Zu viele Anfragen in kurzer Zeit. Bitte in einer Minute erneut versuchen.", Codes.Limit);
+            return await End(AiRunStatus.LimitReached, RateReason, Codes.Limit);
         }
 
-        var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-        var monthTokens = await db.AiRun.Where(r => r.StartDate >= monthStart).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
-        if (settings.MonthlyTokens > 0 && monthTokens >= settings.MonthlyTokens)
+        if (await BudgetReasonAsync(db, settings, call.UserId, now, ct) is { } budget)
         {
-            return await End(AiRunStatus.LimitReached, "Das Monatsbudget der KI ist aufgebraucht.", Codes.Limit);
+            return await End(AiRunStatus.LimitReached, budget, Codes.Limit);
         }
 
-        if (call.UserId is { } userId)
+        if (await RunsPerDayReasonAsync(db, settings, run.AddressHash, now, ct) is { } perDay)
         {
-            if (settings.UserDailyTokens > 0)
-            {
-                var dayTokens = await db.AiRun.Where(r => r.UserId == userId && r.StartDate >= now.Date).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
-                if (dayTokens >= settings.UserDailyTokens)
-                {
-                    return await End(AiRunStatus.LimitReached, "Dein Tagesbudget der KI ist aufgebraucht. Morgen geht es weiter.", Codes.Limit);
-                }
-            }
-
-            if (settings.UserMonthlyTokens > 0)
-            {
-                var userMonth = await db.AiRun.Where(r => r.UserId == userId && r.StartDate >= monthStart).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
-                if (userMonth >= settings.UserMonthlyTokens)
-                {
-                    return await End(AiRunStatus.LimitReached, "Dein Monatsbudget der KI ist aufgebraucht.", Codes.Limit);
-                }
-            }
-        }
-
-        if (run.AddressHash is { } address && settings.AddressDailyRuns > 0
-            && await db.AiRun.CountAsync(r => r.AddressHash == address && r.StartDate >= now.Date, ct) >= settings.AddressDailyRuns)
-        {
-            return await End(AiRunStatus.LimitReached, "Von diesem Anschluss aus sind für heute keine weiteren KI-Aufrufe möglich.", Codes.Limit);
+            return await End(AiRunStatus.LimitReached, perDay, Codes.Limit);
         }
 
         // ---- transport ----
-        var transport = await TransportAsync(db, services, ct);
+        var transport = await TransportAsync(db, services, ct, call.ProfileId);
         if (transport is null)
         {
-            return await End(AiRunStatus.Error, "Es ist keine KI eingerichtet.", Codes.NotConfigured);
+            return await End(AiRunStatus.Error, call.ProfileId is null ? "Es ist keine KI eingerichtet." : "Dieses Profil ist nicht fertig eingerichtet: es fehlt der API-Schlüssel oder die Anmeldung bei ChatGPT.", Codes.NotConfigured);
         }
 
         run.ProfileName = transport.Name;
@@ -213,22 +189,65 @@ public static class AiLogic
 
     // ================================================================================================ transport: own connection, else relay
 
-    private sealed record Transport(string Kind, string Name, string Model, Func<AiRequest, CancellationToken, Task<AiResponse>> Complete)
+    /// <summary>One way to reach a model: an own connection (a profile) or the relay of the operator.</summary>
+    internal sealed record Transport(string Kind, string Name, string Model, Func<AiRequest, CancellationToken, Task<AiResponse>> Complete)
     {
         public Task<AiResponse> CompleteAsync(AiRequest request, CancellationToken ct) => Complete(request, ct);
     }
 
-    private static async Task<Transport?> TransportAsync(DtDbContext db, IServiceProvider services, CancellationToken ct)
+    /// <summary>The token budgets, per call: all users per month, this user per day and per month. The text of the one that is used up, or null.</summary>
+    internal static async Task<string?> BudgetReasonAsync(DtDbContext db, AiSettings settings, long? userId, DateTime now, CancellationToken ct)
+    {
+        var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var monthTokens = await db.AiRun.Where(r => r.StartDate >= monthStart).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
+        if (settings.MonthlyTokens > 0 && monthTokens >= settings.MonthlyTokens)
+        {
+            return "Das Monatsbudget der KI ist aufgebraucht.";
+        }
+
+        if (userId is { } uid)
+        {
+            if (settings.UserDailyTokens > 0)
+            {
+                var dayTokens = await db.AiRun.Where(r => r.UserId == uid && r.StartDate >= now.Date).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
+                if (dayTokens >= settings.UserDailyTokens)
+                {
+                    return "Dein Tagesbudget der KI ist aufgebraucht. Morgen geht es weiter.";
+                }
+            }
+
+            if (settings.UserMonthlyTokens > 0)
+            {
+                var userMonth = await db.AiRun.Where(r => r.UserId == uid && r.StartDate >= monthStart).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
+                if (userMonth >= settings.UserMonthlyTokens)
+                {
+                    return "Dein Monatsbudget der KI ist aufgebraucht.";
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>The brake per address and day (runs started from this address today, counted by the daily hash). The text, or null.</summary>
+    internal static async Task<string?> RunsPerDayReasonAsync(DtDbContext db, AiSettings settings, string? addressHash, DateTime now, CancellationToken ct)
+        => addressHash is { } address && settings.AddressDailyRuns > 0 && await db.AiRun.CountAsync(r => r.AddressHash == address && r.StartDate >= now.Date, ct) >= settings.AddressDailyRuns
+            ? "Von diesem Anschluss aus sind für heute keine weiteren KI-Aufrufe möglich."
+            : null;
+
+    internal const string RateReason = "Zu viele Anfragen in kurzer Zeit. Bitte in einer Minute erneut versuchen.";
+
+    /// <summary>
+    /// The transport of a call: the test seam when the tests registered one, else the profile with this id (the one that is tested, active or not), else the active profile, else the relay of the
+    /// operator; null when there is none that is complete.
+    /// </summary>
+    internal static async Task<Transport?> TransportAsync(DtDbContext db, IServiceProvider services, CancellationToken ct, long? profileId = null)
     {
         if (services.GetService<AiTestSeam>() is { Handler: { } handler } seam)
         {
             return new Transport("profile", "Testprofil", "test-model", (r, c) =>
             {
-                lock (seam.Requests)
-                {
-                    seam.Requests.Add(r);
-                }
-
+                seam.Record(r);
                 return handler(r, c);
             });
         }
@@ -238,7 +257,9 @@ public static class AiLogic
         var http = services.GetRequiredService<IHttpClientFactory>();
         var settings = services.GetRequiredService<SettingStore>().Get<AiSettings>(SettingStore.Ai);
         var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger("Ai");
-        var profile = await db.AiProfile.AsNoTracking().FirstOrDefaultAsync(p => p.IsActive, ct);
+        var profile = profileId is { } wanted
+            ? await db.AiProfile.AsNoTracking().FirstOrDefaultAsync(p => p.Id == wanted, ct)
+            : await db.AiProfile.AsNoTracking().FirstOrDefaultAsync(p => p.IsActive, ct);
         if (profile is not null)
         {
             if (profile.Provider == AiProvider.ChatGpt)
@@ -246,7 +267,7 @@ public static class AiLogic
                 var account = AiProfileLogic.Account(services, profile);
                 if (await account.IsConnectedAsync(ct))
                 {
-                    return new Transport("profile", profile.Name, profile.Model, (r, c) => account.CompleteAsync(profile.Model, r.Messages, c));
+                    return new Transport("profile", profile.Name, profile.Model, (r, c) => account.CompleteAsync(profile.Model, r.Messages, c, r.OnDelta));
                 }
             }
             else if (await secrets.LoadAsync(profile.SecretToken, AiSecretStore.ApiKey, ct) is { Length: > 0 } key)
@@ -254,6 +275,11 @@ public static class AiLogic
                 return new Transport("profile", profile.Name, profile.Model, (r, c) =>
                     ChatCompletionsClient.CompleteAsync(http.CreateClient("ai"), profile.BaseUrl, key, profile.Model, r, settings.MaxTokens, m => logger.LogWarning("{Message}", m.Replace(key, "***")), c, settings.TimeoutSeconds));
             }
+        }
+
+        if (profileId is not null)
+        {
+            return null;   // a profile that is tested must work by itself: no fall back to the relay
         }
 
         var op = config.Current.Ai;
@@ -313,13 +339,21 @@ public static class AiLogic
 
     // ================================================================================================ settings page: test and the full instruction
 
-    public static async Task<string> TestAsync(Biz biz, string? address)
+    /// <summary>
+    /// Tests a connection: a short question, the answer is shown. Without a profile id the active profile (or the relay) is tested, with one THAT profile, active or not (the button on its edit page).
+    /// </summary>
+    public static async Task<string> TestAsync(Biz biz, string? address, long? profileId = null)
     {
         biz.RequireAdmin();
-        var outcome = await RunAsync(biz.Db, biz.Services, new Call(AiAction.Test, "Bitte bestätige kurz, dass du erreichbar bist.", null, null, null, biz.UserId, address));
+        if (profileId is { } id && !await biz.Db.AiProfile.AnyAsync(p => p.Id == id))
+        {
+            throw new BizException("Das Profil gibt es nicht mehr.");
+        }
+
+        var outcome = await RunAsync(biz.Db, biz.Services, new Call(AiAction.Test, "Bitte bestätige kurz, dass du erreichbar bist.", null, null, null, biz.UserId, address, ProfileId: profileId));
         return outcome.Ok
             ? $"Verbindung steht ({outcome.Run.ProfileName}, {outcome.Run.Model}): {outcome.Result!.Value.Text("message")}"
-            : $"Fehlgeschlagen: {ReasonFor(biz, outcome)}";
+            : $"Fehlgeschlagen: {(profileId is not null && outcome.Code == Codes.NotConfigured ? outcome.Error : ReasonFor(biz, outcome))}";
     }
 
     /// <summary>"Vollständige Anweisung anzeigen" on the settings page: the text of an action with a sketch of the situation (the real one depends on the data).</summary>
@@ -331,6 +365,7 @@ public static class AiLogic
             AiAction.Test => "Bitte bestätige kurz, dass du erreichbar bist.",
             AiAction.DataImport => "(die Lage: die Spalten der Datenliste mit Art und Beschriftung, die erlaubten Medien, der Text der Person)",
             AiAction.DataFill => "(die Lage: die Zielspalte, die ausgewählten Zeilen mit den gewählten Spalten)",
+            AiAction.DesignAgent => "(die Lage, bei jedem Aufruf neu: das Datum, Name und Format des Designs, die Seiten, die Felder, der Bereich, den die Person freigegeben hat, die gewählten Elemente, die Marke des Bereichs)",
             _ => "(die Lage: der Text des Elements, die Felder des Designs mit Beispielwerten)",
         };
         return Show(biz.Services, new Call(action, situation, action == AiAction.Test ? null : "(was die Person im Dialog schreibt)", null, null, null, null));
@@ -364,6 +399,12 @@ public static class AiLogic
         var open = run.Status == AiRunStatus.Waiting && run.Action is AiAction.DataImport or AiAction.DataFill && run.SubjectType == nameof(DataList) && subject?.Href is { } href
             ? href + (href.Contains('?') ? "&" : "?") + "aiRun=" + run.Id
             : null;
+        if (run.Action == AiAction.DesignAgent)
+        {
+            // a design is taken back in the designer (one run at a time, newest first, with the check that nobody changed it since)
+            return new RunDetails(run, journal, false, journal.Any(j => j.RevertedDate is null) ? "Änderungen am Design macht man im Designer rückgängig (Panel KI, „Rückgängig“)." : null, subject, null);
+        }
+
         return new RunDetails(run, journal, journal.Any(j => j.RevertedDate is null) && blocker is null, blocker is null ? null : $"Erst Lauf #{blocker} rückgängig machen (neuester zuerst).", subject, open);
     }
 
@@ -437,7 +478,7 @@ public static class AiLogic
             await Access.RequireAsync(biz, ItemKind.Design, subjectId, AccessLevel.Edit);
         }
 
-        var query = biz.Db.AiRun.AsNoTracking().Where(r => r.SubjectType == subjectType && r.SubjectId == subjectId && r.Action != AiAction.Test);
+        var query = biz.Db.AiRun.AsNoTracking().Where(r => r.SubjectType == subjectType && r.SubjectId == subjectId && r.Action != AiAction.Test && r.Action != AiAction.DesignAgent);
         if (!biz.IsAdmin)
         {
             var me = biz.UserId;
@@ -464,6 +505,11 @@ public static class AiLogic
         if (!biz.IsAdmin && run.UserId != biz.UserId)
         {
             throw new ForbiddenException("Du kannst nur deine eigenen KI-Läufe rückgängig machen.");
+        }
+
+        if (run.Action == AiAction.DesignAgent)
+        {
+            throw new BizException("Änderungen am Design macht man im Designer rückgängig (Panel KI, „Rückgängig“).");
         }
 
         var journal = await biz.Db.AiJournalEntry.Where(j => j.AiRunId == runId && j.RevertedDate == null).OrderByDescending(j => j.Id).ToListAsync();

@@ -31,11 +31,29 @@ public sealed class AiSettings
     public int AddressDailyRuns { get; set; } = 60;
 
     /// <summary>How many calls one address may start per minute.</summary>
-    public int PerMinutePerAddress { get; set; } = 6;
+    /// <summary>How many calls one address may start per minute. A run of the design assistant makes one call per step, so the default leaves room for several runs.</summary>
+    public int PerMinutePerAddress { get; set; } = 30;
 
     public int MaxTokens { get; set; } = 16_000;
 
     public int TimeoutSeconds { get; set; } = 280;
+
+    // ---- the design assistant (docs/PLAN-AI-DESIGN.md 3.7) ----
+
+    /// <summary>How many calls of the model one run (one message) may make before it stops with "Limit erreicht" and a button to go on.</summary>
+    public int AgentMaxCallsPerRun { get; set; } = 40;
+
+    /// <summary>The length cap of one answer of the design assistant (a reasoning model thinks inside it).</summary>
+    public int AgentMaxTokens { get; set; } = 12_000;
+
+    /// <summary>How many runs of the design assistant work at the same moment (the others wait).</summary>
+    public int AgentMaxConcurrent { get; set; } = 3;
+
+    /// <summary>How many times one run may look at a page (<c>look</c>).</summary>
+    public int AgentMaxLooks { get; set; } = 6;
+
+    /// <summary>How many files one message may bring.</summary>
+    public int AgentMaxFilesPerMessage { get; set; } = 6;
 }
 
 /// <summary>

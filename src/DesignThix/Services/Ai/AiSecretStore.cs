@@ -141,6 +141,30 @@ public sealed class AiRateLimiter(TimeProvider clock)
         }
     }
 
+    /// <summary>Forgets the calls counted so far (the tests that measure the brake).</summary>
+    public void Reset() => _calls.Clear();
+
+    /// <summary>Whether the address still has a call left in this minute, without taking one (the check before a message of the design assistant is stored).</summary>
+    public bool WouldAllow(string? address, int perMinute)
+    {
+        if (perMinute <= 0)
+        {
+            return true;
+        }
+
+        var key = Hash(address ?? "unknown");
+        var now = clock.GetUtcNow().UtcDateTime;
+        if (!_calls.TryGetValue(key, out var queue))
+        {
+            return true;
+        }
+
+        lock (queue)
+        {
+            return queue.Count(t => t >= now.AddMinutes(-1)) < perMinute;
+        }
+    }
+
     /// <summary>A hash of the address with a secret that changes every day: the same visitor is the same hash for one day, and the address cannot be recovered.</summary>
     public string Hash(string address)
     {

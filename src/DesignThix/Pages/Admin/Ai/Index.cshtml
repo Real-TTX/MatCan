@@ -32,7 +32,7 @@
             </dt-card>
             <dt-card title="Ergänzung je Aktion" icon="sparkles" sub="Optional: etwas, das nur für diese Aktion gilt. Es steht hinter der Grundanweisung.">
                 <div class="mat-form__grid">
-                    @foreach (var action in new[] { AiAction.DataImport, AiAction.DataFill, AiAction.TextSuggest })
+                    @foreach (var action in new[] { AiAction.DataImport, AiAction.DataFill, AiAction.TextSuggest, AiAction.DesignAgent })
                     {
                         <dt-textarea name="Input.ActionInstructions[@action]" label="@Labels.Of(action)" rows="3" full="true" value="@Model.Input.ActionInstructions.GetValueOrDefault(action.ToString())"
                                      hint="@AiActionHints.For(action)" />
@@ -78,6 +78,7 @@
                     <li><strong>Daten übernehmen:</strong> der Text, den die Person einfügt, die Spalten der Datenliste (Schlüssel, Beschriftung, Art) und die Schlüssel und Namen der erlaubten Medien.</li>
                     <li><strong>Spalte füllen:</strong> nur die ausgewählten Zeilen und nur die Spalten, die die Person als Zusammenhang gewählt hat.</li>
                     <li><strong>Text vorschlagen:</strong> der Text des Elements sowie Beschriftungen und Beispielwerte der Felder des Designs.</li>
+                    <li><strong>Design (Assistent):</strong> das Design, an dem die Person arbeitet (Seiten, Elemente, Felder), die Marke des Bereichs, die Schriften und Medien der Bibliothek, die Nachrichten der Person und das, was sie anhängt (Bilder, der Text von Dokumenten, Referenzen auf Designs und Datenlisten), und auf Wunsch ein Bild der Seite, die der Editor gezeichnet hat.</li>
                     <li>Nie gesendet werden: Kennwörter, Schlüssel der KI-Profile, Benutzerdaten, andere Datenlisten, Bilddateien.</li>
                 </ul>
                 <p class="dt-subhead">Anbieter und Region</p>
@@ -115,6 +116,15 @@
                     <dt-input for="Input.TimeoutSeconds" label="Zeitlimit (Sekunden)" type="number" min="30" max="600" step="10" />
                 </div>
                 <p class="mat-hint">Nennt ein Anbieter keine Tokenzahl, wird geschätzt (Zeichen geteilt durch 4).</p>
+            </dt-card>
+            <dt-card title="Design-Assistent" icon="sparkles" sub="Der Assistent im Designer arbeitet in Schritten; jeder Schritt ist ein Aufruf der KI und zählt gegen die Grenzen oben.">
+                <div class="mat-form__grid">
+                    <dt-input for="Input.AgentMaxCallsPerRun" label="Aufrufe pro Auftrag" type="number" min="1" max="200" step="1" hint="Danach hält der Auftrag an und die Person kann mit „Weitermachen“ fortfahren." />
+                    <dt-input for="Input.AgentMaxTokens" label="Längenlimit einer Antwort (Tokens)" type="number" min="1000" max="64000" step="1000" hint="Eine Seite in einem Zug zu entwerfen braucht Platz." />
+                    <dt-input for="Input.AgentMaxConcurrent" label="Aufträge gleichzeitig" type="number" min="1" max="10" step="1" hint="Weitere Aufträge warten, bis ein Platz frei ist." />
+                    <dt-input for="Input.AgentMaxLooks" label="Seitenansichten pro Auftrag" type="number" min="0" max="20" step="1" hint="Wie oft die KI sich eine Seite ansehen darf (das Bild zeichnet der geöffnete Editor)." />
+                    <dt-input for="Input.AgentMaxFilesPerMessage" label="Dateien pro Nachricht" type="number" min="1" max="20" step="1" />
+                </div>
             </dt-card>
         </dt-tab>
     </dt-tabs>

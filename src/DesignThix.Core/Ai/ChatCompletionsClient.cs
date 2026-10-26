@@ -29,6 +29,7 @@ public static class ChatCompletionsClient
         var useTemperature = true;
         var useJson = req.Json;
         var useAttachments = req.Messages.Any(m => m.Attachments is { Count: > 0 });
+        var useStream = req.OnDelta is not null;
         string? note = null;
         try
         {
@@ -44,6 +45,12 @@ public static class ChatCompletionsClient
                 };
                 if (useTemperature) payload["temperature"] = 0.4;
                 if (useJson) payload["response_format"] = new JsonObject { ["type"] = "json_object" };
+                if (useStream)
+                {
+                    payload["stream"] = true;
+                    payload["stream_options"] = new JsonObject { ["include_usage"] = true };
+                }
+
 
                 using var httpReq = new HttpRequestMessage(HttpMethod.Post, $"{baseUrl}/chat/completions");
                 httpReq.Headers.Add("Authorization", $"Bearer {apiKey}");
@@ -52,7 +59,7 @@ public static class ChatCompletionsClient
                 HttpResponseMessage resp;
                 try
                 {
-                    resp = await client.SendAsync(httpReq, ct);
+                    resp = await client.SendAsync(httpReq, useStream ? HttpCompletionOption.ResponseHeadersRead : HttpCompletionOption.ResponseContentRead, ct);
                 }
                 catch (HttpRequestException ex) when (transient < 3)
                 {
@@ -62,6 +69,19 @@ public static class ChatCompletionsClient
                 }
 
                 using var _ = resp;
+                if (resp.IsSuccessStatusCode && useStream && resp.Content.Headers.ContentType?.MediaType is { } mediaType && mediaType.Contains("event-stream", StringComparison.OrdinalIgnoreCase))
+                {
+                    // the answer arrives piece by piece; a stream that breaks off is a failure, never a half answer
+                    var streamed = await ReadStreamAsync(resp, req.OnDelta!, ct);
+                    if (streamed.Failure is not null)
+                    {
+                        warn?.Invoke("AI stream failed: " + streamed.Failure);
+                        return new AiResponse { Ok = false, Model = model, PromptTokens = streamed.Prompt, CompletionTokens = streamed.Completion, Error = streamed.Failure };
+                    }
+
+                    return Finish(streamed.Text, streamed.Prompt, streamed.Completion, streamed.Finish, model, note);
+                }
+
                 var raw = await resp.Content.ReadAsStringAsync(ct);
                 if (!resp.IsSuccessStatusCode)
                 {
@@ -79,6 +99,7 @@ public static class ChatCompletionsClient
                     {
                         if (!useCompletionTokens && lower.Contains("max_tokens")) { useCompletionTokens = true; continue; }
                         if (useTemperature && lower.Contains("temperature")) { useTemperature = false; continue; }
+                        if (useStream && lower.Contains("stream")) { useStream = false; continue; }
                         if (useJson && (lower.Contains("response_format") || lower.Contains("json"))) { useJson = false; continue; }
                         if (useAttachments && (lower.Contains("image") || lower.Contains("file") || lower.Contains("variant") || lower.Contains("content")))
                         {
@@ -106,17 +127,7 @@ public static class ChatCompletionsClient
                     if (usage.TryGetProperty("prompt_tokens", out var p) && p.ValueKind == JsonValueKind.Number) prompt = p.GetInt32();
                     if (usage.TryGetProperty("completion_tokens", out var c) && c.ValueKind == JsonValueKind.Number) completion = c.GetInt32();
                 }
-                if (string.IsNullOrWhiteSpace(text))
-                    return new AiResponse
-                    {
-                        Ok = false, PromptTokens = prompt, CompletionTokens = completion, Model = model,
-                        Error = finish == "length"
-                            ? "Die KI hat ihr Längenlimit erreicht, bevor sie antworten konnte (bei Denk-Modellen zählt das Nachdenken mit)."
-                            : "Die KI hat eine leere Antwort geliefert.",
-                    };
-                if (finish == "length")
-                    note = (note is null ? "" : note + " ") + "Die Antwort wurde am Längenlimit abgeschnitten.";
-                return new AiResponse { Ok = true, Text = text, PromptTokens = prompt, CompletionTokens = completion, Model = model, Note = note };
+                return Finish(text, prompt, completion, finish, model, note);
             }
             return new AiResponse { Ok = false, Error = "Der KI-Anbieter hat die Anfrage wiederholt abgelehnt.", Model = model };
         }
@@ -129,6 +140,84 @@ public static class ChatCompletionsClient
                 Error = ex is TaskCanceledException ? "Die KI hat nicht rechtzeitig geantwortet." : $"KI-Aufruf fehlgeschlagen: {ex.Message}",
             };
         }
+    }
+
+    /// <summary>The answer of a call that came back with text (from one document or a stream): an empty text is a failure that says why, a cut-off one carries a note.</summary>
+    private static AiResponse Finish(string text, int prompt, int completion, string? finish, string model, string? note)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return new AiResponse
+            {
+                Ok = false, PromptTokens = prompt, CompletionTokens = completion, Model = model,
+                Error = finish == "length"
+                    ? "Die KI hat ihr Längenlimit erreicht, bevor sie antworten konnte (bei Denk-Modellen zählt das Nachdenken mit)."
+                    : "Die KI hat eine leere Antwort geliefert.",
+            };
+        if (finish == "length")
+            note = (note is null ? "" : note + " ") + "Die Antwort wurde am Längenlimit abgeschnitten.";
+        return new AiResponse { Ok = true, Text = text, PromptTokens = prompt, CompletionTokens = completion, Model = model, Note = note };
+    }
+
+    private sealed record Streamed(string Text, int Prompt, int Completion, string? Finish, string? Failure);
+
+    /// <summary>
+    /// Reads a chat-completions stream (server-sent events: <c>data: {chunk}</c> lines, <c>data: [DONE]</c> at the end) and hands every piece of text to <paramref name="onDelta"/>. A stream that ends
+    /// before the provider said it was finished (a finish reason or <c>[DONE]</c>), or carries an error, is a failure: text that arrived before is never returned as if it were the whole answer.
+    /// </summary>
+    private static async Task<Streamed> ReadStreamAsync(HttpResponseMessage resp, Action<string> onDelta, CancellationToken ct)
+    {
+        await using var stream = await resp.Content.ReadAsStreamAsync(ct);
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        var text = new StringBuilder();
+        string? finish = null, failure = null;
+        var done = false;
+        int prompt = 0, completion = 0;
+
+        string? line;
+        while ((line = await reader.ReadLineAsync(ct)) is not null)
+        {
+            if (!line.StartsWith("data:", StringComparison.Ordinal)) continue;
+            var data = line[5..].Trim();
+            if (data.Length == 0) continue;
+            if (data == "[DONE]") { done = true; break; }
+            JsonDocument doc;
+            try { doc = JsonDocument.Parse(data); } catch (JsonException) { continue; }
+            using (doc)
+            {
+                var root = doc.RootElement;
+                if (root.ValueKind != JsonValueKind.Object) continue;
+                if (root.TryGetProperty("error", out var error) && error.ValueKind is JsonValueKind.Object or JsonValueKind.String)
+                {
+                    failure = "Anbieter-Fehler: " + (error.ValueKind == JsonValueKind.Object && error.TryGetProperty("message", out var m) && m.ValueKind == JsonValueKind.String ? m.GetString() : error.ValueKind == JsonValueKind.String ? error.GetString() : "unbekannt");
+                    break;
+                }
+
+                if (root.TryGetProperty("usage", out var usage) && usage.ValueKind == JsonValueKind.Object)
+                {
+                    if (usage.TryGetProperty("prompt_tokens", out var p) && p.ValueKind == JsonValueKind.Number) prompt = p.GetInt32();
+                    if (usage.TryGetProperty("completion_tokens", out var c) && c.ValueKind == JsonValueKind.Number) completion = c.GetInt32();
+                }
+
+                if (root.TryGetProperty("choices", out var choices) && choices.ValueKind == JsonValueKind.Array && choices.GetArrayLength() > 0)
+                {
+                    var choice = choices[0];
+                    if (choice.TryGetProperty("delta", out var delta) && delta.ValueKind == JsonValueKind.Object && delta.TryGetProperty("content", out var content))
+                    {
+                        var piece = content.ValueKind == JsonValueKind.String ? content.GetString() : null;
+                        if (!string.IsNullOrEmpty(piece))
+                        {
+                            text.Append(piece);
+                            try { onDelta(piece); } catch (Exception) { /* a listener that fails must not break the call */ }
+                        }
+                    }
+
+                    if (choice.TryGetProperty("finish_reason", out var fr) && fr.ValueKind == JsonValueKind.String) finish = fr.GetString();
+                }
+            }
+        }
+
+        if (failure is null && !done && finish is null) failure = "Die Antwort der KI wurde unterbrochen.";
+        return new Streamed(text.ToString(), prompt, completion, finish, failure);
     }
 
     /// <summary>One model a provider offers. <c>Free</c>: it costs nothing per token (OpenRouter states prices — "0" for both, or an

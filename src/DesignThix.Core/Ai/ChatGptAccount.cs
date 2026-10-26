@@ -360,7 +360,7 @@ public class ChatGptAccount
     /// stream collected into an <see cref="AiResponse"/>. Never throws. What the backend insists on (from Codex and Hermes):
     /// <c>stream:true</c> and <c>store:false</c>, the system prompt as <c>instructions</c>, the whole history in <c>input</c>, and
     /// none of the sampling or length parameters.</summary>
-    public async Task<AiResponse> CompleteAsync(string model, IReadOnlyList<AiMessage> messages, CancellationToken ct = default)
+    public async Task<AiResponse> CompleteAsync(string model, IReadOnlyList<AiMessage> messages, CancellationToken ct = default, Action<string>? onDelta = null)
     {
         try
         {
@@ -381,7 +381,7 @@ public class ChatGptAccount
                 req.Headers.TryAddWithoutValidation("Accept", "text/event-stream");
 
                 using var resp = await client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
-                if (resp.IsSuccessStatusCode) { var a = await ReadStreamAsync(resp, ct); a.Model = model; return a; }
+                if (resp.IsSuccessStatusCode) { var a = await ReadStreamAsync(resp, onDelta, ct); a.Model = model; return a; }
 
                 var raw = await resp.Content.ReadAsStringAsync(ct);
                 var status = (int)resp.StatusCode;
@@ -446,7 +446,7 @@ public class ChatGptAccount
 
     /// <summary>Collects the event stream. A call counts as successful only after <c>response.completed</c>; text that arrived before an
     /// interrupted stream or a <c>response.failed</c> is thrown away rather than returned as if it were the whole answer.</summary>
-    private static async Task<AiResponse> ReadStreamAsync(HttpResponseMessage resp, CancellationToken ct)
+    private static async Task<AiResponse> ReadStreamAsync(HttpResponseMessage resp, Action<string>? onDelta, CancellationToken ct)
     {
         await using var stream = await resp.Content.ReadAsStreamAsync(ct);
         using var reader = new StreamReader(stream, Encoding.UTF8);
@@ -470,7 +470,12 @@ public class ChatGptAccount
                 switch (type)
                 {
                     case "response.output_text.delta":
-                        if (root.TryGetProperty("delta", out var d) && d.ValueKind == JsonValueKind.String) text.Append(d.GetString());
+                        if (root.TryGetProperty("delta", out var d) && d.ValueKind == JsonValueKind.String)
+                        {
+                            var piece = d.GetString();
+                            text.Append(piece);
+                            if (!string.IsNullOrEmpty(piece) && onDelta is not null) { try { onDelta(piece); } catch (Exception) { /* a listener that fails must not break the call */ } }
+                        }
                         break;
                     case "response.completed":
                         completed = true;

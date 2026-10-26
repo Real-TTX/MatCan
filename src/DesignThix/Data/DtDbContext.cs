@@ -23,6 +23,10 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
 
     public DbSet<AiJournalEntry> AiJournalEntry => Set<AiJournalEntry>();
 
+    public DbSet<AiConversation> AiConversation => Set<AiConversation>();
+
+    public DbSet<AiAttachment> AiAttachment => Set<AiAttachment>();
+
     public DbSet<ActivityLog> ActivityLog => Set<ActivityLog>();
 
     public DbSet<Setting> Setting => Set<Setting>();
@@ -123,8 +127,30 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
             e.HasIndex(x => x.StartDate);
             e.HasIndex(x => new { x.UserId, x.StartDate });
             e.HasIndex(x => new { x.AddressHash, x.StartDate });
+            e.HasIndex(x => x.ConversationId);
         });
-        b.Entity<AiRunStep>().HasOne(x => x.AiRun).WithMany(x => x.Steps).HasForeignKey(x => x.AiRunId).OnDelete(DeleteBehavior.Cascade);
+        b.Entity<AiConversation>(e =>
+        {
+            e.Property(x => x.Title).HasMaxLength(200);
+            e.Property(x => x.SubjectType).HasMaxLength(40);
+            e.HasIndex(x => new { x.UserId, x.SubjectType, x.SubjectId });
+            e.HasIndex(x => new { x.SubjectType, x.SubjectId, x.Status });
+        });
+        b.Entity<AiAttachment>(e =>
+        {
+            e.Property(x => x.Name).HasMaxLength(260);
+            e.Property(x => x.Kind).HasMaxLength(20);
+            e.Property(x => x.RefKind).HasMaxLength(20);
+            e.Property(x => x.AssetKey).HasMaxLength(80);
+            e.Property(x => x.MediaType).HasMaxLength(100);
+            e.HasIndex(x => new { x.ConversationId, x.RunNumber });
+        });
+        b.Entity<AiRunStep>(e =>
+        {
+            e.HasOne(x => x.AiRun).WithMany(x => x.Steps).HasForeignKey(x => x.AiRunId).OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(x => new { x.AiRunId, x.Number });
+            e.Property(x => x.DataJson).HasDefaultValue("{}");
+        });
         b.Entity<AiJournalEntry>(e =>
         {
             e.HasIndex(x => x.AiRunId);
@@ -173,6 +199,7 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
         b.Entity<DesignRevision>(e =>
         {
             e.HasIndex(x => new { x.DesignId, x.Revision }).IsUnique();
+            e.Property(x => x.Note).HasMaxLength(200);
             e.HasOne(x => x.Design).WithMany(x => x.Revisions).HasForeignKey(x => x.DesignId).OnDelete(DeleteBehavior.Cascade);
         });
         b.Entity<SheetLayout>().Property(x => x.Name).HasMaxLength(200);

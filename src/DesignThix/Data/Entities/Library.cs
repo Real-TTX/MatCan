@@ -182,6 +182,9 @@ public class DesignRevision : AuditedEntity
     public int Revision { get; set; }
 
     public string DocumentJson { get; set; } = "{}";
+
+    /// <summary>What made this state, when it was no save of the person ("KI: Plakat für das Sommerfest", "KI rückgängig"); null for an ordinary save. An autosave never joins an entry with a note.</summary>
+    public string? Note { get; set; }
 }
 
 /// <summary>How labels sit on a sheet of paper (all lengths in mm).</summary>

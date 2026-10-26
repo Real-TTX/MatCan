@@ -122,7 +122,7 @@
                                     @foreach (var r in Model.Revisions)
                                     {
                                         <tr>
-                                            <td data-label="Stand">Stand @r.Revision @if (r.Revision == d.Revision) { @Ui.Pill("aktuell", "ok") }</td>
+                                            <td data-label="Stand">Stand @r.Revision @if (r.Revision == d.Revision) { @Ui.Pill("aktuell", "ok") }@if (r.Note is { Length: > 0 } note) { <span class="mat-muted"> · @note</span> }</td>
                                             <td data-label="Gespeichert">@Fmt.Moment(r.Date)</td>
                                             <td data-label="Von" class="mat-hide-sm">@(r.UserName ?? "–")</td>
                                             @if (!ro)

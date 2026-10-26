@@ -16,11 +16,17 @@ public static class LenientJson
     };
 
     /// <summary>The first complete JSON object in <paramref name="text"/>, or null.</summary>
-    public static JsonElement? FirstObject(string? text)
+    public static JsonElement? FirstObject(string? text) => Objects(text).Select(o => (JsonElement?)o).FirstOrDefault();
+
+    /// <summary>
+    /// Every complete JSON object in <paramref name="text"/>, in the order their opening braces come (an object inside another one is found after it, too): a model that writes a sentence with
+    /// a brace in it before the real answer is still read.
+    /// </summary>
+    public static IEnumerable<JsonElement> Objects(string? text)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
-            return null;
+            yield break;
         }
 
         var start = text.IndexOf('{');
@@ -29,24 +35,28 @@ public static class LenientJson
             var end = MatchingBrace(text, start);
             if (end > start)
             {
+                JsonElement? found = null;
                 try
                 {
                     using var doc = JsonDocument.Parse(text.AsMemory(start, end - start + 1), Options);
                     if (doc.RootElement.ValueKind == JsonValueKind.Object)
                     {
-                        return doc.RootElement.Clone();
+                        found = doc.RootElement.Clone();
                     }
                 }
                 catch (JsonException)
                 {
                     // Not this one: try the next opening brace.
                 }
+
+                if (found is { } element)
+                {
+                    yield return element;
+                }
             }
 
             start = text.IndexOf('{', start + 1);
         }
-
-        return null;
     }
 
     /// <summary>The closing brace of the object that starts at <paramref name="start"/>, aware of strings and escapes; -1 when it does not close.</summary>

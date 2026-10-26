@@ -50,6 +50,9 @@ public enum AiAction
 
     /// <summary>Up to five alternatives for the text of a design element; nothing is saved on the server.</summary>
     TextSuggest,
+
+    /// <summary>The design assistant (docs/PLAN-AI-DESIGN.md): one run per message of a conversation, a loop of model calls and tools that change the design, every step written down as it happens.</summary>
+    DesignAgent,
 }
 
 /// <summary>How a run ended. Running only while it runs.</summary>
@@ -103,6 +106,12 @@ public class AiRun : AuditedEntity
 
     public string? Error { get; set; }
 
+    /// <summary>The conversation of the design assistant this run belongs to (one run per message); null for the other actions.</summary>
+    public long? ConversationId { get; set; }
+
+    /// <summary>The number of the run in its conversation (1, 2, ...); 0 for the other actions.</summary>
+    public int Number { get; set; }
+
     /// <summary>The checked result (jsonb), what the page shows: for the data actions the proposal that "Übernehmen" applies (the code checked it, never the model).</summary>
     public string ResultJson { get; set; } = "{}";
 
@@ -120,6 +129,13 @@ public enum AiStepKind
     Action,
     Result,
     Warning,
+
+    // the design assistant (a conversation): what the person wrote, what the model wrote, what a tool did, grey and red lines, and how the run ended
+    User,
+    Assistant,
+    Info,
+    Error,
+    End,
 }
 
 public class AiRunStep : AuditedEntity
@@ -135,6 +151,9 @@ public class AiRunStep : AuditedEntity
     public string Text { get; set; } = "";
 
     public DateTime OccurredDate { get; set; }
+
+    /// <summary>The data of a step of the design assistant (jsonb): assistant = model, tokens, note, raw, actions; action = tool, args, ok, summary, warnings, result, pageId, elementIds, changed, revision, picture; user = files, refs; end = state.</summary>
+    public string DataJson { get; set; } = "{}";
 }
 
 /// <summary>A change a run made, with the value before: the journal that "Rückgängig" walks back, the newest run first.</summary>
@@ -155,4 +174,76 @@ public class AiJournalEntry : AuditedEntity
     public string? NewValue { get; set; }
 
     public DateTime? RevertedDate { get; set; }
+}
+
+public enum AiConversationStatus
+{
+    Idle,
+    Running,
+}
+
+/// <summary>
+/// A conversation with the design assistant about ONE design. Private to its person (an administrator reads it in the run list). <see cref="HistoryJson"/> is what the model sees of it (the messages and
+/// the results of its tools; pictures are not in it, they ride along with the run they came with), <see cref="ScopeJson"/> where the newest message said the AI may work.
+/// </summary>
+public class AiConversation : AuditedEntity, ISoftDeletable
+{
+    /// <summary>"Design" (what <see cref="AiRun.SubjectType"/> says too).</summary>
+    public string SubjectType { get; set; } = nameof(Design);
+
+    public long SubjectId { get; set; }
+
+    public long UserId { get; set; }
+
+    /// <summary>From the first message, at most 80 characters.</summary>
+    public string Title { get; set; } = "";
+
+    public AiConversationStatus Status { get; set; }
+
+    /// <summary><c>{ kind: design|page|selection, pageId?, elementIds?, locked }</c> of the newest message.</summary>
+    public string ScopeJson { get; set; } = "{}";
+
+    /// <summary>The model-facing list <c>[{ role, content, tool, run }]</c>.</summary>
+    public string HistoryJson { get; set; } = "[]";
+
+    /// <summary>How many runs (messages) the conversation has had: the number of the newest run.</summary>
+    public int Runs { get; set; }
+
+    public int Tokens { get; set; }
+
+    public UpdateState UpdateState { get; set; } = UpdateState.Created;
+}
+
+/// <summary>What came with a message of a conversation: a picture (in the library, and a copy for the model under <c>{data}/ai-files</c>), the text of a document, or a reference to a design or a data list.</summary>
+public class AiAttachment : AuditedEntity
+{
+    public long ConversationId { get; set; }
+
+    public int RunNumber { get; set; }
+
+    /// <summary>"image", "text" or "reference".</summary>
+    public string Kind { get; set; } = "image";
+
+    public string Name { get; set; } = "";
+
+    /// <summary>The library image a picture was imported as.</summary>
+    public long? AssetId { get; set; }
+
+    public string? AssetKey { get; set; }
+
+    /// <summary>The downscaled picture the model gets, relative to <c>{data}/ai-files</c>.</summary>
+    public string? ModelImagePath { get; set; }
+
+    public string? MediaType { get; set; }
+
+    /// <summary>The text of a document (at most 60 000 characters), or the description of a reference.</summary>
+    public string? TextContent { get; set; }
+
+    /// <summary>For a reference: "design" or "datalist", and the id.</summary>
+    public string? RefKind { get; set; }
+
+    public long? RefId { get; set; }
+
+    /// <summary>Why the file was not used (shown as a red chip); null for a file that was.</summary>
+    public string? Refused { get; set; }
 }

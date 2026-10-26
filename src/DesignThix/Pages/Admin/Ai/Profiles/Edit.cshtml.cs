@@ -104,6 +104,30 @@ public sealed class EditModel(Biz biz) : PageModelBase
         return RedirectToPage(new { id = Id });
     }
 
+    /// <summary>Tests THIS profile (active or not): a short question to its model; the answer or the reason it failed is shown at the top of the page.</summary>
+    public async Task<IActionResult> OnPostTestAsync()
+    {
+        ModelState.Clear();
+        try
+        {
+            var result = await AiLogic.TestAsync(biz, HttpContext.Connection.RemoteIpAddress?.ToString(), Id ?? 0);
+            if (result.StartsWith("Verbindung steht", StringComparison.Ordinal))
+            {
+                Flash(result);
+            }
+            else
+            {
+                FlashError(result);
+            }
+        }
+        catch (BizException ex)
+        {
+            FlashError(ex.Message);
+        }
+
+        return RedirectToPage(new { id = Id });
+    }
+
     public async Task<IActionResult> OnPostActivateAsync()
     {
         await AiProfileLogic.ActivateAsync(biz, Id ?? 0);

@@ -64,6 +64,10 @@ builder.Services.AddSingleton<SetupState>();
 builder.Services.AddSingleton<SettingStore>();
 builder.Services.AddSingleton<AiSecretStore>();
 builder.Services.AddSingleton<AiRateLimiter>();
+builder.Services.AddSingleton<AiRenderBroker>();
+builder.Services.AddSingleton<AiPartialStore>();
+builder.Services.AddSingleton<AiAgentRunner>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<AiAgentRunner>());
 builder.Services.AddSingleton<TrashPurger>();
 builder.Services.AddSingleton<PresenceTracker>();
 builder.Services.AddSingleton<PublicRateLimiter>();
@@ -351,6 +355,7 @@ app.MapNotificationEndpoints();
 app.MapCommentEndpoints();
 app.MapOutputEndpoints();
 app.MapAiEndpoints();
+app.MapAiAgentEndpoints();
 
 app.MapRazorPages();
 

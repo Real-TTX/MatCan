@@ -51,6 +51,7 @@ public static class Labels
         AiAction.DataImport => "Daten übernehmen",
         AiAction.DataFill => "Spalte füllen",
         AiAction.TextSuggest => "Text vorschlagen",
+        AiAction.DesignAgent => "Design (Assistent)",
         _ => "Verbindungstest",
     };
 
@@ -81,6 +82,11 @@ public static class Labels
         AiStepKind.Message => "Nachricht",
         AiStepKind.Action => "Aktion",
         AiStepKind.Result => "Ergebnis",
+        AiStepKind.User => "Nachricht der Person",
+        AiStepKind.Assistant => "Antwort der KI",
+        AiStepKind.Info => "Hinweis",
+        AiStepKind.Error => "Fehler",
+        AiStepKind.End => "Ende",
         _ => "Warnung",
     };
 }

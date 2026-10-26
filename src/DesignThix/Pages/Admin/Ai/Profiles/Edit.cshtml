@@ -45,6 +45,10 @@
         </div>
     </dt-card>
     <dt-buttons back-href="/Admin/Ai/Profiles" delete-url="@(p is null ? null : Url.Page("/Admin/Ai/Profiles/Edit", "Delete", new { id = Model.Id }))" delete-confirm="Dieses Profil löschen? Sein Schlüssel und seine ChatGPT-Anmeldung werden mit gelöscht.">
+        @if (p is not null)
+        {
+            <button type="submit" formaction="@Url.Page("/Admin/Ai/Profiles/Edit", "Test", new { id = Model.Id })" formnovalidate class="mat-btn mat-btn--secondary" data-ai-test>@Ui.Icon("play")<span>Testen</span></button>
+        }
         @if (p is { IsActive: false })
         {
             <button type="submit" formaction="@Url.Page("/Admin/Ai/Profiles/Edit", "Activate", new { id = Model.Id })" formnovalidate class="mat-btn mat-btn--secondary">@Ui.Icon("check")<span>Aktivieren</span></button>
