@@ -49,7 +49,7 @@ public static class DesignPackageLogic
             design.Category,
             design.Description,
             DocumentValidator.ToJson(document),
-            [.. assets.Select(a => new PackageAsset(a.Key, a.Name, a.Category, a.ContentType, a.Bytes))],
+            [.. assets.Select(a => new PackageAsset(a.Key, a.Name, a.Category, a.ContentType, a.Bytes, a.SourceJson))],
             [.. fonts.Select(f => new PackageFont(f.Family, f.Weight, f.Style, f.Format, f.Bytes))]);
         await biz.Log.LogAsync("Design exportiert", nameof(Design), designId, $"{design.Name}: {assets.Count} Medien, {fonts.Count} Schriften");
         return (DesignPackageFormat.Write(package), DesignPackageFormat.FileName(design.Name));
@@ -156,6 +156,7 @@ public static class DesignPackageLogic
                 SizeBytes = prepared.Bytes.LongLength,
                 SpaceId = space,
                 FolderId = folder,
+                SourceJson = source.SourceJson,
             });
             added++;
         }

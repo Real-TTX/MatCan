@@ -153,6 +153,7 @@ public sealed class ShellFactory(ICurrentUser user, IHttpContextAccessor accesso
         [
             new("Plattform", "/Admin/Platform", "sliders"),
             new("E-Mail", "/Admin/Mail", "mail"),
+            new("Kataloge", "/Admin/Catalogs", "dt:images"),
         ]),
         new("KI",
         [

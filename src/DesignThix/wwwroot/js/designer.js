@@ -138,6 +138,7 @@
       var items = [
         { label: 'KI-Assistent', icon: 'sparkles', run: function () { D.panels.open('ai'); }, hidden: !(D.ai && D.ai.entryVisible()) },
         { label: 'Vorlagen', icon: 'layout-template', run: function () { D.panels.open('templates'); } },
+        { label: 'Fotos', icon: 'images', run: function () { D.panels.open('photos'); }, hidden: !(D.photos && D.photos.visible()) },
         { label: 'Marke', icon: 'badge-check', run: function () { D.panels.open('brand'); } },
         { label: 'Kommentare' + (D.comments && D.comments.openCount() ? ' (' + D.comments.openCount() + ')' : ''), icon: 'message-square', run: function () { D.panels.open('comments'); } },
         { label: 'Daten (Zusatz)', icon: 'database', run: function () { D.panels.open('data'); } },
@@ -230,6 +231,8 @@
         initResponsive();
         // the design assistant: its rail entry appears when the server says so; a run that is going on (or ?ai=<conversation> after "Mit KI entwerfen") is followed from the start
         if (D.ai) { D.ai.init(app, config); }
+        // the panel Fotos: its rail entry appears when a catalogue with pictures (besides Mitgeliefert and Uploads) is switched on
+        if (D.photos) { D.photos.init(app, config); }
         if (restored) { app.baseRevision = restored.revision; app.markDirty(); }
         rootEl.classList.remove('is-loading');
         refs.loading.hidden = true;

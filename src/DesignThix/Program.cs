@@ -70,6 +70,15 @@ builder.Services.AddSingleton<AiAgentRunner>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<AiAgentRunner>());
 builder.Services.AddSingleton<TrashPurger>();
 builder.Services.AddSingleton<PresenceTracker>();
+builder.Services.AddSingleton<DesignThix.Catalogs.CatalogRegistry>();
+builder.Services.AddSingleton<DesignThix.Catalogs.CatalogHttp>();
+builder.Services.AddSingleton<DesignThix.Catalogs.CatalogProxy>();
+builder.Services.AddSingleton<DesignThix.Catalogs.CatalogLimiter>();
+builder.Services.AddSingleton<DesignThix.Catalogs.CatalogSecretStore>();
+builder.Services.AddSingleton<DesignThix.Catalogs.CatalogThumbCache>();
+builder.Services.AddSingleton<DesignThix.Catalogs.CatalogServices>();
+builder.Services.AddSingleton<DesignThix.Catalogs.CatalogCacheCleaner>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<DesignThix.Catalogs.CatalogCacheCleaner>());
 builder.Services.AddSingleton<PublicRateLimiter>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<TrashPurger>());
 builder.Services.AddSingleton<MailQueue>();
@@ -356,6 +365,7 @@ app.MapCommentEndpoints();
 app.MapOutputEndpoints();
 app.MapAiEndpoints();
 app.MapAiAgentEndpoints();
+app.MapCatalogEndpoints();
 
 app.MapRazorPages();
 

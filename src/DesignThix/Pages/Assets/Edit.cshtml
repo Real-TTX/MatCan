@@ -34,12 +34,23 @@
                 <dt>Dateigröße</dt><dd>@Fmt.FileSize(a.SizeBytes)</dd>
                 <dt>Bildgröße</dt><dd>@(a.Width is { } w && a.Height is { } h ? $"{w} × {h} Pixel" : "unbekannt")</dd>
                 <dt>Prüfsumme (SHA-256)</dt><dd class="mat-mono dt-break">@a.ContentHash</dd>
-                <dt>Herkunft</dt><dd>@(a.IsBuiltIn ? "mitgeliefert (Flaggen und Siegel von DesignThix)" : "von dir hochgeladen")</dd>
+                <dt>Herkunft</dt><dd>@(a.IsBuiltIn ? "mitgeliefert (Flaggen und Siegel von DesignThix)" : Model.Source is { } source ? "aus dem Katalog „" + source.CatalogName + "“" : "von dir hochgeladen")</dd>
                 <dt>Zuletzt geändert</dt><dd>@Fmt.Moment(a.UpdateDate)</dd>
             </dl>
             <div class="mat-btn-row mat-btn-row--plain">
                 <a class="mat-btn mat-btn--secondary" href="/media/@Uri.EscapeDataString(a.Key)?download=1">@Ui.Icon("download")<span>Herunterladen</span></a>
             </div>
+            @if (Model.Source is { } src)
+            {
+                <h3 class="dt-subhead">Quelle</h3>
+                <dl class="mat-kv" data-asset-source>
+                    @if (!string.IsNullOrEmpty(src.Title)) { <dt>Titel</dt><dd>@src.Title</dd> }
+                    @if (!string.IsNullOrEmpty(src.Author)) { <dt>Urheber</dt><dd>@if (!string.IsNullOrEmpty(src.AuthorUrl)) { <a href="@src.AuthorUrl" target="_blank" rel="noopener noreferrer">@src.Author</a> } else { @src.Author }</dd> }
+                    @if (!string.IsNullOrEmpty(src.LicenceName)) { <dt>Lizenz</dt><dd>@if (!string.IsNullOrEmpty(src.LicenceUrl)) { <a href="@src.LicenceUrl" target="_blank" rel="noopener noreferrer">@src.LicenceName</a> } else { @src.LicenceName }</dd> }
+                    @if (!string.IsNullOrEmpty(src.SourceUrl)) { <dt>Seite beim Anbieter</dt><dd><a href="@src.SourceUrl" target="_blank" rel="noopener noreferrer">@src.SourceUrl</a></dd> }
+                    @if (!string.IsNullOrEmpty(src.Attribution)) { <dt>Bildnachweis</dt><dd>@src.Attribution</dd> }
+                </dl>
+            }
             @if (!ro)
             {
                 <h3 class="dt-subhead">Datei ersetzen</h3>

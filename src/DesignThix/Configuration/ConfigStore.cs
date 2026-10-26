@@ -113,6 +113,7 @@ public sealed class ConfigStore
 
         copy.Database = fromFile.Database;
         copy.Server = fromFile.Server;
+        copy.Catalogs = fromFile.Catalogs;
         return copy;
     }
 
@@ -128,6 +129,19 @@ public sealed class ConfigStore
         if (Env("Server__PublicUrl") is { Length: > 0 } url) { config.Server.PublicUrl = url.TrimEnd('/'); }
         if (Env("Server__TimeZone") is { Length: > 0 } zone) { config.Server.TimeZone = zone; }
         if (bool.TryParse(Env("Server__ForceSecureCookie"), out var secure)) { config.Server.ForceSecureCookie = secure; }
+
+        // DESIGNTHIX__Catalogs__<id>__BaseUrl (the id may contain dashes: example-browse)
+        foreach (System.Collections.DictionaryEntry variable in Environment.GetEnvironmentVariables())
+        {
+            var name = variable.Key?.ToString() ?? "";
+            const string prefix = "DESIGNTHIX__CATALOGS__";
+            const string suffix = "__BASEURL";
+            if (name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && name.EndsWith(suffix, StringComparison.OrdinalIgnoreCase) && name.Length > prefix.Length + suffix.Length && variable.Value?.ToString() is { Length: > 0 } baseUrl)
+            {
+                var id = name[prefix.Length..^suffix.Length].ToLowerInvariant();
+                config.Catalogs[id] = new CatalogOperatorConfig { BaseUrl = baseUrl.TrimEnd('/') };
+            }
+        }
     }
 }
 

@@ -9,9 +9,9 @@ Styles: `wwwroot/css/designer.css` (+ `dt-media.css` for the media browser), Mat
 
 ```
 .dt-top      back | Datei ▾ | undo redo | save state | name (click to rename) | people (avatars, presence) | Serie | Herunterladen | Drucken | Teilen (or "Kopie erstellen" when read-only)
-.dt-rail     Vorlagen KI Elemente Text Uploads Marke Ebenen Kommentare Daten (Zusatz)        .dt-panel (≈ 340 px, collapsible; context pages with a back arrow)
+.dt-rail     Vorlagen KI Elemente Text Uploads Fotos Marke Ebenen Kommentare Daten (Zusatz)        .dt-panel (≈ 340 px, collapsible; context pages with a back arrow)
 .dt-ds__center  .dt-ctx (contextual toolbar) / canvas (#dt-viewport > #dt-sheet > #dt-page + #dt-overlay) / .dt-bottom (page strip, zoom)
-.dt-tabbar   phones only: Elemente Text Uploads Ebenen Mehr (KI-Assistent, Vorlagen, Marke, Kommentare ...)
+.dt-tabbar   phones only: Elemente Text Uploads Ebenen Mehr (KI-Assistent, Vorlagen, Fotos, Marke, Kommentare ...)
 ```
 
 >= 1024 px everything is side by side. 768 to 1023 px the panel is an overlay drawer next to the rail (closes on a tap on the canvas, after adding something) and the toolbar scrolls
@@ -38,6 +38,7 @@ a 44 px hit area. A person with View only (`canEdit=false`) gets the same page w
 | `designer.panel-text.js` | The panel **Text**: three add buttons (brand fonts) and the ten **Schriftkombinationen** (`D.textCombos = { list, insert(app, combo, at), build }`). |
 | `designer.panel-templates.js` | The panel **Vorlagen** (previews drawn by the engine, category chips, search, the dialog "Aktuelle Seite ersetzen" / "Als neue Seite hinzufügen"); `D.templates = { list(), apply(t, mode), dialog(t) }`. |
 | `designer.panel-uploads.js`, `-layers.js`, `-data.js`, `-position.js` | Uploads, Ebenen (tree), Daten (Zusatz) (+ `D.data`, the preview state), Position (context page). |
+| `designer.panel-photos.js` | Plan 5 (catalogues): the panel **Fotos** (`D.photos = { init, visible, open, state }`) and the dialog **Bildnachweise** (`D.credits = { open, text }`). See "Catalogues in the editor" below. |
 | `designer.panel-comments.js` (+ `css/designer-comments.css`) | `D.comments` (P5): the rail entry **Kommentare** (badge = open threads), the panel (filter, "Nur diese Seite", threads with replies, composer with `@` mentions) and the **pins** on the canvas: buttons in the layer `#dt-pins` inside `#dt-sheet` (outside `#dt-page`, so never in a download, print or thumbnail). See "Comments" below. |
 | `designer.ai.js` (+ `css/designer-ai.css`, `ai-attach.js`) | `D.ai` (plan 4, A2): the rail entry **KI** (first after Vorlagen; hidden until `GET /api/ai/designs/{id}/agent` says `showEntry`), its panel, the live canvas, the lock while a run works, the pictures for `look`. See "The design assistant" below. |
 | `designer.effects.js` | The context pages **Effekte** (text: presets and the properties shadow, outline, background, curve) and **Anpassen** (image: looks and filters); both have `reselect: true`, so they follow the selection. |
@@ -49,7 +50,7 @@ a 44 px hit area. A person with View only (`canEdit=false`) gets the same page w
 | `designer.share.js` | `D.share` (P3): the top bar's **Teilen** button (`DtShare.open`) or **Kopie erstellen** for read-only people (`DtMove.pick`, else a plain area select, `POST /api/items/copy`), the avatars of the people with access (max 4 + "+N") and **presence**: `POST /api/designs/{id}/presence` every 15 s while visible, `{ leave: true }` on `pagehide`; a dot on the avatar of everybody who has the design open, the toast "Anna bearbeitet dieses Design gerade.". `D.share.beat()` for the checks. |
 | `designer.shortcuts.js` | Keyboard, clipboard events (copy/cut), the Tastenkürzel dialog. **K** opens the composer of the comments (C adds a circle). |
 | `designer.js` | Boot: loads design, fonts, assets, brand, formats; starts the modules in order; top bar; phone tab bar. |
-| `dt-media.js` + `css/dt-media.css` | The media browser `window.DtMedia.pick(options, callback(key, asset))`, standalone (also used by `/Brand`). |
+| `dt-media.js` + `css/dt-media.css` | The media browser `window.DtMedia.pick(options, callback(key, asset))`, standalone (also used by `/Brand`, the data list grid and the single print). Five library tabs (Uploads, Flaggen, Siegel, Logos, Alle) and one tab per catalogue (plan 5, see below). |
 
 ## State and commands (`D.createApp`, `D.app`)
 
@@ -116,6 +117,13 @@ The module keeps all state (threads, filter, drafts of the composer, of the repl
 - **Rules for changes**: no `innerHTML`; a new action kind needs its card in `actionCard` and its `END_TEXT`; never start a gesture while `busy`; the module must work when the panel is not built (the poll goes on).
 - **Check**: `tests/e2e/ai-design-check.js` (see tests/e2e/README.md).
 
+## Catalogues in the editor (plan 5, `docs/PLAN-CATALOGS.md`)
+
+* **The media browser is catalogue-driven.** `DtMedia.pick` asks `GET /api/catalogs` (cached for a minute, `DtMedia.catalogs()`) and appends a tab `data-tab="cat-<id>"` for every usable catalogue with pictures except Mitgeliefert and Uploads (the first five tabs show those through `/api/assets`, so `options.tab`, `options.category` and every existing caller work unchanged). A browsable catalogue shows chips for its collections and its first page, a search-only one suggestion chips and "Gib einen Suchbegriff ein." (no request without words); results arrive in pages of 30 ("Mehr laden" + an IntersectionObserver); a tile shows title, author · licence and, for an external source, a badge with the name of the catalogue (hidden on a phone); the provider's link (their rule) and the format select (`caps.filters`) sit above the grid. A click IMPORTS the item (`POST /api/catalogs/{id}/import` with `preferSpace` = the area of the open design, a spinner on the tile) and then calls the callback with the new asset like for an upload, so replacing an image, strip slots, backgrounds, the brand logos, data list cells and the single print get the catalogues for free. Thumbnails are `/api/catalogs/thumb/<token>`, never the address of a provider.
+* **Fotos** (`designer.panel-photos.js`, rail id `photos`, order 45; `hidden` until `D.photos.init` finds a usable catalogue with pictures that is not Mitgeliefert or Uploads and the person may edit: with only the two local catalogues the panel Uploads and the media browser are the places): one catalogue at a time (a chip each when there are several), search (250 ms), the format select, collections or suggestions, the provider link, tiles built like those of Uploads: `D.dnd.attach(tile, { onClick: use, onDrop: use at x, y })`; `use` imports first, then `app.addAssets([asset])`, `app.emit('uploaded')` and `D.io.useAsset(asset)` (click) or `D.canvas.dropAsset(asset, x, y)` (drop; onto an image, frame or strip slot it replaces the source). The module keeps its state, so `D.panels.open` may rebuild the panel at any time. The phone has "Fotos" under Mehr.
+* **Bildnachweise** (Datei menu, also in the phone's Datei submenu): `GET /api/designs/{id}/credits` after a `D.save.flush()`; one card per image of the design that came from an EXTERNAL catalogue (title, author (link), catalogue, licence (link), "Quelle" link); "Text kopieren" copies one line per image (the provider's own credit line when it has one). Links are only made for `http(s)` addresses; the dialog also opens for somebody who may only view the design.
+* **Rules for changes**: text of a provider only through `textContent`; no address of a provider in a page (everything goes through the proxy); a new catalogue needs no change in these scripts.
+
 ## How to extend
 
 * **A toolbar control** for a kind: `D.toolbar.extend('text', function (ctx, controls) { controls.splice(3, 0, ctx.button({ icon, label, pressed: function () {…}, onClick: function () {…} })); })`.
@@ -135,7 +143,7 @@ The module keeps all state (threads, filter, drafts of the composer, of the repl
 
 `GET/POST /api/designs/{id}` (`{ revision, document, autosave }`; 409 → dialog; autosaves of one person within 10 minutes share one history entry, Ctrl+S makes a new one),
 `/rename`, `/copy`, `/thumbnail`, `/resize`; `POST /api/designs` (one-click create); `GET /api/formats`, `/api/templates`, `/api/brand`, `/api/fonts`, `/api/assets?q&category&sort&take`,
-`POST /api/assets/upload`, `POST /api/fonts/upload`, `GET /api/datalists`, `/api/datalists/{id}/rows`, `/lib/icons.json`; sharing (P3): `GET /api/share/design/{id}` (the people with access), `POST /api/designs/{id}/presence`, `POST /api/items/copy`; comments (P5): see "Comments". Every POST carries `RequestVerificationToken`.
+`POST /api/assets/upload`, `POST /api/fonts/upload`, catalogues (plan 5): `GET /api/catalogs`, `/api/catalogs/{id}/collections|search`, `POST /api/catalogs/{id}/import`, `GET /api/designs/{id}/credits`, `GET /api/datalists`, `/api/datalists/{id}/rows`, `/lib/icons.json`; sharing (P3): `GET /api/share/design/{id}` (the people with access), `POST /api/designs/{id}/presence`, `POST /api/items/copy`; comments (P5): see "Comments". Every POST carries `RequestVerificationToken`.
 
 ## Checks
 

@@ -73,6 +73,8 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
 
     public DbSet<ItemAssetRef> ItemAssetRef => Set<ItemAssetRef>();
 
+    public DbSet<CatalogCacheEntry> CatalogCacheEntry => Set<CatalogCacheEntry>();
+
     protected override void OnModelCreating(ModelBuilder b)
     {
         // Tables are PascalCase and named like the entity; enums are stored as text; JSON documents are jsonb.
@@ -339,6 +341,14 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
             e.Property(x => x.Text).HasMaxLength(2000);
             e.HasIndex(x => x.DesignId);
             e.HasIndex(x => x.ParentId);
+        });
+
+        b.Entity<CatalogCacheEntry>(e =>
+        {
+            e.Property(x => x.Catalog).HasMaxLength(40);
+            e.Property(x => x.KeyHash).HasMaxLength(64);
+            e.HasIndex(x => new { x.Catalog, x.KeyHash }).IsUnique();
+            e.HasIndex(x => x.ExpiresDate);
         });
 
         b.Entity<ItemAssetRef>(e =>

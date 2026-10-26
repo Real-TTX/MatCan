@@ -12,6 +12,9 @@ services:
       - "3043:3043"
     volumes:
       - web-data:/data
+      # Ein Bildarchiv als Katalog "Ordner" (Verwaltung → Kataloge): einen Ordner des Servers nur lesend einhängen und seinen Namen
+      # (hier "Firmenbilder") auf der Seite des Katalogs eintragen. DesignThix liest nur, es verändert nichts darin.
+      # - /srv/bilder:/data/catalogs/Firmenbilder:ro
     depends_on:
       db:
         condition: service_healthy

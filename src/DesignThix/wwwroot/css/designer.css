@@ -675,3 +675,23 @@ html.dt-designer-page, .dt-designer-body { height: 100%; margin: 0; overflow: hi
 @media (max-width: 640px) { .dt-tpldlg__body { grid-template-columns: minmax(0, 1fr); } }
 
 @media print { .dt-ds { display: none; } }
+
+/* ---- the panel Fotos and the dialog Bildnachweise (plan 5): chips for the catalogues, collections and suggestions, tiles with author and licence, a spinner while a photo is imported */
+.dt-photos__cats, .dt-photos__chips { display: flex; flex-wrap: wrap; gap: var(--mat-space-2); }
+.dt-photos__cats[hidden], .dt-photos__chips[hidden] { display: none; }
+.dt-photos__cat, .dt-photos__chip { padding: 2px var(--mat-space-3); min-height: 1.75rem; border: 1px solid var(--mat-border); border-radius: 999px; background: var(--mat-surface); color: var(--mat-text); font: inherit; font-size: var(--mat-fs-sm); cursor: pointer; }
+.dt-photos__cat:hover, .dt-photos__chip:hover { border-color: var(--mat-accent); }
+.dt-photos__cat:focus-visible, .dt-photos__chip:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-photos__cat[aria-pressed="true"], .dt-photos__chip[aria-pressed="true"] { border-color: var(--mat-accent); background: var(--mat-accent-soft); color: var(--mat-accent-text); font-weight: 600; }
+.dt-photos__orient { width: 100%; }
+.dt-photos__providerlink { color: var(--mat-accent-text); text-decoration: underline; }
+.dt-photos__more { justify-self: center; }
+.dt-photo { position: relative; }
+.dt-photo__credit { font-size: var(--mat-fs-xs); color: var(--mat-text-muted); text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-photo.is-busy { pointer-events: none; opacity: 0.7; }
+.dt-photo.is-busy .dt-asset__thumb::after { content: ''; position: absolute; top: 50%; left: 50%; width: 1.75rem; height: 1.75rem; margin: -0.875rem 0 0 -0.875rem; border: 3px solid var(--mat-border); border-top-color: var(--mat-accent); border-radius: 50%; animation: dt-photo-spin 0.8s linear infinite; }
+@keyframes dt-photo-spin { to { transform: rotate(360deg); } }
+.dt-credits__list { list-style: none; margin: var(--mat-space-3) 0 0; padding: 0; display: grid; gap: var(--mat-space-3); }
+.dt-credits__item { display: grid; gap: 2px; padding: var(--mat-space-3); border: 1px solid var(--mat-border); border-radius: var(--mat-radius); background: var(--mat-surface); }
+.dt-credits__meta { font-size: var(--mat-fs-sm); color: var(--mat-text-muted); overflow-wrap: anywhere; }
+.dt-credits__meta a { color: var(--mat-accent-text); text-decoration: underline; }

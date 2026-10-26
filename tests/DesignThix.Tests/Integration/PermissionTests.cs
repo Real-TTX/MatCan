@@ -1,3 +1,4 @@
+using DesignThix.Catalogs;
 using DesignThix.Core.Documents;
 using DesignThix.Data.Entities;
 using DesignThix.Logic;
@@ -52,6 +53,7 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
         new("DesignPackageLogic.ExportAsync", ItemKind.Design, AccessLevel.View, (biz, id, _) => DesignPackageLogic.ExportAsync(biz, id)),
         new("OutputLogic.AdhocPayloadAsync", ItemKind.Design, AccessLevel.View, (biz, id, _) => OutputLogic.AdhocPayloadAsync(biz, new AdhocRequest(id, null, 1, null, null, false, null, 1, null, null, null))),
         new("AssetRefs.ResolveAsync(design)", ItemKind.Design, AccessLevel.View, (biz, id, _) => AssetRefs.ResolveAsync(biz, ItemKind.Design, id, ["flag-de"])),
+        new("CatalogLogic.CreditsAsync", ItemKind.Design, AccessLevel.View, (biz, id, _) => CatalogLogic.CreditsAsync(biz, id)),
         new("ShareLogic.InfoAsync(design)", ItemKind.Design, AccessLevel.View, (biz, id, _) => ShareLogic.InfoAsync(biz, ItemKind.Design, id)),
         new("PresenceLogic.BeatAsync", ItemKind.Design, AccessLevel.View, (biz, id, _) => PresenceLogic.BeatAsync(biz, id)),
         new("CommentLogic.ListAsync", ItemKind.Design, AccessLevel.View, (biz, id, _) => CommentLogic.ListAsync(biz, id)),
@@ -244,6 +246,7 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
         new("AssetLogic.UploadAsync(in area)", SpaceRole.Editor, async (biz, team, _) => await AssetLogic.UploadAsync(biz, "x.png", Png(), null, team)),
         new("FontLogic.UploadAsync(in area)", SpaceRole.Editor, async (biz, team, _) => await FontLogic.UploadAsync(biz, "x.ttf", FakeFont((byte)Random.Shared.Next(1, 250)), null, team)),
         new("SheetLogic.SaveAsync(in area)", SpaceRole.Editor, (biz, team, _) => SheetLogic.SaveAsync(biz, null, new SheetLogic.SheetInput("Bogen", 210, 297, 0, 0, 1, 1, 100, 100, 0, 0, false), team)),
+        new("CatalogLogic.ImportAsync(in area)", SpaceRole.Editor, (biz, team, _) => CatalogLogic.ImportAsync(biz, "builtin", "kein-bild", team)),
         new("FolderLogic.CreateAsync(in area)", SpaceRole.Editor, (biz, team, _) => FolderLogic.CreateAsync(biz, team, null, "x")),
         new("DesignPackageLogic.ImportAsync(in area)", SpaceRole.Editor, (biz, team, _) => DesignPackageLogic.ImportAsync(biz, Bytes, team)),
         new("ItemLogic.MoveAsync(into area)", SpaceRole.Editor, (biz, team, _) => ItemLogic.MoveAsync(biz, [], team, null)),
@@ -371,6 +374,12 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
         ["AiLogic.RunDetailsAsync"] = biz => AiLogic.RunDetailsAsync(biz, Nobody),
         ["AiLogic.ContinueAsync"] = biz => AiLogic.ContinueAsync(biz, Nobody, null),
         ["AiLogic.UsageAsync"] = biz => AiLogic.UsageAsync(biz),
+        ["CatalogLogic.AdminListAsync"] = biz => CatalogLogic.AdminListAsync(biz),
+        ["CatalogLogic.AdminGetAsync"] = biz => CatalogLogic.AdminGetAsync(biz, "builtin"),
+        ["CatalogLogic.SaveAsync"] = biz => CatalogLogic.SaveAsync(biz, "builtin", new CatalogInput(true, 0, 0, 0, true, [], [])),
+        ["CatalogLogic.SetKeyAsync"] = biz => CatalogLogic.SetKeyAsync(biz, "builtin", null, false),
+        ["CatalogLogic.TestAsync"] = biz => CatalogLogic.TestAsync(biz, "builtin"),
+        ["CatalogLogic.ClearCacheAsync"] = biz => CatalogLogic.ClearCacheAsync(biz),
     };
 
     public static TheoryData<string> AdminMethods
@@ -571,6 +580,9 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
         {
             ["DesignLogic.CountAsync"] = biz => DesignLogic.CountAsync(biz),
             ["AssetLogic.SearchAsync"] = biz => AssetLogic.SearchAsync(biz, null, "uploads", 5, "new"),
+            ["CatalogLogic.ListAsync"] = biz => CatalogLogic.ListAsync(biz),
+            ["CatalogLogic.CollectionsAsync"] = biz => CatalogLogic.CollectionsAsync(biz, "uploads"),
+            ["CatalogLogic.SearchAsync"] = biz => CatalogLogic.SearchAsync(biz, "builtin", new CatalogQuery { Text = "de" }),
             ["DesignLogic.TemplatesAsync"] = biz => DesignLogic.TemplatesAsync(biz),
             ["DesignLogic.FeaturedTemplatesAsync"] = biz => DesignLogic.FeaturedTemplatesAsync(biz, 4),
             ["DesignLogic.TemplateCategoriesAsync"] = biz => DesignLogic.TemplateCategoriesAsync(biz),

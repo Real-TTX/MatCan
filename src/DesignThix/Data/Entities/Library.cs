@@ -44,6 +44,9 @@ public class Asset : AuditedEntity, ISoftDeletable
     /// <summary>The key the built-in image was seeded with: a built-in that was renamed or deleted is not seeded again.</summary>
     public string? BuiltInKey { get; set; }
 
+    /// <summary>Where the image came from when it was imported from a catalogue (docs/PLAN-CATALOGS.md section 3): <c>{ catalog, itemId, title, author, authorUrl, sourceUrl, licence: { code, name, url }, attribution, importedDate }</c>; null for an own upload.</summary>
+    public string? SourceJson { get; set; }
+
     public UpdateState UpdateState { get; set; } = UpdateState.Created;
 }
 
@@ -79,6 +82,9 @@ public class Font : AuditedEntity, ISoftDeletable
     public string License { get; set; } = "";
 
     public string? Source { get; set; }
+
+    /// <summary>Like <see cref="Asset.SourceJson"/>: where a font imported from a catalogue came from; null for an uploaded or built-in font.</summary>
+    public string? SourceJson { get; set; }
 
     public UpdateState UpdateState { get; set; } = UpdateState.Created;
 }

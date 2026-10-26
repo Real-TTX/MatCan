@@ -17,6 +17,9 @@ public sealed class AppConfig
     public SecurityConfig Security { get; set; } = new();
 
     public OperatorAiConfig Ai { get; set; } = new();
+
+    /// <summary>What the operator presets per catalogue (docs/PLAN-CATALOGS.md section 4): a changed address of the provider, for tests and for a company that runs its own server. Only the file and the environment can set it, never the administration page (a page that names addresses would be a way to make the server ask for any address).</summary>
+    public Dictionary<string, CatalogOperatorConfig> Catalogs { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }
 
 public sealed class DatabaseConfig
@@ -70,4 +73,11 @@ public sealed class OperatorAiConfig
     public string RelayKey { get; set; } = "";
 
     public string RelayModel { get; set; } = "";
+}
+
+/// <summary>The operator's settings of one catalogue (<c>DESIGNTHIX__Catalogs__&lt;id&gt;__BaseUrl</c>).</summary>
+public sealed class CatalogOperatorConfig
+{
+    /// <summary>The address of the provider's API instead of the built-in one (for example <c>http://127.0.0.1:3073</c> for the fake providers of the browser checks). Empty = the built-in address.</summary>
+    public string BaseUrl { get; set; } = "";
 }

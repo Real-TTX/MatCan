@@ -1,8 +1,10 @@
 'use strict';
 // Runs the browser checks one after the other against a running stack and reports one line per check. The exit code is 0 only when all of them passed.
 //
-//   node run-all.js [base url, default http://localhost:3043] [--only engine,pwa,demo,home,projects,templates,designer,canva,content,output,share,comments,teams,ai,aidesign] [--quiet] [--fake-host h] [--fake-port p]
-//   (--fake-host / --fake-port go to the AI checks: with the app started by dotnet run on 3053 the default 127.0.0.1 is right, with Docker host.docker.internal is chosen for port 3043)
+//   node run-all.js [base url, default http://localhost:3043] [--only engine,pwa,demo,home,projects,templates,designer,canva,content,output,share,comments,teams,ai,aidesign,catalogs] [--quiet] [--fake-host h] [--fake-port p] [--data <data folder of the app>] [--catalog-port p]
+//   (--fake-host / --fake-port go to the AI checks: with the app started by dotnet run on 3053 the default 127.0.0.1 is right, with Docker host.docker.internal is chosen for port 3043;
+//   --data / --catalog-port go to the check of the catalogues: the data folder of the app (for the folder catalogue, else DT_DATA_DIR) and the port of its fake provider, 3073; the app must have been
+//   started with DESIGNTHIX__Catalogs__example-browse__BaseUrl and ...example-search__BaseUrl pointing at that port, see tests/e2e/README.md)
 //
 // The checks make their own accounts (see lib.js): start from an empty database (./scripts/redeploy.ps1 -Clean) or put the accounts into tests/e2e/test-account.json.
 // They leave test designs, lists and jobs behind: for the screenshots of the README use screens.js on a clean stack, not after this.
@@ -33,6 +35,7 @@ const checks = [
   { name: 'teams', file: 'teams-check.js', takesBase: true, what: 'teams, invitations, registration, administration, the bell and the notifications, mail settings, the phone' },
   { name: 'ai', file: 'ai-check.js', takesBase: true, extra: [...passOn('--fake-host'), ...passOn('--fake-port')], what: 'AI actions against a fake provider' },
   { name: 'aidesign', file: 'ai-design-check.js', takesBase: true, extra: [...passOn('--fake-host'), ...passOn('--fake-port')], what: 'the design assistant in the editor: create from a prompt, live canvas, steps, Stopp, undo, attachments, references, roles, phone' },
+  { name: 'catalogs', file: 'catalogs-check.js', takesBase: true, extra: [...passOn('--data'), ...passOn('--catalog-port')], what: 'the catalogues: admin pages, the media browser with catalogue tabs, the panel Fotos, imports, Bildnachweise, the server folder, roles, phone' },
 ];
 
 const summary = [];

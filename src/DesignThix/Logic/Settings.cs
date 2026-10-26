@@ -134,6 +134,7 @@ public sealed class SettingStore(IServiceScopeFactory scopes)
     public const string Brand = "Brand";
     public const string Platform = "Platform";
     public const string Mail = "Mail";
+    public const string Catalogs = "Catalogs";
     public const string VisitorSalt = "Ai.VisitorSalt";
 
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);

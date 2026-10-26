@@ -43,6 +43,9 @@ public sealed record AssetRow
 
     public DateTime CreateDate { get; init; }
 
+    /// <summary>Where the image came from when it was taken from a catalogue (see <see cref="Asset.SourceJson"/>); null for an upload.</summary>
+    public string? SourceJson { get; init; }
+
     /// <summary>The address of the file; the hash makes it immutable for the browser.</summary>
     public string Url => AssetLogic.Url(Key, ContentHash);
 }
@@ -100,7 +103,7 @@ public static class AssetLogic
     public static IQueryable<AssetRow> Query(Biz biz)
     {
         biz.RequireSignedIn();
-        return Access.Visible<Asset>(biz).AsNoTracking().Select(a => new AssetRow { Id = a.Id, Key = a.Key, Name = a.Name, Category = a.Category, Tags = a.Tags, ContentType = a.ContentType, Extension = a.Extension, Width = a.Width, Height = a.Height, SizeBytes = a.SizeBytes, ContentHash = a.ContentHash, IsBuiltIn = a.IsBuiltIn, SpaceId = a.SpaceId, FolderId = a.FolderId, UpdateDate = a.UpdateDate, CreateDate = a.CreateDate });
+        return Access.Visible<Asset>(biz).AsNoTracking().Select(a => new AssetRow { Id = a.Id, Key = a.Key, Name = a.Name, Category = a.Category, Tags = a.Tags, ContentType = a.ContentType, Extension = a.Extension, Width = a.Width, Height = a.Height, SizeBytes = a.SizeBytes, ContentHash = a.ContentHash, IsBuiltIn = a.IsBuiltIn, SpaceId = a.SpaceId, FolderId = a.FolderId, UpdateDate = a.UpdateDate, CreateDate = a.CreateDate, SourceJson = a.SourceJson });
     }
 
     public static async Task<AssetRow?> GetAsync(Biz biz, long id)
@@ -413,6 +416,8 @@ public static class AssetLogic
         asset.Bytes = prepared.Bytes;
         asset.ContentHash = prepared.Hash;
         asset.SizeBytes = prepared.Bytes.LongLength;
+        // another file is no longer the picture a catalogue gave: its credit does not apply any more
+        asset.SourceJson = null;
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync("Medium ersetzt", nameof(Asset), asset.Id, asset.Key);
         return ((await GetAsync(biz, id))!, prepared.Cleaned);

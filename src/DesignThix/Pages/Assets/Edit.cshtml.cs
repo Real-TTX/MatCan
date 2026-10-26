@@ -43,6 +43,9 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public AssetUsage Usage { get; private set; } = new([], []);
 
+    /// <summary>Where the image came from, when a catalogue gave it (null for an upload or a built-in image).</summary>
+    public CreditRow? Source { get; private set; }
+
     public List<SelectListItem> CategoryItems { get; private set; } = [];
 
     /// <summary>The person manages the image (its area, or an administrator for a built-in one): only they change or delete it.</summary>
@@ -121,6 +124,7 @@ public sealed class EditModel(Biz biz) : PageModelBase
         Asset = asset;
         CanEdit = await Access.LevelAsync(biz, Data.Entities.ItemKind.Asset, asset.Id) >= AccessLevel.Manage;
         Usage = await AssetLogic.UsageAsync(biz, asset.Key);
+        Source = CatalogLogic.SourceOf(CatalogLogic.Svc(biz).Registry, asset.Key, asset.Name, asset.SourceJson);
         var categories = AssetLogic.Categories.Union(await AssetLogic.UsedCategoriesAsync(biz));
         CategoryItems = [.. categories.Select(c => new SelectListItem(c, c))];
         Head(asset.Name, null, ("Bibliothek", null), ("Uploads & Medien", "/Assets"), (asset.Name, null));

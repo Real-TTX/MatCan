@@ -380,6 +380,7 @@
       { label: 'Herunterladen …', icon: 'download', run: downloadDialog },
       { label: 'Drucken', icon: 'printer', run: print },
       { label: 'Exportieren (.dtx.json)', icon: 'file-down', run: function () { D.save.flush().then(function () { var a = D.el('a', { href: '/Designs/Edit/' + app.id + '?handler=Export', download: '', class: 'mat-sr-only' }); document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 1000); }); } },
+      { label: 'Bildnachweise …', icon: 'images', run: function () { if (D.credits) { D.credits.open(); } } },
       { type: 'separator' },
       { label: 'Eigenschaften', icon: 'sliders-horizontal', run: function () { leave('/Designs/Edit/' + app.id); } },
       { label: 'Verlauf', icon: 'file-clock', run: function () { leave('/Designs/Edit/' + app.id + '?tab=history'); } },

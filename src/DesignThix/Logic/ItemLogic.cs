@@ -528,10 +528,18 @@ public static class ItemLogic
             }
 
             var (oldSpace, _) = await Access.RawPlaceAsync(biz.Db, item.Kind, item.Id);
+            string? movedSource = null;
+            var keepsSource = true;
             if (item.Kind == ItemKind.Asset && oldSpace != space)
             {
                 var size = await biz.Db.Asset.Where(a => a.Id == item.Id).Select(a => a.SizeBytes).FirstAsync();
                 await StorageLogic.RequireRoomAsync(biz, space, size);
+                // an image from a catalogue that moves to another area is no longer THE import of its item there (that area may have one already): its credit stays, marked as a copy
+                if (await biz.Db.Asset.Where(a => a.Id == item.Id).Select(a => a.SourceJson).FirstAsync() is { } source)
+                {
+                    movedSource = CatalogLogic.AsCopy(source);
+                    keepsSource = false;
+                }
             }
 
             var changed = item.Kind switch
@@ -539,7 +547,8 @@ public static class ItemLogic
                 ItemKind.Design => await biz.Db.Design.Where(d => d.Id == item.Id).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, space).SetProperty(d => d.FolderId, folder)),
                 ItemKind.DataList => await biz.Db.DataList.Where(d => d.Id == item.Id).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, space).SetProperty(d => d.FolderId, folder)),
                 ItemKind.OutputJob => await biz.Db.OutputJob.Where(d => d.Id == item.Id).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, space).SetProperty(d => d.FolderId, folder)),
-                _ => await biz.Db.Asset.Where(d => d.Id == item.Id).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, space).SetProperty(d => d.FolderId, folder)),
+                _ when keepsSource => await biz.Db.Asset.Where(d => d.Id == item.Id).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, space).SetProperty(d => d.FolderId, folder)),
+                _ => await biz.Db.Asset.Where(d => d.Id == item.Id).ExecuteUpdateAsync(s => s.SetProperty(d => d.SpaceId, space).SetProperty(d => d.FolderId, folder).SetProperty(d => d.SourceJson, movedSource)),
             };
             moved += changed;
         }
@@ -662,6 +671,7 @@ public static class ItemLogic
                     SizeBytes = source.SizeBytes,
                     SpaceId = space,
                     FolderId = folder,
+                    SourceJson = CatalogLogic.AsCopy(source.SourceJson),
                 };
                 db.Asset.Add(copy);
                 await db.SaveChangesAsync();

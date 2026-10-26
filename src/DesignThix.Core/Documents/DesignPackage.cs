@@ -6,8 +6,11 @@ using System.Text.Unicode;
 
 namespace DesignThix.Core.Documents;
 
-/// <summary>An image that travels with an exported design: its key in the source installation, name, category and the file itself.</summary>
-public sealed record PackageAsset(string Key, string Name, string Category, string ContentType, byte[] Bytes);
+/// <summary>
+/// An image that travels with an exported design: its key in the source installation, name, category and the file itself. <paramref name="SourceJson"/> is where it came from when a catalogue
+/// gave it (author, licence, links): the credit must travel with the picture, so it is part of the file; null for an own upload.
+/// </summary>
+public sealed record PackageAsset(string Key, string Name, string Category, string ContentType, byte[] Bytes, string? SourceJson = null);
 
 /// <summary>A font file that travels with an exported design (only fonts that are not built in): family, weight ("400" or "100 900"), style, file format and the file.</summary>
 public sealed record PackageFont(string Family, string Weight, string Style, string Format, byte[] Bytes);
@@ -90,6 +93,13 @@ public static partial class DesignPackageFormat
                 w.WriteString("category", asset.Category);
                 w.WriteString("contentType", asset.ContentType);
                 w.WriteString("base64", Convert.ToBase64String(asset.Bytes));
+                if (asset.SourceJson is not null && CleanSource(asset.SourceJson) is { } source)
+                {
+                    w.WritePropertyName("source");
+                    using var sourceDocument = JsonDocument.Parse(source);
+                    sourceDocument.RootElement.WriteTo(w);
+                }
+
                 w.WriteEndObject();
             }
 
@@ -230,7 +240,9 @@ public static partial class DesignPackageFormat
                 var assetName = TryString(entry, "name", out var rawAssetName) && rawAssetName.Trim().Length > 0 ? Clip(rawAssetName.Trim(), 200) : key;
                 var assetCategory = TryString(entry, "category", out var rawAssetCategory) && rawAssetCategory.Trim().Length > 0 ? Clip(rawAssetCategory.Trim(), 60) : "Uploads";
                 var contentType = TryString(entry, "contentType", out var rawType) ? Clip(rawType.Trim(), 100) : "";
-                assets.Add(new PackageAsset(key, assetName, assetCategory, contentType, bytes));
+                // the credit of a picture from a catalogue travels with it: only the known fields of a plain source record are taken, as text
+                var sourceText = entry.TryGetProperty("source", out var sourceElement) && sourceElement.ValueKind is JsonValueKind.Object or JsonValueKind.String ? (sourceElement.ValueKind == JsonValueKind.String ? sourceElement.GetString() : sourceElement.GetRawText()) : null;
+                assets.Add(new PackageAsset(key, assetName, assetCategory, contentType, bytes, sourceText is null ? null : CleanSource(sourceText)));
             }
         }
 
@@ -306,6 +318,61 @@ public static partial class DesignPackageFormat
         catch (FormatException)
         {
             problem = "Der Inhalt (base64) ist beschädigt.";
+            return null;
+        }
+    }
+
+    private static readonly string[] SourceTextFields = ["catalog", "itemId", "title", "author", "authorUrl", "sourceUrl", "attribution"];
+
+    /// <summary>
+    /// The record that says where an image came from (<c>{ catalog, itemId, title, author, authorUrl, sourceUrl, licence: { code, name, url }, attribution }</c>), reduced to those fields, every value as
+    /// clipped text without control characters, every address http(s) or empty, and marked <c>copy</c> (it is no import of this installation). null when it is no such record.
+    /// </summary>
+    public static string? CleanSource(string json)
+    {
+        if (json.Length > 20_000)
+        {
+            return null;
+        }
+
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object || !TryString(doc.RootElement, "catalog", out var catalog) || !Regex.IsMatch(catalog, "^[a-z0-9-]{1,40}$"))
+            {
+                return null;
+            }
+
+            string Text(JsonElement e, string name, int max)
+            {
+                if (!TryString(e, name, out var raw))
+                {
+                    return "";
+                }
+
+                var clean = new string([.. raw.Trim().Where(c => !char.IsControl(c) && (int)c is not (0x200B or 0x200C or 0x200D or 0x2060 or 0xFEFF or (>= 0x202A and <= 0x202E) or (>= 0x2066 and <= 0x2069)))]);
+                if (name.EndsWith("Url", StringComparison.Ordinal) || name == "url")
+                {
+                    return clean.Length <= 500 && Uri.TryCreate(clean, UriKind.Absolute, out var uri) && uri.Scheme is "http" or "https" ? uri.AbsoluteUri : "";
+                }
+
+                return Clip(clean, max);
+            }
+
+            var o = new Dictionary<string, object?>();
+            foreach (var field in SourceTextFields)
+            {
+                o[field] = Text(doc.RootElement, field, field is "attribution" ? 300 : field == "itemId" ? 500 : 200);
+            }
+
+            o["licence"] = doc.RootElement.TryGetProperty("licence", out var l) && l.ValueKind == JsonValueKind.Object
+                ? new Dictionary<string, object?> { ["code"] = Text(l, "code", 40), ["name"] = Text(l, "name", 80), ["url"] = Text(l, "url", 500), ["attributionRequired"] = l.TryGetProperty("attributionRequired", out var r) && r.ValueKind == JsonValueKind.True }
+                : null;
+            o["copy"] = true;
+            return JsonSerializer.Serialize(o, new JsonSerializerOptions { Encoder = Encoder });
+        }
+        catch (JsonException)
+        {
             return null;
         }
     }

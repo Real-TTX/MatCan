@@ -1,4 +1,5 @@
 using System.Net;
+using DesignThix.Catalogs;
 using DesignThix.Services.Ai;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -26,8 +27,12 @@ public sealed class AppTests
     {
         public static string? Connection => Environment.GetEnvironmentVariable("DESIGNTHIX_TEST_DB");
 
-        /// <summary>Registers the test seam of the AI: tests set <see cref="AiTestSeam.Handler"/> to answer instead of a provider (see AiTests).</summary>
-        protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureServices(services => services.AddSingleton<AiTestSeam>());
+        /// <summary>Registers the test seams: of the AI (tests set <see cref="AiTestSeam.Handler"/> to answer instead of a provider, see AiTests) and of the catalogues (<see cref="CatalogTestSeam"/>: no request ever leaves the process, see CatalogTests).</summary>
+        protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.ConfigureServices(services =>
+        {
+            services.AddSingleton<AiTestSeam>();
+            services.AddSingleton<CatalogTestSeam>();
+        });
 
         public AppFactory()
         {
@@ -44,6 +49,9 @@ public sealed class AppTests
             Environment.SetEnvironmentVariable("DESIGNTHIX__Database__Database", "designthix_it_" + Guid.NewGuid().ToString("N")[..8]);
             Environment.SetEnvironmentVariable("DESIGNTHIX_DATA", Path.Combine(Path.GetTempPath(), "designthix-it-" + Guid.NewGuid().ToString("N")));
             Environment.SetEnvironmentVariable("ASPNETCORE_URLS", "http://127.0.0.1:0");
+            // the two example catalogues exist only with an address; the seam answers for it (nothing is ever asked on the network)
+            Environment.SetEnvironmentVariable("DESIGNTHIX__Catalogs__example-browse__BaseUrl", "https://example-stock.test");
+            Environment.SetEnvironmentVariable("DESIGNTHIX__Catalogs__example-search__BaseUrl", "https://example-stock.test");
         }
     }
 
@@ -152,6 +160,13 @@ public sealed class AppTests
     [InlineData("/api/notifications/count")]
     [InlineData("/api/designs/1/comments")]
     [InlineData("/api/designs/1/comments/mentions?q=a")]
+    [InlineData("/api/catalogs")]
+    [InlineData("/api/catalogs/builtin/collections")]
+    [InlineData("/api/catalogs/builtin/search?q=a")]
+    [InlineData("/api/catalogs/thumb/abc")]
+    [InlineData("/api/designs/1/credits")]
+    [InlineData("/Admin/Catalogs")]
+    [InlineData("/Admin/Catalogs/Edit?id=builtin")]
     public async Task Nothing_of_the_library_is_served_to_a_visitor_who_is_not_signed_in(string path)
     {
         if (AppFactory.Connection is null)
@@ -180,6 +195,7 @@ public sealed class AppTests
     [InlineData("/api/outputs/1/ran")]
     [InlineData("/api/ai/datalists/1/import")]
     [InlineData("/api/ai/runs/1/apply")]
+    [InlineData("/api/catalogs/builtin/import")]
     public async Task A_post_without_a_signed_in_person_is_not_accepted(string path)
     {
         if (AppFactory.Connection is null)

@@ -594,6 +594,9 @@ namespace DesignThix.Data.Migrations
                     b.Property<long>("SizeBytes")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("SourceJson")
+                        .HasColumnType("jsonb");
+
                     b.Property<long?>("SpaceId")
                         .HasColumnType("bigint");
 
@@ -632,6 +635,53 @@ namespace DesignThix.Data.Migrations
                     b.HasIndex("SpaceId", "FolderId", "TrashedDate");
 
                     b.ToTable("Asset");
+                });
+
+            modelBuilder.Entity("DesignThix.Data.Entities.CatalogCacheEntry", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Catalog")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("CreateUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("ExpiresDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("KeyHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("ResponseJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpiresDate");
+
+                    b.HasIndex("Catalog", "KeyHash")
+                        .IsUnique();
+
+                    b.ToTable("CatalogCacheEntry");
                 });
 
             modelBuilder.Entity("DesignThix.Data.Entities.Comment", b =>
@@ -1049,6 +1099,9 @@ namespace DesignThix.Data.Migrations
 
                     b.Property<string>("Source")
                         .HasColumnType("text");
+
+                    b.Property<string>("SourceJson")
+                        .HasColumnType("jsonb");
 
                     b.Property<long?>("SpaceId")
                         .HasColumnType("bigint");
