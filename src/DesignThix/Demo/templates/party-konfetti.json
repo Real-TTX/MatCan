@@ -1,0 +1,43 @@
+{
+  "name": "Party-Einladung – Konfetti",
+  "category": "Einladungen",
+  "description": "Bunte Einladung für jede Party (A6 hoch): Partyhut, Konfettiregen auf Violett und eine weiße Tafel für Datum, Ort und Zusage. Der Anlass ist ein Feld.",
+  "family": "party-einladung",
+  "familyName": "Party-Einladung",
+  "variant": "Konfetti",
+  "occasion": "Feste & Events",
+  "tags": ["Party","Einladung","Feier","Fest","Geburtstag","Einladungskarte","Feiern","Konfetti","Bunt","Partyhut","Geburtstagsparty","Gartenparty"],
+  "formatKey": "a6-portrait",
+  "number": 225,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Anlass","label":"Anlass","type":"text","sample":"Sommerparty","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#2f1c6b","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Konfetti","x":0,"y":-4,"w":105,"h":105,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-streuung-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Konfetti unten","x":0,"y":60,"w":105,"h":105,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":true,"flipY":true,"shadow":null,"source":{"asset":"deko-konfetti-streuung-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"shape","name":"Tafel","x":10,"y":50,"w":85,"h":88,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":5,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"image","name":"Partyhut","x":40,"y":11,"w":26.114,"h":42,"rotation":8,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-partyhut-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Kopf","x":14,"y":56,"w":77,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"DU BIST EINGELADEN","fontFamily":"Fredoka","fontSize":9.5,"fontWeight":600,"italic":false,"color":"#ff4f8b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Anlass","x":12,"y":63,"w":81,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Anlass}}","fontFamily":"Baloo 2","fontSize":26,"fontWeight":800,"italic":false,"color":"#2f1c6b","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Text","x":14,"y":87,"w":77,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir feiern – komm vorbei!","fontFamily":"Patrick Hand","fontSize":13,"fontWeight":400,"italic":false,"color":"#2f1c6b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"shape","name":"Datum Chip","x":15,"y":99,"w":7.5,"h":7.5,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ff4f8b","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"icon","name":"Datum Symbol","x":16.65,"y":100.65,"w":4.2,"h":4.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"calendar-days","color":"#ffffff","strokeWidth":2},
+        {"id":"e10","type":"text","name":"Datum","x":25,"y":98.5,"w":65,"h":8.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 19. Juni 2027 · 19 Uhr","fontFamily":"Nunito","fontSize":9,"fontWeight":700,"italic":false,"color":"#2f1c6b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"shape","name":"Ort Chip","x":15,"y":109,"w":7.5,"h":7.5,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ff4f8b","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e12","type":"icon","name":"Ort Symbol","x":16.65,"y":110.65,"w":4.2,"h":4.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"map-pin","color":"#ffffff","strokeWidth":2},
+        {"id":"e13","type":"text","name":"Ort","x":25,"y":108.5,"w":65,"h":8.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Nunito","fontSize":9,"fontWeight":700,"italic":false,"color":"#2f1c6b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"shape","name":"Zusage Chip","x":15,"y":119,"w":7.5,"h":7.5,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ff4f8b","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e15","type":"icon","name":"Zusage Symbol","x":16.65,"y":120.65,"w":4.2,"h":4.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"phone","color":"#ffffff","strokeWidth":2},
+        {"id":"e16","type":"text","name":"Zusage","x":25,"y":118.5,"w":65,"h":8.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 5. Juni: 0170 1234567","fontFamily":"Nunito","fontSize":9,"fontWeight":700,"italic":false,"color":"#2f1c6b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Anlass":"Sommerparty"},
+    {"Anlass":"Garten-Geburtstagsparty"},
+    {"Anlass":"Party"}
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "Flyer A5 quer – Lieferdienst Asia",
+  "category": "Flyer",
+  "description": "Reduzierter A5-Flyer im Querformat für Sushi-, Wok- oder Asia-Lieferdienst: nahezu schwarzer Grund, roter Sonnenkreis, feine Schrift in Raleway, Liefergebiet und QR-Code zur Online-Bestellung.",
+  "family": "flyer-lieferdienst",
+  "familyName": "Flyer Lieferdienst",
+  "variant": "Asia",
+  "occasion": "Gastronomie",
+  "tags": ["Flyer","Querformat","Lieferdienst","Sushi","Asia","Wok","Online bestellen","QR-Code","Gastronomie","Reduziert"],
+  "formatKey": "a5-landscape",
+  "number": 324,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#16161a","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Sonne","x":112,"y":10,"w":100,"h":100,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#c1121f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Sonne Ring","x":106,"y":4,"w":112,"h":112,"rotation":0,"opacity":0.6,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c1121f","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Etikett","x":16,"y":18,"w":80,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SUSHI  ·  WOK  ·  BOWLS","fontFamily":"Raleway","fontSize":9,"fontWeight":600,"italic":false,"color":"#ff8a8a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.32,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Titel","x":16,"y":28,"w":112,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Frisch\ngerollt.","fontFamily":"Raleway","fontSize":54,"fontWeight":200,"italic":false,"color":"#ffffff","align":"left","valign":"top","lineHeight":1.05,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":28,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel 2","x":16,"y":84,"w":100,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Direkt an deine Tür.","fontFamily":"Raleway","fontSize":14,"fontWeight":500,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Linie","x":16,"y":100,"w":40,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c1121f","strokeWidth":0.8,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Lieferung","x":16,"y":104,"w":100,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Lieferung täglich 17–22 Uhr\nMindestbestellwert 15 €  ·  Lieferung 2 €","fontFamily":"Raleway","fontSize":9.5,"fontWeight":500,"italic":false,"color":"#bdbdc6","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"group","name":"QR Karte","x":138,"y":78,"w":54,"h":58,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"children":[
+          {"id":"e9","type":"shape","name":"QR Karte Hintergrund","x":138,"y":78,"w":54,"h":58,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":3,"startCap":"none","endCap":"none"},
+          {"id":"e10","type":"qr","name":"QR-Code","x":143,"y":82,"w":44,"h":44,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"value":"https://www.beispiel.de/bestellen","color":"#16161a","background":"#ffffff","ecc":"M","quiet":true},
+          {"id":"e11","type":"text","name":"QR Text","x":140,"y":127,"w":50,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Online bestellen","fontFamily":"Raleway","fontSize":8.5,"fontWeight":700,"italic":false,"color":"#16161a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+        ]},
+        {"id":"e12","type":"text","name":"Name","x":16,"y":134,"w":100,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Sakura Sushi  ·  0123 456 789","fontFamily":"Raleway","fontSize":9,"fontWeight":600,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

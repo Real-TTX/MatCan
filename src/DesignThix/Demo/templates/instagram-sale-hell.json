@@ -1,0 +1,28 @@
+{
+  "name": "Instagram-Beitrag – Sale hell",
+  "category": "Social Media",
+  "description": "Ruhiger Sale-Beitrag für Instagram (1080 × 1080 px): heller Grund, riesige Prozentzahl in kräftiger Schrift, Hinweis auf das Sortiment und ein Knopf mit Zeitraum. Passe Rabatt, Text und Datum an.",
+  "family": "instagram-sale",
+  "familyName": "Instagram-Beitrag Sale",
+  "variant": "Hell & ruhig",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Beitrag","Sale","Rabatt","Angebot","Social Media","Facebook","Hell","Ruhig","Mode","Boutique","Sommerschlussverkauf","Typografisch"],
+  "formatKey": "instagram-post",
+  "number": 409,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f4efe7","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Kreis","x":640,"y":-180,"w":640,"h":640,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffd9cc","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Kreis klein","x":-120,"y":840,"w":360,"h":360,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffe9a8","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Anlass","x":90,"y":96,"w":700,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Sommer-Sale","fontFamily":"Montserrat","fontSize":22,"fontWeight":700,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.22,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Linie","x":90,"y":166,"w":140,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#ff5a3c","strokeWidth":5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Rabatt","x":70,"y":250,"w":940,"h":420,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"−30 %","fontFamily":"Poppins","fontSize":250,"fontWeight":800,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":100,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Hinweis","x":90,"y":690,"w":800,"h":130,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"auf ausgewählte Artikel im ganzen Laden","fontFamily":"Montserrat","fontSize":30,"fontWeight":500,"italic":false,"color":"#3a3a3a","align":"left","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Knopf","x":90,"y":858,"w":520,"h":92,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Jetzt entdecken","fontFamily":"Montserrat","fontSize":22,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":true,"wrap":false,"fit":"none","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":{"color":"#ff5a3c","radius":46,"padding":30},"curve":0},
+        {"id":"e8","type":"text","name":"Zeitraum","x":640,"y":876,"w":350,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"bis 15. August","fontFamily":"Montserrat","fontSize":20,"fontWeight":600,"italic":false,"color":"#3a3a3a","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

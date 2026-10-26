@@ -1,0 +1,31 @@
+{
+  "name": "Poster A3 – Typo Riesenwort",
+  "category": "Poster",
+  "description": "Reines Schriftplakat im A3-Hochformat für Jazzabend, Konzert oder Lesung: ein einziges Wort in Anton, um 90 Grad gedreht über die ganze Seitenhöhe, daneben Datum, Ort und Programm in klarer Spalte.",
+  "family": "plakat-typo",
+  "familyName": "Typo-Plakat",
+  "variant": "Riesenwort",
+  "occasion": "Feste & Events",
+  "tags": ["Plakat","Poster","Typografie","Schriftplakat","Jazz","Konzert","Riesenwort","Gedreht","Rot","Minimal"],
+  "formatKey": "poster-a3-portrait",
+  "number": 361,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":420,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f1ebdf","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"text","name":"Riesenwort","x":-105,"y":135,"w":410,"h":150,"rotation":-90,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"JAZZ","fontFamily":"Anton","fontSize":520,"fontWeight":400,"italic":false,"color":"#d7263d","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":200,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e2","type":"text","name":"Anlass","x":186,"y":26,"w":96,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"LIVE","fontFamily":"Inter","fontSize":15,"fontWeight":800,"italic":false,"color":"#161616","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"shape","name":"Linie oben","x":186,"y":40,"w":91,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#161616","strokeWidth":1.2,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Tag","x":184,"y":48,"w":100,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"14","fontFamily":"Anton","fontSize":110,"fontWeight":400,"italic":false,"color":"#161616","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":50,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Monat","x":186,"y":90,"w":96,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"NOVEMBER","fontFamily":"Inter","fontSize":15,"fontWeight":800,"italic":false,"color":"#d7263d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Uhrzeit","x":186,"y":104,"w":96,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"20 Uhr","fontFamily":"Inter","fontSize":15,"fontWeight":500,"italic":false,"color":"#161616","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Linie mitte","x":186,"y":128,"w":91,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#161616","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Programm","x":186,"y":134,"w":96,"h":90,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Lena Wolff\nQuartett\n\nMarlo Trio\nfeat. Anna Beck\n\nJam Session\nab 22 Uhr","fontFamily":"Inter","fontSize":14,"fontWeight":600,"italic":false,"color":"#161616","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"shape","name":"Linie unten","x":186,"y":330,"w":91,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#161616","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e10","type":"text","name":"Ort","x":186,"y":336,"w":96,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Alte Brauerei\nSudhaus, Hofweg 4\n12345 Musterstadt","fontFamily":"Inter","fontSize":12.5,"fontWeight":500,"italic":false,"color":"#161616","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Preis","x":186,"y":380,"w":96,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eintritt 15 €\nVorverkauf www.beispiel.de","fontFamily":"Inter","fontSize":11,"fontWeight":500,"italic":false,"color":"#555555","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

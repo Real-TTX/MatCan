@@ -1,0 +1,42 @@
+{
+  "name": "Instagram-Story – Ankündigung Datum groß",
+  "category": "Social Media",
+  "description": "Ankündigung als Story (1080 × 1920 px): oranger Verlauf, riesiger Tag und Monat in Schlagzeilenschrift, darunter Titel, Uhrzeit und Ort mit Symbolen. Titel, Tag, Monat, Zeit und Ort sind Felder.",
+  "family": "instagram-story-event",
+  "familyName": "Instagram-Story Ankündigung",
+  "variant": "Datum groß",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Story","Ankündigung","Veranstaltung","Event","Termin","Einladung","Social Media","Hochformat","Datum","Orange","Riesig","Fest","Konzert","Anton"],
+  "formatKey": "instagram-story",
+  "number": 464,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1920,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Titel","label":"Titel","type":"text","sample":"Hoffest am See","decimals":null,"category":null,"required":true},
+      {"key":"Tag","label":"Tag (Zahl)","type":"text","sample":"12","decimals":null,"category":null,"required":false},
+      {"key":"Monat","label":"Monat (kurz)","type":"text","sample":"JUNI","decimals":null,"category":null,"required":false},
+      {"key":"Datum","label":"Datum","type":"text","sample":"Samstag, 12. Juni 2027","decimals":null,"category":null,"required":false},
+      {"key":"Zeit","label":"Uhrzeit","type":"text","sample":"ab 14 Uhr","decimals":null,"category":null,"required":false},
+      {"key":"Ort","label":"Ort","type":"text","sample":"Festplatz Musterstadt","decimals":null,"category":null,"required":false},
+      {"key":"Link","label":"Internetadresse (QR-Code)","type":"text","sample":"https://example.org/hoffest","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":165,"stops":[{"offset":0,"color":"#ff7a18"},{"offset":1,"color":"#e62e6b"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Kreis","x":-240,"y":1200,"w":760,"h":760,"rotation":0,"opacity":0.1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Tag","x":40,"y":300,"w":1000,"h":500,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#7a0f3a","opacity":0.25,"blur":0,"x":10,"y":12},"text":"{{Tag}}","fontFamily":"Anton","fontSize":330,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":100,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Monat","x":40,"y":780,"w":1000,"h":150,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Monat}}","fontFamily":"Anton","fontSize":100,"fontWeight":400,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0.12,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":50,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Linie","x":340,"y":980,"w":400,"h":0,"rotation":0,"opacity":0.6,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#ffffff","strokeWidth":4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Titel","x":90,"y":1030,"w":900,"h":250,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Titel}}","fontFamily":"Poppins","fontSize":60,"fontWeight":800,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"icon","name":"Uhr","x":170,"y":1340,"w":60,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"clock","color":"#ffd23f","strokeWidth":2.2},
+        {"id":"e7","type":"text","name":"Zeit","x":252,"y":1336,"w":700,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zeit","flipX":false,"flipY":false,"shadow":null,"text":"{{Zeit}}","fontFamily":"Montserrat","fontSize":30,"fontWeight":700,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"icon","name":"Ort","x":170,"y":1450,"w":60,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"map-pin","color":"#ffd23f","strokeWidth":2.2},
+        {"id":"e9","type":"text","name":"Ort","x":252,"y":1446,"w":700,"h":150,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Ort","flipX":false,"flipY":false,"shadow":null,"text":"{{Ort}}","fontFamily":"Montserrat","fontSize":30,"fontWeight":700,"italic":false,"color":"#ffffff","align":"left","valign":"top","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Titel":"Hoffest am See","Tag":"12","Monat":"JUNI","Datum":"Samstag, 12. Juni 2027","Zeit":"ab 14 Uhr","Ort":"Festplatz Musterstadt","Link":"https://example.org/hoffest"},
+    {"Titel":"Großes Sommerfest der Freiwilligen Feuerwehr mit Live-Musik","Tag":"28","Monat":"AUGUST","Datum":"Samstag, 28. August 2027","Zeit":"16 bis 23 Uhr","Ort":"Gerätehaus Musterstadt-Oberdorf, Feuerwehrstraße 1","Link":"https://example.org/feuerwehr-sommerfest"},
+    {"Titel":"Lesung","Tag":"3","Monat":"MAI","Datum":"","Zeit":"","Ort":"Bücherei","Link":""}
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "name": "Instagram-Beitrag – Ankündigung typografisch",
+  "category": "Social Media",
+  "description": "Ruhige, typografische Ankündigung für Instagram (1080 × 1080 px): Cremeton, großer Titel in Antiqua, drei feine Zeilen für Datum, Uhrzeit und Ort mit Linien. Titel, Datum, Zeit, Ort und Zusatz sind Felder.",
+  "family": "instagram-ankuendigung",
+  "familyName": "Instagram-Beitrag Ankündigung",
+  "variant": "Typografisch",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Beitrag","Ankündigung","Veranstaltung","Event","Termin","Einladung","Save the Date","Social Media","Facebook","Typografisch","Antiqua","Creme","Terrakotta","Lesung","Vernissage","Kultur"],
+  "formatKey": "instagram-post",
+  "number": 457,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Titel","label":"Titel","type":"text","sample":"Hoffest am See","decimals":null,"category":null,"required":true},
+      {"key":"Tag","label":"Tag (Zahl)","type":"text","sample":"12","decimals":null,"category":null,"required":false},
+      {"key":"Monat","label":"Monat (kurz)","type":"text","sample":"JUN","decimals":null,"category":null,"required":false},
+      {"key":"Datum","label":"Datum","type":"text","sample":"Samstag, 12. Juni 2027","decimals":null,"category":null,"required":false},
+      {"key":"Zeit","label":"Uhrzeit","type":"text","sample":"ab 14 Uhr","decimals":null,"category":null,"required":false},
+      {"key":"Ort","label":"Ort","type":"text","sample":"Festplatz Musterstadt","decimals":null,"category":null,"required":false},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"Eintritt frei","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f6efe2","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen","x":40,"y":40,"w":1000,"h":1000,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c4552d","strokeWidth":3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Kopf","x":110,"y":110,"w":860,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Einladung","fontFamily":"Montserrat","fontSize":15,"fontWeight":700,"italic":false,"color":"#c4552d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Titel","x":110,"y":170,"w":860,"h":330,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Titel}}","fontFamily":"Playfair Display","fontSize":80,"fontWeight":700,"italic":false,"color":"#2b1d14","align":"left","valign":"top","lineHeight":1.08,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Linie 1","x":110,"y":600,"w":860,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#2b1d14","strokeWidth":1.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Datum Titel","x":110,"y":624,"w":200,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wann","fontFamily":"Montserrat","fontSize":15,"fontWeight":700,"italic":false,"color":"#c4552d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":330,"y":614,"w":640,"h":66,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Datum","flipX":false,"flipY":false,"shadow":null,"text":"{{Datum}}","fontFamily":"Playfair Display","fontSize":24,"fontWeight":500,"italic":false,"color":"#2b1d14","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Linie 2","x":110,"y":700,"w":860,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#cdbfa8","strokeWidth":1.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Zeit Titel","x":110,"y":724,"w":200,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Um","fontFamily":"Montserrat","fontSize":15,"fontWeight":700,"italic":false,"color":"#c4552d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zeit","x":330,"y":714,"w":640,"h":66,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zeit","flipX":false,"flipY":false,"shadow":null,"text":"{{Zeit}}","fontFamily":"Playfair Display","fontSize":24,"fontWeight":500,"italic":false,"color":"#2b1d14","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"shape","name":"Linie 3","x":110,"y":800,"w":860,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#cdbfa8","strokeWidth":1.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"text","name":"Ort Titel","x":110,"y":824,"w":200,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wo","fontFamily":"Montserrat","fontSize":15,"fontWeight":700,"italic":false,"color":"#c4552d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Ort","x":330,"y":814,"w":640,"h":100,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Ort","flipX":false,"flipY":false,"shadow":null,"text":"{{Ort}}","fontFamily":"Playfair Display","fontSize":24,"fontWeight":500,"italic":false,"color":"#2b1d14","align":"left","valign":"top","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Zusatz","x":110,"y":940,"w":860,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Playfair Display","fontSize":17,"fontWeight":400,"italic":true,"color":"#6e5a48","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Titel":"Hoffest am See","Tag":"12","Monat":"JUN","Datum":"Samstag, 12. Juni 2027","Zeit":"ab 14 Uhr","Ort":"Festplatz Musterstadt","Zusatz":"Eintritt frei"},
+    {"Titel":"Großes Sommerfest der Freiwilligen Feuerwehr mit Live-Musik","Tag":"28","Monat":"AUG","Datum":"Samstag, 28. August 2027","Zeit":"16 bis 23 Uhr","Ort":"Gerätehaus Musterstadt-Oberdorf, Feuerwehrstraße 1","Zusatz":"Für Speisen und Getränke ist gesorgt"},
+    {"Titel":"Lesung","Tag":"3","Monat":"MAI","Datum":"","Zeit":"","Ort":"Bücherei","Zusatz":""}
+  ]
+}

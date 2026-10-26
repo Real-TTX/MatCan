@@ -1,0 +1,39 @@
+{
+  "name": "Namensschild – Hallo, ich bin",
+  "category": "Business",
+  "description": "Namensschild (90 × 55 mm) im bekannten Aufkleber-Stil: roter Kopf mit „Hallo ich bin“, großes Feld für den Namen in Filzstiftschrift, darunter Firma und Rolle. Name, Firma und Rolle sind Felder, auch zum Ausfüllen von Hand.",
+  "family": "name-badge",
+  "familyName": "Namensschild",
+  "variant": "Hallo, ich bin",
+  "occasion": "Business",
+  "tags": ["Namensschild","Namensschilder","Badge","Ausweis","Konferenz","Messe","Veranstaltung","Teilnehmer","Gast","Name","Hallo","Aufkleber","Sticker","Party","Kennenlernen","Workshop","Rot","Handschrift"],
+  "formatKey": "name-badge",
+  "number": 444,
+  "document": {
+    "schema":2,"unit":"mm","width":90,"height":55,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Anna Beispiel","decimals":null,"category":null,"required":true},
+      {"key":"Firma","label":"Firma oder Verein","type":"text","sample":"Hofladen Wiesengrund","decimals":null,"category":null,"required":false},
+      {"key":"Rolle","label":"Rolle","type":"text","sample":"Referentin","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen","x":1.2,"y":1.2,"w":87.6,"h":52.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":"#e63232","strokeWidth":1.4,"dash":"solid","radius":3,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Kopf","x":1.2,"y":1.2,"w":87.6,"h":17,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#e63232","stroke":null,"strokeWidth":1,"dash":"solid","radius":3,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Kopf unten","x":1.2,"y":12,"w":87.6,"h":6.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#e63232","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Hallo","x":6,"y":2.4,"w":78,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"HALLO","fontFamily":"Anton","fontSize":24,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Ich bin","x":6,"y":10.6,"w":78,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ich bin","fontFamily":"Montserrat","fontSize":9,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Name","x":5,"y":19.4,"w":80,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Permanent Marker","fontSize":24,"fontWeight":400,"italic":false,"color":"#111111","align":"center","valign":"middle","lineHeight":1.05,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Linie","x":14,"y":38.4,"w":62,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d7d7d7","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Firma","x":6,"y":40,"w":78,"h":5.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Firma","flipX":false,"flipY":false,"shadow":null,"text":"{{Firma}}","fontFamily":"Montserrat","fontSize":8.5,"fontWeight":600,"italic":false,"color":"#333333","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Rolle","x":6,"y":45.4,"w":78,"h":4.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Rolle","flipX":false,"flipY":false,"shadow":null,"text":"{{Rolle}}","fontFamily":"Montserrat","fontSize":7,"fontWeight":700,"italic":false,"color":"#e63232","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Anna Beispiel","Firma":"Hofladen Wiesengrund","Rolle":"Referentin"},
+    {"Name":"Prof. Dr. Maximilian Mustermann-Schneider","Firma":"Institut für angewandte Lebensmitteltechnologie und Ernährung","Rolle":"Organisation"},
+    {"Name":"Jo Kurz","Firma":"","Rolle":"Gast"},
+    {"Name":"Sabine Müller","Firma":"Stadtwerke Musterstadt","Rolle":""}
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "Aushang A4 – Tier entlaufen Suchplakat",
+  "category": "Flyer",
+  "description": "Freundlicher A4-Aushang „Wer hat mich gesehen?“ für Katze, Hund oder Kaninchen: rundes Foto in Orange, Pfotenspuren, Steckbrief in drei Zeilen, Hinweis auf Chip und Kontakt mit großem Telefon.",
+  "family": "aushang-tier-entlaufen",
+  "familyName": "Aushang Tier entlaufen",
+  "variant": "Suchplakat",
+  "occasion": "Kinder & Familie",
+  "tags": ["Aushang","Tier entlaufen","Katze vermisst","Hund vermisst","Kaninchen","Suchplakat","Haustier","Pfoten","Foto","Hinweise"],
+  "formatKey": "a4-portrait",
+  "number": 341,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":297,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fff7ec","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"text","name":"Titel","x":14,"y":16,"w":182,"h":36,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wer hat mich\ngesehen?","fontFamily":"Fredoka","fontSize":56,"fontWeight":700,"italic":false,"color":"#1f7a8c","align":"center","valign":"top","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e2","type":"shape","name":"Foto Hintergrund","x":45,"y":82,"w":120,"h":120,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffe0b8","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"icon","name":"Foto Symbol","x":80,"y":117,"w":50,"h":50,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"cat","color":"#e8b27a","strokeWidth":1.1},
+        {"id":"e4","type":"image","name":"Foto","x":45,"y":82,"w":120,"h":120,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"circle","border":{"color":"#f08a24","width":4},"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"icon","name":"Pfote 1","x":14,"y":92,"w":15,"h":15,"rotation":-20,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"paw-print","color":"#f2c58b","strokeWidth":1.8},
+        {"id":"e6","type":"icon","name":"Pfote 2","x":24,"y":118,"w":12,"h":12,"rotation":15,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"paw-print","color":"#f2c58b","strokeWidth":1.8},
+        {"id":"e7","type":"icon","name":"Pfote 3","x":176,"y":100,"w":13.5,"h":13.5,"rotation":20,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"paw-print","color":"#f2c58b","strokeWidth":1.8},
+        {"id":"e8","type":"icon","name":"Pfote 4","x":168,"y":128,"w":12,"h":12,"rotation":-10,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"paw-print","color":"#f2c58b","strokeWidth":1.8},
+        {"id":"e9","type":"icon","name":"Pfote 5","x":16,"y":160,"w":12,"h":12,"rotation":10,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"paw-print","color":"#f2c58b","strokeWidth":1.8},
+        {"id":"e10","type":"text","name":"Name","x":20,"y":208,"w":170,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Mimi","fontFamily":"Fredoka","fontSize":54,"fontWeight":700,"italic":false,"color":"#f08a24","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Steckbrief","x":20,"y":228,"w":170,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Graue Katze mit weißen Pfoten, 3 Jahre, gechippt\nVerschwunden am Montag in der Gartenstraße","fontFamily":"Fredoka","fontSize":15,"fontWeight":400,"italic":false,"color":"#3a4a50","align":"center","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"shape","name":"Kontakt Feld","x":20,"y":258,"w":170,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#1f7a8c","stroke":null,"strokeWidth":1,"dash":"solid","radius":14,"startCap":"none","endCap":"none"},
+        {"id":"e13","type":"icon","name":"Telefon","x":30,"y":265,"w":14,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"phone","color":"#ffffff","strokeWidth":2},
+        {"id":"e14","type":"text","name":"Nummer","x":50,"y":258,"w":136,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"0123 456 789","fontFamily":"Fredoka","fontSize":34,"fontWeight":700,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Etikett rund – Sonne",
+  "category": "Etiketten",
+  "description": "Fröhliches rundes Etikett (60 mm): korallroter Grund, goldener Strahlenkranz und eine helle Scheibe mit Produktname in Schreibschrift, Zusatz und Inhalt. Produkt, Zusatz und Inhalt sind Felder für eine Datenliste.",
+  "family": "label-round-60",
+  "familyName": "Etikett rund",
+  "variant": "Sonne",
+  "occasion": "Handel & Preise",
+  "tags": ["Etikett","Aufkleber","Sticker","Rund","Siegel","Verpackung","Geschenk","Hofladen","Marktstand","Sonne","Bunt","Strahlenkranz","Schreibschrift","Sommer","Fröhlich","Marmelade"],
+  "formatKey": "label-round-60",
+  "number": 441,
+  "document": {
+    "schema":2,"unit":"mm","width":60,"height":60,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Produkt","type":"text","sample":"Bergkäse","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"12 Monate gereift","decimals":null,"category":null,"required":false},
+      {"key":"Inhalt","label":"Inhalt","type":"text","sample":"ca. 250 g","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Grund","x":0.5,"y":0.5,"w":59,"h":59,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ee5a3c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"image","name":"Strahlenkranz","x":2,"y":2,"w":56,"h":56,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-ornamente-strahlenkranz-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"shape","name":"Scheibe","x":14,"y":14,"w":32,"h":32,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#fff6e6","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Produkt","x":15.4,"y":19.4,"w":29.2,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Dancing Script","fontSize":17,"fontWeight":700,"italic":false,"color":"#7a2410","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Zusatz","x":16,"y":32,"w":28,"h":4.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Montserrat","fontSize":7,"fontWeight":600,"italic":false,"color":"#7a2410","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Inhalt","x":16,"y":36.6,"w":28,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Inhalt","flipX":false,"flipY":false,"shadow":null,"text":"{{Inhalt}}","fontFamily":"Montserrat","fontSize":7,"fontWeight":800,"italic":false,"color":"#ee5a3c","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Bergkäse","Zusatz":"12 Monate gereift","Inhalt":"ca. 250 g"},
+    {"Produkt":"Himbeer-Rhabarber-Marmelade","Zusatz":"mit 55 % Frucht, kleine Charge","Inhalt":"250 g"},
+    {"Produkt":"Tee","Zusatz":"","Inhalt":""},
+    {"Produkt":"Brot","Zusatz":"Sauerteig, Steinofen","Inhalt":"750 g"}
+  ]
+}

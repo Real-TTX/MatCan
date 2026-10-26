@@ -1,0 +1,39 @@
+{
+  "name": "Konfirmation – Typo",
+  "category": "Einladungen",
+  "description": "Moderne Einladung zur Konfirmation (DIN lang hoch): große Buchstaben in Schwarz auf Papierweiß mit grünem Akzent und schlichtem Kreuz. Name als Feld.",
+  "family": "konfirmation-einladung",
+  "familyName": "Konfirmation – Einladung",
+  "variant": "Typo",
+  "occasion": "Kinder & Familie",
+  "tags": ["Konfirmation","Einladung","Kirche","Jugend","Glaube","Familie","Feier","Modern","Typografie","Schwarz-Weiß","Minimal","Jugendlich","Grün"],
+  "formatKey": "din-lang-portrait",
+  "number": 216,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Lea","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f7f5f0","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Balken","x":10,"y":14,"w":79,"h":2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#2f6b5a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Kreuz senkrecht","x":46.5,"y":157,"w":5,"h":27,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#151515","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Kreuz waagerecht","x":38.5,"y":163,"w":21,"h":5,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#151515","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"shape","name":"Linie","x":10,"y":124,"w":79,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#151515","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Jahr","x":10,"y":20,"w":79,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"2027","fontFamily":"Oswald","fontSize":12,"fontWeight":500,"italic":false,"color":"#2f6b5a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Konfirmation","x":8,"y":30,"w":85,"h":58,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"KON-\nFIR-\nMA-\nTION","fontFamily":"Anton","fontSize":42,"fontWeight":400,"italic":false,"color":"#151515","align":"left","valign":"top","lineHeight":0.98,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":22,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Name","x":10,"y":94,"w":79,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Oswald","fontSize":26,"fontWeight":500,"italic":false,"color":"#2f6b5a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.08,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Einladung","x":10,"y":109,"w":79,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"wird gesegnet und lädt\nzum Fest ein.","fontFamily":"Inter","fontSize":9.5,"fontWeight":500,"italic":false,"color":"#151515","align":"left","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Datum","x":10,"y":128,"w":79,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Sonntag, 9. Mai 2027","fontFamily":"Inter","fontSize":11,"fontWeight":700,"italic":false,"color":"#151515","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Ort","x":10,"y":137,"w":79,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"um 10 Uhr\nEvangelische Kirche Musterstadt","fontFamily":"Inter","fontSize":9,"fontWeight":500,"italic":false,"color":"#151515","align":"left","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Feier","x":10,"y":189,"w":79,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anschließend feiern wir im Gemeindehaus.","fontFamily":"Inter","fontSize":8,"fontWeight":500,"italic":false,"color":"#151515","align":"left","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Zusage","x":10,"y":197,"w":79,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Rückmeldung bis 25. April: 0170 1234567","fontFamily":"Inter","fontSize":7.5,"fontWeight":600,"italic":false,"color":"#2f6b5a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Lea"},
+    {"Name":"Maximilian-Johannes"},
+    {"Name":"Jo"}
+  ]
+}

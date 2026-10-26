@@ -1,0 +1,33 @@
+{
+  "name": "Hochzeit Tischnummer – Botanisch Salbei",
+  "category": "Karten",
+  "description": "Tischnummer im Format A6 hoch: ein Eukalyptuskranz in Salbeigrün umrahmt die Nummer (Feld), darüber „Tisch“ in Kapitälchen. Mit einer Liste der Tische ganz einfach als Serie zu drucken.",
+  "family": "hochzeit-tischnummer",
+  "familyName": "Hochzeit: Tischnummer",
+  "variant": "Botanisch Salbei",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Tischnummer","Tischnummern","Tisch","Eukalyptus","Salbei","botanisch","A6","Dekoration","Serie"],
+  "formatKey": "table-number",
+  "number": 161,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Tisch","label":"Tischnummer","type":"text","sample":"7","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"Tischnummer","background":{"color":"#f6f7f1","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Kranz","x":6,"y":26,"w":93,"h":89.904,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-eukalyptuskranz-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Tisch","x":22.5,"y":46,"w":60,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"TISCH","fontFamily":"Josefin Sans","fontSize":9,"fontWeight":600,"italic":false,"color":"#5f8167","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Nummer","x":22.5,"y":54,"w":60,"h":36,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Tisch}}","fontFamily":"Cormorant Garamond","fontSize":80,"fontWeight":500,"italic":false,"color":"#33423a","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":34,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Namen","x":12.5,"y":128,"w":80,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ANNA & JONAS","fontFamily":"Josefin Sans","fontSize":6.5,"fontWeight":600,"italic":false,"color":"#5f8167","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.34,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":4,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Tisch":"1"},
+    {"Tisch":"7"},
+    {"Tisch":"10"},
+    {"Tisch":"12"},
+    {"Tisch":"4"}
+  ]
+}

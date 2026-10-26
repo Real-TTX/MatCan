@@ -1,0 +1,38 @@
+{
+  "name": "Babyparty – Boho",
+  "category": "Einladungen",
+  "description": "Ruhige Boho-Einladung zur Babyparty (A5 hoch) mit Regenbogen in Erdtönen, Schleierkraut und Serifenschrift. Der Name der werdenden Mama ist ein Feld.",
+  "family": "babyparty-einladung",
+  "familyName": "Babyparty – Einladung",
+  "variant": "Boho",
+  "occasion": "Kinder & Familie",
+  "tags": ["Babyparty","Babyshower","Baby Shower","Einladung","Baby","Schwangerschaft","Party","Boho","Regenbogen","Erdtöne","Schleierkraut","Natur","Modern"],
+  "formatKey": "a5-portrait",
+  "number": 220,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Anna","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f8efe6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Regenbogen","x":29,"y":16,"w":90,"h":46.214,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-regenbogen-boho"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Schleierkraut links","x":6,"y":44,"w":24,"h":27.258,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-schleierkraut-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Schleierkraut rechts","x":118,"y":44,"w":24,"h":27.258,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":true,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-schleierkraut-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"image","name":"Trenner","x":49,"y":158,"w":50,"h":5,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-punkte-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Willkommen","x":12,"y":76,"w":124,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WIR FREUEN UNS AUF","fontFamily":"Josefin Sans","fontSize":9,"fontWeight":600,"italic":false,"color":"#c98467","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Baby","x":10,"y":86,"w":128,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"BABYPARTY","fontFamily":"Josefin Sans","fontSize":36,"fontWeight":300,"italic":false,"color":"#5e4234","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.22,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"für","x":10,"y":106,"w":128,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"für {{Name}}","fontFamily":"Cormorant Garamond","fontSize":32,"fontWeight":500,"italic":true,"color":"#c98467","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Text","x":24,"y":128,"w":100,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ein kleiner Mensch ist unterwegs.\nWir feiern mit Kuchen, Spielen\nund vielen guten Wünschen.","fontFamily":"Raleway","fontSize":10.5,"fontWeight":500,"italic":false,"color":"#5e4234","align":"center","valign":"top","lineHeight":1.45,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Datum","x":14,"y":167,"w":120,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 22. Mai 2027 · 15 Uhr","fontFamily":"Raleway","fontSize":12,"fontWeight":700,"italic":false,"color":"#5e4234","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Ort","x":14,"y":176,"w":120,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Bei Familie Beispiel, Musterweg 5","fontFamily":"Raleway","fontSize":10.5,"fontWeight":500,"italic":false,"color":"#5e4234","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Zusage","x":14,"y":188,"w":120,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 8. Mai: 0170 1234567","fontFamily":"Raleway","fontSize":9,"fontWeight":600,"italic":false,"color":"#c98467","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Anna"},
+    {"Name":"Franziska-Marie"},
+    {"Name":"Jo"}
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Firmenjubiläum – Plakat",
+  "category": "Poster",
+  "description": "Plakat A3 hoch zum Firmenjubiläum: eine riesige Jahreszahl im goldenen Lorbeerkranz auf Nachtblau, darunter Firmenname und Termin der Feier. Jahre und Firma sind Felder.",
+  "family": "firmenjubilaeum",
+  "familyName": "Firmenjubiläum",
+  "variant": "Plakat",
+  "occasion": "Feste & Events",
+  "tags": ["Jubiläum","Firmenjubiläum","Firma","Betriebsjubiläum","Jahre","Feier","Festakt","Geburtstag der Firma","Plakat","Poster","Aushang","Gold","Lorbeer","A3","Zahl"],
+  "formatKey": "poster-a3-portrait",
+  "number": 228,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":420,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Jahre","label":"Jahre","type":"text","sample":"25","decimals":null,"category":null,"required":false},
+      {"key":"Firma","label":"Firma","type":"text","sample":"Mustermann GmbH","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":170,"stops":[{"offset":0,"color":"#0f1b3d"},{"offset":1,"color":"#1e3070"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Sterne","x":0,"y":0,"w":297,"h":297,"rotation":0,"opacity":0.35,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-himmel-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Lorbeerkranz","x":25,"y":34,"w":247,"h":239.7,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-lorbeerkranz-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"shape","name":"Stern","x":134,"y":46,"w":29,"h":29,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"star","points":5,"innerRadius":0.45,"fill":"#e0b85c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"image","name":"Banderole","x":55,"y":236,"w":187,"h":42.543,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-baender-banderole-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"shape","name":"Linie","x":40,"y":358,"w":217,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#e0b85c","strokeWidth":0.8,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Jahre","x":55,"y":100,"w":187,"h":130,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#000000","opacity":0.3,"blur":6,"x":0,"y":3},"text":"{{Jahre}}","fontFamily":"Anton","fontSize":250,"fontWeight":400,"italic":false,"color":"#e0b85c","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":80,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Jahre Wort","x":82,"y":248,"w":133,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"JAHRE","fontFamily":"Cinzel","fontSize":30,"fontWeight":700,"italic":false,"color":"#0f1b3d","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Firma","x":24,"y":296,"w":249,"h":34,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Firma}}","fontFamily":"Playfair Display","fontSize":40,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Wir feiern","x":24,"y":332,"w":249,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir feiern mit allen, die uns begleitet haben.","fontFamily":"Cormorant Garamond","fontSize":21,"fontWeight":600,"italic":true,"color":"#f7ecd2","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Datum","x":24,"y":366,"w":249,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Festakt am Freitag, 20. September 2027 · 17 Uhr","fontFamily":"Montserrat","fontSize":17,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Ort","x":24,"y":384,"w":249,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Firmengelände Musterweg 5 · 12345 Musterstadt","fontFamily":"Montserrat","fontSize":13,"fontWeight":500,"italic":false,"color":"#e0b85c","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Eintritt","x":24,"y":398,"w":249,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Der Eintritt ist frei – Anmeldung unter 0170 1234567","fontFamily":"Montserrat","fontSize":11,"fontWeight":500,"italic":false,"color":"#f7ecd2","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Jahre":"25","Firma":"Mustermann GmbH"},
+    {"Jahre":"100","Firma":"Schreinerei Huber & Söhne"},
+    {"Jahre":"10","Firma":"Bäckerei Korn"}
+  ]
+}

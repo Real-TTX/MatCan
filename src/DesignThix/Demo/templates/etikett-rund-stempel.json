@@ -1,0 +1,38 @@
+{
+  "name": "Etikett rund – Stempel",
+  "category": "Etiketten",
+  "description": "Rundes Etikett (60 mm) im Stempel-Look: Kraftpapier, Doppelring, Bogenschrift oben und unten, in der Mitte Produkt, Zusatz und Inhalt. Produkt, Zusatz und Inhalt sind Felder für eine Datenliste.",
+  "family": "label-round-60",
+  "familyName": "Etikett rund",
+  "variant": "Stempel",
+  "occasion": "Handel & Preise",
+  "tags": ["Etikett","Aufkleber","Sticker","Rund","Siegel","Verpackung","Geschenk","Hofladen","Marktstand","Stempel","Kraftpapier","Vintage","Bogenschrift","Doppelring","Handgemacht"],
+  "formatKey": "label-round-60",
+  "number": 440,
+  "document": {
+    "schema":2,"unit":"mm","width":60,"height":60,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Produkt","type":"text","sample":"Bergkäse","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"12 Monate gereift","decimals":null,"category":null,"required":false},
+      {"key":"Inhalt","label":"Inhalt","type":"text","sample":"ca. 250 g","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Grund","x":0.5,"y":0.5,"w":59,"h":59,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#e6d3ae","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Ring außen","x":3,"y":3,"w":54,"h":54,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3b2a1a","strokeWidth":0.7,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Ring innen","x":13.4,"y":13.4,"w":33.2,"h":33.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3b2a1a","strokeWidth":0.25,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Bogen oben","x":8,"y":5.6,"w":44,"h":6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"HANDGEMACHT · REGIONAL","fontFamily":"Montserrat","fontSize":7,"fontWeight":700,"italic":false,"color":"#3b2a1a","align":"left","valign":"top","lineHeight":1.15,"letterSpacing":0.14,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":36},
+        {"id":"e5","type":"text","name":"Bogen unten","x":8,"y":47.4,"w":44,"h":6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"★ AUS UNSERER REGION ★","fontFamily":"Montserrat","fontSize":7,"fontWeight":700,"italic":false,"color":"#3b2a1a","align":"left","valign":"bottom","lineHeight":1.15,"letterSpacing":0.14,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":-36},
+        {"id":"e6","type":"text","name":"Produkt","x":14.6,"y":21.4,"w":30.8,"h":10.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Abril Fatface","fontSize":14,"fontWeight":400,"italic":false,"color":"#3b2a1a","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Zusatz","x":15,"y":32.4,"w":30,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Lora","fontSize":7,"fontWeight":400,"italic":true,"color":"#5a4328","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Inhalt","x":15,"y":38,"w":30,"h":4.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Inhalt","flipX":false,"flipY":false,"shadow":null,"text":"{{Inhalt}}","fontFamily":"Montserrat","fontSize":7,"fontWeight":700,"italic":false,"color":"#3b2a1a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Bergkäse","Zusatz":"12 Monate gereift","Inhalt":"ca. 250 g"},
+    {"Produkt":"Himbeer-Rhabarber-Marmelade","Zusatz":"mit 55 % Frucht, kleine Charge","Inhalt":"250 g"},
+    {"Produkt":"Tee","Zusatz":"","Inhalt":""},
+    {"Produkt":"Brot","Zusatz":"Sauerteig, Steinofen","Inhalt":"750 g"}
+  ]
+}

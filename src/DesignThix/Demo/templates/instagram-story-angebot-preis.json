@@ -1,0 +1,38 @@
+{
+  "name": "Instagram-Story – Angebot Preisknaller",
+  "category": "Social Media",
+  "description": "Lautes Angebot als Story (1080 × 1920 px): roter Verlauf, „Angebot“-Etikett, Produktname, riesiger Preis in Schlagzeilenschrift, Zeitraum und Aufforderung. Produkt, Preis, Einheit und Zeitraum sind Felder.",
+  "family": "instagram-story-angebot",
+  "familyName": "Instagram-Story Angebot",
+  "variant": "Preisknaller",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Story","Angebot","Preis","Aktion","Rabatt","Social Media","Hochformat","Sale","Preisknaller","Rot","Riesig","Schlagzeile","Discount","Wochenmarkt"],
+  "formatKey": "instagram-story",
+  "number": 461,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1920,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Produkt","type":"text","sample":"Frische Erdbeeren","decimals":null,"category":null,"required":true},
+      {"key":"Preis","label":"Preis","type":"text","sample":"2,99 €","decimals":null,"category":null,"required":false},
+      {"key":"Einheit","label":"Einheit","type":"text","sample":"pro Schale (500 g)","decimals":null,"category":null,"required":false},
+      {"key":"Rabatt","label":"Rabatt","type":"text","sample":"−30 %","decimals":null,"category":null,"required":false},
+      {"key":"Zeitraum","label":"Zeitraum","type":"text","sample":"Nur heute und morgen","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":170,"stops":[{"offset":0,"color":"#e41b2f"},{"offset":1,"color":"#9b0c1c"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Kreis","x":560,"y":1180,"w":760,"h":760,"rotation":0,"opacity":0.08,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Etikett","x":90,"y":300,"w":400,"h":76,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Angebot","fontFamily":"Montserrat","fontSize":20,"fontWeight":800,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"none","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":{"color":"#ffd23f","radius":38,"padding":28},"curve":0},
+        {"id":"e3","type":"text","name":"Produkt","x":90,"y":420,"w":900,"h":280,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Poppins","fontSize":60,"fontWeight":800,"italic":false,"color":"#ffffff","align":"left","valign":"top","lineHeight":1.08,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":28,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Preis","x":30,"y":730,"w":1020,"h":460,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#000000","opacity":0.3,"blur":0,"x":12,"y":14},"text":"{{Preis}}","fontFamily":"Anton","fontSize":300,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":90,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Einheit","x":90,"y":1200,"w":900,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Einheit","flipX":false,"flipY":false,"shadow":null,"text":"{{Einheit}}","fontFamily":"Montserrat","fontSize":24,"fontWeight":700,"italic":false,"color":"#ffe1e1","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Zeitraum","x":190,"y":1330,"w":700,"h":90,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zeitraum","flipX":false,"flipY":false,"shadow":null,"text":"{{Zeitraum}}","fontFamily":"Montserrat","fontSize":22,"fontWeight":800,"italic":false,"color":"#111111","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.08,"uppercase":true,"wrap":false,"fit":"none","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":{"color":"#ffd23f","radius":45,"padding":30},"curve":0},
+        {"id":"e7","type":"icon","name":"Pfeil","x":490,"y":1500,"w":100,"h":100,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"arrow-down","color":"#ffffff","strokeWidth":2.4}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Frische Erdbeeren","Preis":"2,99 €","Einheit":"pro Schale (500 g)","Rabatt":"−30 %","Zeitraum":"Nur heute und morgen"},
+    {"Produkt":"Hausgemachte Marmelade im Dreierpack","Preis":"11,50 €","Einheit":"statt 14,90 €","Rabatt":"−25 %","Zeitraum":"Solange der Vorrat reicht"},
+    {"Produkt":"Eier","Preis":"3,20 €","Einheit":"","Rabatt":"","Zeitraum":""}
+  ]
+}

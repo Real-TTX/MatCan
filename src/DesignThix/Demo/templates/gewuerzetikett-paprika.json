@@ -1,0 +1,40 @@
+{
+  "name": "Gewürzetikett – Paprika",
+  "category": "Etiketten",
+  "description": "Kräftiges Gewürzetikett (58 × 40 mm) mit roter Leiste und Flammensymbol: Name in fetter Grotesk, Zusatz, Zutaten und der Inhalt in einer Kapsel. Alle Angaben sind Felder für eine Datenliste.",
+  "family": "gewuerzetikett",
+  "familyName": "Gewürzetikett",
+  "variant": "Paprika",
+  "occasion": "Handel & Preise",
+  "tags": ["Gewürz","Gewürzmischung","Gewürzdose","Etikett","Kräuter","Hofladen","Selbstgemacht","Salz","Zutaten","Paprika","Rot","Scharf","Grill","Kräftig","Modern"],
+  "formatKey": "label-58x40",
+  "number": 429,
+  "document": {
+    "schema":2,"unit":"mm","width":58,"height":40,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Gewürz","type":"text","sample":"Grillgewürz","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"für Fleisch und Gemüse","decimals":null,"category":null,"required":false},
+      {"key":"Zutaten","label":"Zutaten","type":"text","sample":"Paprika, Knoblauch, Salz, Kräuter","decimals":null,"category":null,"required":false},
+      {"key":"Inhalt","label":"Inhalt","type":"text","sample":"60 g","decimals":null,"category":null,"required":false},
+      {"key":"MHD","label":"Mindestens haltbar bis","type":"text","sample":"MHD 12/2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Leiste","x":0,"y":0,"w":13,"h":40,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#c8301f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"icon","name":"Flamme","x":3,"y":5,"w":7,"h":7,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"flame","color":"#ffffff","strokeWidth":1.8},
+        {"id":"e3","type":"text","name":"Inhalt Leiste","x":-10,"y":17.2,"w":33,"h":5.6,"rotation":-90,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Inhalt}}","fontFamily":"Poppins","fontSize":9,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Produkt","x":16.5,"y":3.4,"w":38.5,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Poppins","fontSize":15,"fontWeight":800,"italic":false,"color":"#1d1d1f","align":"left","valign":"bottom","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Zusatz","x":16.5,"y":14.6,"w":38.5,"h":6.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Poppins","fontSize":7,"fontWeight":600,"italic":false,"color":"#c8301f","align":"left","valign":"top","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Trenner","x":16.5,"y":21.6,"w":38.5,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#e4e4e8","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Zutaten","x":16.5,"y":22.6,"w":38.5,"h":10.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zutaten","flipX":false,"flipY":false,"shadow":null,"text":"{{Zutaten}}","fontFamily":"Poppins","fontSize":7,"fontWeight":400,"italic":false,"color":"#4a4a52","align":"left","valign":"top","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"MHD","x":16.5,"y":33.6,"w":38.5,"h":3.8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"MHD","flipX":false,"flipY":false,"shadow":null,"text":"{{MHD}}","fontFamily":"Poppins","fontSize":7,"fontWeight":500,"italic":false,"color":"#8a8a94","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Grillgewürz","Zusatz":"für Fleisch und Gemüse","Zutaten":"Paprika, Knoblauch, Salz, Kräuter","Inhalt":"60 g","MHD":"MHD 12/2027"},
+    {"Produkt":"Zitronen-Kräuter-Salz","Zusatz":"feine Würzmischung für Fisch, Geflügel und Salate","Zutaten":"Meersalz, Zitronenschale, Thymian, Rosmarin, Petersilie, Pfeffer","Inhalt":"120 g","MHD":"MHD 06/2028"},
+    {"Produkt":"Chili","Zusatz":"scharf","Zutaten":"Chilischoten","Inhalt":"35 g","MHD":""},
+    {"Produkt":"Glühweingewürz","Zusatz":"","Zutaten":"","Inhalt":"50 g","MHD":"MHD 10/2027"}
+  ]
+}

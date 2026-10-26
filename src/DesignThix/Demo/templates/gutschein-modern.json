@@ -1,0 +1,46 @@
+{
+  "name": "Gutschein – Modern",
+  "category": "Business",
+  "description": "Moderner Gutschein (DIN lang quer, 210 × 99 mm): links eine dunkle Farbfläche mit riesigem Betrag, rechts weiß mit „für“-Zeile, gestricheltem Codefeld und Gültigkeit. Betrag, Name, Code und Datum sind Felder für eine Serie.",
+  "family": "gutschein",
+  "familyName": "Gutschein",
+  "variant": "Modern",
+  "occasion": "Handel & Preise",
+  "tags": ["Gutschein","Geschenk","Wertgutschein","Geschenkgutschein","Code","Betrag","Verkauf","Modern","Kräftig","Türkis","Shop","Studio","Café"],
+  "formatKey": "voucher-dl",
+  "number": 417,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":99,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Betrag","label":"Betrag oder Leistung","type":"text","sample":"25 €","decimals":null,"category":null,"required":true},
+      {"key":"Fuer","label":"Für","type":"text","sample":"Anna","decimals":null,"category":null,"required":false},
+      {"key":"Code","label":"Gutscheincode","type":"text","sample":"GS-2027-0042","decimals":null,"category":null,"required":false},
+      {"key":"Gueltig","label":"Gültig bis","type":"text","sample":"Gültig bis 31. Dezember 2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Farbfläche","x":0,"y":0,"w":108,"h":99,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":{"type":"linear","angle":150,"stops":[{"offset":0,"color":"#0b4f58"},{"offset":1,"color":"#093a42"}]},"stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Kreis oben","x":38,"y":-34,"w":70,"h":70,"rotation":0,"opacity":0.18,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#3fd1b8","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Kreis unten","x":-20,"y":66,"w":60,"h":60,"rotation":0,"opacity":0.25,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#3fd1b8","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Titel","x":12,"y":10,"w":90,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gutschein","fontFamily":"Poppins","fontSize":12,"fontWeight":600,"italic":false,"color":"#3fd1b8","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Betrag","x":10,"y":24,"w":94,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Betrag}}","fontFamily":"Poppins","fontSize":64,"fontWeight":800,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Hinweis","x":12,"y":76,"w":90,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zum Verschenken –\neinlösbar im Hofladen","fontFamily":"Poppins","fontSize":8.5,"fontWeight":400,"italic":false,"color":"#cfe9ec","align":"left","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"icon","name":"Geschenk","x":90,"y":76,"w":11,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"gift","color":"#3fd1b8","strokeWidth":1.6},
+        {"id":"e8","type":"text","name":"Für Titel","x":118,"y":12,"w":80,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Für","fontFamily":"Poppins","fontSize":7.5,"fontWeight":600,"italic":false,"color":"#7a8a8d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Für","x":118,"y":17,"w":82,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Fuer","flipX":false,"flipY":false,"shadow":null,"text":"{{Fuer}}","fontFamily":"Poppins","fontSize":22,"fontWeight":700,"italic":false,"color":"#102b30","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"shape","name":"Linie","x":118,"y":33,"w":80,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d8e2e3","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"text","name":"Code Titel","x":118,"y":40,"w":80,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Code","fontFamily":"Poppins","fontSize":7.5,"fontWeight":600,"italic":false,"color":"#7a8a8d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"shape","name":"Code Feld","x":118,"y":45,"w":80,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#eef7f6","stroke":"#0b4f58","strokeWidth":0.5,"dash":"dashed","radius":2,"startCap":"none","endCap":"none"},
+        {"id":"e13","type":"text","name":"Code","x":119,"y":45,"w":78,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Code","flipX":false,"flipY":false,"shadow":null,"text":"{{Code}}","fontFamily":"IBM Plex Mono","fontSize":16,"fontWeight":700,"italic":false,"color":"#0b4f58","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"text","name":"Gültig","x":118,"y":68,"w":80,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Gueltig","flipX":false,"flipY":false,"shadow":null,"text":"{{Gueltig}}","fontFamily":"Poppins","fontSize":8,"fontWeight":500,"italic":false,"color":"#4a5b5e","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e15","type":"text","name":"Firma","x":118,"y":82,"w":80,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Hofladen Wiesengrund · Dorfstraße 12","fontFamily":"Poppins","fontSize":7,"fontWeight":400,"italic":false,"color":"#7a8a8d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Betrag":"25 €","Fuer":"Anna","Code":"GS-2027-0042","Gueltig":"Gültig bis 31. Dezember 2027"},
+    {"Betrag":"100 €","Fuer":"Maximiliane Schneider-Hohenstein","Code":"GS-2027-0107","Gueltig":"Gültig bis 30. Juni 2028"},
+    {"Betrag":"Ein Abendessen für zwei Personen","Fuer":"Jo","Code":"GS-2027-0108","Gueltig":""},
+    {"Betrag":"50 €","Fuer":"","Code":"GS-2027-0109","Gueltig":"Gültig bis 31. März 2028"}
+  ]
+}

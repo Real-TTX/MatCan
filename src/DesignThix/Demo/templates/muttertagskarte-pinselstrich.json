@@ -1,0 +1,33 @@
+{
+  "name": "Muttertagskarte Klappkarte – Pinselstrich",
+  "category": "Karten",
+  "description": "Moderne Klappkarte A6 hoch zum Muttertag: lachsfarbener Pinselstrich, Kirschblütenzweig und „Danke Mama“ in kräftiger Schrift mit Handschrift-Akzent. Innen zwei ruhige Seiten für deinen Text.",
+  "family": "muttertagskarte",
+  "familyName": "Muttertagskarte",
+  "variant": "Pinselstrich",
+  "occasion": "Feiertage",
+  "tags": ["Muttertag","Mama","modern","Pinselstrich","Kirschblüten","Klappkarte","lachs","Karte","Danke Mama","Handlettering"],
+  "formatKey": "card-a6-portrait",
+  "number": 132,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":148,"dpi":300,"locale":"de-DE","fold":"vertical",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Außen (Rückseite | Vorderseite)","background":{"color":"#fff4ee","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Blüten hinten","x":22.5,"y":100,"w":60,"h":28.945,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-kirschblueten-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Pinsel","x":108,"y":46,"w":94,"h":17.474,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-pinsel-1-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Zweig","x":112,"y":8,"w":88,"h":42.452,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-kirschblueten-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Danke","x":115,"y":46.5,"w":70,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"DANKE","fontFamily":"Poppins","fontSize":36,"fontWeight":700,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Mama","x":117.5,"y":72,"w":80,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Mama","fontFamily":"Dancing Script","fontSize":44,"fontWeight":700,"italic":false,"color":"#7a3f45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Muttertag","x":117.5,"y":104,"w":80,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"zum Muttertag","fontFamily":"Poppins","fontSize":8,"fontWeight":500,"italic":false,"color":"#7a3f45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innen","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"image","name":"Pinsel innen","x":6,"y":18,"w":90,"h":16.536,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-pinsel-2-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e8","type":"text","name":"Titel","x":12.5,"y":60,"w":80,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Für die beste\nMama der Welt","fontFamily":"Dancing Script","fontSize":24,"fontWeight":700,"italic":false,"color":"#7a3f45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Anrede","x":120,"y":26,"w":76,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Mama,","fontFamily":"Dancing Script","fontSize":24,"fontWeight":700,"italic":false,"color":"#b0585f","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Text","x":120,"y":42,"w":76,"h":62,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"du schenkst mir jeden Tag Mut, Wärme und ein offenes Ohr. Heute möchte ich dir einfach sagen: Danke, dass es dich gibt. Ich hab dich lieb!","fontFamily":"Poppins","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#4a3b3d","align":"left","valign":"top","lineHeight":1.55,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Gruß","x":120,"y":110,"w":76,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Deine Lisa","fontFamily":"Dancing Script","fontSize":20,"fontWeight":700,"italic":false,"color":"#b0585f","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

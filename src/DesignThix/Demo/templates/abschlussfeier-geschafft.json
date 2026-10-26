@@ -1,0 +1,36 @@
+{
+  "name": "Abschlussfeier – Geschafft",
+  "category": "Social Media",
+  "description": "Post für Instagram und WhatsApp (1080 x 1080 px) zum bestandenen Abschluss oder zur Einladung zur Feier: großes „Geschafft!“, Hut und Konfetti. Name und Abschluss sind Felder.",
+  "family": "abschlussfeier",
+  "familyName": "Abschlussfeier",
+  "variant": "Geschafft",
+  "occasion": "Feste & Events",
+  "tags": ["Abschluss","Abitur","Abi","Abschlussfeier","Schulabschluss","Ausbildung","Einladung","Feier","Geschafft","Instagram","Social Media","Bestanden","Glückwunsch","Post","Bunt"],
+  "formatKey": "instagram-post",
+  "number": 236,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Jonas","decimals":null,"category":null,"required":false},
+      {"key":"Abschluss","label":"Abschluss","type":"text","sample":"Abi 2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffd23f","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Konfetti","x":0,"y":0,"w":1080,"h":1080,"rotation":0,"opacity":0.7,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-streuung-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Kreis","x":90,"y":150,"w":900,"h":900,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"icon","name":"Hut","x":420,"y":80,"w":240,"h":240,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"graduation-cap","color":"#2a1b5e","strokeWidth":1.4},
+        {"id":"e4","type":"image","name":"Regenbogen","x":790,"y":800,"w":260,"h":133.506,"rotation":-10,"opacity":0,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-regenbogen-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Geschafft","x":120,"y":330,"w":840,"h":230,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Geschafft!","fontFamily":"Fredoka","fontSize":105,"fontWeight":700,"italic":false,"color":"#ff5d9a","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Name","x":140,"y":570,"w":800,"h":120,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Fredoka","fontSize":64,"fontWeight":600,"italic":false,"color":"#2a1b5e","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Abschluss","x":140,"y":690,"w":800,"h":100,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Abschluss}}","fontFamily":"Poppins","fontSize":40,"fontWeight":700,"italic":false,"color":"#3fd6b2","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Danke","x":160,"y":820,"w":760,"h":140,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir feiern am 25. Juni ab 18 Uhr in der Aula. Kommt vorbei!","fontFamily":"Poppins","fontSize":27,"fontWeight":500,"italic":false,"color":"#2a1b5e","align":"center","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Jonas","Abschluss":"Abi 2027"},
+    {"Name":"Maximiliane Schneider-Hohenstein","Abschluss":"Realschulabschluss 2027"},
+    {"Name":"Jo","Abschluss":"Gesellenbrief"}
+  ]
+}

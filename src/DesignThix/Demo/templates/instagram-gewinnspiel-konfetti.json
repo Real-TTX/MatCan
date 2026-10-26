@@ -1,0 +1,42 @@
+{
+  "name": "Instagram-Beitrag – Gewinnspiel Konfetti",
+  "category": "Social Media",
+  "description": "Buntes Gewinnspiel für Instagram (1080 × 1080 px): Konfettiregen, weiße Karte mit „Gewinnspiel“, dem Preis, drei Teilnahmeschritten mit Symbolen und dem Teilnahmeschluss. Preis, Konto und Frist sind Felder.",
+  "family": "instagram-gewinnspiel",
+  "familyName": "Instagram-Beitrag Gewinnspiel",
+  "variant": "Konfetti",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Beitrag","Gewinnspiel","Verlosung","Giveaway","Gewinn","Social Media","Facebook","Teilnahme","Konfetti","Bunt","Party","Fröhlich","Geburtstagsaktion"],
+  "formatKey": "instagram-post",
+  "number": 458,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Preis","label":"Preis","type":"text","sample":"Ein Korb voller Hofladen-Spezialitäten","decimals":null,"category":null,"required":true},
+      {"key":"Konto","label":"Dein Konto","type":"text","sample":"@hofladen.wiesengrund","decimals":null,"category":null,"required":false},
+      {"key":"Frist","label":"Teilnahmeschluss","type":"text","sample":"Teilnahme bis 30. Juni 2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#7b3fe4","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Konfetti","x":-60,"y":-60,"w":1200,"h":1200,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-streuung-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Karte","x":90,"y":110,"w":900,"h":860,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#2a0a60","opacity":0.4,"blur":36,"x":0,"y":20},"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":48,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Titel","x":130,"y":150,"w":820,"h":150,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GEWINNSPIEL","fontFamily":"Anton","fontSize":90,"fontWeight":400,"italic":false,"color":"#7b3fe4","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Wir verlosen","x":130,"y":300,"w":820,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir verlosen","fontFamily":"Montserrat","fontSize":15,"fontWeight":700,"italic":false,"color":"#777777","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.24,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Preis","x":150,"y":350,"w":780,"h":190,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Preis}}","fontFamily":"Poppins","fontSize":32,"fontWeight":700,"italic":false,"color":"#1a1033","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Linie","x":190,"y":560,"w":700,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#e6dcfb","strokeWidth":3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"icon","name":"Schritt 1 Symbol","x":190,"y":598,"w":52,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"user-plus","color":"#e8458b","strokeWidth":2.2},
+        {"id":"e8","type":"text","name":"Schritt 1","x":266,"y":594,"w":700,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Folge {{Konto}}","fontFamily":"Montserrat","fontSize":24,"fontWeight":700,"italic":false,"color":"#1a1033","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"icon","name":"Schritt 2 Symbol","x":190,"y":688,"w":52,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"heart","color":"#e8458b","strokeWidth":2.2},
+        {"id":"e10","type":"text","name":"Schritt 2","x":266,"y":684,"w":700,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Like diesen Beitrag","fontFamily":"Montserrat","fontSize":24,"fontWeight":700,"italic":false,"color":"#1a1033","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"icon","name":"Schritt 3 Symbol","x":190,"y":778,"w":52,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"message-circle","color":"#e8458b","strokeWidth":2.2},
+        {"id":"e12","type":"text","name":"Schritt 3","x":266,"y":774,"w":700,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Kommentiere und markiere einen Freund","fontFamily":"Montserrat","fontSize":24,"fontWeight":700,"italic":false,"color":"#1a1033","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Frist","x":130,"y":870,"w":820,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Frist","flipX":false,"flipY":false,"shadow":null,"text":"{{Frist}}","fontFamily":"Montserrat","fontSize":16,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":{"color":"#e8458b","radius":30,"padding":20},"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Preis":"Ein Korb voller Hofladen-Spezialitäten","Konto":"@hofladen.wiesengrund","Frist":"Teilnahme bis 30. Juni 2027"},
+    {"Preis":"Drei Gutscheine für ein Wochenende mit Übernachtung, Frühstück und Wellness für zwei Personen","Konto":"@gasthof.zum.wiesengrund.musterstadt","Frist":"Teilnahmeschluss: Sonntag, 31. Oktober 2027, 23:59 Uhr"},
+    {"Preis":"Ein Buch","Konto":"@lesezeit","Frist":""}
+  ]
+}

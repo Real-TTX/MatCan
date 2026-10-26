@@ -1,0 +1,33 @@
+{
+  "name": "Instagram-Beitrag – Zitat elegant",
+  "category": "Social Media",
+  "description": "Eleganter Zitat-Beitrag für Instagram (1080 × 1080 px): nachtblauer Verlauf, goldene Anführungszeichen, Zitat in kursiver Antiqua und Urheber mit Goldlinie. Zitat und Urheber sind Felder, so entsteht eine ganze Reihe aus einer Liste.",
+  "family": "instagram-zitat",
+  "familyName": "Instagram-Beitrag Zitat",
+  "variant": "Elegant",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Beitrag","Zitat","Spruch","Weisheit","Motivation","Social Media","Facebook","Post","Elegant","Dunkel","Gold","Antiqua","Nachtblau"],
+  "formatKey": "instagram-post",
+  "number": 449,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Zitat","label":"Zitat","type":"multiline","sample":"Wer aufhört, besser zu werden, hat aufgehört, gut zu sein.","decimals":null,"category":null,"required":true},
+      {"key":"Autor","label":"Urheber","type":"text","sample":"Marie von Ebner-Eschenbach","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":160,"stops":[{"offset":0,"color":"#0f1a35"},{"offset":1,"color":"#1d2d58"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"text","name":"Anführungszeichen","x":80,"y":60,"w":300,"h":300,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"„","fontFamily":"Playfair Display","fontSize":260,"fontWeight":700,"italic":false,"color":"#d6b25e","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":100,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e2","type":"text","name":"Zitat","x":110,"y":330,"w":860,"h":430,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Zitat}}","fontFamily":"Playfair Display","fontSize":52,"fontWeight":500,"italic":true,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"shape","name":"Linie","x":110,"y":800,"w":140,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d6b25e","strokeWidth":3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Autor","x":110,"y":822,"w":860,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Autor","flipX":false,"flipY":false,"shadow":null,"text":"{{Autor}}","fontFamily":"Montserrat","fontSize":19,"fontWeight":600,"italic":false,"color":"#d6b25e","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Handle","x":110,"y":972,"w":860,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"@hofladen.wiesengrund","fontFamily":"Montserrat","fontSize":16,"fontWeight":500,"italic":false,"color":"#8d9bc0","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Zitat":"Wer aufhört, besser zu werden, hat aufgehört, gut zu sein.","Autor":"Marie von Ebner-Eschenbach"},
+    {"Zitat":"Das Leben ist das, was passiert, während du eifrig dabei bist, andere Pläne zu machen – und manchmal ist genau das das Beste daran.","Autor":"John Lennon"},
+    {"Zitat":"Heute ist ein guter Tag.","Autor":""}
+  ]
+}

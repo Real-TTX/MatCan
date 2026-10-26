@@ -1,0 +1,37 @@
+{
+  "name": "Etikett rund – Minimal",
+  "category": "Etiketten",
+  "description": "Schlichtes rundes Etikett (60 mm): weiße Scheibe mit feinem schwarzem Ring, kleinem Blatt, Produktname in Versalien, Zusatz und Inhalt. Produkt, Zusatz und Inhalt sind Felder für eine Datenliste.",
+  "family": "label-round-60",
+  "familyName": "Etikett rund",
+  "variant": "Minimal",
+  "occasion": "Handel & Preise",
+  "tags": ["Etikett","Aufkleber","Sticker","Rund","Siegel","Verpackung","Geschenk","Hofladen","Marktstand","Minimal","Schlicht","Weiß","Ring","Skandinavisch","Bio"],
+  "formatKey": "label-round-60",
+  "number": 442,
+  "document": {
+    "schema":2,"unit":"mm","width":60,"height":60,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Produkt","type":"text","sample":"Bergkäse","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"12 Monate gereift","decimals":null,"category":null,"required":false},
+      {"key":"Inhalt","label":"Inhalt","type":"text","sample":"ca. 250 g","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Ring","x":1,"y":1,"w":58,"h":58,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":"#111111","strokeWidth":0.8,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Ring innen","x":3.4,"y":3.4,"w":53.2,"h":53.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#111111","strokeWidth":0.2,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"icon","name":"Blatt","x":26.5,"y":9.6,"w":7,"h":7,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"leaf","color":"#3d7a4a","strokeWidth":1.6},
+        {"id":"e4","type":"text","name":"Produkt","x":8,"y":19.4,"w":44,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Inter","fontSize":12,"fontWeight":700,"italic":false,"color":"#111111","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0.08,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Trenner","x":25,"y":35,"w":10,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#111111","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Zusatz","x":10,"y":36.6,"w":40,"h":4.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Inter","fontSize":7,"fontWeight":400,"italic":false,"color":"#555555","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Inhalt","x":10,"y":41.4,"w":40,"h":4.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Inhalt","flipX":false,"flipY":false,"shadow":null,"text":"{{Inhalt}}","fontFamily":"Inter","fontSize":7,"fontWeight":700,"italic":false,"color":"#111111","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Bergkäse","Zusatz":"12 Monate gereift","Inhalt":"ca. 250 g"},
+    {"Produkt":"Himbeer-Rhabarber-Marmelade","Zusatz":"mit 55 % Frucht, kleine Charge","Inhalt":"250 g"},
+    {"Produkt":"Tee","Zusatz":"","Inhalt":""},
+    {"Produkt":"Brot","Zusatz":"Sauerteig, Steinofen","Inhalt":"750 g"}
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Instagram-Beitrag – Zitat bold",
+  "category": "Social Media",
+  "description": "Kräftiger Zitat-Beitrag für Instagram (1080 × 1080 px): gelber Grund, riesige Anführungszeichen und Zitat in fetten Versalien, Urheber im schwarzen Balken. Zitat und Urheber sind Felder, so entsteht eine ganze Reihe aus einer Liste.",
+  "family": "instagram-zitat",
+  "familyName": "Instagram-Beitrag Zitat",
+  "variant": "Bold",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Beitrag","Zitat","Spruch","Weisheit","Motivation","Social Media","Facebook","Post","Bold","Gelb","Schwarz","Versalien","Laut"],
+  "formatKey": "instagram-post",
+  "number": 451,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Zitat","label":"Zitat","type":"multiline","sample":"Wer aufhört, besser zu werden, hat aufgehört, gut zu sein.","decimals":null,"category":null,"required":true},
+      {"key":"Autor","label":"Urheber","type":"text","sample":"Marie von Ebner-Eschenbach","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffd23f","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"text","name":"Anführungszeichen","x":40,"y":-20,"w":420,"h":420,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"“","fontFamily":"Anton","fontSize":330,"fontWeight":400,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":100,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e2","type":"text","name":"Zitat","x":80,"y":260,"w":920,"h":560,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Zitat}}","fontFamily":"Anton","fontSize":60,"fontWeight":400,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":true,"wrap":true,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Autor","x":80,"y":880,"w":700,"h":64,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Autor","flipX":false,"flipY":false,"shadow":null,"text":"{{Autor}}","fontFamily":"Montserrat","fontSize":20,"fontWeight":700,"italic":false,"color":"#ffd23f","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":true,"wrap":false,"fit":"none","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":{"color":"#111111","radius":0,"padding":22},"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Zitat":"Wer aufhört, besser zu werden, hat aufgehört, gut zu sein.","Autor":"Marie von Ebner-Eschenbach"},
+    {"Zitat":"Das Leben ist das, was passiert, während du eifrig dabei bist, andere Pläne zu machen – und manchmal ist genau das das Beste daran.","Autor":"John Lennon"},
+    {"Zitat":"Heute ist ein guter Tag.","Autor":""}
+  ]
+}

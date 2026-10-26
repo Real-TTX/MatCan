@@ -1,0 +1,32 @@
+{
+  "name": "Muttertagskarte A6 hoch – Blumengruß",
+  "category": "Karten",
+  "description": "Romantische Muttertagskarte im Format A6 hoch: ein Strauß aus Pfingstrose, Rose und Margerite, „Alles Liebe zum Muttertag“ in Schreibschrift. Innen eine Blütenecke und Platz für deine Worte.",
+  "family": "muttertagskarte",
+  "familyName": "Muttertagskarte",
+  "variant": "Blumengruß",
+  "occasion": "Feiertage",
+  "tags": ["Muttertag","Mama","Blumen","Pfingstrose","Rose","Blumenstrauß","rosé","Karte","Danke Mama","romantisch"],
+  "formatKey": "a6-portrait",
+  "number": 130,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#fdf6f2","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rose","x":4,"y":56,"w":40,"h":51.876,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-rose-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Pfingstrose","x":31,"y":48,"w":46,"h":60.692,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-pfingstrose-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Margerite","x":64,"y":66,"w":34,"h":44.684,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-margerite-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Alles Liebe","x":7.5,"y":14,"w":90,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Alles Liebe","fontFamily":"Parisienne","fontSize":30,"fontWeight":400,"italic":false,"color":"#b0585f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"zum Muttertag","x":7.5,"y":28,"w":90,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"zum Muttertag","fontFamily":"Parisienne","fontSize":30,"fontWeight":400,"italic":false,"color":"#7a3f45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Wunsch","x":9.5,"y":130,"w":86,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"in Liebe und Dankbarkeit","fontFamily":"Raleway","fontSize":7.5,"fontWeight":600,"italic":false,"color":"#b0585f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.22,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#fffdfb","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"image","name":"Ecke","x":0,"y":0,"w":38,"h":38,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-ecken-blueten-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e8","type":"text","name":"Anrede","x":16,"y":46,"w":74,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Mama,","fontFamily":"Parisienne","fontSize":22,"fontWeight":400,"italic":false,"color":"#b0585f","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Text","x":16,"y":60,"w":74,"h":54,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"danke für deine Liebe, deine Geduld und dafür, dass du immer für mich da bist. Du bist die beste Mama der Welt!","fontFamily":"Lora","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#4a3b3d","align":"left","valign":"top","lineHeight":1.6,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Gruß","x":16,"y":118,"w":74,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Deine Lisa","fontFamily":"Parisienne","fontSize":20,"fontWeight":400,"italic":false,"color":"#b0585f","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

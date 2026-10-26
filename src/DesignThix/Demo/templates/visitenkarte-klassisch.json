@@ -1,0 +1,50 @@
+{
+  "name": "Visitenkarte klassisch (2 Seiten)",
+  "category": "Karten",
+  "description": "Klassische Visitenkarte (85 × 55 mm) auf Elfenbein mit Goldlinien und Schnörkel: vorne Name und Funktion in feiner Antiqua, hinten dunkel mit Logo und zentrierten Kontaktdaten. Alle Angaben sind Felder für ein ganzes Team.",
+  "family": "visitenkarte",
+  "familyName": "Visitenkarte",
+  "variant": "Klassisch",
+  "occasion": "Business",
+  "tags": ["Visitenkarte","Kontakt","Firma","Logo","Business","Netzwerk","Klassisch","Elegant","Gold","Kanzlei","Beratung","Antiqua"],
+  "formatKey": "business-card",
+  "number": 400,
+  "document": {
+    "schema":2,"unit":"mm","width":85,"height":55,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Anna Beispiel","decimals":null,"category":null,"required":true},
+      {"key":"Rolle","label":"Funktion","type":"text","sample":"Geschäftsführung","decimals":null,"category":null,"required":false},
+      {"key":"Firma","label":"Firma","type":"text","sample":"Hofladen Wiesengrund","decimals":null,"category":null,"required":false},
+      {"key":"Telefon","label":"Telefon","type":"text","sample":"+49 123 456 789","decimals":null,"category":null,"required":false},
+      {"key":"Mail","label":"E-Mail","type":"text","sample":"anna@wiesengrund.example","decimals":null,"category":null,"required":false},
+      {"key":"Web","label":"Internet","type":"text","sample":"www.wiesengrund.example","decimals":null,"category":null,"required":false},
+      {"key":"Adresse","label":"Adresse","type":"multiline","sample":"Dorfstraße 12\n12345 Musterstadt","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#faf5ea","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen außen","x":2.6,"y":2.6,"w":79.8,"h":49.8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a8832f","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Rahmen innen","x":3.6,"y":3.6,"w":77.8,"h":47.8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a8832f","strokeWidth":0.2,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Firma","x":8,"y":11,"w":69,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Firma","flipX":false,"flipY":false,"shadow":null,"text":"{{Firma}}","fontFamily":"Cormorant Garamond","fontSize":9,"fontWeight":600,"italic":true,"color":"#a8832f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"image","name":"Schnörkel","x":28.5,"y":16.6,"w":28,"h":10.188,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-ornamente-schnoerkel-breit-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Name","x":8,"y":26.6,"w":69,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Cormorant Garamond","fontSize":19,"fontWeight":600,"italic":false,"color":"#2b2a33","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Funktion","x":8,"y":37.2,"w":69,"h":4.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Rolle","flipX":false,"flipY":false,"shadow":null,"text":"{{Rolle}}","fontFamily":"Raleway","fontSize":7,"fontWeight":600,"italic":false,"color":"#6c6a73","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.22,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#2b2a33","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"shape","name":"Rahmen","x":2.6,"y":2.6,"w":79.8,"h":49.8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a8832f","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"shape","name":"Logo Ring","x":36.1,"y":6.8,"w":12.8,"h":12.8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a8832f","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"icon","name":"Logo Symbol","x":39.5,"y":10.2,"w":6,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"sparkles","color":"#a8832f","strokeWidth":1.5},
+        {"id":"e10","type":"image","name":"Logo","x":37.1,"y":7.8,"w":10.8,"h":10.8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"circle","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e11","type":"text","name":"Telefon","x":8,"y":22.4,"w":69,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Telefon","flipX":false,"flipY":false,"shadow":null,"text":"{{Telefon}}","fontFamily":"Raleway","fontSize":7.5,"fontWeight":600,"italic":false,"color":"#f3ead6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"E-Mail","x":8,"y":27.2,"w":69,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Mail","flipX":false,"flipY":false,"shadow":null,"text":"{{Mail}}","fontFamily":"Raleway","fontSize":7.5,"fontWeight":500,"italic":false,"color":"#f3ead6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Internet","x":8,"y":32,"w":69,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Web","flipX":false,"flipY":false,"shadow":null,"text":"{{Web}}","fontFamily":"Raleway","fontSize":7.5,"fontWeight":500,"italic":false,"color":"#f3ead6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"shape","name":"Trenner","x":36,"y":38.2,"w":13,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a8832f","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e15","type":"text","name":"Adresse","x":14,"y":39.8,"w":57,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Adresse","flipX":false,"flipY":false,"shadow":null,"text":"{{Adresse}}","fontFamily":"Raleway","fontSize":7,"fontWeight":400,"italic":false,"color":"#c9bfa7","align":"center","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Anna Beispiel","Rolle":"Geschäftsführung","Firma":"Hofladen Wiesengrund","Telefon":"+49 123 456 789","Mail":"anna@wiesengrund.example","Web":"www.wiesengrund.example","Adresse":"Dorfstraße 12\n12345 Musterstadt"},
+    {"Name":"Prof. Dr. Maximilian Mustermann-Schneider","Rolle":"Leitung Einkauf und Qualitätssicherung","Firma":"Hofladen Wiesengrund","Telefon":"+49 123 456 780","Mail":"m.mustermann-schneider@wiesengrund.example","Web":"www.wiesengrund.example","Adresse":"Dorfstraße 12\n12345 Musterstadt"},
+    {"Name":"Jo Beispiel","Rolle":"","Firma":"Hofladen Wiesengrund","Telefon":"","Mail":"jo@wiesengrund.example","Web":"","Adresse":""}
+  ]
+}

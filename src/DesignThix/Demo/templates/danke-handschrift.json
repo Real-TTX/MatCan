@@ -1,0 +1,31 @@
+{
+  "name": "Dankeskarte A6 quer – Handschrift",
+  "category": "Karten",
+  "description": "Persönliche Dankeskarte im Format A6 quer: riesiges handgeschriebenes „Danke“ auf Kraftpapier-Ton mit kleinen Herzen, innen liniert und mit Platz für ein paar eigene Zeilen.",
+  "family": "danke-karte",
+  "familyName": "Dankeskarte",
+  "variant": "Handschrift",
+  "occasion": "Feste & Events",
+  "tags": ["Danke","Dankeskarte","Dankeschön","Handschrift","Herzen","Kraftpapier","Karte","persönlich","Dank"],
+  "formatKey": "a6-landscape",
+  "number": 109,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#f1e4cf","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Herzen","x":84,"y":2,"w":62,"h":62,"rotation":0,"opacity":0.75,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-herzen-streuung-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Danke","x":10,"y":10,"w":128,"h":58,"rotation":-4,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danke","fontFamily":"Caveat","fontSize":118,"fontWeight":700,"italic":false,"color":"#c8473f","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":50,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Zeile","x":14,"y":70,"w":120,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"von ganzem Herzen","fontFamily":"Caveat","fontSize":26,"fontWeight":600,"italic":false,"color":"#4a3b32","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Linie","x":52,"y":86,"w":44,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c8473f","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#fffaf1","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e5","type":"shape","name":"Rand","x":0,"y":0,"w":5,"h":105,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#c8473f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Anrede","x":18,"y":14,"w":112,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Anna,","fontFamily":"Caveat","fontSize":28,"fontWeight":700,"italic":false,"color":"#c8473f","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Text","x":18,"y":28,"w":112,"h":46,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"vielen Dank für deine Hilfe, deine Zeit und dein offenes Ohr. Ohne dich wäre vieles schwerer gewesen. Ich bin froh, dich an meiner Seite zu haben.","fontFamily":"Caveat","fontSize":21,"fontWeight":500,"italic":false,"color":"#4a3b32","align":"left","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Gruß","x":18,"y":80,"w":112,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Deine Lisa","fontFamily":"Caveat","fontSize":26,"fontWeight":700,"italic":false,"color":"#4a3b32","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"icon","name":"Herz","x":18,"y":82,"w":7,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"heart","color":"#c8473f","strokeWidth":2}
+      ]}
+    ]
+  }
+}

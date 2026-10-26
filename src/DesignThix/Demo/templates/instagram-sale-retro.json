@@ -1,0 +1,28 @@
+{
+  "name": "Instagram-Beitrag – Sale retro",
+  "category": "Social Media",
+  "description": "Bunter Retro-Beitrag für Instagram (1080 × 1080 px): Marineblau, bunte Wimpelkette, goldene Zackenscheibe mit „SALE“ und halbem Preis, dazu Zeitraum und Adresse. Texte und Prozentzahl änderst du direkt.",
+  "family": "instagram-sale",
+  "familyName": "Instagram-Beitrag Sale",
+  "variant": "Retro",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Beitrag","Sale","Rabatt","Angebot","Social Media","Facebook","Retro","Bunt","Wimpel","Vintage","Aktion","Ausverkauf","Gold"],
+  "formatKey": "instagram-post",
+  "number": 410,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#1b2559","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Wimpelkette","x":0,"y":0,"w":1080,"h":289.587,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-wimpelkette-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Zackenscheibe","x":150,"y":250,"w":780,"h":787.531,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#000000","opacity":0.3,"blur":24,"x":0,"y":14},"source":{"asset":"deko-baender-starburst-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Sale","x":240,"y":440,"w":600,"h":140,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SALE","fontFamily":"Righteous","fontSize":105,"fontWeight":400,"italic":false,"color":"#1b2559","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":60,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Rabatt","x":240,"y":580,"w":600,"h":110,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"−50 %","fontFamily":"Righteous","fontSize":78,"fontWeight":400,"italic":false,"color":"#b3243b","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":50,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Auf alles","x":240,"y":690,"w":600,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"auf alles","fontFamily":"Kaushan Script","fontSize":26,"fontWeight":400,"italic":false,"color":"#1b2559","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Linie","x":90,"y":960,"w":900,"h":0,"rotation":0,"opacity":0.4,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#ffffff","strokeWidth":2,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Zeitraum","x":90,"y":975,"w":460,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Nur bis Samstag","fontFamily":"Righteous","fontSize":24,"fontWeight":400,"italic":false,"color":"#ffd34d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Adresse","x":520,"y":978,"w":470,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Hofladen Wiesengrund","fontFamily":"Montserrat","fontSize":17,"fontWeight":600,"italic":false,"color":"#ffffff","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

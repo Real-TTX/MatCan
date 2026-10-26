@@ -1,0 +1,46 @@
+{
+  "name": "Gutschein – Elegant",
+  "category": "Business",
+  "description": "Eleganter Geschenkgutschein (DIN lang quer, 210 × 99 mm) in Elfenbein und Gold: Betrag in Antiqua, „für“-Zeile und Gültigkeit, rechts ein Abschnitt mit Gutscheincode und QR-Code. Betrag, Name, Code und Datum sind Felder für eine Serie.",
+  "family": "gutschein",
+  "familyName": "Gutschein",
+  "variant": "Elegant",
+  "occasion": "Handel & Preise",
+  "tags": ["Gutschein","Geschenk","Wertgutschein","Geschenkgutschein","Code","Betrag","Verkauf","Elegant","Gold","Antiqua","Restaurant","Wellness","Friseur","QR-Code"],
+  "formatKey": "voucher-dl",
+  "number": 416,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":99,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Betrag","label":"Betrag oder Leistung","type":"text","sample":"25 €","decimals":null,"category":null,"required":true},
+      {"key":"Fuer","label":"Für","type":"text","sample":"Anna","decimals":null,"category":null,"required":false},
+      {"key":"Code","label":"Gutscheincode","type":"text","sample":"GS-2027-0042","decimals":null,"category":null,"required":false},
+      {"key":"Gueltig","label":"Gültig bis","type":"text","sample":"Gültig bis 31. Dezember 2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fbf6ea","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen außen","x":4,"y":4,"w":202,"h":91,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a8832f","strokeWidth":0.7,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Rahmen innen","x":5.6,"y":5.6,"w":198.8,"h":87.8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a8832f","strokeWidth":0.25,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Titel","x":12,"y":11,"w":130,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gutschein","fontFamily":"Cinzel","fontSize":30,"fontWeight":600,"italic":false,"color":"#2b2a33","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.14,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"image","name":"Schnörkel","x":52,"y":24,"w":50,"h":18.193,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-ornamente-schnoerkel-breit-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Im Wert von","x":12,"y":39,"w":130,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"im Wert von","fontFamily":"Cormorant Garamond","fontSize":12,"fontWeight":500,"italic":true,"color":"#6c6a73","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Betrag","x":12,"y":45,"w":130,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Betrag}}","fontFamily":"Cinzel","fontSize":38,"fontWeight":600,"italic":false,"color":"#a8832f","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Für","x":12,"y":72,"w":130,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Fuer","flipX":false,"flipY":false,"shadow":null,"text":"für {{Fuer}}","fontFamily":"Cormorant Garamond","fontSize":17,"fontWeight":500,"italic":true,"color":"#2b2a33","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Gültig","x":12,"y":83,"w":130,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Gueltig","flipX":false,"flipY":false,"shadow":null,"text":"{{Gueltig}}","fontFamily":"Raleway","fontSize":7.5,"fontWeight":500,"italic":false,"color":"#6c6a73","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.14,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"shape","name":"Trennlinie","x":150,"y":8,"w":0,"h":83,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a8832f","strokeWidth":0.5,"dash":"dashed","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e10","type":"icon","name":"Schere","x":147.4,"y":8.5,"w":5.2,"h":5.2,"rotation":90,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"scissors","color":"#a8832f","strokeWidth":1.8},
+        {"id":"e11","type":"text","name":"Code Titel","x":155,"y":14,"w":45,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gutscheincode","fontFamily":"Raleway","fontSize":7,"fontWeight":600,"italic":false,"color":"#a8832f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.16,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"shape","name":"Code Feld","x":156,"y":20,"w":43,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":"#a8832f","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e13","type":"text","name":"Code","x":157,"y":20,"w":41,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Code","flipX":false,"flipY":false,"shadow":null,"text":"{{Code}}","fontFamily":"IBM Plex Mono","fontSize":11,"fontWeight":700,"italic":false,"color":"#2b2a33","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"qr","name":"QR-Code","x":165,"y":36,"w":25,"h":25,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Code","flipX":false,"flipY":false,"shadow":null,"value":"{{Code}}","color":"#2b2a33","background":null,"ecc":"M","quiet":false},
+        {"id":"e15","type":"text","name":"Einlösen","x":155,"y":65,"w":45,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Einlösbar im\nHofladen Wiesengrund,\nDorfstraße 12","fontFamily":"Raleway","fontSize":7,"fontWeight":400,"italic":false,"color":"#6c6a73","align":"center","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Betrag":"25 €","Fuer":"Anna","Code":"GS-2027-0042","Gueltig":"Gültig bis 31. Dezember 2027"},
+    {"Betrag":"100 €","Fuer":"Maximiliane Schneider-Hohenstein","Code":"GS-2027-0107","Gueltig":"Gültig bis 30. Juni 2028"},
+    {"Betrag":"Ein Abendessen für zwei Personen","Fuer":"Jo","Code":"GS-2027-0108","Gueltig":""},
+    {"Betrag":"50 €","Fuer":"","Code":"GS-2027-0109","Gueltig":"Gültig bis 31. März 2028"}
+  ]
+}

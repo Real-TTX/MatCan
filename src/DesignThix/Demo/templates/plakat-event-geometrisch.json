@@ -1,0 +1,32 @@
+{
+  "name": "Poster A3 quer – Event Geometrisch",
+  "category": "Poster",
+  "description": "Grafisches A3-Plakat im Querformat für Markt, Messe oder Clubnacht: große Kreise, Dreieck und Balken in Pink und Cyan auf Weiß, Titel „NIGHT MARKET“ in Montserrat und Infoblöcke mit Datum, Ort und Eintritt.",
+  "family": "plakat-event",
+  "familyName": "Plakat Veranstaltung",
+  "variant": "Geometrisch",
+  "occasion": "Feste & Events",
+  "tags": ["Plakat","Poster","Querformat","Markt","Nachtmarkt","Clubnacht","Messe","Geometrisch","Pink","Veranstaltung"],
+  "formatKey": "poster-a3-landscape",
+  "number": 356,
+  "document": {
+    "schema":2,"unit":"mm","width":420,"height":297,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Kreis Pink","x":250,"y":-60,"w":230,"h":230,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ff2d78","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Kreis Cyan","x":304,"y":96,"w":180,"h":180,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#00c2d1","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Dreieck","x":336,"y":196,"w":60,"h":60,"rotation":14,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"triangle","points":5,"innerRadius":0.5,"fill":"#111111","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"shape","name":"Balken","x":0,"y":0,"w":22,"h":297,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#111111","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Anlass","x":46,"y":24,"w":200,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Der Markt für Nachteulen","fontFamily":"Montserrat","fontSize":24,"fontWeight":600,"italic":false,"color":"#ff2d78","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Titel","x":40,"y":40,"w":300,"h":150,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"NIGHT\nMARKET","fontFamily":"Montserrat","fontSize":130,"fontWeight":900,"italic":false,"color":"#111111","align":"left","valign":"top","lineHeight":0.95,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":60,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Datum Block","x":46,"y":208,"w":128,"h":54,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#111111","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Datum Zeile 1","x":54,"y":212,"w":112,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Fr, 9. Oktober","fontFamily":"Montserrat","fontSize":28,"fontWeight":800,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Datum Zeile 2","x":54,"y":230,"w":112,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"18 bis 24 Uhr","fontFamily":"Montserrat","fontSize":20,"fontWeight":500,"italic":false,"color":"#ffffff","align":"left","valign":"top","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Ort Titel","x":190,"y":208,"w":160,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ORT","fontFamily":"Montserrat","fontSize":12,"fontWeight":800,"italic":false,"color":"#ff2d78","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Ort","x":190,"y":218,"w":108,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Alte Gießerei\nHafenstraße 8, Musterstadt","fontFamily":"Montserrat","fontSize":15,"fontWeight":600,"italic":false,"color":"#111111","align":"left","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Eintritt","x":46,"y":272,"w":340,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eintritt frei  ·  120 Stände  ·  Live-DJs  ·  Street Food","fontFamily":"Montserrat","fontSize":15,"fontWeight":600,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

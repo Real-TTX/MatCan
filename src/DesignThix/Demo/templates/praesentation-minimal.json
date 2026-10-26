@@ -1,0 +1,27 @@
+{
+  "name": "Präsentation – Titelfolie Minimal",
+  "category": "Business",
+  "description": "Ruhige Titelfolie (1920 × 1080 px) mit viel Weißraum: großer Titel in Antiqua, feine Linie, Untertitel und Angaben zum Vortrag klein am Rand. Ändere die Texte und lade die Folie als Bild herunter.",
+  "family": "presentation",
+  "familyName": "Präsentation Titelfolie",
+  "variant": "Minimal",
+  "occasion": "Business",
+  "tags": ["Präsentation","Titelfolie","Folie","Vortrag","Slide","PowerPoint","Pitch","Business","Schule","Referat","Minimal","Weiß","Antiqua","Universität","Kunst","Elegant"],
+  "formatKey": "presentation",
+  "number": 471,
+  "document": {
+    "schema":2,"unit":"px","width":1920,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fbfaf7","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen","x":60,"y":60,"w":1800,"h":960,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#1a1a1a","strokeWidth":1.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Kicker","x":160,"y":160,"w":1000,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Vortrag","fontFamily":"Raleway","fontSize":18,"fontWeight":600,"italic":false,"color":"#8a6a3a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Titel","x":160,"y":260,"w":1500,"h":400,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Vom Samen zum Brot","fontFamily":"Cormorant Garamond","fontSize":140,"fontWeight":600,"italic":false,"color":"#1a1a1a","align":"left","valign":"top","lineHeight":1.02,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":50,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Linie","x":160,"y":700,"w":400,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#8a6a3a","strokeWidth":3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Untertitel","x":160,"y":730,"w":1300,"h":100,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eine kleine Geschichte des Getreides in unserer Region","fontFamily":"Cormorant Garamond","fontSize":38,"fontWeight":500,"italic":true,"color":"#4a4a4a","align":"left","valign":"top","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Sprecher","x":160,"y":900,"w":800,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna Beispiel","fontFamily":"Raleway","fontSize":20,"fontWeight":600,"italic":false,"color":"#1a1a1a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":1060,"y":900,"w":700,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterstadt, 12. Juni 2027","fontFamily":"Raleway","fontSize":20,"fontWeight":400,"italic":false,"color":"#6a6a6a","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

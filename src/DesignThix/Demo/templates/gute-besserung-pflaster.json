@@ -1,0 +1,37 @@
+{
+  "name": "Gute-Besserung-Karte A6 quer – Pflaster",
+  "category": "Karten",
+  "description": "Verspielte Karte im Format A6 quer: ein großes Herz mit aufgeklebtem Pflaster, kleine Symbole für Tee, Tablette und Thermometer und „Gute Besserung“ in krakeliger Kinderschrift.",
+  "family": "gute-besserung",
+  "familyName": "Gute Besserung",
+  "variant": "Pflaster",
+  "occasion": "Kinder & Familie",
+  "tags": ["Gute Besserung","Genesung","Pflaster","Herz","Kinder","verspielt","krank","Karte","Genesungswünsche","Tee"],
+  "formatKey": "a6-landscape",
+  "number": 117,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#e9f6f3","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Herz","x":8,"y":14,"w":68,"h":62.333,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-herzen-voll-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Pflaster","x":20,"y":38,"w":46,"h":13,"rotation":-35,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#f2cf9b","stroke":null,"strokeWidth":1,"dash":"solid","radius":3,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Pflaster Mitte","x":36,"y":41,"w":14,"h":7,"rotation":-35,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ecbd7c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"shape","name":"Pflaster 2","x":20,"y":38,"w":46,"h":13,"rotation":35,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#f2cf9b","stroke":null,"strokeWidth":1,"dash":"solid","radius":3,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"shape","name":"Pflaster 2 Mitte","x":36,"y":41,"w":14,"h":7,"rotation":35,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ecbd7c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Gute","x":82,"y":14,"w":60,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gute","fontFamily":"Gochi Hand","fontSize":40,"fontWeight":400,"italic":false,"color":"#c9505c","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Besserung","x":80,"y":34,"w":66,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Besserung!","fontFamily":"Gochi Hand","fontSize":38,"fontWeight":400,"italic":false,"color":"#1f6f78","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"icon","name":"Tee","x":86,"y":74,"w":14,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"coffee","color":"#1f6f78","strokeWidth":1.6},
+        {"id":"e9","type":"icon","name":"Tablette","x":106,"y":74,"w":14,"h":14,"rotation":25,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"pill","color":"#c9505c","strokeWidth":1.6},
+        {"id":"e10","type":"icon","name":"Thermometer","x":126,"y":74,"w":14,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"thermometer","color":"#1f6f78","strokeWidth":1.6}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e11","type":"shape","name":"Band","x":0,"y":0,"w":148,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#c9505c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e12","type":"icon","name":"Herz","x":118,"y":16,"w":16,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"heart-pulse","color":"#c9505c","strokeWidth":1.8},
+        {"id":"e13","type":"text","name":"Anrede","x":18,"y":20,"w":96,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Hallo Tom,","fontFamily":"Gochi Hand","fontSize":24,"fontWeight":400,"italic":false,"color":"#1f6f78","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"text","name":"Text","x":18,"y":34,"w":100,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Mit Tee, Ruhe und viel Schlaf geht es bald wieder bergauf! Wir vermissen dich und freuen uns, wenn du wieder dabei bist.","fontFamily":"Gochi Hand","fontSize":16,"fontWeight":400,"italic":false,"color":"#2f2a4a","align":"left","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e15","type":"text","name":"Gruß","x":18,"y":82,"w":112,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Deine Klasse 3b","fontFamily":"Gochi Hand","fontSize":21,"fontWeight":400,"italic":false,"color":"#c9505c","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

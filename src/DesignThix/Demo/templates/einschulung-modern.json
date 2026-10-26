@@ -1,0 +1,42 @@
+{
+  "name": "Einschulung – Modern",
+  "category": "Einladungen",
+  "description": "Ruhige, moderne Einladung zur Einschulung (DIN lang hoch) mit Bogen, Schulranzen-Symbol und klarer Schrift in Creme und Koralle. Name als Feld.",
+  "family": "einschulung",
+  "familyName": "Einschulung",
+  "variant": "Modern",
+  "occasion": "Kinder & Familie",
+  "tags": ["Einschulung","Schulanfang","Schulstart","Schulkind","Einladung","Erster Schultag","Schule","Modern","Minimal","Bogen","Boho","Creme","Schulranzen"],
+  "formatKey": "din-lang-portrait",
+  "number": 209,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Ben","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fbf3e8","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Bogen","x":18,"y":14,"w":63,"h":83.014,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-bogen-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Regenbogen","x":31.5,"y":76,"w":36,"h":18.485,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-regenbogen-boho"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"icon","name":"Ranzen","x":36,"y":38,"w":27,"h":27,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"backpack","color":"#fbf3e8","strokeWidth":1.5},
+        {"id":"e4","type":"image","name":"Funkeln 1","x":7,"y":24,"w":11,"h":10.316,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-funkeln-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"image","name":"Funkeln 2","x":84,"y":52,"w":8,"h":7.503,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-funkeln-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"image","name":"Blob","x":74,"y":100,"w":46,"h":44.306,"rotation":0,"opacity":0.35,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-blob-3-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e7","type":"shape","name":"Trenner 1","x":38,"y":136.5,"w":23,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d9a441","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"shape","name":"Trenner 2","x":38,"y":171,"w":23,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d9a441","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Hallo","x":8,"y":100,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"HALLO SCHULE!","fontFamily":"Poppins","fontSize":11,"fontWeight":600,"italic":false,"color":"#e8725a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Name","x":6,"y":108,"w":87,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Poppins","fontSize":32,"fontWeight":700,"italic":false,"color":"#2b3a4a","align":"center","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"wird Schulkind","x":8,"y":124.5,"w":83,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"wird Schulkind","fontFamily":"Raleway","fontSize":17,"fontWeight":500,"italic":false,"color":"#2b3a4a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Einladung","x":10,"y":138,"w":79,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zur Feier der Einschulung\nlädt die Familie herzlich ein.","fontFamily":"Raleway","fontSize":10.5,"fontWeight":500,"italic":false,"color":"#2b3a4a","align":"center","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Datum","x":8,"y":157,"w":83,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag,\n7. August 2027 · 10 Uhr","fontFamily":"Raleway","fontSize":11,"fontWeight":700,"italic":false,"color":"#2b3a4a","align":"center","valign":"middle","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"text","name":"Ort","x":8,"y":173,"w":83,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Aula der Grundschule am Park\nMusterweg 5 · 12345 Musterstadt","fontFamily":"Raleway","fontSize":9.5,"fontWeight":500,"italic":false,"color":"#2b3a4a","align":"center","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e15","type":"text","name":"Danach","x":8,"y":189,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danach Kaffee und Kuchen","fontFamily":"Raleway","fontSize":9.5,"fontWeight":600,"italic":false,"color":"#e8725a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Ben"},
+    {"Name":"Emilia-Sophie"},
+    {"Name":"Jo"}
+  ]
+}

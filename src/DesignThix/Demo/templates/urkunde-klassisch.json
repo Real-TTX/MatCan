@@ -1,0 +1,43 @@
+{
+  "name": "Urkunde – Klassisch",
+  "category": "Karten",
+  "description": "Klassische Urkunde (A4 quer) mit goldenem Doppellinienrahmen, Titel in römischen Versalien, Name in Schreibschrift, Anlass, Datum, Unterschriftenlinie und goldenem Siegel. Name, Anlass und Datum sind Felder, so druckst du eine ganze Liste.",
+  "family": "certificate-a4",
+  "familyName": "Urkunde & Zertifikat",
+  "variant": "Klassisch",
+  "occasion": "Verein & Schule",
+  "tags": ["Urkunde","Zertifikat","Auszeichnung","Teilnahme","Gewinner","Schule","Verein","Sport","Teilnahmebescheinigung","Klassisch","Gold","Feierlich","Siegel","Schreibschrift","Abschluss","Ehrung"],
+  "formatKey": "certificate-a4",
+  "number": 419,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Anna Beispiel","decimals":null,"category":null,"required":true},
+      {"key":"Anlass","label":"Anlass","type":"multiline","sample":"für die erfolgreiche Teilnahme am Sommerlauf 2027","decimals":null,"category":null,"required":false},
+      {"key":"Datum","label":"Datum","type":"text","sample":"12. Juni 2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fffdf6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rahmen","x":8.514,"y":6,"w":279.972,"h":198,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-rahmen-doppellinie-quer-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Titel","x":30,"y":23,"w":237,"h":19,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Urkunde","fontFamily":"Cinzel","fontSize":46,"fontWeight":600,"italic":false,"color":"#1f2a44","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.22,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"image","name":"Schnörkel","x":118.5,"y":44,"w":60,"h":21.832,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-ornamente-schnoerkel-breit-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Verliehen","x":30,"y":68,"w":237,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"wird verliehen an","fontFamily":"Cormorant Garamond","fontSize":17,"fontWeight":500,"italic":true,"color":"#5c5a64","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Name","x":30,"y":76,"w":237,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Great Vibes","fontSize":58,"fontWeight":400,"italic":false,"color":"#1f2a44","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Namenslinie","x":78,"y":108,"w":141,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a8832f","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Anlass","x":50,"y":113,"w":197,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Anlass","flipX":false,"flipY":false,"shadow":null,"text":"{{Anlass}}","fontFamily":"Cormorant Garamond","fontSize":17,"fontWeight":500,"italic":false,"color":"#2b2a33","align":"center","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"image","name":"Siegel","x":133.5,"y":141,"w":30,"h":30,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-baender-siegel-zacken-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e9","type":"text","name":"Datum","x":34,"y":160,"w":80,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Datum}}","fontFamily":"Cormorant Garamond","fontSize":14,"fontWeight":600,"italic":false,"color":"#1f2a44","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"shape","name":"Datumslinie","x":34,"y":168,"w":80,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#555555","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"text","name":"Datum Beschriftung","x":34,"y":169.4,"w":80,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Datum","fontFamily":"Raleway","fontSize":7,"fontWeight":500,"italic":false,"color":"#777777","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.14,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"shape","name":"Unterschriftslinie","x":183,"y":168,"w":80,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#555555","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e13","type":"text","name":"Unterschrift Beschriftung","x":183,"y":169.4,"w":80,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Unterschrift","fontFamily":"Raleway","fontSize":7,"fontWeight":500,"italic":false,"color":"#777777","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.14,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Anna Beispiel","Anlass":"für die erfolgreiche Teilnahme am Sommerlauf 2027","Datum":"12. Juni 2027"},
+    {"Name":"Maximiliane Schneider-Hohenstein","Anlass":"für hervorragende Leistungen im Schuljahr 2026/27 und ihr großes Engagement in der Schulgemeinschaft","Datum":"30. Juni 2027"},
+    {"Name":"Jo Kurz","Anlass":"für den ersten Platz","Datum":""},
+    {"Name":"Prof. Dr. Maximilian Mustermann","Anlass":"","Datum":"1. Oktober 2027"}
+  ]
+}

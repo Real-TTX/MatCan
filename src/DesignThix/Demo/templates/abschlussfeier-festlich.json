@@ -1,0 +1,38 @@
+{
+  "name": "Abschlussfeier – Festlich",
+  "category": "Einladungen",
+  "description": "Festliche Einladung zur Abschlussfeier (A6 hoch) in Marineblau und Gold mit Lorbeerkranz und Abschlusshut. Name und Abschluss sind Felder.",
+  "family": "abschlussfeier",
+  "familyName": "Abschlussfeier",
+  "variant": "Festlich",
+  "occasion": "Feste & Events",
+  "tags": ["Abschluss","Abitur","Abi","Abschlussfeier","Schulabschluss","Ausbildung","Einladung","Feier","Geschafft","Festlich","Lorbeer","Gold","Marine","Elegant","Abschlusshut","Klassisch"],
+  "formatKey": "a6-portrait",
+  "number": 235,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Jonas","decimals":null,"category":null,"required":false},
+      {"key":"Abschluss","label":"Abschluss","type":"text","sample":"Abi 2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#1c2b52","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Fläche","x":5,"y":5,"w":95,"h":138,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#b8893a","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"image","name":"Lorbeerkranz","x":25,"y":14,"w":55,"h":53.374,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-lorbeerkranz-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"icon","name":"Hut","x":41,"y":30,"w":23,"h":23,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"graduation-cap","color":"#ffffff","strokeWidth":1.4},
+        {"id":"e4","type":"image","name":"Trenner","x":27,"y":107,"w":51,"h":5.1,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-raute-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Kopf","x":12,"y":74,"w":81,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WIR FEIERN DEN ABSCHLUSS VON","fontFamily":"Cinzel","fontSize":7,"fontWeight":400,"italic":false,"color":"#b8893a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Name","x":10,"y":82,"w":85,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Great Vibes","fontSize":36,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Abschluss","x":10,"y":98,"w":85,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Abschluss}}","fontFamily":"Cormorant Garamond","fontSize":14,"fontWeight":700,"italic":false,"color":"#b8893a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.05,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Datum","x":12,"y":114,"w":81,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 25. Juni 2027 · 18 Uhr","fontFamily":"Cormorant Garamond","fontSize":12.5,"fontWeight":700,"italic":false,"color":"#fbf7ee","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Ort","x":12,"y":122,"w":81,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Aula am Park, Musterstadt","fontFamily":"Cormorant Garamond","fontSize":11,"fontWeight":600,"italic":true,"color":"#fbf7ee","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Zusage","x":12,"y":131,"w":81,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 11. Juni: 0170 1234567","fontFamily":"Cormorant Garamond","fontSize":8.5,"fontWeight":600,"italic":false,"color":"#b8893a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Jonas","Abschluss":"Abi 2027"},
+    {"Name":"Maximiliane Schneider-Hohenstein","Abschluss":"Realschulabschluss 2027"},
+    {"Name":"Jo","Abschluss":"Gesellenbrief"}
+  ]
+}

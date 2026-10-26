@@ -1,0 +1,36 @@
+{
+  "name": "Flyer DIN lang – Kurs Musik",
+  "category": "Flyer",
+  "description": "Schlanker DIN-lang-Flyer für Musikunterricht (Gitarre, Klavier, Gesang): großer oranger Kreis mit Gitarre, Titel in Josefin Sans, drei Vorteile mit Häkchen, Probestunde und Kontakt.",
+  "family": "flyer-kurs",
+  "familyName": "Flyer Kurs",
+  "variant": "Musik",
+  "occasion": "Verein & Schule",
+  "tags": ["Flyer","DIN lang","Kurs","Musik","Gitarre","Musikunterricht","Klavier","Gesang","Probestunde","Musikschule"],
+  "formatKey": "din-lang-portrait",
+  "number": 318,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#2b1810","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Kreis","x":14,"y":12,"w":71,"h":71,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ff7043","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Kreis Ring","x":10,"y":8,"w":79,"h":79,"rotation":0,"opacity":0.6,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#ff7043","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"icon","name":"Gitarre","x":28,"y":26,"w":43,"h":43,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"guitar","color":"#2b1810","strokeWidth":1.5},
+        {"id":"e4","type":"icon","name":"Note 1","x":8,"y":94,"w":8,"h":8,"rotation":-12,"opacity":0.6,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"music","color":"#ff7043","strokeWidth":1.6},
+        {"id":"e5","type":"icon","name":"Note 2","x":84,"y":90,"w":8,"h":8,"rotation":12,"opacity":0.6,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"music-2","color":"#ff7043","strokeWidth":1.6},
+        {"id":"e6","type":"text","name":"Titel","x":8,"y":98,"w":83,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GITARRE","fontFamily":"Josefin Sans","fontSize":34,"fontWeight":700,"italic":false,"color":"#fff1dc","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Titel 2","x":8,"y":115,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"lernen für Anfänger","fontFamily":"Josefin Sans","fontSize":13,"fontWeight":400,"italic":false,"color":"#ff7043","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"icon","name":"Vorteil 1 Symbol","x":12,"y":134,"w":5.5,"h":5.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"check","color":"#ff7043","strokeWidth":2.4},
+        {"id":"e9","type":"text","name":"Vorteil 1 Wert","x":20.5,"y":134,"w":69.5,"h":4.815,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Einzel- und Kleingruppen","fontFamily":"Josefin Sans","fontSize":10.5,"fontWeight":600,"italic":false,"color":"#fff1dc","align":"left","valign":"middle","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"icon","name":"Vorteil 2 Symbol","x":12,"y":144,"w":5.5,"h":5.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"check","color":"#ff7043","strokeWidth":2.4},
+        {"id":"e11","type":"text","name":"Vorteil 2 Wert","x":20.5,"y":144,"w":69.5,"h":4.815,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Leihgitarren vorhanden","fontFamily":"Josefin Sans","fontSize":10.5,"fontWeight":600,"italic":false,"color":"#fff1dc","align":"left","valign":"middle","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"icon","name":"Vorteil 3 Symbol","x":12,"y":154,"w":5.5,"h":5.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"check","color":"#ff7043","strokeWidth":2.4},
+        {"id":"e13","type":"text","name":"Vorteil 3 Wert","x":20.5,"y":154,"w":69.5,"h":4.815,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Alle Altersgruppen willkommen","fontFamily":"Josefin Sans","fontSize":10.5,"fontWeight":600,"italic":false,"color":"#fff1dc","align":"left","valign":"middle","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"shape","name":"Probestunde","x":10,"y":168,"w":79,"h":15,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ff7043","stroke":null,"strokeWidth":1,"dash":"solid","radius":7.5,"startCap":"none","endCap":"none"},
+        {"id":"e15","type":"text","name":"Probestunde Text","x":10,"y":168,"w":79,"h":15,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Erste Probestunde gratis","fontFamily":"Josefin Sans","fontSize":11,"fontWeight":700,"italic":false,"color":"#2b1810","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e16","type":"text","name":"Kontakt","x":8,"y":188,"w":83,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musikschule Klangraum\n0123 456 789  ·  www.beispiel.de","fontFamily":"Josefin Sans","fontSize":8.5,"fontWeight":400,"italic":false,"color":"#d9bfa0","align":"center","valign":"top","lineHeight":1.45,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

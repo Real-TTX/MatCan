@@ -1,0 +1,34 @@
+{
+  "name": "Dankeskarte Klappkarte quadratisch – Modern",
+  "category": "Karten",
+  "description": "Klare Dankeskarte als quadratische Klappkarte: vorne ein riesiges „DANKE“ in Salbeigrün und Weiß, hinten eine kurze Zeile, innen ein ruhiges Layout für deinen Text.",
+  "family": "danke-karte",
+  "familyName": "Dankeskarte",
+  "variant": "Modern",
+  "occasion": "Feste & Events",
+  "tags": ["Danke","Dankeskarte","modern","Typografie","quadratisch","Klappkarte","grün","minimal","Karte","Dankeschön"],
+  "formatKey": "card-square-145",
+  "number": 111,
+  "document": {
+    "schema":2,"unit":"mm","width":290,"height":145,"dpi":300,"locale":"de-DE","fold":"vertical",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Außen (Rückseite | Vorderseite)","background":{"color":"#f4f7f1","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"text","name":"Hinten","x":27.5,"y":66,"w":90,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Schön, dass es dich gibt.","fontFamily":"Raleway","fontSize":14,"fontWeight":500,"italic":false,"color":"#2f4a3b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e2","type":"shape","name":"Front","x":145,"y":0,"w":145,"h":145,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#9bb8a1","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Kreis","x":192,"y":18,"w":100,"h":100,"rotation":0,"opacity":0.55,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#e7efe5","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"DAN","x":154,"y":24,"w":130,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"DAN","fontFamily":"Anton","fontSize":100,"fontWeight":400,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"KE","x":154,"y":70,"w":130,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"KE","fontFamily":"Anton","fontSize":100,"fontWeight":400,"italic":false,"color":"#2f4a3b","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Zeile","x":156,"y":126,"w":100,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"von Herzen","fontFamily":"Raleway","fontSize":10,"fontWeight":700,"italic":false,"color":"#2f4a3b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innen","background":{"color":"#f4f7f1","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"shape","name":"Strich","x":24,"y":28,"w":20,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#9bb8a1","strokeWidth":1.2,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Anrede","x":24,"y":32,"w":100,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Anna,","fontFamily":"Raleway","fontSize":20,"fontWeight":700,"italic":false,"color":"#2f4a3b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Text","x":24,"y":50,"w":100,"h":62,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"danke für alles, was du getan hast. Es hat mir viel bedeutet und ich bin dir sehr dankbar. Lass uns bald einmal in Ruhe darauf anstoßen.","fontFamily":"Raleway","fontSize":12.5,"fontWeight":400,"italic":false,"color":"#2f4a3b","align":"left","valign":"top","lineHeight":1.55,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Gruß","x":24,"y":118,"w":100,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Deine Lisa","fontFamily":"Raleway","fontSize":12,"fontWeight":700,"italic":false,"color":"#2f4a3b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"image","name":"Zweig","x":200,"y":8,"w":28,"h":105.878,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-eukalyptuszweig-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e12","type":"image","name":"Zweig 2","x":238,"y":30,"w":22,"h":83.19,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":true,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-eukalyptuszweig-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]}
+    ]
+  }
+}

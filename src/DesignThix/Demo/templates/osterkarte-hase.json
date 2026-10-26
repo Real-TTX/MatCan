@@ -1,0 +1,36 @@
+{
+  "name": "Osterkarte A6 quer – Hase",
+  "category": "Karten",
+  "description": "Rustikale Osterkarte im Format A6 quer: ein Hase im Kreis auf Kraftpapier-Ton, „Frohe Ostern“ in schmaler handgezeichneter Schrift und kleine Blümchen. Innen eine ruhige Schreibseite.",
+  "family": "osterkarte",
+  "familyName": "Osterkarte",
+  "variant": "Hase",
+  "occasion": "Feiertage",
+  "tags": ["Ostern","Osterkarte","Hase","Osterhase","rustikal","Landhaus","Kraftpapier","Frohe Ostern","Karte","Frühling"],
+  "formatKey": "a6-landscape",
+  "number": 125,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#ecdcc0","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Scheibe","x":12,"y":12,"w":81,"h":81,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#f8efdc","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Ring","x":16,"y":16,"w":73,"h":73,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#5a3e2b","strokeWidth":0.5,"dash":"dashed","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"icon","name":"Hase","x":29,"y":29,"w":47,"h":47,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"rabbit","color":"#5a3e2b","strokeWidth":1.3},
+        {"id":"e4","type":"icon","name":"Blume 1","x":84,"y":72,"w":11,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"flower-2","color":"#c9704f","strokeWidth":1.6},
+        {"id":"e5","type":"icon","name":"Blume 2","x":15,"y":76,"w":9,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"flower-2","color":"#7a9a62","strokeWidth":1.6},
+        {"id":"e6","type":"text","name":"Frohe","x":100,"y":22,"w":44,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"FROHE","fontFamily":"Amatic SC","fontSize":40,"fontWeight":700,"italic":false,"color":"#5a3e2b","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0.08,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Ostern","x":98,"y":34,"w":48,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"OSTERN","fontFamily":"Amatic SC","fontSize":60,"fontWeight":700,"italic":false,"color":"#c9704f","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0.04,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":28,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"shape","name":"Linie","x":100,"y":66,"w":40,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#5a3e2b","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Wunsch","x":100,"y":69,"w":44,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Hoppel-hoppel,\nbis bald!","fontFamily":"Caveat","fontSize":15,"fontWeight":600,"italic":false,"color":"#5a3e2b","align":"left","valign":"top","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#fbf5e8","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e10","type":"shape","name":"Band","x":0,"y":0,"w":148,"h":6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#c9704f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"icon","name":"Ei","x":126,"y":16,"w":12,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"egg","color":"#7a9a62","strokeWidth":1.6},
+        {"id":"e12","type":"text","name":"Anrede","x":18,"y":16,"w":100,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Oma,","fontFamily":"Amatic SC","fontSize":30,"fontWeight":700,"italic":false,"color":"#c9704f","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Text","x":18,"y":30,"w":106,"h":44,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"der Osterhase war schon bei uns und hat dir ein ganz besonders liebes Hallo mitgebracht. Wir freuen uns auf das gemeinsame Osterfrühstück mit dir!","fontFamily":"Caveat","fontSize":19,"fontWeight":500,"italic":false,"color":"#5a3e2b","align":"left","valign":"top","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"text","name":"Gruß","x":18,"y":82,"w":112,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Deine Enkel","fontFamily":"Amatic SC","fontSize":28,"fontWeight":700,"italic":false,"color":"#5a3e2b","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

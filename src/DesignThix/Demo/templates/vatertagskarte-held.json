@@ -1,0 +1,32 @@
+{
+  "name": "Vatertagskarte A6 hoch – Held",
+  "category": "Karten",
+  "description": "Vatertagskarte im Format A6 hoch mit Abzeichen: goldener Zackenstern mit der „1“, „Bester Papa“ in schmaler Großschrift auf Nachtblau und ein Banner. Innen hell und mit Platz für lange Sätze.",
+  "family": "vatertagskarte",
+  "familyName": "Vatertagskarte",
+  "variant": "Held",
+  "occasion": "Feiertage",
+  "tags": ["Vatertag","Papa","Held","Abzeichen","Nummer eins","Gold","Nachtblau","Karte","bester Papa","Superpapa"],
+  "formatKey": "a6-portrait",
+  "number": 134,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#16264d","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Starburst","x":14,"y":14,"w":77,"h":77.743,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-baender-starburst-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Eins","x":22.5,"y":31,"w":60,"h":44,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"1","fontFamily":"Anton","fontSize":100,"fontWeight":400,"italic":false,"color":"#16264d","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"image","name":"Banderole","x":8,"y":92,"w":89,"h":20.248,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-baender-banderole-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Papa","x":12.5,"y":95,"w":80,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"DER BESTE","fontFamily":"Anton","fontSize":16,"fontWeight":400,"italic":false,"color":"#16264d","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0.08,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Papa 2","x":7.5,"y":116,"w":90,"h":26,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"PAPA","fontFamily":"Anton","fontSize":60,"fontWeight":400,"italic":false,"color":"#f1d78a","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0.04,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":28,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#f8f4ea","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e6","type":"shape","name":"Band","x":0,"y":0,"w":105,"h":7,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#16264d","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"shape","name":"Stern","x":76,"y":14,"w":12,"h":12,"rotation":10,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"star","points":5,"innerRadius":0.45,"fill":"#d9b866","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Anrede","x":16,"y":34,"w":66,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Lieber Papa,","fontFamily":"Anton","fontSize":18,"fontWeight":400,"italic":false,"color":"#16264d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.03,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Text","x":16,"y":50,"w":73,"h":64,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"für mich bist du ein Held – nicht nur am Vatertag. Danke, dass du mir zeigst, wie man mutig ist, zuhört und nie aufgibt. Ich bin stolz auf dich!","fontFamily":"Montserrat","fontSize":10,"fontWeight":500,"italic":false,"color":"#16264d","align":"left","valign":"top","lineHeight":1.6,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Gruß","x":16,"y":122,"w":73,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dein Sohn Leon","fontFamily":"Montserrat","fontSize":10.5,"fontWeight":700,"italic":false,"color":"#b8902f","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "Seifenetikett – Pastell",
+  "category": "Etiketten",
+  "description": "Freundliches Seifenetikett (70 × 50 mm) mit weichen Pastellformen: Duft in runder Schrift, Zusatz, Zutaten und das Gewicht in einem Kreis. Alle Angaben sind Felder für eine Datenliste.",
+  "family": "seifenetikett",
+  "familyName": "Seifenetikett",
+  "variant": "Pastell",
+  "occasion": "Handel & Preise",
+  "tags": ["Seife","Naturseife","Handseife","Kosmetik","Duft","Etikett","Zutaten","Manufaktur","Wellness","Pastell","Rosa","Rund","Freundlich","Blob","Modern","Fredoka"],
+  "formatKey": "label-70x50",
+  "number": 432,
+  "document": {
+    "schema":2,"unit":"mm","width":70,"height":50,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Duft oder Sorte","type":"text","sample":"Lavendel & Honig","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"Handgemachte Naturseife","decimals":null,"category":null,"required":false},
+      {"key":"Zutaten","label":"Zutaten","type":"text","sample":"Olivenöl, Kokosöl, Sheabutter, Honig, Lavendelöl","decimals":null,"category":null,"required":false},
+      {"key":"Gewicht","label":"Gewicht","type":"text","sample":"100 g","decimals":null,"category":null,"required":false},
+      {"key":"Hersteller","label":"Hersteller","type":"text","sample":"Seifenmanufaktur Wiesengrund","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fff7f4","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Form oben","x":44,"y":-14,"w":36,"h":39.397,"rotation":0,"opacity":0.8,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-blob-1-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Form unten","x":-10,"y":34,"w":30,"h":28.895,"rotation":0,"opacity":0.7,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-blob-3-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Kopf","x":6,"y":5.6,"w":36,"h":3.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Handgemachte Seife","fontFamily":"Fredoka","fontSize":7.5,"fontWeight":500,"italic":false,"color":"#b05a68","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Produkt","x":6,"y":10,"w":42,"h":17,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Fredoka","fontSize":19,"fontWeight":600,"italic":false,"color":"#3d2a30","align":"left","valign":"top","lineHeight":1.05,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Zusatz","x":6,"y":27.6,"w":40,"h":4.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Fredoka","fontSize":8,"fontWeight":400,"italic":false,"color":"#7a5a62","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Zutaten","x":22,"y":34,"w":42,"h":8.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zutaten","flipX":false,"flipY":false,"shadow":null,"text":"{{Zutaten}}","fontFamily":"Fredoka","fontSize":7,"fontWeight":400,"italic":false,"color":"#5b4a4e","align":"left","valign":"top","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Hersteller","x":22,"y":43,"w":42,"h":3.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Hersteller","flipX":false,"flipY":false,"shadow":null,"text":"{{Hersteller}}","fontFamily":"Fredoka","fontSize":7,"fontWeight":500,"italic":false,"color":"#b05a68","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"shape","name":"Gewicht Kreis","x":52,"y":4.6,"w":14,"h":14,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":"#e89aa8","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Gewicht","x":52.2,"y":4.6,"w":13.6,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Gewicht}}","fontFamily":"Fredoka","fontSize":9,"fontWeight":700,"italic":false,"color":"#b05a68","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Lavendel & Honig","Zusatz":"Handgemachte Naturseife","Zutaten":"Olivenöl, Kokosöl, Sheabutter, Honig, Lavendelöl","Gewicht":"100 g","Hersteller":"Seifenmanufaktur Wiesengrund"},
+    {"Produkt":"Orange, Zimt und Nelke","Zusatz":"Handgemachte Peelingseife mit Mohn","Zutaten":"Sonnenblumenöl, Kokosöl, Sheabutter, Mohn, Orangenöl, Zimt, Nelke, Kaolin","Gewicht":"120 g","Hersteller":"Seifenmanufaktur Wiesengrund"},
+    {"Produkt":"Pur","Zusatz":"ohne Duft","Zutaten":"Olivenöl, Kokosöl","Gewicht":"90 g","Hersteller":""},
+    {"Produkt":"Rose","Zusatz":"","Zutaten":"","Gewicht":"100 g","Hersteller":"Seifenmanufaktur Wiesengrund"}
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Runder Geburtstag A6 – Große Zahl",
+  "category": "Karten",
+  "description": "Glückwunschkarte A6 hoch zum runden Geburtstag: riesige Zahl (Feld „Alter“) auf Konfettikranz, Name als Feld, innen Platz für deinen Text. Passt zu 30, 40, 50, 60 und mehr.",
+  "family": "geburtstag-rund",
+  "familyName": "Runder Geburtstag (30, 40, 50, 60)",
+  "variant": "Große Zahl",
+  "occasion": "Geburtstag",
+  "tags": ["Geburtstag","runder Geburtstag","30","40","50","60","Zahl","Konfetti","Glückwunsch","Karte","bunt"],
+  "formatKey": "a6-portrait",
+  "number": 106,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Alter","label":"Alter","type":"text","sample":"50","decimals":null,"category":null,"required":false},
+      {"key":"Name","label":"Name","type":"text","sample":"Anna","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#fff3df","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Konfetti","x":0,"y":6,"w":105,"h":105,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-streuung-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Scheibe","x":9,"y":18,"w":87,"h":87,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#fff3df","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Zum","x":12.5,"y":28,"w":80,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Alles Gute zum","fontFamily":"Fredoka","fontSize":13,"fontWeight":600,"italic":false,"color":"#2f2a4a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Zahl","x":9.5,"y":36,"w":86,"h":58,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#2f2a4a","opacity":0.18,"blur":0,"x":1.2,"y":1.5},"text":"{{Alter}}","fontFamily":"Fredoka","fontSize":150,"fontWeight":700,"italic":false,"color":"#ff5d73","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":70,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Geburtstag","x":7.5,"y":92,"w":90,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Geburtstag!","fontFamily":"Dancing Script","fontSize":34,"fontWeight":700,"italic":false,"color":"#13a89e","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Name","x":9.5,"y":120,"w":86,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Fredoka","fontSize":22,"fontWeight":600,"italic":false,"color":"#2f2a4a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Linie","x":30,"y":134,"w":45,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#ffb347","strokeWidth":0.8,"dash":"solid","radius":0,"startCap":"none","endCap":"none"}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e8","type":"image","name":"Ballons","x":70,"y":6,"w":26,"h":45.05,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-ballons-drei-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e9","type":"image","name":"Wimpel","x":0,"y":128,"w":105,"h":36,"rotation":0,"opacity":0.9,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-regen"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e10","type":"text","name":"Anrede","x":14,"y":44,"w":76,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe {{Name}},","fontFamily":"Fredoka","fontSize":18,"fontWeight":600,"italic":false,"color":"#ff5d73","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Text","x":14,"y":58,"w":77,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ein ganzes Jahrzehnt mehr – und du wirst immer besser! Ich wünsche dir einen rauschenden Geburtstag, Gesundheit und viele Gründe zum Feiern.","fontFamily":"Nunito","fontSize":11,"fontWeight":500,"italic":false,"color":"#2f2a4a","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Gruß","x":14,"y":110,"w":77,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Alles Liebe, dein Max","fontFamily":"Dancing Script","fontSize":17,"fontWeight":700,"italic":false,"color":"#2f2a4a","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Alter":"50","Name":"Anna"},
+    {"Alter":"30","Name":"Maximiliane"},
+    {"Alter":"60","Name":"Jürgen"},
+    {"Alter":"40","Name":"Lu"}
+  ]
+}

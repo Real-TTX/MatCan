@@ -1,0 +1,33 @@
+{
+  "name": "Lesezeichen – Typografisch",
+  "category": "Karten",
+  "description": "Typografisches Lesezeichen (50 × 150 mm) in Schwarz mit senkrecht gesetztem „LESEN“ und dem Zitat in klarer Grotesk: Zitat und Urheber sind Felder für eine Serie. Das Loch für ein Bändchen sitzt oben.",
+  "family": "bookmark",
+  "familyName": "Lesezeichen",
+  "variant": "Typografisch",
+  "occasion": "Verein & Schule",
+  "tags": ["Lesezeichen","Buch","Lesen","Bibliothek","Zitat","Geschenk","Schule","Werbegeschenk","Buchhandlung","Typografisch","Schwarz","Modern","Minimal","Senkrecht","Gelb"],
+  "formatKey": "bookmark",
+  "number": 448,
+  "document": {
+    "schema":2,"unit":"mm","width":50,"height":150,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Zitat","label":"Zitat","type":"multiline","sample":"Ein Zimmer ohne Bücher ist wie ein Körper ohne Seele.","decimals":null,"category":null,"required":false},
+      {"key":"Autor","label":"Urheber","type":"text","sample":"Cicero","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#141414","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Loch","x":22.5,"y":7,"w":5,"h":5,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#2b2b2b","stroke":"#555555","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Lesen","x":-5,"y":29,"w":60,"h":30,"rotation":-90,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"LESEN","fontFamily":"Anton","fontSize":52,"fontWeight":400,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"shape","name":"Balken","x":6,"y":80,"w":8,"h":1.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffd23f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Zitat","x":6,"y":85,"w":38,"h":42,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Zitat}}","fontFamily":"Inter","fontSize":8,"fontWeight":500,"italic":false,"color":"#e6e6e6","align":"left","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Autor","x":6,"y":131,"w":38,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Autor","flipX":false,"flipY":false,"shadow":null,"text":"{{Autor}}","fontFamily":"Inter","fontSize":7,"fontWeight":700,"italic":false,"color":"#ffd23f","align":"left","valign":"bottom","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Zitat":"Ein Zimmer ohne Bücher ist wie ein Körper ohne Seele.","Autor":"Cicero"},
+    {"Zitat":"Lesen heißt, mit fremden Augen sehen, mit fremden Ohren hören, mit fremdem Herzen fühlen und mit fremdem Verstand denken – und zugleich ganz bei sich selbst bleiben.","Autor":"Sehr langer Name der Autorin"},
+    {"Zitat":"Kurz und gut.","Autor":""}
+  ]
+}

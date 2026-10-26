@@ -1,0 +1,44 @@
+{
+  "name": "Babyparty – Instagram-Post",
+  "category": "Einladungen",
+  "description": "Digitale Einladung zur Babyparty als Instagram-Post (1080 x 1080 px) mit Pastellballons, Konfetti und runder Schrift. Zum Teilen in Gruppen und Storys. Name als Feld.",
+  "family": "babyparty-einladung",
+  "familyName": "Babyparty – Einladung",
+  "variant": "Instagram",
+  "occasion": "Kinder & Familie",
+  "tags": ["Babyparty","Babyshower","Baby Shower","Einladung","Baby","Schwangerschaft","Party","Instagram","Social Media","Digital","Ballons","Mint","WhatsApp","Post"],
+  "formatKey": "instagram-post",
+  "number": 221,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Anna","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#d6f0e4","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Konfetti","x":0,"y":0,"w":1080,"h":1080,"rotation":0,"opacity":0.5,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-streuung-pastell"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Kreis","x":560,"y":300,"w":640,"h":640,"rotation":0,"opacity":0.55,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"image","name":"Ballons","x":800,"y":560,"w":277.029,"h":480,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-ballons-drei-pastell"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"image","name":"Wellen","x":0,"y":920,"w":1080,"h":244.413,"rotation":0,"opacity":0,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-wellenrand-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Kopf","x":80,"y":110,"w":700,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WIR FEIERN","fontFamily":"Fredoka","fontSize":34,"fontWeight":600,"italic":false,"color":"#ff7a8a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Baby","x":80,"y":180,"w":900,"h":190,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Babyparty","fontFamily":"Baloo 2","fontSize":118,"fontWeight":800,"italic":false,"color":"#1f4a5c","align":"left","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":50,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"für","x":80,"y":370,"w":860,"h":110,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"für {{Name}}","fontFamily":"Fredoka","fontSize":62,"fontWeight":500,"italic":false,"color":"#ff7a8a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":28,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"shape","name":"Datum Chip","x":80,"y":600,"w":78,"h":78,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#1f4a5c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"icon","name":"Datum Symbol","x":97.16,"y":617.16,"w":43.68,"h":43.68,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"calendar-days","color":"#ffffff","strokeWidth":2},
+        {"id":"e10","type":"text","name":"Datum","x":160.5,"y":599.5,"w":619.5,"h":79,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 22. Mai 2027","fontFamily":"Nunito","fontSize":26,"fontWeight":800,"italic":false,"color":"#1f4a5c","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"shape","name":"Zeit Chip","x":80,"y":700,"w":78,"h":78,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#1f4a5c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e12","type":"icon","name":"Zeit Symbol","x":97.16,"y":717.16,"w":43.68,"h":43.68,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"clock","color":"#ffffff","strokeWidth":2},
+        {"id":"e13","type":"text","name":"Zeit","x":160.5,"y":699.5,"w":619.5,"h":79,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"15 Uhr","fontFamily":"Nunito","fontSize":26,"fontWeight":800,"italic":false,"color":"#1f4a5c","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"shape","name":"Ort Chip","x":80,"y":800,"w":78,"h":78,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#1f4a5c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e15","type":"icon","name":"Ort Symbol","x":97.16,"y":817.16,"w":43.68,"h":43.68,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"map-pin","color":"#ffffff","strokeWidth":2},
+        {"id":"e16","type":"text","name":"Ort","x":160.5,"y":799.5,"w":619.5,"h":79,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5, Musterstadt","fontFamily":"Nunito","fontSize":26,"fontWeight":800,"italic":false,"color":"#1f4a5c","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e17","type":"text","name":"Zusage","x":80,"y":930,"w":700,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Sag bis 8. Mai Bescheid!","fontFamily":"Fredoka","fontSize":24,"fontWeight":500,"italic":false,"color":"#1f4a5c","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Anna"},
+    {"Name":"Franziska-Marie"},
+    {"Name":"Jo"}
+  ]
+}

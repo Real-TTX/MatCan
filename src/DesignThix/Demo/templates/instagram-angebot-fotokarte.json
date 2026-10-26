@@ -1,0 +1,43 @@
+{
+  "name": "Instagram-Beitrag – Angebot mit Foto",
+  "category": "Social Media",
+  "description": "Angebots-Beitrag für Instagram (1080 × 1080 px): große Bildfläche für dein Produktfoto, darunter eine Karte mit Überschrift, Produkt und Zeitraum, dazu ein orangefarbener Preisrund. Alle Texte und der Preis sind Felder.",
+  "family": "instagram-angebot",
+  "familyName": "Instagram-Beitrag Angebot",
+  "variant": "Fotokarte",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Beitrag","Angebot","Preis","Aktion","Produkt","Social Media","Facebook","Wochenangebot","Foto","Karte","Preisrund","Grün","Orange","Lebensmittel","Hofladen"],
+  "formatKey": "instagram-post",
+  "number": 452,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Titel","label":"Überschrift","type":"text","sample":"Angebot der Woche","decimals":null,"category":null,"required":false},
+      {"key":"Produkt","label":"Produkt","type":"text","sample":"Bio-Äpfel Elstar","decimals":null,"category":null,"required":true},
+      {"key":"Preis","label":"Preis","type":"text","sample":"2,49 €","decimals":null,"category":null,"required":false},
+      {"key":"Einheit","label":"Einheit","type":"text","sample":"pro Kilo","decimals":null,"category":null,"required":false},
+      {"key":"Zeitraum","label":"Zeitraum","type":"text","sample":"Nur bis Samstag","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#1b4332","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Foto Hintergrund","x":0,"y":0,"w":1080,"h":640,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#a9c5b3","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"icon","name":"Foto Symbol","x":440,"y":220,"w":200,"h":200,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"image","color":"#7fa592","strokeWidth":1.2},
+        {"id":"e3","type":"image","name":"Foto","x":0,"y":0,"w":1080,"h":640,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"shape","name":"Karte","x":60,"y":560,"w":960,"h":460,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#000000","opacity":0.25,"blur":30,"x":0,"y":16},"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":44,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Titel","x":110,"y":600,"w":520,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Titel","flipX":false,"flipY":false,"shadow":null,"text":"{{Titel}}","fontFamily":"Poppins","fontSize":15,"fontWeight":700,"italic":false,"color":"#ff7a1a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.14,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Produkt","x":110,"y":654,"w":560,"h":200,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Poppins","fontSize":44,"fontWeight":700,"italic":false,"color":"#1b4332","align":"left","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Linie","x":110,"y":870,"w":530,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d9e6de","strokeWidth":3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"icon","name":"Uhr","x":110,"y":902,"w":44,"h":44,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"clock","color":"#ff7a1a","strokeWidth":2.2},
+        {"id":"e9","type":"text","name":"Zeitraum","x":168,"y":898,"w":520,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zeitraum","flipX":false,"flipY":false,"shadow":null,"text":"{{Zeitraum}}","fontFamily":"Montserrat","fontSize":20,"fontWeight":600,"italic":false,"color":"#3d5a4b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"shape","name":"Preisrund","x":700,"y":600,"w":280,"h":280,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#000000","opacity":0.2,"blur":16,"x":0,"y":8},"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ff7a1a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"text","name":"Preis","x":716,"y":668,"w":248,"h":110,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Preis}}","fontFamily":"Poppins","fontSize":40,"fontWeight":800,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Einheit","x":716,"y":780,"w":248,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Einheit","flipX":false,"flipY":false,"shadow":null,"text":"{{Einheit}}","fontFamily":"Montserrat","fontSize":18,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Titel":"Angebot der Woche","Produkt":"Bio-Äpfel Elstar","Preis":"2,49 €","Einheit":"pro Kilo","Zeitraum":"Nur bis Samstag"},
+    {"Titel":"Heute im Angebot","Produkt":"Frisches Dinkelbrot aus dem Steinofen","Preis":"12,90 €","Einheit":"pro 750-g-Laib","Zeitraum":"Nur solange der Vorrat reicht"},
+    {"Titel":"","Produkt":"Eier","Preis":"3,20 €","Einheit":"","Zeitraum":""}
+  ]
+}

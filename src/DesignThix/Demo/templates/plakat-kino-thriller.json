@@ -1,0 +1,32 @@
+{
+  "name": "Poster A3 – Kino Thriller",
+  "category": "Poster",
+  "description": "Dramatisches A3-Plakat im Look eines Kinofilms für Krimi-Dinner, Mottoparty oder Theaterabend: fast schwarz, Lichtkegel, Slogan oben, Titel in Oswald, Rollenliste im Abspann-Stil und Altersfreigabe.",
+  "family": "plakat-kino",
+  "familyName": "Plakat im Kino-Stil",
+  "variant": "Thriller",
+  "occasion": "Feste & Events",
+  "tags": ["Plakat","Poster","Kino","Filmplakat","Thriller","Krimi-Dinner","Mottoparty","Theater","Dunkel","Abspann"],
+  "formatKey": "poster-a3-portrait",
+  "number": 358,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":420,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#05070d"},{"offset":1,"color":"#1a2233"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Lichtkegel","x":40,"y":50,"w":217,"h":260,"rotation":180,"opacity":0.07,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"triangle","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Lichtfleck","x":78,"y":270,"w":140,"h":40,"rotation":0,"opacity":0.08,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Slogan","x":20,"y":24,"w":257,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"EINE NACHT. EIN FEST. KEIN ZURÜCK.","fontFamily":"Oswald","fontSize":15,"fontWeight":400,"italic":false,"color":"#c9d3e6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.5,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"icon","name":"Detektiv","x":118,"y":76,"w":60,"h":60,"rotation":0,"opacity":0.9,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"search","color":"#e9edf5","strokeWidth":0.9},
+        {"id":"e5","type":"text","name":"Titel","x":10,"y":150,"w":277,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"DAS LETZTE\nDINNER","fontFamily":"Oswald","fontSize":92,"fontWeight":700,"italic":false,"color":"#f3f5fa","align":"center","valign":"top","lineHeight":0.98,"letterSpacing":0.04,"uppercase":false,"wrap":true,"fit":"none","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Linie","x":40,"y":306,"w":217,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#6a768d","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Datum","x":20,"y":312,"w":257,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"AB 24. OKTOBER IM SAAL DES ALTEN GASTHOFS","fontFamily":"Oswald","fontSize":19,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Rollen","x":30,"y":332,"w":237,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"MIT  Ines Brandt  ·  Tom Lehmann  ·  Sabine Roth  ·  Klaus Meier\nund den Gästen des Abends","fontFamily":"Oswald","fontSize":14,"fontWeight":300,"italic":false,"color":"#aeb8cc","align":"center","valign":"top","lineHeight":1.6,"letterSpacing":0.14,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Abspann","x":30,"y":360,"w":237,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"REGIE  Eva Sommer     BUCH  Jonas Falk     MUSIK  Das Quartett\nPRODUKTION  Theaterverein Musterstadt","fontFamily":"Oswald","fontSize":11.5,"fontWeight":300,"italic":false,"color":"#8d98ae","align":"center","valign":"top","lineHeight":1.7,"letterSpacing":0.2,"uppercase":false,"wrap":true,"fit":"none","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"shape","name":"Freigabe","x":24,"y":392,"w":24,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#aeb8cc","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"text","name":"Freigabe Text","x":24,"y":392,"w":24,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"FSK 16","fontFamily":"Oswald","fontSize":11,"fontWeight":500,"italic":false,"color":"#aeb8cc","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Tickets","x":60,"y":392,"w":213,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Karten 48 € inklusive Dreigängemenü  ·  www.beispiel.de","fontFamily":"Oswald","fontSize":13,"fontWeight":400,"italic":false,"color":"#aeb8cc","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

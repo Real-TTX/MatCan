@@ -1,0 +1,40 @@
+{
+  "name": "Regaletikett Premium (Schwarz-Gold)",
+  "category": "Etiketten",
+  "description": "Edles Regaletikett (100 × 30 mm) für Feinkost, Wein und Spirituosen: schwarzer Grund, Artikelname in Antiqua, goldene Linie, Preis in Gold und ein EAN-13-Strichcode. Alle Werte sind Felder für eine Datenliste.",
+  "family": "regaletikett",
+  "familyName": "Regaletikett",
+  "variant": "Premium",
+  "occasion": "Handel & Preise",
+  "tags": ["Regal","Etikett","EAN","Strichcode","Preis","Grundpreis","Supermarkt","Laden","Premium","Feinkost","Wein","Delikatessen","Schwarz","Gold","Edel"],
+  "formatKey": "shelf-strip",
+  "number": 406,
+  "document": {
+    "schema":2,"unit":"mm","width":100,"height":30,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Artikel","label":"Artikel","type":"text","sample":"Haferflocken zart","decimals":null,"category":null,"required":true},
+      {"key":"Inhalt","label":"Inhalt","type":"text","sample":"Bio-Vollkorn · 500 g","decimals":null,"category":null,"required":false},
+      {"key":"Grundpreis","label":"Grundpreis","type":"text","sample":"Grundpreis 3,98 € / kg","decimals":null,"category":null,"required":false},
+      {"key":"Preis","label":"Preis","type":"price","sample":"1.99","decimals":2,"category":null,"required":true},
+      {"key":"EAN","label":"EAN-13","type":"text","sample":"4006381333931","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#121216","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Goldlinie oben","x":4,"y":2.6,"w":92,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c9a24a","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Goldlinie unten","x":4,"y":27.4,"w":92,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c9a24a","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Artikel","x":6,"y":4.4,"w":55,"h":10.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Artikel}}","fontFamily":"Playfair Display","fontSize":12.5,"fontWeight":600,"italic":false,"color":"#ffffff","align":"left","valign":"bottom","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Inhalt","x":6,"y":15.6,"w":55,"h":4.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Inhalt","flipX":false,"flipY":false,"shadow":null,"text":"{{Inhalt}}","fontFamily":"Raleway","fontSize":7.5,"fontWeight":500,"italic":false,"color":"#c9a24a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Grundpreis","x":6,"y":20.8,"w":55,"h":4.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Grundpreis","flipX":false,"flipY":false,"shadow":null,"text":"{{Grundpreis}}","fontFamily":"Raleway","fontSize":7,"fontWeight":400,"italic":false,"color":"#a7a7b2","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Preis","x":62,"y":4.6,"w":27,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Preis}}","fontFamily":"Libre Baskerville","fontSize":22,"fontWeight":700,"italic":false,"color":"#c9a24a","align":"right","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Euro","x":89.8,"y":5.6,"w":6.2,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"€","fontFamily":"Libre Baskerville","fontSize":11,"fontWeight":400,"italic":false,"color":"#c9a24a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"barcode","name":"EAN-13","x":66,"y":17.6,"w":28,"h":8.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"EAN","flipX":false,"flipY":false,"shadow":null,"format":"ean13","value":"{{EAN}}","color":"#121216","background":"#ffffff","showText":true,"fontFamily":"Montserrat"}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Artikel":"Haferflocken zart","Inhalt":"Bio-Vollkorn · 500 g","Grundpreis":"Grundpreis 3,98 € / kg","Preis":"1.99","EAN":"4006381333931"},
+    {"Artikel":"Bio-Müsli Beeren-Mix mit Cranberries und Himbeeren","Inhalt":"Knusprig · 750 g","Grundpreis":"Grundpreis 6,65 € / kg","Preis":"4.99","EAN":"4012345678901"},
+    {"Artikel":"Olivenöl nativ extra","Inhalt":"0,5 l Flasche","Grundpreis":"","Preis":"12.50","EAN":"9780201379624"},
+    {"Artikel":"Espresso","Inhalt":"","Grundpreis":"","Preis":"0.99","EAN":""}
+  ]
+}

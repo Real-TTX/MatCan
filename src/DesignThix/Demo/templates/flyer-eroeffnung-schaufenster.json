@@ -1,0 +1,30 @@
+{
+  "name": "Flyer DIN lang – Eröffnung Schaufenster",
+  "category": "Flyer",
+  "description": "Reduzierter DIN-lang-Flyer zur Eröffnung einer Boutique, Galerie oder eines Studios: Schwarz-Weiß, riesige Datumszahl in Raleway, feine Linien und ein Hinweis auf Aperitif und Eröffnungsangebot.",
+  "family": "flyer-eroeffnung",
+  "familyName": "Flyer Eröffnung",
+  "variant": "Schaufenster",
+  "occasion": "Handel & Preise",
+  "tags": ["Flyer","DIN lang","Eröffnung","Boutique","Galerie","Studio","Minimal","Schwarz-Weiß","Datum","Vernissage"],
+  "formatKey": "din-lang-portrait",
+  "number": 345,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"text","name":"Marke","x":10,"y":12,"w":79,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ATELIER  NORD","fontFamily":"Raleway","fontSize":9,"fontWeight":700,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.36,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e2","type":"shape","name":"Linie oben","x":10,"y":22,"w":79,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#111111","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Anlass","x":10,"y":30,"w":79,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir eröffnen am","fontFamily":"Raleway","fontSize":15,"fontWeight":300,"italic":true,"color":"#111111","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Tag","x":6,"y":40,"w":90,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"24","fontFamily":"Raleway","fontSize":200,"fontWeight":200,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":80,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Monat","x":10,"y":114,"w":79,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"OKTOBER","fontFamily":"Raleway","fontSize":24,"fontWeight":700,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Uhrzeit","x":10,"y":128,"w":79,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 17 Uhr  ·  Aperitif und Musik","fontFamily":"Raleway","fontSize":9.5,"fontWeight":400,"italic":false,"color":"#444444","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Linie mitte","x":10,"y":146,"w":79,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#cccccc","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Angebot","x":10,"y":152,"w":79,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zur Eröffnung:\n20 % auf die gesamte\nErsteinrichtung.","fontFamily":"Raleway","fontSize":11,"fontWeight":500,"italic":false,"color":"#111111","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Adresse","x":10,"y":184,"w":79,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterstraße 12\n12345 Musterstadt","fontFamily":"Raleway","fontSize":9.5,"fontWeight":600,"italic":false,"color":"#111111","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Web","x":10,"y":197,"w":79,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"www.beispiel.de","fontFamily":"Raleway","fontSize":8,"fontWeight":400,"italic":false,"color":"#777777","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

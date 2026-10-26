@@ -1,0 +1,42 @@
+{
+  "name": "Grillfest – Kreide",
+  "category": "Flyer",
+  "description": "Flyer A5 hoch im Stil einer Kreidetafel: Amatic-Schrift, Flamme, Würstchen, Bier und Salat als Kreidezeichnung, Termin und Ort in der Mitte. Der Veranstalter ist ein Feld.",
+  "family": "grillfest",
+  "familyName": "Grillfest",
+  "variant": "Kreide",
+  "occasion": "Feste & Events",
+  "tags": ["Grillfest","Grillen","Grillparty","BBQ","Barbecue","Einladung","Flyer","Fest","Gartenparty","Nachbarschaft","Kreide","Tafel","Rustikal","A5","Handschrift","Schwarz"],
+  "formatKey": "a5-portrait",
+  "number": 246,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Veranstalter","label":"Veranstalter","type":"text","sample":"Familie Mustermann","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#2a2724","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen","x":8,"y":8,"w":132,"h":194,"rotation":0,"opacity":0.6,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#f3efe4","strokeWidth":0.8,"dash":"dashed","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"icon","name":"Flamme","x":56,"y":18,"w":36,"h":36,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"flame","color":"#ff9f40","strokeWidth":1.5},
+        {"id":"e3","type":"icon","name":"Fleisch","x":16,"y":151,"w":20,"h":20,"rotation":-12,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"beef","color":"#f3efe4","strokeWidth":1.5},
+        {"id":"e4","type":"icon","name":"Keule","x":46,"y":153,"w":20,"h":20,"rotation":10,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"drumstick","color":"#f3efe4","strokeWidth":1.5},
+        {"id":"e5","type":"icon","name":"Bier","x":80,"y":151,"w":20,"h":20,"rotation":-8,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"beer","color":"#ffd96b","strokeWidth":1.5},
+        {"id":"e6","type":"icon","name":"Salat","x":110,"y":152,"w":20,"h":20,"rotation":8,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"salad","color":"#9be24b","strokeWidth":1.5},
+        {"id":"e7","type":"shape","name":"Strich 1","x":38,"y":124,"w":72,"h":0,"rotation":0,"opacity":0.7,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#f3efe4","strokeWidth":0.6,"dash":"dashed","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"shape","name":"Strich 2","x":38,"y":191,"w":72,"h":0,"rotation":0,"opacity":0.7,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#f3efe4","strokeWidth":0.6,"dash":"dashed","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Kopf","x":16,"y":60,"w":116,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ES WIRD HEISS BEI","fontFamily":"Amatic SC","fontSize":26,"fontWeight":700,"italic":false,"color":"#ff9f40","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Veranstalter","x":16,"y":70,"w":116,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Veranstalter}}","fontFamily":"Patrick Hand","fontSize":17,"fontWeight":400,"italic":false,"color":"#f3efe4","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Titel","x":10,"y":84,"w":128,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GRILLFEST","fontFamily":"Amatic SC","fontSize":84,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":34,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Datum","x":14,"y":128,"w":120,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 24. Juli · ab 16 Uhr","fontFamily":"Patrick Hand","fontSize":19,"fontWeight":400,"italic":false,"color":"#ffd96b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Ort","x":14,"y":140,"w":120,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"im Garten, Musterweg 5","fontFamily":"Patrick Hand","fontSize":15,"fontWeight":400,"italic":false,"color":"#f3efe4","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"text","name":"Mitbringen","x":16,"y":175,"w":116,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Fleisch und Getränke gibt es vor Ort –\nSalate und gute Laune bringst du mit!","fontFamily":"Patrick Hand","fontSize":12,"fontWeight":400,"italic":false,"color":"#f3efe4","align":"center","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e15","type":"text","name":"Zusage","x":16,"y":192.5,"w":116,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Bitte kurz Bescheid sagen: 0170 1234567","fontFamily":"Patrick Hand","fontSize":12,"fontWeight":400,"italic":false,"color":"#ff9f40","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Veranstalter":"Familie Mustermann"},
+    {"Veranstalter":"Schützenverein Oberhausen-Niederweiler e. V."},
+    {"Veranstalter":"Ben"}
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "Instagram-Beitrag – Zitat pastell",
+  "category": "Social Media",
+  "description": "Sanfter Zitat-Beitrag für Instagram (1080 × 1080 px): Pfirsichton mit weichen Formen, Zitat in Handschrift und kleinem Herz beim Urheber. Zitat und Urheber sind Felder, so entsteht eine ganze Reihe aus einer Liste.",
+  "family": "instagram-zitat",
+  "familyName": "Instagram-Beitrag Zitat",
+  "variant": "Pastell",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Beitrag","Zitat","Spruch","Weisheit","Motivation","Social Media","Facebook","Post","Pastell","Handschrift","Sanft","Rosa","Achtsamkeit","Blogger"],
+  "formatKey": "instagram-post",
+  "number": 450,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Zitat","label":"Zitat","type":"multiline","sample":"Wer aufhört, besser zu werden, hat aufgehört, gut zu sein.","decimals":null,"category":null,"required":true},
+      {"key":"Autor","label":"Urheber","type":"text","sample":"Marie von Ebner-Eschenbach","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffe9dd","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Form oben","x":640,"y":-140,"w":560,"h":612.846,"rotation":0,"opacity":0.7,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-blob-1-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Form unten","x":-300,"y":760,"w":520,"h":500.854,"rotation":0,"opacity":0.6,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-blob-3-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Zitat","x":120,"y":210,"w":840,"h":520,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Zitat}}","fontFamily":"Caveat","fontSize":62,"fontWeight":700,"italic":false,"color":"#4b2e2b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":26,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"icon","name":"Herz","x":504,"y":770,"w":72,"h":72,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"heart","color":"#e0707f","strokeWidth":2},
+        {"id":"e5","type":"text","name":"Autor","x":140,"y":860,"w":800,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Autor","flipX":false,"flipY":false,"shadow":null,"text":"{{Autor}}","fontFamily":"Poppins","fontSize":20,"fontWeight":600,"italic":false,"color":"#7a5650","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Zitat":"Wer aufhört, besser zu werden, hat aufgehört, gut zu sein.","Autor":"Marie von Ebner-Eschenbach"},
+    {"Zitat":"Das Leben ist das, was passiert, während du eifrig dabei bist, andere Pläne zu machen – und manchmal ist genau das das Beste daran.","Autor":"John Lennon"},
+    {"Zitat":"Heute ist ein guter Tag.","Autor":""}
+  ]
+}

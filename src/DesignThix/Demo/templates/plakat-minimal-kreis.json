@@ -1,0 +1,29 @@
+{
+  "name": "Poster A3 – Minimal Kreis",
+  "category": "Poster",
+  "description": "Klares A3-Plakat für Workshop, Markttag oder Vortrag: eine große terrakottafarbene Scheibe mit dem Titel darin, darunter Datum und Ort in schlanker Inter. Erkennbar aus großer Entfernung.",
+  "family": "plakat-minimal",
+  "familyName": "Minimalistisches Plakat",
+  "variant": "Kreis",
+  "occasion": "Feste & Events",
+  "tags": ["Plakat","Poster","Minimal","Workshop","Vortrag","Markttag","Kreis","Terrakotta","Modern","Klar"],
+  "formatKey": "poster-a3-portrait",
+  "number": 365,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":420,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f6efe4","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Scheibe","x":28,"y":40,"w":241,"h":241,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#c8613f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Titel","x":40,"y":100,"w":217,"h":120,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Töpfern\nam Fluss","fontFamily":"Inter","fontSize":62,"fontWeight":800,"italic":false,"color":"#f6efe4","align":"center","valign":"middle","lineHeight":1.05,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Reihe","x":40,"y":76,"w":217,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WORKSHOP","fontFamily":"Inter","fontSize":13,"fontWeight":600,"italic":false,"color":"#f6efe4","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Zusatz","x":40,"y":232,"w":217,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"für Anfänger und Fortgeschrittene","fontFamily":"Inter","fontSize":15,"fontWeight":400,"italic":false,"color":"#f6efe4","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Datum","x":28,"y":304,"w":241,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 3. Oktober","fontFamily":"Inter","fontSize":28,"fontWeight":700,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Zeit","x":28,"y":320,"w":241,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"10 bis 16 Uhr, Material inklusive","fontFamily":"Inter","fontSize":18,"fontWeight":400,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Linie","x":28,"y":346,"w":241,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#1d1d1b","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Ort","x":28,"y":352,"w":120,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Kunstwerkstatt\nUferweg 5, Musterstadt","fontFamily":"Inter","fontSize":13,"fontWeight":400,"italic":false,"color":"#1d1d1b","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Anmeldung","x":160,"y":352,"w":109,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anmeldung\nwww.beispiel.de","fontFamily":"Inter","fontSize":13,"fontWeight":400,"italic":false,"color":"#1d1d1b","align":"right","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

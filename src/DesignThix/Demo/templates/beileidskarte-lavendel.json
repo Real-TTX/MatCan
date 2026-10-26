@@ -1,0 +1,31 @@
+{
+  "name": "Beileidskarte Klappkarte – Lavendel",
+  "category": "Karten",
+  "description": "Sanfte Beileidskarte als Klappkarte A6 hoch in Grau und gedämpftem Violett: drei Lavendelstängel, „Unser aufrichtiges Mitgefühl“ in ruhiger Serifenschrift, innen Platz für einen persönlichen Text.",
+  "family": "beileidskarte",
+  "familyName": "Beileidskarte",
+  "variant": "Lavendel",
+  "occasion": "Trauer",
+  "tags": ["Beileid","Trauer","Trauerkarte","Kondolenz","Mitgefühl","Lavendel","Klappkarte","sanft","Anteilnahme","Karte"],
+  "formatKey": "card-a6-portrait",
+  "number": 137,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":148,"dpi":300,"locale":"de-DE","fold":"vertical",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Außen (Rückseite | Vorderseite)","background":{"color":"#f3f1f6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Lavendel hinten","x":46.5,"y":54,"w":12,"h":31.221,"rotation":0,"opacity":0.6,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-lavendel-navy"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Lavendel","x":145.5,"y":14,"w":24,"h":62.442,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-lavendel-navy"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Titel 1","x":115.5,"y":80,"w":84,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Unser aufrichtiges","fontFamily":"Lora","fontSize":14,"fontWeight":400,"italic":true,"color":"#4b4560","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Titel 2","x":115.5,"y":91,"w":84,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Mitgefühl","fontFamily":"Lora","fontSize":19,"fontWeight":600,"italic":false,"color":"#4b4560","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Strich","x":149.5,"y":112,"w":16,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#b9b3cf","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"}
+      ]},
+      {"id":"p2","name":"Innen","background":{"color":"#fbfafc","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e6","type":"image","name":"Lavendel innen","x":38,"y":36,"w":30,"h":78.052,"rotation":0,"opacity":0.85,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-lavendel-navy"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e7","type":"text","name":"Anrede","x":120,"y":28,"w":76,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Anna,","fontFamily":"Lora","fontSize":13,"fontWeight":400,"italic":true,"color":"#4b4560","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Text","x":120,"y":42,"w":76,"h":62,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"In Gedanken sind wir bei dir und deiner Familie. Wir wünschen euch Kraft, Zeit zum Trauern und Menschen, die euch in diesen schweren Tagen zur Seite stehen.","fontFamily":"Lora","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#3d3a4a","align":"left","valign":"top","lineHeight":1.65,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Gruß","x":120,"y":108,"w":76,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Mit herzlichem Mitgefühl, Jonas","fontFamily":"Lora","fontSize":10,"fontWeight":400,"italic":true,"color":"#4b4560","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

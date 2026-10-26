@@ -1,0 +1,32 @@
+{
+  "name": "Muttertagskarte A6 quer – Herz",
+  "category": "Karten",
+  "description": "Herzliche Muttertagskarte im Format A6 quer: ein großes Herz mit „Danke, Mama“ in Handschrift, kleine Herzen als Konfetti und eine Innenseite mit Zeilen für deinen Muttertagsgruß.",
+  "family": "muttertagskarte",
+  "familyName": "Muttertagskarte",
+  "variant": "Herz",
+  "occasion": "Feiertage",
+  "tags": ["Muttertag","Mama","Herz","Danke Mama","Handschrift","Kinder","rosa","Karte","Liebe","basteln"],
+  "formatKey": "a6-landscape",
+  "number": 131,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#ffe9ee","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Herzen","x":76,"y":0,"w":72,"h":72,"rotation":0,"opacity":0.6,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-herzen-streuung-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Herz","x":14,"y":8,"w":84,"h":77,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-herzen-voll-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Danke","x":18,"y":24,"w":76,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danke,","fontFamily":"Caveat","fontSize":44,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Mama","x":16,"y":40,"w":80,"h":26,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Mama!","fontFamily":"Caveat","fontSize":50,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Zeile","x":100,"y":80,"w":46,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Alles Liebe zum\nMuttertag","fontFamily":"Caveat","fontSize":17,"fontWeight":700,"italic":false,"color":"#b0585f","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#fffaf7","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e6","type":"icon","name":"Herz","x":120,"y":12,"w":14,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"heart","color":"#e8708a","strokeWidth":1.8},
+        {"id":"e7","type":"text","name":"Anrede","x":16,"y":14,"w":100,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Mama,","fontFamily":"Caveat","fontSize":28,"fontWeight":700,"italic":false,"color":"#e8708a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Text","x":16,"y":28,"w":112,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"du bist die Beste! Danke für jedes Pflaster, jede Umarmung und jedes Abendbrot. Heute bist du dran: Frühstück ans Bett und ein Tag nur für dich.","fontFamily":"Caveat","fontSize":21,"fontWeight":500,"italic":false,"color":"#5a3a40","align":"left","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Gruß","x":16,"y":82,"w":112,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dein Max","fontFamily":"Caveat","fontSize":26,"fontWeight":700,"italic":false,"color":"#e8708a","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"shape","name":"Linie","x":16,"y":95,"w":116,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#f3c4cf","strokeWidth":0.5,"dash":"dotted","radius":0,"startCap":"none","endCap":"none"}
+      ]}
+    ]
+  }
+}

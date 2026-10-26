@@ -1,0 +1,31 @@
+{
+  "name": "Facebook-Titelbild – Hofladen",
+  "category": "Social Media",
+  "description": "Titelbild für deine Facebook-Seite (1640 × 624 px): Cremeton mit grüner Welle, großer Satz in Antiqua, Unterzeile und drei Merkmale mit Symbolen. Der Bereich links unten bleibt frei für dein rundes Profilbild.",
+  "family": "facebook-cover",
+  "familyName": "Facebook-Titelbild",
+  "variant": "Hofladen",
+  "occasion": "Social Media",
+  "tags": ["Facebook","Titelbild","Cover","Banner","Kopfbild","Social Media","Seite","Firma","Verein","LinkedIn","Hofladen","Bauernhof","Regional","Grün","Natur","Lebensmittel","Café","Antiqua"],
+  "formatKey": "facebook-cover",
+  "number": 467,
+  "document": {
+    "schema":2,"unit":"px","width":1640,"height":624,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f7f1e1","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Welle","x":0,"y":440,"w":1640,"h":371.146,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-wellenrand-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Titel","x":560,"y":70,"w":1020,"h":150,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Frisch vom Hof","fontFamily":"Playfair Display","fontSize":96,"fontWeight":700,"italic":false,"color":"#233a2a","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Unterzeile","x":560,"y":222,"w":1020,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Regionale Lebensmittel aus eigener Erzeugung","fontFamily":"Lora","fontSize":28,"fontWeight":400,"italic":true,"color":"#5c6b55","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"icon","name":"Merkmal 1","x":560,"y":330,"w":56,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"leaf","color":"#3f6b4c","strokeWidth":2},
+        {"id":"e5","type":"text","name":"Merkmal 1 Text","x":630,"y":330,"w":280,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Saisonal und bio","fontFamily":"Montserrat","fontSize":17,"fontWeight":700,"italic":false,"color":"#233a2a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"icon","name":"Merkmal 2","x":940,"y":330,"w":56,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"store","color":"#3f6b4c","strokeWidth":2},
+        {"id":"e7","type":"text","name":"Merkmal 2 Text","x":1010,"y":330,"w":280,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Hofladen und Café","fontFamily":"Montserrat","fontSize":17,"fontWeight":700,"italic":false,"color":"#233a2a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"icon","name":"Merkmal 3","x":1320,"y":330,"w":56,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"truck","color":"#3f6b4c","strokeWidth":2},
+        {"id":"e9","type":"text","name":"Merkmal 3 Text","x":1390,"y":330,"w":230,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Lieferservice","fontFamily":"Montserrat","fontSize":17,"fontWeight":700,"italic":false,"color":"#233a2a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Öffnungszeiten","x":560,"y":392,"w":1060,"h":44,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Mo bis Sa 8 bis 18 Uhr · Dorfstraße 12 · Musterstadt","fontFamily":"Montserrat","fontSize":17,"fontWeight":600,"italic":false,"color":"#4a5d44","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"image","name":"Ähren","x":1480,"y":40,"w":90,"h":140.23,"rotation":12,"opacity":0.9,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-weizenaehren-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]}
+    ]
+  }
+}

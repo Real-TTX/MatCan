@@ -1,0 +1,35 @@
+{
+  "name": "Dankeskarte A6 hoch – Blumen",
+  "category": "Karten",
+  "description": "Zarte Dankeskarte im Format A6 hoch mit Pfingstrosen und Blütenecke: „Vielen Dank“ in Kursivschrift, innen eine Blütenranke und Platz für deine Zeilen an Gäste, Helfer oder Gastgeber.",
+  "family": "danke-karte",
+  "familyName": "Dankeskarte",
+  "variant": "Blumen",
+  "occasion": "Feste & Events",
+  "tags": ["Danke","Dankeskarte","Blumen","Blüten","Pfingstrose","rosé","romantisch","Karte","Dankeschön","zart"],
+  "formatKey": "a6-portrait",
+  "number": 110,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#fdf8f5","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Pfingstrose","x":28,"y":80,"w":48,"h":63.331,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-pfingstrose-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Margerite","x":5,"y":103,"w":26,"h":34.17,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-margerite-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Anemone","x":74,"y":108,"w":26,"h":34.266,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-anemone-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Vielen","x":9.5,"y":18,"w":86,"h":26,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Vielen","fontFamily":"Playfair Display","fontSize":36,"fontWeight":400,"italic":true,"color":"#9b5a5f","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Dank","x":9.5,"y":38,"w":86,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dank","fontFamily":"Playfair Display","fontSize":46,"fontWeight":700,"italic":false,"color":"#9b5a5f","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0.08,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Trenner links","x":38.5,"y":72,"w":9,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d9a3a6","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"shape","name":"Trenner rechts","x":57.5,"y":72,"w":9,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d9a3a6","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"icon","name":"Trenner Herz","x":51,"y":70.5,"w":3,"h":3,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"heart","color":"#d9a3a6","strokeWidth":2}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#fffdfb","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e9","type":"image","name":"Ecke","x":0,"y":0,"w":40,"h":40,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-ecken-blueten-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e10","type":"image","name":"Ecke unten","x":65,"y":108,"w":40,"h":40,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":true,"flipY":true,"shadow":null,"source":{"asset":"deko-ecken-blueten-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e11","type":"text","name":"Anrede","x":16,"y":46,"w":74,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Anna,","fontFamily":"Playfair Display","fontSize":15,"fontWeight":400,"italic":true,"color":"#9b5a5f","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Text","x":16,"y":59,"w":74,"h":46,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"von Herzen danke ich dir für dein wunderbares Geschenk und die schönen Stunden mit dir. Du hast mir eine große Freude gemacht.","fontFamily":"Lora","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#4a3b3d","align":"left","valign":"top","lineHeight":1.55,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Gruß","x":16,"y":108,"w":74,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Herzlich, Lisa","fontFamily":"Playfair Display","fontSize":13,"fontWeight":400,"italic":true,"color":"#9b5a5f","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

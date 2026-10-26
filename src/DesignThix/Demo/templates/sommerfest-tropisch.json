@@ -1,0 +1,39 @@
+{
+  "name": "Sommerfest – Tropisch",
+  "category": "Poster",
+  "description": "Plakat A3 hoch für das Sommerfest mit Sonnenuntergangs-Verlauf, Palmwedeln, Wellen und großer Schrift: Aushang für Gemeinde, Verein oder Betrieb. Der Veranstalter ist ein Feld.",
+  "family": "sommerfest",
+  "familyName": "Sommerfest",
+  "variant": "Tropisch",
+  "occasion": "Feste & Events",
+  "tags": ["Sommerfest","Sommer","Fest","Einladung","Flyer","Verein","Kita","Gartenfest","Straßenfest","Feier","Tropisch","Palmen","Sonnenuntergang","Plakat","Poster","A3","Aushang","Strandparty"],
+  "formatKey": "poster-a3-portrait",
+  "number": 244,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":420,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Veranstalter","label":"Veranstalter","type":"text","sample":"Sportverein Musterstadt","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#ff7a59"},{"offset":0.5,"color":"#ffb347"},{"offset":1,"color":"#ffe08a"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Sonne","x":73,"y":222,"w":150,"h":150,"rotation":0,"opacity":0.9,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#fff0b5","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Sonne innen","x":93,"y":242,"w":110,"h":110,"rotation":0,"opacity":0.9,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#fffbe0","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"image","name":"Palme links","x":-34,"y":-4,"w":190,"h":107.214,"rotation":8,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-palmwedel-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"image","name":"Palme rechts","x":150,"y":-14,"w":170,"h":95.929,"rotation":-18,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":true,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-palmwedel-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"image","name":"Wellen vorn","x":0,"y":316,"w":297,"h":67.214,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-wellenrand-navy"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"shape","name":"Meer","x":0,"y":386,"w":297,"h":34,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#1f2f5c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Kopf","x":20,"y":128,"w":257,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"KOMM VORBEI ZUM","fontFamily":"Montserrat","fontSize":22,"fontWeight":700,"italic":false,"color":"#2b1a3b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.5,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Titel","x":10,"y":148,"w":277,"h":80,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#d1432b","opacity":0.6,"blur":0,"x":3,"y":4},"text":"SOMMERFEST","fontFamily":"Anton","fontSize":118,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Untertitel","x":20,"y":232,"w":257,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musik · Cocktails · Strandfeeling","fontFamily":"Montserrat","fontSize":20,"fontWeight":600,"italic":false,"color":"#2b1a3b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Datum","x":20,"y":340,"w":257,"h":26,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 17. Juli 2027 · ab 14 Uhr","fontFamily":"Montserrat","fontSize":26,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Ort","x":20,"y":366,"w":257,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Festwiese am Sportplatz · Musterweg 1","fontFamily":"Montserrat","fontSize":15,"fontWeight":500,"italic":false,"color":"#dfe6ff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Veranstalter","x":20,"y":399,"w":257,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Es lädt ein: {{Veranstalter}}","fontFamily":"Montserrat","fontSize":14,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Veranstalter":"Sportverein Musterstadt"},
+    {"Veranstalter":"Freiwillige Feuerwehr Oberhausen-Niederweiler"},
+    {"Veranstalter":"Kita Sonnenschein"}
+  ]
+}

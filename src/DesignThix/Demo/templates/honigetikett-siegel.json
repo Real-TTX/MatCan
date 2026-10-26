@@ -1,0 +1,42 @@
+{
+  "name": "Honigetikett – Goldsiegel",
+  "category": "Etiketten",
+  "description": "Edles Honigetikett (70 × 50 mm) für Spezialitäten: dunkelbrauner Grund, Goldlinien, Sorte in kursiver Antiqua, Imkerei in Versalien und ein rundes Siegel mit dem Gewicht. Alle Angaben sind Felder für eine Datenliste.",
+  "family": "honigetikett",
+  "familyName": "Honigetikett",
+  "variant": "Goldsiegel",
+  "occasion": "Handel & Preise",
+  "tags": ["Honig","Imker","Imkerei","Honigglas","Etikett","Hofladen","Biene","Glas","Sorte","Siegel","Edel","Gold","Braun","Geschenk","Spezialität","Manufaktur"],
+  "formatKey": "label-70x50",
+  "number": 439,
+  "document": {
+    "schema":2,"unit":"mm","width":70,"height":50,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Sorte","label":"Sorte","type":"text","sample":"Waldhonig","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"cremig, aus der Region","decimals":null,"category":null,"required":false},
+      {"key":"Gewicht","label":"Gewicht","type":"text","sample":"500 g","decimals":null,"category":null,"required":false},
+      {"key":"Imker","label":"Imkerei","type":"text","sample":"Imkerei Sonnenhang","decimals":null,"category":null,"required":false},
+      {"key":"MHD","label":"Mindestens haltbar bis","type":"text","sample":"MHD 12/2028","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#33200f","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen","x":2.2,"y":2.2,"w":65.6,"h":45.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d9b25a","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Imker","x":5,"y":5.4,"w":60,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Imker","flipX":false,"flipY":false,"shadow":null,"text":"{{Imker}}","fontFamily":"Cinzel","fontSize":7.5,"fontWeight":600,"italic":false,"color":"#d9b25a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.14,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"shape","name":"Linie oben","x":20,"y":10.8,"w":30,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d9b25a","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Sorte","x":5,"y":13,"w":60,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Sorte}}","fontFamily":"Playfair Display","fontSize":22,"fontWeight":600,"italic":true,"color":"#fff4dc","align":"center","valign":"middle","lineHeight":1.05,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Zusatz","x":6,"y":28,"w":58,"h":4.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Raleway","fontSize":7.5,"fontWeight":500,"italic":false,"color":"#d8c49a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Linie unten","x":20,"y":34.4,"w":30,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d9b25a","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"shape","name":"Siegel Ring","x":16.4,"y":35.4,"w":11.4,"h":11.4,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d9b25a","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"shape","name":"Siegel Ring innen","x":17.4,"y":36.4,"w":9.4,"h":9.4,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d9b25a","strokeWidth":0.2,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Gewicht","x":16.8,"y":35.4,"w":10.6,"h":11.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Gewicht}}","fontFamily":"Cinzel","fontSize":7.5,"fontWeight":700,"italic":false,"color":"#d9b25a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"MHD","x":31.4,"y":38.4,"w":24,"h":5.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"MHD","flipX":false,"flipY":false,"shadow":null,"text":"{{MHD}}","fontFamily":"Raleway","fontSize":7,"fontWeight":500,"italic":false,"color":"#d8c49a","align":"left","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Sorte":"Waldhonig","Zusatz":"cremig, aus der Region","Gewicht":"500 g","Imker":"Imkerei Sonnenhang","MHD":"MHD 12/2028"},
+    {"Sorte":"Frühlingsblütenhonig","Zusatz":"fein cremig, Raps und Obstblüte, aus eigener Imkerei","Gewicht":"250 g","Imker":"Imkerei Familie Mustermann-Schneider","MHD":"MHD 06/2028"},
+    {"Sorte":"Linde","Zusatz":"flüssig","Gewicht":"1 kg","Imker":"Imkerei Sonnenhang","MHD":""},
+    {"Sorte":"Akazie","Zusatz":"","Gewicht":"125 g","Imker":"","MHD":"MHD 03/2029"}
+  ]
+}

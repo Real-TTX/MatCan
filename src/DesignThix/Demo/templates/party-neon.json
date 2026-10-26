@@ -1,0 +1,38 @@
+{
+  "name": "Party-Einladung – Neon",
+  "category": "Einladungen",
+  "description": "Digitale Party-Einladung als Instagram-Post (1080 x 1080 px): dunkler Hintergrund, Neonrahmen in Pink und Cyan, große Schrift. Der Anlass ist ein Feld.",
+  "family": "party-einladung",
+  "familyName": "Party-Einladung",
+  "variant": "Neon",
+  "occasion": "Feste & Events",
+  "tags": ["Party","Einladung","Feier","Fest","Geburtstag","Einladungskarte","Feiern","Neon","Disco","Nachtparty","Instagram","Social Media","Club","Dunkel"],
+  "formatKey": "instagram-post",
+  "number": 226,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Anlass","label":"Anlass","type":"text","sample":"Sommerparty","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":160,"stops":[{"offset":0,"color":"#150a3d"},{"offset":1,"color":"#0d0a29"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen Pink","x":50,"y":50,"w":980,"h":980,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#ff3df2","opacity":0.9,"blur":30,"x":0,"y":0},"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#ff3df2","strokeWidth":5,"dash":"solid","radius":40,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Rahmen Cyan","x":70,"y":70,"w":940,"h":940,"rotation":0,"opacity":0.9,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#2ff3ff","opacity":0.8,"blur":20,"x":0,"y":0},"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#2ff3ff","strokeWidth":2.5,"dash":"solid","radius":28,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"icon","name":"Musik","x":120,"y":130,"w":90,"h":90,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#2ff3ff","opacity":0.9,"blur":20,"x":0,"y":0},"icon":"music","color":"#2ff3ff","strokeWidth":1.8},
+        {"id":"e4","type":"icon","name":"Funken","x":870,"y":130,"w":90,"h":90,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#ff3df2","opacity":0.9,"blur":20,"x":0,"y":0},"icon":"sparkles","color":"#ff3df2","strokeWidth":1.8},
+        {"id":"e5","type":"shape","name":"Strich","x":360,"y":660,"w":360,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#ff3df2","opacity":0.9,"blur":16,"x":0,"y":0},"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#ff3df2","strokeWidth":3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Party","x":100,"y":180,"w":880,"h":80,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#2ff3ff","opacity":0.9,"blur":14,"x":0,"y":0},"text":"DIE GROSSE","fontFamily":"Righteous","fontSize":34,"fontWeight":400,"italic":false,"color":"#2ff3ff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Anlass","x":100,"y":260,"w":880,"h":330,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#ff3df2","opacity":1,"blur":24,"x":0,"y":0},"text":"{{Anlass}}","fontFamily":"Righteous","fontSize":84,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.05,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Datum","x":100,"y":700,"w":880,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 19. Juni 2027","fontFamily":"Poppins","fontSize":34,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zeit","x":100,"y":770,"w":880,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"19 Uhr · Einlass ab 18:30 Uhr","fontFamily":"Poppins","fontSize":26,"fontWeight":500,"italic":false,"color":"#2ff3ff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Ort","x":100,"y":840,"w":880,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Poppins","fontSize":24,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Zusage","x":100,"y":910,"w":880,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 5. Juni · 0170 1234567","fontFamily":"Poppins","fontSize":20,"fontWeight":500,"italic":false,"color":"#ff3df2","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Anlass":"Sommerparty"},
+    {"Anlass":"Garten-Geburtstagsparty"},
+    {"Anlass":"Party"}
+  ]
+}

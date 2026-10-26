@@ -1,0 +1,33 @@
+{
+  "name": "Glückwunschkarte DIN lang – Gold",
+  "category": "Karten",
+  "description": "Feierliche Glückwunschkarte im Format DIN lang quer für Prüfung, Jubiläum oder neuen Job: nachtblau mit goldener Rosette, Lorbeerzweigen und „Herzlichen Glückwunsch“ in Kursivschrift.",
+  "family": "glueckwunschkarte",
+  "familyName": "Glückwunschkarte",
+  "variant": "Gold",
+  "occasion": "Feste & Events",
+  "tags": ["Glückwunsch","Gratulation","Gold","Lorbeer","bestanden","Jubiläum","Erfolg","Karte","DIN lang","feierlich"],
+  "formatKey": "din-lang-landscape",
+  "number": 112,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":99,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#16213e","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rahmen","x":40.663,"y":4,"w":128.674,"h":91,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-rahmen-doppellinie-quer-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Lorbeer links","x":40,"y":76,"w":36,"h":16.281,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-lorbeerzweig-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Lorbeer rechts","x":134,"y":76,"w":36,"h":16.281,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":true,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-lorbeerzweig-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Erfolg","x":77,"y":76,"w":56,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"zum großen Erfolg","fontFamily":"Cormorant Garamond","fontSize":14,"fontWeight":500,"italic":true,"color":"#ecd49a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"image","name":"Rosette","x":94,"y":10,"w":22,"h":31.346,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-baender-rosette-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"text","name":"Herzlichen","x":30,"y":38,"w":150,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Herzlichen","fontFamily":"Cormorant Garamond","fontSize":26,"fontWeight":500,"italic":true,"color":"#ecd49a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Glückwunsch","x":10,"y":49,"w":190,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GLÜCKWUNSCH","fontFamily":"Cinzel","fontSize":34,"fontWeight":500,"italic":false,"color":"#d4af5f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.14,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#fbf6ea","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e8","type":"image","name":"Schwung","x":80,"y":6,"w":50,"h":20.999,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-ornamente-schwung-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e9","type":"text","name":"Anrede","x":40,"y":26,"w":130,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Anna,","fontFamily":"Cormorant Garamond","fontSize":19,"fontWeight":600,"italic":true,"color":"#3a3226","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Text","x":40,"y":38,"w":130,"h":34,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"zu diesem großen Erfolg gratulieren wir dir von Herzen. Du hast dir diesen Moment mit Fleiß und Ausdauer verdient – wir sind stolz auf dich!","fontFamily":"Cormorant Garamond","fontSize":14.5,"fontWeight":500,"italic":false,"color":"#3a3226","align":"left","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Gruß","x":40,"y":78,"w":130,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Deine Familie","fontFamily":"Cormorant Garamond","fontSize":17,"fontWeight":600,"italic":true,"color":"#a8822f","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

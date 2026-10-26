@@ -1,0 +1,44 @@
+{
+  "name": "Urkunde – Modern",
+  "category": "Karten",
+  "description": "Moderne Urkunde oder Zertifikat (A4 quer) mit Eckbändern in Marineblau, linksbündigem Layout in klarer Schrift, Rosette, Datum und Unterschriftenlinie. Name, Anlass und Datum sind Felder für eine Serie.",
+  "family": "certificate-a4",
+  "familyName": "Urkunde & Zertifikat",
+  "variant": "Modern",
+  "occasion": "Verein & Schule",
+  "tags": ["Urkunde","Zertifikat","Auszeichnung","Teilnahme","Gewinner","Schule","Verein","Sport","Teilnahmebescheinigung","Modern","Marineblau","Weiterbildung","Kurs","Seminar","Rosette"],
+  "formatKey": "certificate-a4",
+  "number": 420,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Anna Beispiel","decimals":null,"category":null,"required":true},
+      {"key":"Anlass","label":"Anlass","type":"multiline","sample":"für die erfolgreiche Teilnahme am Sommerlauf 2027","decimals":null,"category":null,"required":false},
+      {"key":"Datum","label":"Datum","type":"text","sample":"12. Juni 2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Eckband oben","x":0,"y":0,"w":62,"h":62,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-baender-eckband-navy"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Eckband unten","x":235,"y":148,"w":62,"h":62,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":true,"flipY":true,"shadow":null,"source":{"asset":"deko-baender-eckband-navy"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Titel","x":45,"y":34,"w":170,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zertifikat","fontFamily":"Poppins","fontSize":40,"fontWeight":800,"italic":false,"color":"#1f2a44","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Untertitel","x":45,"y":49,"w":170,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Teilnahmebescheinigung","fontFamily":"Poppins","fontSize":13,"fontWeight":500,"italic":false,"color":"#2e8bd8","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.22,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Verliehen","x":45,"y":72,"w":170,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Hiermit wird bestätigt, dass","fontFamily":"Poppins","fontSize":13,"fontWeight":400,"italic":false,"color":"#5b6475","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Name","x":45,"y":79,"w":170,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Poppins","fontSize":38,"fontWeight":700,"italic":false,"color":"#111827","align":"left","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Akzent","x":45,"y":101,"w":24,"h":1.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#2e8bd8","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Anlass","x":45,"y":108,"w":170,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Anlass","flipX":false,"flipY":false,"shadow":null,"text":"{{Anlass}}","fontFamily":"Poppins","fontSize":16,"fontWeight":400,"italic":false,"color":"#1f2937","align":"left","valign":"top","lineHeight":1.45,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"image","name":"Rosette","x":228,"y":62,"w":42,"h":59.843,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-baender-rosette-navy"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e10","type":"text","name":"Datum","x":45,"y":154,"w":80,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Datum}}","fontFamily":"Poppins","fontSize":12,"fontWeight":600,"italic":false,"color":"#1f2a44","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"shape","name":"Datumslinie","x":45,"y":162,"w":80,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#9aa3b2","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e12","type":"text","name":"Datum Beschriftung","x":45,"y":163.4,"w":80,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Datum","fontFamily":"Poppins","fontSize":7,"fontWeight":500,"italic":false,"color":"#7b8494","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"shape","name":"Unterschriftslinie","x":140,"y":162,"w":80,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#9aa3b2","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e14","type":"text","name":"Unterschrift Beschriftung","x":140,"y":163.4,"w":80,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Unterschrift","fontFamily":"Poppins","fontSize":7,"fontWeight":500,"italic":false,"color":"#7b8494","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Anna Beispiel","Anlass":"für die erfolgreiche Teilnahme am Sommerlauf 2027","Datum":"12. Juni 2027"},
+    {"Name":"Maximiliane Schneider-Hohenstein","Anlass":"für hervorragende Leistungen im Schuljahr 2026/27 und ihr großes Engagement in der Schulgemeinschaft","Datum":"30. Juni 2027"},
+    {"Name":"Jo Kurz","Anlass":"für den ersten Platz","Datum":""},
+    {"Name":"Prof. Dr. Maximilian Mustermann","Anlass":"","Datum":"1. Oktober 2027"}
+  ]
+}

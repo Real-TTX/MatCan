@@ -1,0 +1,40 @@
+{
+  "name": "Abschlussfeier – Abi-Plakat",
+  "category": "Poster",
+  "description": "Plakat A3 hoch für Abi-Party, Abifete oder Abschlussfeier: gewaltige Schrift, bunte Farbblöcke auf Nachtblau und Abschlusshut. Die Bezeichnung des Abschlusses ist ein Feld.",
+  "family": "abschlussfeier",
+  "familyName": "Abschlussfeier",
+  "variant": "Abi-Plakat",
+  "occasion": "Feste & Events",
+  "tags": ["Abschluss","Abitur","Abi","Abschlussfeier","Schulabschluss","Ausbildung","Einladung","Feier","Geschafft","Plakat","Poster","A3","Abifete","Abiparty","Abiball","Bunt","Aushang"],
+  "formatKey": "poster-a3-portrait",
+  "number": 234,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":420,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Jonas","decimals":null,"category":null,"required":false},
+      {"key":"Abschluss","label":"Abschluss","type":"text","sample":"Abi 2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#101828","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Block Gelb","x":-30,"y":250,"w":240,"h":90,"rotation":-8,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffd23f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Block Pink","x":120,"y":300,"w":230,"h":80,"rotation":-8,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ff4f8b","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Block Cyan","x":-40,"y":336,"w":200,"h":44,"rotation":-8,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#38d6e8","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"shape","name":"Kreis","x":200,"y":30,"w":120,"h":120,"rotation":0,"opacity":0.85,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ff4f8b","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"icon","name":"Hut","x":226,"y":52,"w":66,"h":66,"rotation":12,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"graduation-cap","color":"#ffffff","strokeWidth":1.5},
+        {"id":"e6","type":"shape","name":"Stern","x":30,"y":38,"w":22,"h":22,"rotation":12,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"star","points":5,"innerRadius":0.45,"fill":"#ffd23f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"shape","name":"Stern 2","x":266,"y":196,"w":12,"h":12,"rotation":-8,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"star","points":5,"innerRadius":0.45,"fill":"#38d6e8","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Kopf","x":24,"y":70,"w":190,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"DIE GROSSE","fontFamily":"Oswald","fontSize":30,"fontWeight":500,"italic":false,"color":"#38d6e8","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Abschluss","x":20,"y":90,"w":262,"h":110,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Abschluss}}","fontFamily":"Anton","fontSize":150,"fontWeight":400,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.05,"letterSpacing":0,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":36,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Party","x":24,"y":204,"w":250,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"PARTY & ZEUGNISÜBERGABE","fontFamily":"Oswald","fontSize":25,"fontWeight":500,"italic":false,"color":"#ffd23f","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Datum","x":20,"y":262,"w":160,"h":18,"rotation":-8,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 25. Juni 2027","fontFamily":"Anton","fontSize":28,"fontWeight":400,"italic":false,"color":"#101828","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Hinweis","x":20,"y":394,"w":257,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eintritt frei für alle Abiturientinnen und Abiturienten  ·  Gäste 5 €  ·  Musterstadt","fontFamily":"Oswald","fontSize":14,"fontWeight":400,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.04,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Jonas","Abschluss":"Abi 2027"},
+    {"Name":"Maximiliane Schneider-Hohenstein","Abschluss":"Realschulabschluss 2027"},
+    {"Name":"Jo","Abschluss":"Gesellenbrief"}
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "Konfirmation – Farbblock",
+  "category": "Einladungen",
+  "description": "Junge Einladung zur Konfirmation (A5 quer) mit Senfgelb-Block, Pflaume und Koralle, großem Kreuz-Symbol und dem Satz „Dein Weg. Dein Glaube. Dein Tag.“. Name als Feld.",
+  "family": "konfirmation-einladung",
+  "familyName": "Konfirmation – Einladung",
+  "variant": "Farbblock",
+  "occasion": "Kinder & Familie",
+  "tags": ["Konfirmation","Einladung","Kirche","Jugend","Glaube","Familie","Feier","Farbblock","Modern","Jugendlich","Senf","Pflaume","Spruch"],
+  "formatKey": "a5-landscape",
+  "number": 218,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Lea","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fff9ee","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Block","x":0,"y":0,"w":78,"h":148,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#e9b44c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Kreis","x":14,"y":36,"w":50,"h":50,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#3a2a4d","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"icon","name":"Kreuz","x":29,"y":49,"w":20,"h":20,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"cross","color":"#e9b44c","strokeWidth":1.7},
+        {"id":"e4","type":"shape","name":"Kreis klein","x":54,"y":104,"w":18,"h":18,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#e8674e","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"shape","name":"Dreieck","x":10,"y":108,"w":16,"h":14,"rotation":12,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"triangle","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"shape","name":"Ring","x":6,"y":14,"w":14,"h":14,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3a2a4d","strokeWidth":1.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"shape","name":"Linie","x":96,"y":48,"w":100,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3a2a4d","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Jahr","x":96,"y":14,"w":100,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"KONFIRMATION 2027","fontFamily":"Oswald","fontSize":12,"fontWeight":500,"italic":false,"color":"#e8674e","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Satz","x":96,"y":24,"w":108,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dein Weg. Dein Glaube.\nDein Tag.","fontFamily":"Poppins","fontSize":16,"fontWeight":700,"italic":false,"color":"#3a2a4d","align":"left","valign":"top","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Name","x":96,"y":52,"w":108,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Poppins","fontSize":30,"fontWeight":700,"italic":false,"color":"#3a2a4d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Einladung","x":96,"y":70,"w":108,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"wird konfirmiert. Feier mit uns!","fontFamily":"Poppins","fontSize":10,"fontWeight":500,"italic":false,"color":"#3a2a4d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Datum","x":96,"y":84,"w":108,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Sonntag, 9. Mai 2027 · 10 Uhr","fontFamily":"Poppins","fontSize":11.5,"fontWeight":600,"italic":false,"color":"#3a2a4d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Kirche","x":96,"y":92.5,"w":108,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Evangelische Kirche Musterstadt","fontFamily":"Poppins","fontSize":10,"fontWeight":400,"italic":false,"color":"#3a2a4d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"text","name":"Feier","x":96,"y":104,"w":108,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anschließend feiern wir im Gemeindehaus.","fontFamily":"Poppins","fontSize":10,"fontWeight":400,"italic":false,"color":"#3a2a4d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e15","type":"text","name":"Zusage","x":96,"y":118,"w":108,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Rückmeldung bis 25. April: 0170 1234567","fontFamily":"Poppins","fontSize":9,"fontWeight":600,"italic":false,"color":"#e8674e","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Lea"},
+    {"Name":"Maximilian-Johannes"},
+    {"Name":"Jo"}
+  ]
+}

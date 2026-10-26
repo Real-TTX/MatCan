@@ -1,0 +1,33 @@
+{
+  "name": "Glückwunschkarte A6 hoch – Schlicht",
+  "category": "Karten",
+  "description": "Ruhige Glückwunschkarte im Format A6 hoch: viel Weißraum, „Gratulation“ in feiner Schrift mit weitem Abstand, ein mintgrüner Block und dünne Linien. Innen Platz für einen persönlichen Text.",
+  "family": "glueckwunschkarte",
+  "familyName": "Glückwunschkarte",
+  "variant": "Schlicht",
+  "occasion": "Feste & Events",
+  "tags": ["Glückwunsch","Gratulation","schlicht","minimal","modern","mint","ruhig","Karte","Typografie","Erfolg"],
+  "formatKey": "a6-portrait",
+  "number": 114,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Block","x":0,"y":86,"w":105,"h":62,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d6ece4","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Linie oben","x":20,"y":28,"w":65,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#1f2a2e","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Gratulation","x":4.5,"y":40,"w":96,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GRATULATION","fontFamily":"Josefin Sans","fontSize":22,"fontWeight":300,"italic":false,"color":"#1f2a2e","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.28,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Zeile","x":12.5,"y":56,"w":80,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"zu deinem großen Erfolg","fontFamily":"Josefin Sans","fontSize":9.5,"fontWeight":400,"italic":false,"color":"#1f2a2e","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"icon","name":"Stern","x":48.5,"y":68,"w":8,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"star","color":"#2f8f78","strokeWidth":1.6},
+        {"id":"e6","type":"shape","name":"Linie unten","x":20,"y":124,"w":65,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#1f2a2e","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Absender","x":12.5,"y":128,"w":80,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"von uns allen","fontFamily":"Josefin Sans","fontSize":8,"fontWeight":400,"italic":false,"color":"#1f2a2e","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e8","type":"shape","name":"Linie","x":20,"y":24,"w":20,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#2f8f78","strokeWidth":0.8,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Anrede","x":20,"y":30,"w":70,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Anna,","fontFamily":"Josefin Sans","fontSize":14,"fontWeight":600,"italic":false,"color":"#1f2a2e","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Text","x":20,"y":46,"w":66,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"wir gratulieren dir von Herzen zu diesem besonderen Moment. Du hast es dir verdient, genieße ihn in vollen Zügen.","fontFamily":"Josefin Sans","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#1f2a2e","align":"left","valign":"top","lineHeight":1.7,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Gruß","x":20,"y":122,"w":66,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Viele Grüße, dein Team","fontFamily":"Josefin Sans","fontSize":9,"fontWeight":600,"italic":false,"color":"#2f8f78","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

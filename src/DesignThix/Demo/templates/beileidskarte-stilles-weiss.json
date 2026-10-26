@@ -1,0 +1,31 @@
+{
+  "name": "Beileidskarte Klappkarte – Stilles Weiß",
+  "category": "Karten",
+  "description": "Ruhige Beileidskarte als Klappkarte A6 hoch: Weiß mit einem einzelnen Olivenzweig in gedämpftem Grün, „In stillem Gedenken“ in zurückhaltender Antiqua. Innen viel Raum für persönliche Worte.",
+  "family": "beileidskarte",
+  "familyName": "Beileidskarte",
+  "variant": "Stilles Weiß",
+  "occasion": "Trauer",
+  "tags": ["Beileid","Trauer","Trauerkarte","Kondolenz","Anteilnahme","Gedenken","Klappkarte","ruhig","Olivenzweig","Karte"],
+  "formatKey": "card-a6-portrait",
+  "number": 136,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":148,"dpi":300,"locale":"de-DE","fold":"vertical",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Außen (Rückseite | Vorderseite)","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"text","name":"Hinten","x":12.5,"y":130,"w":80,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"In Anteilnahme","fontFamily":"Cormorant Garamond","fontSize":10,"fontWeight":500,"italic":true,"color":"#8b8b8b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e2","type":"image","name":"Zweig","x":118,"y":40,"w":76,"h":30.535,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-olivenzweig-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Titel 1","x":115.5,"y":66,"w":84,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"In stillem","fontFamily":"Cormorant Garamond","fontSize":22,"fontWeight":500,"italic":false,"color":"#3b3b3b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Titel 2","x":115.5,"y":77,"w":84,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gedenken","fontFamily":"Cormorant Garamond","fontSize":22,"fontWeight":500,"italic":true,"color":"#3b3b3b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innen","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e5","type":"text","name":"Anrede","x":120,"y":28,"w":76,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Familie Hoffmann,","fontFamily":"Cormorant Garamond","fontSize":17,"fontWeight":600,"italic":true,"color":"#3b3b3b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Text","x":120,"y":42,"w":76,"h":62,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"In Gedanken sind wir bei dir und deiner Familie. Wir wünschen euch Kraft, Zeit zum Trauern und Menschen, die euch in diesen schweren Tagen zur Seite stehen.","fontFamily":"Cormorant Garamond","fontSize":13,"fontWeight":500,"italic":false,"color":"#3b3b3b","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Gruß","x":120,"y":108,"w":76,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"In stiller Anteilnahme, Familie Beck","fontFamily":"Cormorant Garamond","fontSize":12.5,"fontWeight":500,"italic":true,"color":"#6f7f6f","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"shape","name":"Strich","x":120,"y":106,"w":76,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d7d7d7","strokeWidth":0.25,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"image","name":"Zweig innen","x":14,"y":60,"w":76,"h":30.535,"rotation":0,"opacity":0.8,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-olivenzweig-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]}
+    ]
+  }
+}

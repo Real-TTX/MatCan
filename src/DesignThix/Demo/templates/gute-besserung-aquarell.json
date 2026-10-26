@@ -1,0 +1,31 @@
+{
+  "name": "Gute-Besserung-Karte A6 hoch – Aquarell",
+  "category": "Karten",
+  "description": "Beruhigende Karte im Format A6 hoch: sanfte Salbei-Aquarellfläche mit Olivenzweig, „Werde bald wieder gesund“ in feiner Kursivschrift, innen Platz für warme Worte.",
+  "family": "gute-besserung",
+  "familyName": "Gute Besserung",
+  "variant": "Aquarell",
+  "occasion": "Kinder & Familie",
+  "tags": ["Gute Besserung","Genesung","Aquarell","ruhig","Salbei","Olivenzweig","Karte","Genesungswünsche","beruhigend"],
+  "formatKey": "a6-portrait",
+  "number": 116,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#fbfaf6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Aquarell","x":-6,"y":18,"w":118,"h":83.893,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-aquarell-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Zweig","x":12,"y":112,"w":80,"h":32.142,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-olivenzweig-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Werde","x":12.5,"y":40,"w":80,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Werde bald","fontFamily":"Lora","fontSize":19,"fontWeight":400,"italic":true,"color":"#4f6f58","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"gesund","x":9.5,"y":54,"w":86,"h":26,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"wieder gesund","fontFamily":"Playfair Display","fontSize":26,"fontWeight":600,"italic":true,"color":"#2f4a3b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":13,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Gruß","x":15.5,"y":84,"w":74,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ich denke an dich","fontFamily":"Raleway","fontSize":8.5,"fontWeight":600,"italic":false,"color":"#4f6f58","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#fbfaf6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e6","type":"image","name":"Zweig innen","x":16,"y":12,"w":74,"h":29.731,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-olivenzweig-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e7","type":"text","name":"Anrede","x":16,"y":44,"w":74,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Anna,","fontFamily":"Playfair Display","fontSize":15,"fontWeight":400,"italic":true,"color":"#4f6f58","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Text","x":16,"y":58,"w":74,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ich wünsche dir viel Ruhe, gute Pflege und bald wieder ganz viel Kraft. Lass dich verwöhnen und melde dich, wenn ich dir etwas vorbeibringen soll.","fontFamily":"Lora","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#2f4a3b","align":"left","valign":"top","lineHeight":1.55,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Gruß","x":16,"y":114,"w":74,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gute Besserung, Lisa","fontFamily":"Playfair Display","fontSize":12.5,"fontWeight":400,"italic":true,"color":"#4f6f58","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

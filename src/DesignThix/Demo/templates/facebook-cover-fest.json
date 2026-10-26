@@ -1,0 +1,28 @@
+{
+  "name": "Facebook-Titelbild – Fest",
+  "category": "Social Media",
+  "description": "Fröhliches Titelbild für Vereine und Veranstaltungen (1640 × 624 px): Türkis-Violett-Verlauf, bunte Wimpelkette, großer Veranstaltungstitel mit Datum und Ort. Der Bereich links unten bleibt frei für dein rundes Profilbild.",
+  "family": "facebook-cover",
+  "familyName": "Facebook-Titelbild",
+  "variant": "Fest",
+  "occasion": "Social Media",
+  "tags": ["Facebook","Titelbild","Cover","Banner","Kopfbild","Social Media","Seite","Firma","Verein","LinkedIn","Fest","Veranstaltung","Wimpel","Bunt","Sommerfest","Event","Gemeinde"],
+  "formatKey": "facebook-cover",
+  "number": 468,
+  "document": {
+    "schema":2,"unit":"px","width":1640,"height":624,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":110,"stops":[{"offset":0,"color":"#12b5b0"},{"offset":1,"color":"#6b3fd4"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Wimpelkette","x":500,"y":-14,"w":1140,"h":305.676,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-wimpelkette-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Kreis","x":1180,"y":120,"w":700,"h":700,"rotation":0,"opacity":0.08,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Kopf","x":560,"y":250,"w":1000,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Herzliche Einladung zum","fontFamily":"Montserrat","fontSize":17,"fontWeight":700,"italic":false,"color":"#ffe27a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.24,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Titel","x":560,"y":296,"w":1060,"h":150,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#2a1068","opacity":0.3,"blur":0,"x":4,"y":6},"text":"Sommerfest 2027","fontFamily":"Poppins","fontSize":80,"fontWeight":800,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":36,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"icon","name":"Kalender","x":560,"y":480,"w":48,"h":48,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"calendar","color":"#ffe27a","strokeWidth":2.2},
+        {"id":"e6","type":"text","name":"Datum","x":624,"y":478,"w":480,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 12. Juni","fontFamily":"Montserrat","fontSize":17,"fontWeight":700,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"icon","name":"Ort","x":1090,"y":480,"w":48,"h":48,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"map-pin","color":"#ffe27a","strokeWidth":2.2},
+        {"id":"e8","type":"text","name":"Ort","x":1154,"y":478,"w":460,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Festplatz am See","fontFamily":"Montserrat","fontSize":17,"fontWeight":700,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

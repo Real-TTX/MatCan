@@ -1,0 +1,42 @@
+{
+  "name": "Kerzenetikett – Schwarz & Gold",
+  "category": "Etiketten",
+  "description": "Edles Kerzenetikett (100 × 70 mm): schwarzer Grund, goldener Rahmen und Flammensymbol, Duft in römischen Versalien, Zusatz, Brenndauer, Gewicht und Sicherheitshinweis. Alle Angaben sind Felder für eine Datenliste.",
+  "family": "kerzenetikett",
+  "familyName": "Kerzenetikett",
+  "variant": "Schwarz & Gold",
+  "occasion": "Handel & Preise",
+  "tags": ["Kerze","Duftkerze","Sojawachs","Kerzenglas","Etikett","Brenndauer","Warnhinweis","Manufaktur","Wohnen","Schwarz","Gold","Luxus","Edel","Cinzel","Geschenk"],
+  "formatKey": "label-100x70",
+  "number": 434,
+  "document": {
+    "schema":2,"unit":"mm","width":100,"height":70,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Duft","type":"text","sample":"Vanille & Zimt","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"Duftkerze aus Sojawachs","decimals":null,"category":null,"required":false},
+      {"key":"Brenndauer","label":"Brenndauer","type":"text","sample":"ca. 40 Stunden","decimals":null,"category":null,"required":false},
+      {"key":"Gewicht","label":"Gewicht","type":"text","sample":"180 g","decimals":null,"category":null,"required":false},
+      {"key":"Hersteller","label":"Hersteller","type":"text","sample":"Kerzenmanufaktur Wiesengrund","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#111113","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen außen","x":3,"y":3,"w":94,"h":64,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c9a24a","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Rahmen innen","x":4.4,"y":4.4,"w":91.2,"h":61.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c9a24a","strokeWidth":0.2,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"icon","name":"Flamme","x":45.5,"y":8.4,"w":9,"h":9,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"flame","color":"#c9a24a","strokeWidth":1.3},
+        {"id":"e4","type":"text","name":"Produkt","x":10,"y":19.4,"w":80,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Cinzel","fontSize":20,"fontWeight":600,"italic":false,"color":"#fff4dc","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0.1,"uppercase":true,"wrap":true,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"image","name":"Schnörkel","x":37,"y":34.4,"w":26,"h":9.461,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-ornamente-schnoerkel-breit-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"text","name":"Zusatz","x":10,"y":43.4,"w":80,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Cormorant Garamond","fontSize":10,"fontWeight":500,"italic":true,"color":"#d8c49a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Brenndauer","x":10,"y":49.4,"w":38,"h":4.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Brenndauer","flipX":false,"flipY":false,"shadow":null,"text":"{{Brenndauer}}","fontFamily":"Raleway","fontSize":7.5,"fontWeight":600,"italic":false,"color":"#c9a24a","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"shape","name":"Punkt","x":49.2,"y":51,"w":1.6,"h":1.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#c9a24a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Gewicht","x":52,"y":49.4,"w":38,"h":4.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Inhalt {{Gewicht}}","fontFamily":"Raleway","fontSize":7.5,"fontWeight":600,"italic":false,"color":"#c9a24a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Hinweis","x":12,"y":55.6,"w":76,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Nie unbeaufsichtigt brennen lassen. Von Kindern und Haustieren fernhalten. Docht vor dem Anzünden auf 5 mm kürzen.","fontFamily":"Raleway","fontSize":7,"fontWeight":400,"italic":false,"color":"#9a9488","align":"center","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Vanille & Zimt","Zusatz":"Duftkerze aus Sojawachs","Brenndauer":"ca. 40 Stunden","Gewicht":"180 g","Hersteller":"Kerzenmanufaktur Wiesengrund"},
+    {"Produkt":"Wintermärchen: Tannennadel, Orange und Gewürznelke","Zusatz":"Handgegossene Duftkerze aus nachhaltigem Sojawachs im Glas","Brenndauer":"ca. 60 Stunden","Gewicht":"300 g","Hersteller":"Kerzenmanufaktur Wiesengrund"},
+    {"Produkt":"Meeresbrise","Zusatz":"Duftkerze","Brenndauer":"ca. 25 Stunden","Gewicht":"110 g","Hersteller":""},
+    {"Produkt":"Zeder","Zusatz":"","Brenndauer":"","Gewicht":"180 g","Hersteller":"Kerzenmanufaktur Wiesengrund"}
+  ]
+}

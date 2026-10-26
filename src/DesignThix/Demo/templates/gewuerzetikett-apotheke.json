@@ -1,0 +1,41 @@
+{
+  "name": "Gewürzetikett – Apotheke",
+  "category": "Etiketten",
+  "description": "Gewürzetikett (58 × 40 mm) im Apothekerstil: Kraftpapier, Doppelrahmen, Name in kräftiger Antiqua, Zusatz, Zutaten sowie Inhalt und Mindesthaltbarkeit. Alle Angaben sind Felder für eine Datenliste.",
+  "family": "gewuerzetikett",
+  "familyName": "Gewürzetikett",
+  "variant": "Apotheke",
+  "occasion": "Handel & Preise",
+  "tags": ["Gewürz","Gewürzmischung","Gewürzdose","Etikett","Kräuter","Hofladen","Selbstgemacht","Salz","Zutaten","Apotheke","Kraftpapier","Vintage","Antiqua","Rahmen"],
+  "formatKey": "label-58x40",
+  "number": 428,
+  "document": {
+    "schema":2,"unit":"mm","width":58,"height":40,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Gewürz","type":"text","sample":"Grillgewürz","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"für Fleisch und Gemüse","decimals":null,"category":null,"required":false},
+      {"key":"Zutaten","label":"Zutaten","type":"text","sample":"Paprika, Knoblauch, Salz, Kräuter","decimals":null,"category":null,"required":false},
+      {"key":"Inhalt","label":"Inhalt","type":"text","sample":"60 g","decimals":null,"category":null,"required":false},
+      {"key":"MHD","label":"Mindestens haltbar bis","type":"text","sample":"MHD 12/2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#dcc59c","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen außen","x":1.8,"y":1.8,"w":54.4,"h":36.4,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3b2a1a","strokeWidth":0.6,"dash":"solid","radius":1,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Rahmen innen","x":2.9,"y":2.9,"w":52.2,"h":34.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3b2a1a","strokeWidth":0.2,"dash":"solid","radius":0.6,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Kopf","x":6,"y":4.2,"w":46,"h":3.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Handgemischt","fontFamily":"Montserrat","fontSize":6.5,"fontWeight":600,"italic":false,"color":"#3b2a1a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Produkt","x":5,"y":7.6,"w":48,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Abril Fatface","fontSize":19,"fontWeight":400,"italic":false,"color":"#3b2a1a","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Zusatz","x":5,"y":18,"w":48,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Lora","fontSize":7.5,"fontWeight":400,"italic":true,"color":"#5a4328","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Trenner","x":18,"y":23.2,"w":22,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3b2a1a","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Zutaten","x":5.4,"y":24.2,"w":47.2,"h":6.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zutaten","flipX":false,"flipY":false,"shadow":null,"text":"{{Zutaten}}","fontFamily":"Lora","fontSize":7,"fontWeight":400,"italic":false,"color":"#3b2a1a","align":"center","valign":"top","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Inhalt","x":5.4,"y":32,"w":18,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Inhalt}}","fontFamily":"Montserrat","fontSize":7.5,"fontWeight":700,"italic":false,"color":"#3b2a1a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"MHD","x":24,"y":32,"w":28.6,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"MHD","flipX":false,"flipY":false,"shadow":null,"text":"{{MHD}}","fontFamily":"Montserrat","fontSize":7,"fontWeight":500,"italic":false,"color":"#5a4328","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Grillgewürz","Zusatz":"für Fleisch und Gemüse","Zutaten":"Paprika, Knoblauch, Salz, Kräuter","Inhalt":"60 g","MHD":"MHD 12/2027"},
+    {"Produkt":"Zitronen-Kräuter-Salz","Zusatz":"feine Würzmischung für Fisch, Geflügel und Salate","Zutaten":"Meersalz, Zitronenschale, Thymian, Rosmarin, Petersilie, Pfeffer","Inhalt":"120 g","MHD":"MHD 06/2028"},
+    {"Produkt":"Chili","Zusatz":"scharf","Zutaten":"Chilischoten","Inhalt":"35 g","MHD":""},
+    {"Produkt":"Glühweingewürz","Zusatz":"","Zutaten":"","Inhalt":"50 g","MHD":"MHD 10/2027"}
+  ]
+}

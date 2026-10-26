@@ -1,0 +1,28 @@
+{
+  "name": "Flyer A4 – Sale Prozent",
+  "category": "Flyer",
+  "description": "Schreiendes A4-Blatt für Schaufenster und Eingang: roter Grund, riesiges „–50 %“ in Anton, schräges weißes Band „Räumungsverkauf“, Warengruppen und Zeitraum. Sofort lesbar aus zehn Metern.",
+  "family": "flyer-sale",
+  "familyName": "Flyer Sale",
+  "variant": "Prozent",
+  "occasion": "Handel & Preise",
+  "tags": ["Flyer","Sale","Rabatt","Räumungsverkauf","Schlussverkauf","Prozent","Schaufenster","Aushang","Angebot","Preis"],
+  "formatKey": "a4-portrait",
+  "number": 346,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":297,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#e10600","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"text","name":"Etikett","x":14,"y":14,"w":182,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"RÄUMUNGSVERKAUF","fontFamily":"Anton","fontSize":40,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e2","type":"text","name":"Zahl","x":4,"y":34,"w":202,"h":130,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"–50 %","fontFamily":"Anton","fontSize":300,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":100,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"shape","name":"Band","x":-10,"y":176,"w":230,"h":30,"rotation":-3,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Band Text","x":-4,"y":176,"w":218,"h":30,"rotation":-3,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"AUF ALLES, WAS IM LADEN STEHT","fontFamily":"Anton","fontSize":30,"fontWeight":400,"italic":false,"color":"#e10600","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Gruppen","x":14,"y":220,"w":182,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Mode  ·  Schuhe  ·  Taschen  ·  Accessoires","fontFamily":"Source Sans 3","fontSize":22,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Zeitraum","x":14,"y":246,"w":182,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Nur vom 6. bis 18. Januar","fontFamily":"Anton","fontSize":30,"fontWeight":400,"italic":false,"color":"#ffe14d","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Fuß","x":0,"y":270,"w":210,"h":27,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#111111","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Adresse","x":14,"y":270,"w":182,"h":27,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Modehaus Winter  ·  Musterstraße 12, 12345 Musterstadt","fontFamily":"Source Sans 3","fontSize":13,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

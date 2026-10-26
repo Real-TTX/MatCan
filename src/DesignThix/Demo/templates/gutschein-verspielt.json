@@ -1,0 +1,42 @@
+{
+  "name": "Gutschein – Verspielt",
+  "category": "Business",
+  "description": "Fröhlicher Geschenkgutschein (DIN lang quer, 210 × 99 mm) mit Schleife, Konfetti und Betrag im bunten Kreis, dazu „für“-Zeile, Gültigkeit und Code. Betrag, Name, Code und Datum sind Felder für eine Serie.",
+  "family": "gutschein",
+  "familyName": "Gutschein",
+  "variant": "Verspielt",
+  "occasion": "Handel & Preise",
+  "tags": ["Gutschein","Geschenk","Wertgutschein","Geschenkgutschein","Code","Betrag","Verkauf","Verspielt","Rosa","Schleife","Konfetti","Kinder","Geburtstag","Weihnachten","Spielwaren"],
+  "formatKey": "voucher-dl",
+  "number": 418,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":99,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Betrag","label":"Betrag oder Leistung","type":"text","sample":"25 €","decimals":null,"category":null,"required":true},
+      {"key":"Fuer","label":"Für","type":"text","sample":"Anna","decimals":null,"category":null,"required":false},
+      {"key":"Code","label":"Gutscheincode","type":"text","sample":"GS-2027-0042","decimals":null,"category":null,"required":false},
+      {"key":"Gueltig","label":"Gültig bis","type":"text","sample":"Gültig bis 31. Dezember 2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fff1f3","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Konfetti","x":100,"y":-50,"w":150,"h":150,"rotation":0,"opacity":0.6,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-streuung-pastell"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Schleife","x":8,"y":12,"w":46,"h":41.4,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-baender-schleife-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Titel","x":58,"y":10,"w":90,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gutschein","fontFamily":"Dancing Script","fontSize":44,"fontWeight":700,"italic":false,"color":"#ff6b81","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Für","x":58,"y":30,"w":90,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Fuer","flipX":false,"flipY":false,"shadow":null,"text":"für {{Fuer}}","fontFamily":"Fredoka","fontSize":20,"fontWeight":500,"italic":false,"color":"#5b3a44","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Gültig","x":58,"y":44,"w":90,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Gueltig","flipX":false,"flipY":false,"shadow":null,"text":"{{Gueltig}}","fontFamily":"Fredoka","fontSize":9,"fontWeight":400,"italic":false,"color":"#8a6a73","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Betrag Kreis","x":148,"y":10,"w":52,"h":52,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ff6b81","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"shape","name":"Betrag Ring","x":150.5,"y":12.5,"w":47,"h":47,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#ffffff","strokeWidth":0.8,"dash":"dotted","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Betrag","x":152,"y":22,"w":44,"h":26,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Betrag}}","fontFamily":"Fredoka","fontSize":30,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"shape","name":"Code Feld","x":58,"y":70,"w":80,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":"#ff6b81","strokeWidth":0.5,"dash":"dashed","radius":7,"startCap":"none","endCap":"none"},
+        {"id":"e10","type":"text","name":"Code","x":60,"y":70,"w":76,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Code","flipX":false,"flipY":false,"shadow":null,"text":"{{Code}}","fontFamily":"Fredoka","fontSize":15,"fontWeight":600,"italic":false,"color":"#5b3a44","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Hinweis","x":148,"y":72,"w":52,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Einlösbar im\nHofladen Wiesengrund","fontFamily":"Fredoka","fontSize":8,"fontWeight":400,"italic":false,"color":"#8a6a73","align":"center","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Betrag":"25 €","Fuer":"Anna","Code":"GS-2027-0042","Gueltig":"Gültig bis 31. Dezember 2027"},
+    {"Betrag":"100 €","Fuer":"Maximiliane Schneider-Hohenstein","Code":"GS-2027-0107","Gueltig":"Gültig bis 30. Juni 2028"},
+    {"Betrag":"Ein Abendessen für zwei Personen","Fuer":"Jo","Code":"GS-2027-0108","Gueltig":""},
+    {"Betrag":"50 €","Fuer":"","Code":"GS-2027-0109","Gueltig":"Gültig bis 31. März 2028"}
+  ]
+}

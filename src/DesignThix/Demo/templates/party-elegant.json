@@ -1,0 +1,39 @@
+{
+  "name": "Party-Einladung – Elegant",
+  "category": "Einladungen",
+  "description": "Festliche Einladung für Cocktailparty, Gala oder Geburtstagsfeier (DIN lang hoch): Gold auf Schwarz mit langem Zierrahmen, Gläsern und Serifenschrift. Der Anlass ist ein Feld.",
+  "family": "party-einladung",
+  "familyName": "Party-Einladung",
+  "variant": "Elegant",
+  "occasion": "Feste & Events",
+  "tags": ["Party","Einladung","Feier","Fest","Geburtstag","Einladungskarte","Feiern","Elegant","Gold","Schwarz","Cocktail","Gala","Festlich","Abend"],
+  "formatKey": "din-lang-portrait",
+  "number": 227,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Anlass","label":"Anlass","type":"text","sample":"Sommerparty","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#14100c","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rahmen","x":5,"y":10.615,"w":89,"h":188.769,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-rahmen-doppellinie-lang-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"icon","name":"Glas links","x":33,"y":24,"w":16,"h":16,"rotation":-14,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"wine","color":"#d4af6a","strokeWidth":1.3},
+        {"id":"e3","type":"icon","name":"Glas rechts","x":50,"y":24,"w":16,"h":16,"rotation":14,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"wine","color":"#d4af6a","strokeWidth":1.3},
+        {"id":"e4","type":"image","name":"Trenner","x":24,"y":66,"w":51,"h":5.1,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-deco-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"image","name":"Trenner unten","x":24,"y":150,"w":51,"h":5.1,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-deco-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"text","name":"Kopf","x":14,"y":50,"w":71,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WIR LADEN EIN ZUR","fontFamily":"Cinzel","fontSize":8.5,"fontWeight":400,"italic":false,"color":"#d4af6a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Anlass","x":12,"y":76,"w":75,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Anlass}}","fontFamily":"Playfair Display","fontSize":30,"fontWeight":600,"italic":true,"color":"#f3e8d0","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Text","x":14,"y":128,"w":71,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ein Abend mit Musik, guten Gesprächen und Champagner.","fontFamily":"Cormorant Garamond","fontSize":12,"fontWeight":600,"italic":true,"color":"#d4af6a","align":"center","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Datum","x":12,"y":160,"w":75,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 19. Juni 2027","fontFamily":"Cinzel","fontSize":11,"fontWeight":400,"italic":false,"color":"#f3e8d0","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.06,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Zeit","x":12,"y":170,"w":75,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 19 Uhr","fontFamily":"Cormorant Garamond","fontSize":13,"fontWeight":600,"italic":false,"color":"#d4af6a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Ort","x":12,"y":179,"w":75,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Cormorant Garamond","fontSize":10.5,"fontWeight":600,"italic":false,"color":"#f3e8d0","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Zusage","x":12,"y":188,"w":75,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"U. A. w. g. bis 5. Juni · 0170 1234567","fontFamily":"Cormorant Garamond","fontSize":9,"fontWeight":600,"italic":true,"color":"#d4af6a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Anlass":"Sommerparty"},
+    {"Anlass":"Garten-Geburtstagsparty"},
+    {"Anlass":"Party"}
+  ]
+}

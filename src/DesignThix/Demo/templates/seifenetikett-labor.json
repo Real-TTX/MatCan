@@ -1,0 +1,44 @@
+{
+  "name": "Seifenetikett – Labor",
+  "category": "Etiketten",
+  "description": "Klares Seifenetikett (70 × 50 mm) im Laborstil: Schwarz auf Weiß, Kopfband, Tabelle für Zutaten, Gewicht und Hersteller in Schreibmaschinenschrift. Alle Angaben sind Felder für eine Datenliste.",
+  "family": "seifenetikett",
+  "familyName": "Seifenetikett",
+  "variant": "Labor",
+  "occasion": "Handel & Preise",
+  "tags": ["Seife","Naturseife","Handseife","Kosmetik","Duft","Etikett","Zutaten","Manufaktur","Wellness","Labor","Schwarz-Weiß","Mono","Minimalistisch","Skandinavisch","Tabelle"],
+  "formatKey": "label-70x50",
+  "number": 433,
+  "document": {
+    "schema":2,"unit":"mm","width":70,"height":50,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Duft oder Sorte","type":"text","sample":"Lavendel & Honig","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"Handgemachte Naturseife","decimals":null,"category":null,"required":false},
+      {"key":"Zutaten","label":"Zutaten","type":"text","sample":"Olivenöl, Kokosöl, Sheabutter, Honig, Lavendelöl","decimals":null,"category":null,"required":false},
+      {"key":"Gewicht","label":"Gewicht","type":"text","sample":"100 g","decimals":null,"category":null,"required":false},
+      {"key":"Hersteller","label":"Hersteller","type":"text","sample":"Seifenmanufaktur Wiesengrund","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen","x":2.4,"y":2.4,"w":65.2,"h":45.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#111111","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Kopfband","x":2.4,"y":2.4,"w":65.2,"h":8.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#111111","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Kopf","x":5,"y":2.4,"w":30,"h":8.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"NATURSEIFE","fontFamily":"IBM Plex Mono","fontSize":8,"fontWeight":700,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Nr","x":40,"y":2.4,"w":25.6,"h":8.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Gewicht}}","fontFamily":"IBM Plex Mono","fontSize":8,"fontWeight":700,"italic":false,"color":"#ffffff","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Produkt","x":5,"y":12.4,"w":60,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Josefin Sans","fontSize":17,"fontWeight":600,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0.06,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Zusatz","x":5,"y":23.4,"w":60,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"IBM Plex Mono","fontSize":7,"fontWeight":400,"italic":false,"color":"#555555","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Linie 1","x":2.4,"y":28.6,"w":65.2,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#111111","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Zutaten Titel","x":5,"y":29.4,"w":14,"h":3.8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Inhalt","fontFamily":"IBM Plex Mono","fontSize":7,"fontWeight":700,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zutaten","x":18,"y":29.6,"w":48,"h":10.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zutaten","flipX":false,"flipY":false,"shadow":null,"text":"{{Zutaten}}","fontFamily":"IBM Plex Mono","fontSize":7,"fontWeight":400,"italic":false,"color":"#333333","align":"left","valign":"top","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"shape","name":"Linie 2","x":2.4,"y":40.6,"w":65.2,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#111111","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"text","name":"Hersteller Titel","x":5,"y":41.6,"w":14,"h":4.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Von","fontFamily":"IBM Plex Mono","fontSize":7,"fontWeight":700,"italic":false,"color":"#111111","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Hersteller","x":18,"y":41.6,"w":48,"h":4.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Hersteller","flipX":false,"flipY":false,"shadow":null,"text":"{{Hersteller}}","fontFamily":"IBM Plex Mono","fontSize":7,"fontWeight":400,"italic":false,"color":"#333333","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Lavendel & Honig","Zusatz":"Handgemachte Naturseife","Zutaten":"Olivenöl, Kokosöl, Sheabutter, Honig, Lavendelöl","Gewicht":"100 g","Hersteller":"Seifenmanufaktur Wiesengrund"},
+    {"Produkt":"Orange, Zimt und Nelke","Zusatz":"Handgemachte Peelingseife mit Mohn","Zutaten":"Sonnenblumenöl, Kokosöl, Sheabutter, Mohn, Orangenöl, Zimt, Nelke, Kaolin","Gewicht":"120 g","Hersteller":"Seifenmanufaktur Wiesengrund"},
+    {"Produkt":"Pur","Zusatz":"ohne Duft","Zutaten":"Olivenöl, Kokosöl","Gewicht":"90 g","Hersteller":""},
+    {"Produkt":"Rose","Zusatz":"","Zutaten":"","Gewicht":"100 g","Hersteller":"Seifenmanufaktur Wiesengrund"}
+  ]
+}

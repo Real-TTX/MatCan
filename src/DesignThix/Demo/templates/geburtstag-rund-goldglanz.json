@@ -1,0 +1,45 @@
+{
+  "name": "Runder Geburtstag A6 – Goldglanz",
+  "category": "Karten",
+  "description": "Festliche Karte zum runden Geburtstag in Schwarz und Gold: Zahl in Antiqua (Feld „Alter“), Goldrahmen, Sternenfunkeln und Name in Schreibschrift. Innen dunkel mit goldener Schrift.",
+  "family": "geburtstag-rund",
+  "familyName": "Runder Geburtstag (30, 40, 50, 60)",
+  "variant": "Goldglanz",
+  "occasion": "Geburtstag",
+  "tags": ["Geburtstag","runder Geburtstag","Gold","schwarz","elegant","50","60","40","festlich","Karte","Zahl"],
+  "formatKey": "a6-portrait",
+  "number": 107,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Alter","label":"Alter","type":"text","sample":"50","decimals":null,"category":null,"required":false},
+      {"key":"Name","label":"Name","type":"text","sample":"Anna","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#14130f","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Himmel","x":0,"y":30,"w":105,"h":105,"rotation":0,"opacity":0.22,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-himmel-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Rahmen","x":4,"y":5.421,"w":97,"h":137.158,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-rahmen-doppellinie-hoch-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Glückwunsch","x":12.5,"y":20,"w":80,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Herzlichen Glückwunsch","fontFamily":"Cormorant Garamond","fontSize":17,"fontWeight":500,"italic":true,"color":"#efe0b6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Zahl","x":9.5,"y":32,"w":86,"h":62,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Alter}}","fontFamily":"Abril Fatface","fontSize":140,"fontWeight":400,"italic":false,"color":"#d8b25a","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":70,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Trenner links","x":29.5,"y":99,"w":18,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d8b25a","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"shape","name":"Trenner rechts","x":57.5,"y":99,"w":18,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d8b25a","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"shape","name":"Trenner Raute","x":51.6,"y":98.1,"w":1.8,"h":1.8,"rotation":45,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d8b25a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"zum Geburtstag","x":12.5,"y":104,"w":80,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"zum Geburtstag","fontFamily":"Cinzel","fontSize":11,"fontWeight":500,"italic":false,"color":"#d8b25a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.25,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Name","x":12.5,"y":116,"w":80,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Great Vibes","fontSize":28,"fontWeight":400,"italic":false,"color":"#efe0b6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#14130f","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e10","type":"image","name":"Ecke","x":6,"y":6,"w":30,"h":30,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-ecken-sterne-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e11","type":"text","name":"Anrede","x":15,"y":44,"w":75,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe {{Name}},","fontFamily":"Cormorant Garamond","fontSize":20,"fontWeight":600,"italic":true,"color":"#d8b25a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Text","x":15,"y":58,"w":75,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Jahre sind wie Wein: Mit der Zeit werden sie wertvoller. Ich wünsche dir einen glänzenden Geburtstag und alles, was dein Herz begehrt.","fontFamily":"Cormorant Garamond","fontSize":13.5,"fontWeight":500,"italic":false,"color":"#efe0b6","align":"left","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Gruß","x":15,"y":112,"w":75,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dein Max","fontFamily":"Cormorant Garamond","fontSize":16,"fontWeight":600,"italic":true,"color":"#d8b25a","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"shape","name":"Linie","x":15,"y":126,"w":75,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d8b25a","strokeWidth":0.25,"dash":"solid","radius":0,"startCap":"none","endCap":"none"}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Alter":"50","Name":"Anna"},
+    {"Alter":"30","Name":"Maximiliane"},
+    {"Alter":"60","Name":"Jürgen"},
+    {"Alter":"40","Name":"Lu"}
+  ]
+}

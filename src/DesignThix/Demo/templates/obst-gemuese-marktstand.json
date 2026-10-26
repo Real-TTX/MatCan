@@ -1,0 +1,43 @@
+{
+  "name": "Obst & Gemüse – Preisschild Marktstand",
+  "category": "Etiketten",
+  "description": "Preisschild im Marktstand-Stil (100 × 70 mm): Kraftpapier-Optik, Produktname in handgezeichneter Schrift, Herkunft und Siegel und eine rote Zackenscheibe für den Preis. Alle Angaben sind Felder für eine Datenliste.",
+  "family": "preisschild-obst-gemuese",
+  "familyName": "Preisschild Obst & Gemüse",
+  "variant": "Marktstand",
+  "occasion": "Handel & Preise",
+  "tags": ["Preisschild","Obst","Gemüse","Markt","Hofladen","Preis","Etikett","Herkunft","Marktstand","Handschrift","Kraftpapier","Rustikal","Wochenmarkt","Angebot"],
+  "formatKey": "label-100x70",
+  "number": 404,
+  "document": {
+    "schema":2,"unit":"mm","width":100,"height":70,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Erdbeeren","decimals":null,"category":null,"required":true},
+      {"key":"Land","label":"Herkunftsland","type":"image","sample":"flag-de","decimals":null,"category":"Flaggen","required":false},
+      {"key":"Siegel","label":"Siegel","type":"image","sample":"icon-bio","decimals":null,"category":"Siegel","required":false},
+      {"key":"Klasse","label":"Klasse","type":"text","sample":"Klasse I","decimals":null,"category":null,"required":false},
+      {"key":"Herkunft","label":"Herkunft","type":"text","sample":"Region Oberrhein","decimals":null,"category":null,"required":false},
+      {"key":"Preis","label":"Preis","type":"price","sample":"3.49","decimals":2,"category":null,"required":true},
+      {"key":"Einheit","label":"Einheit","type":"text","sample":"/ 500 g","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ead9b9","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rand","x":2.5,"y":2.5,"w":95,"h":65,"rotation":0,"opacity":0.55,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3b2a1a","strokeWidth":0.5,"dash":"dashed","radius":2,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Name","x":7,"y":6,"w":62,"h":25,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Amatic SC","fontSize":50,"fontWeight":700,"italic":false,"color":"#3b2a1a","align":"left","valign":"bottom","lineHeight":0.95,"letterSpacing":0,"uppercase":true,"wrap":true,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Herkunft","x":7,"y":33.2,"w":48,"h":6.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Herkunft","flipX":false,"flipY":false,"shadow":null,"text":"aus {{Herkunft}}","fontFamily":"Patrick Hand","fontSize":12,"fontWeight":400,"italic":false,"color":"#7a4a1a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Klasse","x":7,"y":41.5,"w":40,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Klasse","flipX":false,"flipY":false,"shadow":null,"text":"{{Klasse}}","fontFamily":"Patrick Hand","fontSize":11,"fontWeight":400,"italic":false,"color":"#3b2a1a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Strich","x":7,"y":50.4,"w":43,"h":0,"rotation":0,"opacity":0.5,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3b2a1a","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"imageStrip","name":"Land und Siegel","x":7,"y":53,"w":46,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"items":[{"field":"Land"},{"field":"Siegel"}],"gap":2.5,"align":"left","mask":"none","border":null},
+        {"id":"e7","type":"image","name":"Zackenscheibe","x":56,"y":26,"w":38,"h":38.367,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-baender-starburst-bordeaux"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e8","type":"text","name":"Preis","x":60,"y":36,"w":30,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Preis}}","fontFamily":"Amatic SC","fontSize":38,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Euro Einheit","x":61,"y":48.4,"w":28,"h":5.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"€ {{Einheit}}","fontFamily":"Patrick Hand","fontSize":11,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Erdbeeren","Land":"flag-de","Siegel":"icon-bio","Klasse":"Klasse I","Herkunft":"Region Oberrhein","Preis":"3.49","Einheit":"/ 500 g"},
+    {"Name":"Kirschtomaten","Land":"flag-es","Siegel":"","Klasse":"Klasse I","Herkunft":"Almería","Preis":"2.99","Einheit":"/ 250 g"},
+    {"Name":"Bio-Äpfel Elstar","Land":"flag-de","Siegel":"icon-bio","Klasse":"Klasse I","Herkunft":"Bodensee","Preis":"2.79","Einheit":"/ kg"},
+    {"Name":"Zitronen Primofiori","Land":"flag-it","Siegel":"","Klasse":"","Herkunft":"Sizilien","Preis":"12.90","Einheit":"/ kg"}
+  ]
+}

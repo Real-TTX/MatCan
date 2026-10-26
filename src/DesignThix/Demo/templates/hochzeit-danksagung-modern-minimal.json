@@ -1,0 +1,33 @@
+{
+  "name": "Hochzeit Danksagung – Modern Minimal",
+  "category": "Karten",
+  "description": "Danksagungskarte nach der Hochzeit im Format DIN lang quer: „Danke.“ in großer Kursivschrift neben einem Foto vom Hochzeitstag, die Rückseite mit dem Dank an die Gäste in klaren Spalten.",
+  "family": "hochzeit-danksagung",
+  "familyName": "Hochzeit: Danksagung",
+  "variant": "Modern Minimal",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Danksagung","Danke","Dankeskarte","DIN lang","minimalistisch","modern","Foto","schlicht","Gäste"],
+  "formatKey": "din-lang-landscape",
+  "number": 165,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":99,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Foto Grund","x":120,"y":0,"w":90,"h":99,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#efe5dc","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"image","name":"Foto","x":120,"y":0,"w":90,"h":99,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Danke","x":12,"y":14,"w":104,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danke.","fontFamily":"Cormorant Garamond","fontSize":74,"fontWeight":400,"italic":true,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Linie","x":14,"y":74,"w":12,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#b5836a","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Namen","x":14,"y":79,"w":100,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ANNA & JONAS · 12.06.2027","fontFamily":"Josefin Sans","fontSize":7,"fontWeight":600,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e6","type":"text","name":"Titel","x":14,"y":14,"w":80,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Von Herzen.","fontFamily":"Cormorant Garamond","fontSize":24,"fontWeight":400,"italic":true,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Linie","x":14,"y":32,"w":12,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#b5836a","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Text","x":14,"y":40,"w":110,"h":36,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ihr habt unseren Hochzeitstag zu dem schönsten Tag unseres Lebens gemacht. Für eure Glückwünsche, Geschenke und die vielen schönen Stunden danken wir euch von ganzem Herzen.","fontFamily":"Josefin Sans","fontSize":9.5,"fontWeight":400,"italic":false,"color":"#1d1d1b","align":"left","valign":"top","lineHeight":1.7,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Gruß","x":14,"y":84,"w":100,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ANNA & JONAS","fontFamily":"Josefin Sans","fontSize":8,"fontWeight":600,"italic":false,"color":"#b5836a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.34,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"shape","name":"Sandfläche","x":150,"y":0,"w":60,"h":99,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#efe5dc","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"text","name":"Zitat","x":156,"y":30,"w":48,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ein Tag, den wir\nnie vergessen.","fontFamily":"Cormorant Garamond","fontSize":14,"fontWeight":400,"italic":true,"color":"#1d1d1b","align":"left","valign":"top","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

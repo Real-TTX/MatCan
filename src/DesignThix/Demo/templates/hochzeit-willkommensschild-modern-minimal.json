@@ -1,0 +1,30 @@
+{
+  "name": "Hochzeit Willkommensschild – Modern Minimal",
+  "category": "Karten",
+  "description": "Willkommensplakat A3 für den Eingang der Hochzeitsfeier: „Willkommen.“ in riesiger Kursivschrift, linksbündig, mit einem sandfarbenen Block für Namen, Datum und Ort. Zum Ausdrucken, Rahmen oder Aufstellen am Eingang.",
+  "family": "hochzeit-willkommensschild",
+  "familyName": "Hochzeit: Willkommensschild",
+  "variant": "Modern Minimal",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Willkommensschild","Willkommen","Plakat","Poster","A3","minimalistisch","modern","Typografie","Eingang"],
+  "formatKey": "poster-a3-portrait",
+  "number": 168,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":420,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Willkommensschild","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Block","x":0,"y":262,"w":297,"h":158,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#efe5dc","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Herzlich","x":24,"y":36,"w":200,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"HERZLICH","fontFamily":"Josefin Sans","fontSize":22,"fontWeight":600,"italic":false,"color":"#b5836a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.5,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Will","x":20,"y":54,"w":270,"h":90,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Will-","fontFamily":"Cormorant Garamond","fontSize":150,"fontWeight":400,"italic":true,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":60,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"kommen","x":20,"y":134,"w":270,"h":90,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"kommen.","fontFamily":"Cormorant Garamond","fontSize":150,"fontWeight":400,"italic":true,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":60,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Linie","x":24,"y":252,"w":30,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#b5836a","strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Zur Hochzeit","x":24,"y":280,"w":120,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ZUR HOCHZEIT VON","fontFamily":"Josefin Sans","fontSize":14,"fontWeight":400,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Namen","x":24,"y":292,"w":260,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Cormorant Garamond","fontSize":64,"fontWeight":400,"italic":true,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Datum","x":24,"y":344,"w":260,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SAMSTAG, 12. JUNI 2027","fontFamily":"Josefin Sans","fontSize":18,"fontWeight":600,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Ort","x":24,"y":358,"w":260,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GUT BIRKENHOF · MUSTERSTADT","fontFamily":"Josefin Sans","fontSize":14,"fontWeight":400,"italic":false,"color":"#b5836a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Schön","x":24,"y":384,"w":260,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Schön, dass ihr dabei seid.","fontFamily":"Cormorant Garamond","fontSize":24,"fontWeight":400,"italic":true,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

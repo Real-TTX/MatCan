@@ -1,0 +1,41 @@
+{
+  "name": "Kerzenetikett – Boho",
+  "category": "Etiketten",
+  "description": "Warmes Boho-Kerzenetikett (100 × 70 mm): Sandton, Rosé-Bogen mit Flamme, Duft in Schreibschrift, Zusatz, Brenndauer, Gewicht und Sicherheitshinweis. Alle Angaben sind Felder für eine Datenliste.",
+  "family": "kerzenetikett",
+  "familyName": "Kerzenetikett",
+  "variant": "Boho",
+  "occasion": "Handel & Preise",
+  "tags": ["Kerze","Duftkerze","Sojawachs","Kerzenglas","Etikett","Brenndauer","Warnhinweis","Manufaktur","Wohnen","Boho","Rosé","Sand","Bogen","Schreibschrift","Natürlich","Warm"],
+  "formatKey": "label-100x70",
+  "number": 436,
+  "document": {
+    "schema":2,"unit":"mm","width":100,"height":70,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Duft","type":"text","sample":"Vanille & Zimt","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"Duftkerze aus Sojawachs","decimals":null,"category":null,"required":false},
+      {"key":"Brenndauer","label":"Brenndauer","type":"text","sample":"ca. 40 Stunden","decimals":null,"category":null,"required":false},
+      {"key":"Gewicht","label":"Gewicht","type":"text","sample":"180 g","decimals":null,"category":null,"required":false},
+      {"key":"Hersteller","label":"Hersteller","type":"text","sample":"Kerzenmanufaktur Wiesengrund","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f3e6d6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Bogen","x":7,"y":8,"w":30,"h":39.53,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-bogen-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"icon","name":"Flamme","x":17,"y":23,"w":10,"h":10,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"flame","color":"#ffffff","strokeWidth":1.4},
+        {"id":"e3","type":"text","name":"Produkt","x":44,"y":8,"w":50,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Parisienne","fontSize":25,"fontWeight":400,"italic":false,"color":"#4a2a1d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Zusatz","x":44,"y":31.2,"w":50,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Lora","fontSize":8.5,"fontWeight":400,"italic":true,"color":"#7a5a46","align":"left","valign":"top","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Linie","x":44,"y":39.4,"w":49,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#b8613f","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Brenndauer","x":44,"y":41,"w":50,"h":4.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Brenndauer","flipX":false,"flipY":false,"shadow":null,"text":"{{Brenndauer}}","fontFamily":"Montserrat","fontSize":7.5,"fontWeight":700,"italic":false,"color":"#b8613f","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Gewicht","x":44,"y":45.6,"w":50,"h":4.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Inhalt {{Gewicht}}","fontFamily":"Montserrat","fontSize":7.5,"fontWeight":600,"italic":false,"color":"#4a2a1d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Hersteller","x":44,"y":50.2,"w":50,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Hersteller","flipX":false,"flipY":false,"shadow":null,"text":"{{Hersteller}}","fontFamily":"Montserrat","fontSize":7,"fontWeight":500,"italic":false,"color":"#7a5a46","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Hinweis","x":8,"y":57,"w":86,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Nie unbeaufsichtigt brennen lassen. Von Kindern und Haustieren fernhalten. Docht vor dem Anzünden auf 5 mm kürzen.","fontFamily":"Montserrat","fontSize":7,"fontWeight":400,"italic":false,"color":"#7a5a46","align":"left","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Vanille & Zimt","Zusatz":"Duftkerze aus Sojawachs","Brenndauer":"ca. 40 Stunden","Gewicht":"180 g","Hersteller":"Kerzenmanufaktur Wiesengrund"},
+    {"Produkt":"Wintermärchen: Tannennadel, Orange und Gewürznelke","Zusatz":"Handgegossene Duftkerze aus nachhaltigem Sojawachs im Glas","Brenndauer":"ca. 60 Stunden","Gewicht":"300 g","Hersteller":"Kerzenmanufaktur Wiesengrund"},
+    {"Produkt":"Meeresbrise","Zusatz":"Duftkerze","Brenndauer":"ca. 25 Stunden","Gewicht":"110 g","Hersteller":""},
+    {"Produkt":"Zeder","Zusatz":"","Brenndauer":"","Gewicht":"180 g","Hersteller":"Kerzenmanufaktur Wiesengrund"}
+  ]
+}

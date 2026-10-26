@@ -1,0 +1,29 @@
+{
+  "name": "Poster A3 – Typo Zeilen",
+  "category": "Poster",
+  "description": "Redaktionelles A3-Schriftplakat für Lesung, Buchmesse oder Bibliotheksnacht: gestapelte Zeilen in Playfair und Inter, die das Format füllen, ein roter Akzent und Informationen in einer schmalen Fußzeile.",
+  "family": "plakat-typo",
+  "familyName": "Typo-Plakat",
+  "variant": "Zeilen",
+  "occasion": "Feste & Events",
+  "tags": ["Plakat","Poster","Typografie","Lesung","Buchmesse","Bibliothek","Schriftplakat","Zeilen","Redaktionell","Schwarz-Weiß"],
+  "formatKey": "poster-a3-portrait",
+  "number": 362,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":420,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fbfaf7","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"text","name":"Zeile 1","x":20,"y":20,"w":257,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Die lange","fontFamily":"Playfair Display","fontSize":78,"fontWeight":400,"italic":true,"color":"#161616","align":"left","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e2","type":"text","name":"Zeile 2","x":14,"y":52,"w":269,"h":78,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"NACHT","fontFamily":"Inter","fontSize":190,"fontWeight":900,"italic":false,"color":"#161616","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":60,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Zeile 3","x":20,"y":134,"w":257,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"der","fontFamily":"Playfair Display","fontSize":78,"fontWeight":400,"italic":true,"color":"#d7263d","align":"left","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Zeile 4","x":14,"y":160,"w":269,"h":80,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"BÜCHER","fontFamily":"Inter","fontSize":110,"fontWeight":900,"italic":false,"color":"#161616","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Balken","x":20,"y":250,"w":257,"h":4,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d7263d","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Info 1","x":20,"y":262,"w":120,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"27. September\n18 bis 24 Uhr\nStadtbibliothek\nMarktplatz 3","fontFamily":"Inter","fontSize":22,"fontWeight":700,"italic":false,"color":"#161616","align":"left","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Info 2","x":152,"y":262,"w":125,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Lesungen, Bücherflohmarkt,\nSchreibwerkstatt und\nSuppe um Mitternacht.","fontFamily":"Playfair Display","fontSize":20,"fontWeight":400,"italic":true,"color":"#161616","align":"left","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"shape","name":"Linie","x":20,"y":372,"w":257,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#161616","strokeWidth":0.6,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Fuß","x":20,"y":378,"w":257,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eintritt frei  ·  www.beispiel.de  ·  Ein Abend der Stadtbibliothek Musterstadt","fontFamily":"Inter","fontSize":12,"fontWeight":600,"italic":false,"color":"#161616","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

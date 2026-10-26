@@ -1,0 +1,39 @@
+{
+  "name": "Instagram-Story – Angebot mit Foto und Welle",
+  "category": "Social Media",
+  "description": "Angebot als Story (1080 × 1920 px): großes Fotofeld oben, eine marineblaue Welle als Übergang, darunter Produkt, Preis in Gelb, Zeitraum und Hinweis. Produkt, Preis, Einheit und Zeitraum sind Felder.",
+  "family": "instagram-story-angebot",
+  "familyName": "Instagram-Story Angebot",
+  "variant": "Foto & Welle",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Story","Angebot","Preis","Aktion","Rabatt","Social Media","Hochformat","Sale","Foto","Welle","Marineblau","Gelb","Café","Hofladen","Produktfoto"],
+  "formatKey": "instagram-story",
+  "number": 462,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1920,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Produkt","type":"text","sample":"Frische Erdbeeren","decimals":null,"category":null,"required":true},
+      {"key":"Preis","label":"Preis","type":"text","sample":"2,99 €","decimals":null,"category":null,"required":false},
+      {"key":"Einheit","label":"Einheit","type":"text","sample":"pro Schale (500 g)","decimals":null,"category":null,"required":false},
+      {"key":"Rabatt","label":"Rabatt","type":"text","sample":"−30 %","decimals":null,"category":null,"required":false},
+      {"key":"Zeitraum","label":"Zeitraum","type":"text","sample":"Nur heute und morgen","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#16264f","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Foto Hintergrund","x":0,"y":0,"w":1080,"h":1180,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#8fa6d4","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"icon","name":"Foto Symbol","x":440,"y":560,"w":200,"h":200,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"image","color":"#6d86bd","strokeWidth":1.2},
+        {"id":"e3","type":"image","name":"Foto","x":0,"y":0,"w":1080,"h":1180,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"image","name":"Welle","x":0,"y":1010,"w":1080,"h":244.413,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-wellenrand-navy"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Produkt","x":90,"y":1240,"w":900,"h":190,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Poppins","fontSize":56,"fontWeight":800,"italic":false,"color":"#ffffff","align":"left","valign":"top","lineHeight":1.08,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":26,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Preis","x":90,"y":1440,"w":560,"h":200,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Preis}}","fontFamily":"Anton","fontSize":150,"fontWeight":400,"italic":false,"color":"#ffd23f","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":60,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Einheit","x":90,"y":1618,"w":600,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Einheit","flipX":false,"flipY":false,"shadow":null,"text":"{{Einheit}}","fontFamily":"Montserrat","fontSize":21,"fontWeight":600,"italic":false,"color":"#c9d4f0","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zeitraum","x":640,"y":1470,"w":350,"h":140,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zeitraum","flipX":false,"flipY":false,"shadow":null,"text":"{{Zeitraum}}","fontFamily":"Montserrat","fontSize":20,"fontWeight":700,"italic":false,"color":"#16264f","align":"center","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":{"color":"#ffffff","radius":24,"padding":26},"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Frische Erdbeeren","Preis":"2,99 €","Einheit":"pro Schale (500 g)","Rabatt":"−30 %","Zeitraum":"Nur heute und morgen"},
+    {"Produkt":"Hausgemachte Marmelade im Dreierpack","Preis":"11,50 €","Einheit":"statt 14,90 €","Rabatt":"−25 %","Zeitraum":"Solange der Vorrat reicht"},
+    {"Produkt":"Eier","Preis":"3,20 €","Einheit":"","Rabatt":"","Zeitraum":""}
+  ]
+}

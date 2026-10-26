@@ -1,0 +1,40 @@
+{
+  "name": "Honigetikett – Blumenwiese",
+  "category": "Etiketten",
+  "description": "Helles Honigetikett (70 × 50 mm) mit Blumenwiese am unteren Rand: Sorte in Handschrift, Zusatz, Imkerei, Gewicht und Mindesthaltbarkeit. Alle Angaben sind Felder für eine Datenliste.",
+  "family": "honigetikett",
+  "familyName": "Honigetikett",
+  "variant": "Blumenwiese",
+  "occasion": "Handel & Preise",
+  "tags": ["Honig","Imker","Imkerei","Honigglas","Etikett","Hofladen","Biene","Glas","Sorte","Blumenwiese","Natur","Handschrift","Wiese","Bio","Regional","Hell"],
+  "formatKey": "label-70x50",
+  "number": 438,
+  "document": {
+    "schema":2,"unit":"mm","width":70,"height":50,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Sorte","label":"Sorte","type":"text","sample":"Waldhonig","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"cremig, aus der Region","decimals":null,"category":null,"required":false},
+      {"key":"Gewicht","label":"Gewicht","type":"text","sample":"500 g","decimals":null,"category":null,"required":false},
+      {"key":"Imker","label":"Imkerei","type":"text","sample":"Imkerei Sonnenhang","decimals":null,"category":null,"required":false},
+      {"key":"MHD","label":"Mindestens haltbar bis","type":"text","sample":"MHD 12/2028","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fffdf3","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Wiese","x":0,"y":25.4,"w":70,"h":24.714,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-wiese"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Kopf","x":5,"y":4.6,"w":60,"h":3.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Honig aus der Region","fontFamily":"Montserrat","fontSize":7,"fontWeight":600,"italic":false,"color":"#3f6b2c","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Sorte","x":4,"y":8.4,"w":62,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Sorte}}","fontFamily":"Caveat","fontSize":32,"fontWeight":700,"italic":false,"color":"#3a2a0e","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":13,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Zusatz","x":5,"y":20.2,"w":60,"h":4.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Lora","fontSize":8,"fontWeight":400,"italic":true,"color":"#6b5a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Fußband","x":0,"y":40,"w":70,"h":10,"rotation":0,"opacity":0.88,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#fffdf3","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Gewicht","x":5,"y":41.4,"w":16,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Gewicht}}","fontFamily":"Montserrat","fontSize":10,"fontWeight":800,"italic":false,"color":"#3a2a0e","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Imker","x":21,"y":40.8,"w":44,"h":4.2,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Imker","flipX":false,"flipY":false,"shadow":null,"text":"{{Imker}}","fontFamily":"Montserrat","fontSize":7,"fontWeight":700,"italic":false,"color":"#3f6b2c","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"MHD","x":21,"y":45,"w":44,"h":3.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"MHD","flipX":false,"flipY":false,"shadow":null,"text":"{{MHD}}","fontFamily":"Montserrat","fontSize":7,"fontWeight":500,"italic":false,"color":"#6b5a3a","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Sorte":"Waldhonig","Zusatz":"cremig, aus der Region","Gewicht":"500 g","Imker":"Imkerei Sonnenhang","MHD":"MHD 12/2028"},
+    {"Sorte":"Frühlingsblütenhonig","Zusatz":"fein cremig, Raps und Obstblüte, aus eigener Imkerei","Gewicht":"250 g","Imker":"Imkerei Familie Mustermann-Schneider","MHD":"MHD 06/2028"},
+    {"Sorte":"Linde","Zusatz":"flüssig","Gewicht":"1 kg","Imker":"Imkerei Sonnenhang","MHD":""},
+    {"Sorte":"Akazie","Zusatz":"","Gewicht":"125 g","Imker":"","MHD":"MHD 03/2029"}
+  ]
+}

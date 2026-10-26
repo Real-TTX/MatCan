@@ -1,0 +1,48 @@
+{
+  "name": "Visitenkarte minimal (2 Seiten)",
+  "category": "Karten",
+  "description": "Minimalistische Visitenkarte (85 × 55 mm): vorne viel Weiß mit Name, Funktion und Kontakt in zwei ruhigen Spalten, hinten eine volle Farbfläche mit Logo. Alle Angaben sind Felder, die Farbe änderst du mit einem Klick.",
+  "family": "visitenkarte",
+  "familyName": "Visitenkarte",
+  "variant": "Minimal",
+  "occasion": "Business",
+  "tags": ["Visitenkarte","Kontakt","Firma","Logo","Business","Netzwerk","Minimal","Reduziert","Modern","Design","Agentur","Studio","Weiß"],
+  "formatKey": "business-card",
+  "number": 401,
+  "document": {
+    "schema":2,"unit":"mm","width":85,"height":55,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Anna Beispiel","decimals":null,"category":null,"required":true},
+      {"key":"Rolle","label":"Funktion","type":"text","sample":"Geschäftsführung","decimals":null,"category":null,"required":false},
+      {"key":"Firma","label":"Firma","type":"text","sample":"Hofladen Wiesengrund","decimals":null,"category":null,"required":false},
+      {"key":"Telefon","label":"Telefon","type":"text","sample":"+49 123 456 789","decimals":null,"category":null,"required":false},
+      {"key":"Mail","label":"E-Mail","type":"text","sample":"anna@wiesengrund.example","decimals":null,"category":null,"required":false},
+      {"key":"Web","label":"Internet","type":"text","sample":"www.wiesengrund.example","decimals":null,"category":null,"required":false},
+      {"key":"Adresse","label":"Adresse","type":"multiline","sample":"Dorfstraße 12\n12345 Musterstadt","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Akzent","x":8,"y":8,"w":6,"h":1.1,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ff4f1f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Name","x":8,"y":12,"w":69,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Inter","fontSize":15,"fontWeight":700,"italic":false,"color":"#16161a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Funktion","x":8,"y":19.4,"w":69,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Rolle","flipX":false,"flipY":false,"shadow":null,"text":"{{Rolle}}","fontFamily":"Inter","fontSize":8,"fontWeight":400,"italic":false,"color":"#6d6d72","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Firma","x":8,"y":33.6,"w":36,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Firma","flipX":false,"flipY":false,"shadow":null,"text":"{{Firma}}","fontFamily":"Inter","fontSize":7,"fontWeight":700,"italic":false,"color":"#16161a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Telefon","x":8,"y":38.2,"w":38,"h":3.8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Telefon","flipX":false,"flipY":false,"shadow":null,"text":"{{Telefon}}","fontFamily":"Inter","fontSize":7,"fontWeight":400,"italic":false,"color":"#6d6d72","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"E-Mail","x":8,"y":42,"w":38,"h":3.8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Mail","flipX":false,"flipY":false,"shadow":null,"text":"{{Mail}}","fontFamily":"Inter","fontSize":7,"fontWeight":400,"italic":false,"color":"#6d6d72","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Internet","x":8,"y":45.8,"w":38,"h":3.8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Web","flipX":false,"flipY":false,"shadow":null,"text":"{{Web}}","fontFamily":"Inter","fontSize":7,"fontWeight":400,"italic":false,"color":"#6d6d72","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Adresse","x":50,"y":38.2,"w":27,"h":11.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Adresse","flipX":false,"flipY":false,"shadow":null,"text":"{{Adresse}}","fontFamily":"Inter","fontSize":7,"fontWeight":400,"italic":false,"color":"#6d6d72","align":"left","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#ff4f1f","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e9","type":"shape","name":"Logo Kachel","x":34.5,"y":12.5,"w":16,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":2,"startCap":"none","endCap":"none"},
+        {"id":"e10","type":"icon","name":"Logo Symbol","x":38.5,"y":16.5,"w":8,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"sparkles","color":"#ff4f1f","strokeWidth":1.8},
+        {"id":"e11","type":"image","name":"Logo","x":34.5,"y":12.5,"w":16,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":2,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"rounded","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e12","type":"text","name":"Firma","x":8,"y":32.5,"w":69,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Firma","flipX":false,"flipY":false,"shadow":null,"text":"{{Firma}}","fontFamily":"Inter","fontSize":11,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Internet","x":8,"y":39.6,"w":69,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Web","flipX":false,"flipY":false,"shadow":null,"text":"{{Web}}","fontFamily":"Inter","fontSize":7,"fontWeight":500,"italic":false,"color":"#ffe3d9","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Anna Beispiel","Rolle":"Geschäftsführung","Firma":"Hofladen Wiesengrund","Telefon":"+49 123 456 789","Mail":"anna@wiesengrund.example","Web":"www.wiesengrund.example","Adresse":"Dorfstraße 12\n12345 Musterstadt"},
+    {"Name":"Prof. Dr. Maximilian Mustermann-Schneider","Rolle":"Leitung Einkauf und Qualitätssicherung","Firma":"Hofladen Wiesengrund","Telefon":"+49 123 456 780","Mail":"m.mustermann-schneider@wiesengrund.example","Web":"www.wiesengrund.example","Adresse":"Dorfstraße 12\n12345 Musterstadt"},
+    {"Name":"Jo Beispiel","Rolle":"","Firma":"Hofladen Wiesengrund","Telefon":"","Mail":"jo@wiesengrund.example","Web":"","Adresse":""}
+  ]
+}

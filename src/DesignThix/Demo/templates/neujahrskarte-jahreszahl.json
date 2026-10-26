@@ -1,0 +1,32 @@
+{
+  "name": "Neujahrskarte A6 quer – Jahreszahl",
+  "category": "Karten",
+  "description": "Plakative Neujahrskarte im Format A6 quer: die Jahreszahl 2027 in riesigen Ziffern auf Schwarz mit gelbem Konfettiband und „Happy New Year“ in schlanker Schrift. Innen schlicht in Schwarz und Weiß.",
+  "family": "neujahrskarte",
+  "familyName": "Neujahrskarte",
+  "variant": "Jahreszahl",
+  "occasion": "Feiertage",
+  "tags": ["Neujahr","Silvester","2027","Happy New Year","modern","Typografie","schwarz","gelb","Neujahrskarte","Karte"],
+  "formatKey": "a6-landscape",
+  "number": 129,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#141414","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Band","x":0,"y":80,"w":148,"h":25,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffd23f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"image","name":"Konfetti","x":70,"y":0,"w":78,"h":78,"rotation":0,"opacity":0.5,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-streuung-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Zahl","x":5,"y":6,"w":138,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"2027","fontFamily":"Anton","fontSize":126,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0.02,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":50,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Zeile","x":14,"y":85,"w":120,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Happy New Year","fontFamily":"Montserrat","fontSize":14,"fontWeight":800,"italic":false,"color":"#141414","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Zeile 2","x":14,"y":94,"w":120,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Auf ein gutes Jahr","fontFamily":"Montserrat","fontSize":7,"fontWeight":500,"italic":false,"color":"#141414","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e6","type":"text","name":"Zahl","x":12,"y":8,"w":60,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"2027","fontFamily":"Anton","fontSize":50,"fontWeight":400,"italic":false,"color":"#ffd23f","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Balken","x":12,"y":36,"w":20,"h":1.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#141414","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Anrede","x":12,"y":44,"w":124,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Hallo Jana,","fontFamily":"Montserrat","fontSize":14,"fontWeight":800,"italic":false,"color":"#141414","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Text","x":12,"y":56,"w":124,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ein neues Jahr, neue Pläne, neue Chancen. Ich wünsche dir, dass sich möglichst viele deiner Vorsätze erfüllen – und die anderen vergisst du einfach.","fontFamily":"Montserrat","fontSize":9.5,"fontWeight":400,"italic":false,"color":"#141414","align":"left","valign":"top","lineHeight":1.55,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Gruß","x":12,"y":90,"w":124,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Prost, dein Ben","fontFamily":"Montserrat","fontSize":10,"fontWeight":700,"italic":false,"color":"#141414","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

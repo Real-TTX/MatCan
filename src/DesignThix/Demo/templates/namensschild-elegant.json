@@ -1,0 +1,36 @@
+{
+  "name": "Namensschild – Elegant",
+  "category": "Business",
+  "description": "Elegantes Namensschild (90 × 55 mm) für Empfänge, Vereinsfeiern und Jubiläen: Elfenbein, Goldrahmen und Schnörkel, Name in Antiqua, darunter Firma und Rolle in Kapitälchen. Name, Firma und Rolle sind Felder für eine Gästeliste.",
+  "family": "name-badge",
+  "familyName": "Namensschild",
+  "variant": "Elegant",
+  "occasion": "Business",
+  "tags": ["Namensschild","Namensschilder","Badge","Ausweis","Konferenz","Messe","Veranstaltung","Teilnehmer","Gast","Name","Elegant","Gold","Empfang","Gala","Jubiläum","Antiqua","Gästeliste"],
+  "formatKey": "name-badge",
+  "number": 445,
+  "document": {
+    "schema":2,"unit":"mm","width":90,"height":55,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Anna Beispiel","decimals":null,"category":null,"required":true},
+      {"key":"Firma","label":"Firma oder Verein","type":"text","sample":"Hofladen Wiesengrund","decimals":null,"category":null,"required":false},
+      {"key":"Rolle","label":"Rolle","type":"text","sample":"Referentin","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fbf6ea","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen außen","x":2.4,"y":2.4,"w":85.2,"h":50.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a8832f","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Rahmen innen","x":3.4,"y":3.4,"w":83.2,"h":48.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a8832f","strokeWidth":0.2,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Rolle","x":8,"y":6.6,"w":74,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Rolle","flipX":false,"flipY":false,"shadow":null,"text":"{{Rolle}}","fontFamily":"Raleway","fontSize":7,"fontWeight":600,"italic":false,"color":"#a8832f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.28,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Name","x":7,"y":12,"w":76,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Cormorant Garamond","fontSize":25,"fontWeight":700,"italic":false,"color":"#2b2a33","align":"center","valign":"middle","lineHeight":1.05,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"image","name":"Schnörkel","x":30,"y":30,"w":30,"h":10.916,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-ornamente-schnoerkel-breit-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"text","name":"Firma","x":8,"y":40.4,"w":74,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Firma","flipX":false,"flipY":false,"shadow":null,"text":"{{Firma}}","fontFamily":"Cormorant Garamond","fontSize":11,"fontWeight":600,"italic":true,"color":"#5c5a64","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Anna Beispiel","Firma":"Hofladen Wiesengrund","Rolle":"Referentin"},
+    {"Name":"Prof. Dr. Maximilian Mustermann-Schneider","Firma":"Institut für angewandte Lebensmitteltechnologie und Ernährung","Rolle":"Organisation"},
+    {"Name":"Jo Kurz","Firma":"","Rolle":"Gast"},
+    {"Name":"Sabine Müller","Firma":"Stadtwerke Musterstadt","Rolle":""}
+  ]
+}

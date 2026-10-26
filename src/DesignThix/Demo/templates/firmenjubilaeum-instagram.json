@@ -1,0 +1,37 @@
+{
+  "name": "Firmenjubiläum – Instagram-Post",
+  "category": "Social Media",
+  "description": "Jubiläums-Post (1080 x 1080 px) für Instagram, Facebook und LinkedIn: farbiger Verlauf, riesige Jahreszahl, Konfetti und ein Dankeschön an die Kundschaft. Jahre und Firma sind Felder.",
+  "family": "firmenjubilaeum",
+  "familyName": "Firmenjubiläum",
+  "variant": "Instagram",
+  "occasion": "Feste & Events",
+  "tags": ["Jubiläum","Firmenjubiläum","Firma","Betriebsjubiläum","Jahre","Feier","Festakt","Geburtstag der Firma","Instagram","Social Media","LinkedIn","Facebook","Post","Danke","Konfetti"],
+  "formatKey": "instagram-post",
+  "number": 230,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Jahre","label":"Jahre","type":"text","sample":"25","decimals":null,"category":null,"required":false},
+      {"key":"Firma","label":"Firma","type":"text","sample":"Mustermann GmbH","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":145,"stops":[{"offset":0,"color":"#ff6b5e"},{"offset":1,"color":"#7b3fe4"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Konfetti","x":0,"y":0,"w":1080,"h":1080,"rotation":0,"opacity":0.55,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-streuung-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Kreis","x":190,"y":190,"w":700,"h":700,"rotation":0,"opacity":0.12,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"icon","name":"Popper","x":70,"y":70,"w":130,"h":130,"rotation":-10,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"party-popper","color":"#ffcf4a","strokeWidth":1.6},
+        {"id":"e4","type":"icon","name":"Popper 2","x":880,"y":880,"w":130,"h":130,"rotation":80,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":true,"flipY":false,"shadow":null,"icon":"party-popper","color":"#ffcf4a","strokeWidth":1.6},
+        {"id":"e5","type":"text","name":"Wir","x":100,"y":150,"w":880,"h":80,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WIR FEIERN","fontFamily":"Poppins","fontSize":32,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Jahre","x":140,"y":215,"w":800,"h":420,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#1b1442","opacity":0.25,"blur":0,"x":10,"y":12},"text":"{{Jahre}}","fontFamily":"Anton","fontSize":300,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":90,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Jahre Wort","x":140,"y":635,"w":800,"h":100,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"JAHRE","fontFamily":"Poppins","fontSize":52,"fontWeight":700,"italic":false,"color":"#ffcf4a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Firma","x":100,"y":760,"w":880,"h":90,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Firma}}","fontFamily":"Poppins","fontSize":40,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Danke","x":100,"y":855,"w":880,"h":80,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danke für euer Vertrauen!","fontFamily":"Poppins","fontSize":28,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Jahre":"25","Firma":"Mustermann GmbH"},
+    {"Jahre":"100","Firma":"Schreinerei Huber & Söhne"},
+    {"Jahre":"10","Firma":"Bäckerei Korn"}
+  ]
+}

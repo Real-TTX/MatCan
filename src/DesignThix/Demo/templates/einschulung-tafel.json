@@ -1,0 +1,48 @@
+{
+  "name": "Einschulung – Tafel",
+  "category": "Einladungen",
+  "description": "Einladung zur Einschulung (A6 quer) auf einer Schultafel mit Kreide-Schrift, Schulranzen und Stiften. Der Name des Schulkinds ist ein Feld.",
+  "family": "einschulung",
+  "familyName": "Einschulung",
+  "variant": "Tafel",
+  "occasion": "Kinder & Familie",
+  "tags": ["Einschulung","Schulanfang","Schulstart","Schulkind","Einladung","Erster Schultag","Schule","Tafel","Kreide","Schulranzen","Klassisch","Schultafel"],
+  "formatKey": "a6-landscape",
+  "number": 208,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Ben","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#a8743e","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen innen","x":3,"y":3,"w":142,"h":99,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#8b5c2e","stroke":null,"strokeWidth":1,"dash":"solid","radius":2,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Tafel","x":5.5,"y":5.5,"w":137,"h":88,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#2f5d50","stroke":null,"strokeWidth":1,"dash":"solid","radius":1,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Ablage","x":3,"y":94,"w":142,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#8b5c2e","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"shape","name":"Kreide 1","x":20,"y":95.5,"w":14,"h":3.4,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#f5f3e8","stroke":null,"strokeWidth":1,"dash":"solid","radius":1.2,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"shape","name":"Kreide 2","x":38,"y":96,"w":10,"h":3.4,"rotation":8,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffb3c7","stroke":null,"strokeWidth":1,"dash":"solid","radius":1.2,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"shape","name":"Schwamm","x":112,"y":94.8,"w":16,"h":5,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#e7c75f","stroke":null,"strokeWidth":1,"dash":"solid","radius":1.5,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"icon","name":"Ranzen","x":12,"y":14,"w":28,"h":28,"rotation":-6,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"backpack","color":"#f5f3e8","strokeWidth":1.4},
+        {"id":"e8","type":"icon","name":"Stift","x":115,"y":12,"w":14,"h":14,"rotation":20,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"pencil","color":"#ffe27a","strokeWidth":1.6},
+        {"id":"e9","type":"icon","name":"Lineal","x":129,"y":17,"w":10,"h":10,"rotation":-20,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"ruler","color":"#ffb3c7","strokeWidth":1.6},
+        {"id":"e10","type":"icon","name":"Buch","x":14,"y":62,"w":16,"h":16,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"book-open","color":"#ffe27a","strokeWidth":1.5},
+        {"id":"e11","type":"shape","name":"Stern","x":119,"y":63,"w":10,"h":10,"rotation":10,"opacity":0.9,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"star","points":5,"innerRadius":0.45,"fill":"#ffe27a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e12","type":"shape","name":"Unterstrich","x":48,"y":33,"w":84,"h":0,"rotation":0,"opacity":0.7,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#f5f3e8","strokeWidth":0.7,"dash":"dashed","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e13","type":"text","name":"Titel","x":44,"y":11,"w":66,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Endlich Schulkind!","fontFamily":"Gochi Hand","fontSize":28,"fontWeight":400,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"text","name":"Name","x":44,"y":36,"w":96,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}} wird eingeschult.","fontFamily":"Patrick Hand","fontSize":19,"fontWeight":400,"italic":false,"color":"#ffe27a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e15","type":"text","name":"Einladung","x":44,"y":49,"w":96,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Feiere mit uns den ersten Schultag:","fontFamily":"Patrick Hand","fontSize":12.5,"fontWeight":400,"italic":false,"color":"#f5f3e8","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e16","type":"icon","name":"Datum Symbol","x":45.54,"y":59.54,"w":3.92,"h":3.92,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"calendar-days","color":"#ffe27a","strokeWidth":2},
+        {"id":"e17","type":"text","name":"Datum","x":53.5,"y":57.5,"w":86.5,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 7. August 2027 · 10 Uhr","fontFamily":"Patrick Hand","fontSize":12.5,"fontWeight":400,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e18","type":"icon","name":"Ort Symbol","x":45.54,"y":68.04,"w":3.92,"h":3.92,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"map-pin","color":"#ffe27a","strokeWidth":2},
+        {"id":"e19","type":"text","name":"Ort","x":53.5,"y":66,"w":86.5,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Aula der Grundschule am Park","fontFamily":"Patrick Hand","fontSize":12.5,"fontWeight":400,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e20","type":"icon","name":"Danach Symbol","x":45.54,"y":76.54,"w":3.92,"h":3.92,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"cake-slice","color":"#ffe27a","strokeWidth":2},
+        {"id":"e21","type":"text","name":"Danach","x":53.5,"y":74.5,"w":86.5,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danach Kaffee und Kuchen bei uns","fontFamily":"Patrick Hand","fontSize":12.5,"fontWeight":400,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Ben"},
+    {"Name":"Emilia-Sophie"},
+    {"Name":"Jo"}
+  ]
+}

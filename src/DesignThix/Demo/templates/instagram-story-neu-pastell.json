@@ -1,0 +1,30 @@
+{
+  "name": "Instagram-Story – Neu im Sortiment (Pastell)",
+  "category": "Social Media",
+  "description": "Sanfte Story (1080 × 1920 px) für eine Neuheit: rundes Foto im goldenen Pinselring, Überschrift in Schreibschrift, Produktname, Preis und Knopf „Jetzt im Laden“. Ziehe dein Foto in den Kreis und ändere die Texte.",
+  "family": "instagram-story-neu",
+  "familyName": "Instagram-Story Neuheit",
+  "variant": "Pastell",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Story","Neu","Neuheit","Social Media","Foto","Ankündigung","Pastell","Rund","Sanft","Boutique","Café","Bäckerei"],
+  "formatKey": "instagram-story",
+  "number": 411,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1920,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fbe3d6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Kreis oben","x":-240,"y":-120,"w":700,"h":700,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#f6cdbb","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Kreis unten","x":700,"y":1300,"w":620,"h":620,"rotation":0,"opacity":0.7,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#f9d9a8","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Überschrift","x":90,"y":280,"w":900,"h":150,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Neu im Sortiment","fontFamily":"Dancing Script","fontSize":78,"fontWeight":700,"italic":false,"color":"#4b2e2b","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Foto Hintergrund","x":170,"y":470,"w":740,"h":740,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#f1c3ae","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"icon","name":"Foto Symbol","x":440,"y":740,"w":200,"h":200,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"image","color":"#d49a82","strokeWidth":1.2},
+        {"id":"e6","type":"image","name":"Foto","x":170,"y":470,"w":740,"h":740,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"circle","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e7","type":"image","name":"Pinselring","x":130,"y":430,"w":820,"h":817.627,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-pinselring-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e8","type":"text","name":"Produkt","x":90,"y":1260,"w":900,"h":90,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dein neues Lieblingsstück","fontFamily":"Poppins","fontSize":40,"fontWeight":700,"italic":false,"color":"#4b2e2b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":22,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Beschreibung","x":140,"y":1352,"w":800,"h":100,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Handgemacht aus regionalen Zutaten","fontFamily":"Montserrat","fontSize":22,"fontWeight":500,"italic":false,"color":"#7a5650","align":"center","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Knopf","x":280,"y":1480,"w":520,"h":88,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 4,90 € · jetzt im Laden","fontFamily":"Montserrat","fontSize":17,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":{"color":"#4b2e2b","radius":44,"padding":28},"curve":0}
+      ]}
+    ]
+  }
+}

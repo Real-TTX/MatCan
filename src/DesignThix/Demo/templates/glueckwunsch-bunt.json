@@ -1,0 +1,34 @@
+{
+  "name": "Glückwunschkarte A6 quer – Bunt",
+  "category": "Karten",
+  "description": "Fröhliche Glückwunschkarte im Format A6 quer: Farbverlauf in Violett und Pink, Konfetti, Partyknaller und „Glückwunsch!“ in dicker runder Schrift – für Bestandenes, Neues und Gutes.",
+  "family": "glueckwunschkarte",
+  "familyName": "Glückwunschkarte",
+  "variant": "Bunt",
+  "occasion": "Feste & Events",
+  "tags": ["Glückwunsch","Gratulation","bunt","Konfetti","Party","Erfolg","bestanden","Karte","fröhlich","Baby","Führerschein"],
+  "formatKey": "a6-landscape",
+  "number": 113,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":null,"gradient":{"type":"linear","angle":140,"stops":[{"offset":0,"color":"#7b3fe4"},{"offset":1,"color":"#e0489b"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Konfetti","x":0,"y":0,"w":148,"h":148,"rotation":0,"opacity":0.55,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-streuung-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"icon","name":"Knaller","x":10,"y":10,"w":24,"h":24,"rotation":-8,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"party-popper","color":"#ffd23f","strokeWidth":1.6},
+        {"id":"e3","type":"icon","name":"Stern","x":108,"y":22,"w":22,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"sparkles","color":"#ffffff","strokeWidth":1.6},
+        {"id":"e4","type":"text","name":"Glück","x":9,"y":26,"w":130,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#4a1a8f","opacity":0.45,"blur":0,"x":0.9,"y":1.2},"text":"Glück-","fontFamily":"Baloo 2","fontSize":54,"fontWeight":800,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":26,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"wunsch","x":9,"y":50,"w":130,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#4a1a8f","opacity":0.45,"blur":0,"x":0.9,"y":1.2},"text":"wunsch!","fontFamily":"Baloo 2","fontSize":54,"fontWeight":800,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":26,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Unterzeile","x":14,"y":82,"w":120,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Das habt ihr großartig gemacht","fontFamily":"Nunito","fontSize":10,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.14,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"shape","name":"Band","x":0,"y":0,"w":148,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#e0489b","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"shape","name":"Band 2","x":0,"y":8,"w":148,"h":2.5,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#7b3fe4","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Anrede","x":18,"y":22,"w":112,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Anna,","fontFamily":"Baloo 2","fontSize":20,"fontWeight":700,"italic":false,"color":"#7b3fe4","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Text","x":18,"y":36,"w":112,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wow, das ist ein toller Erfolg! Wir freuen uns riesig mit dir und feiern mit dir – bald gibt es Kuchen und Sekt.","fontFamily":"Nunito","fontSize":12,"fontWeight":500,"italic":false,"color":"#2f2a4a","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Gruß","x":18,"y":82,"w":112,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dein Team","fontFamily":"Baloo 2","fontSize":16,"fontWeight":700,"italic":false,"color":"#e0489b","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"image","name":"Konfetti unten","x":0,"y":92,"w":148,"h":50.743,"rotation":0,"opacity":0.9,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-regen"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]}
+    ]
+  }
+}

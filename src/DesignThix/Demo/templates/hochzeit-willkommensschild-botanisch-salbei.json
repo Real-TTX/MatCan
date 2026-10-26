@@ -1,0 +1,30 @@
+{
+  "name": "Hochzeit Willkommensschild – Botanisch Salbei",
+  "category": "Karten",
+  "description": "Willkommensplakat A3 für den Eingang der Hochzeitsfeier: ein riesiger Eukalyptuskranz in Salbeigrün um „Willkommen“, darunter die Namen des Brautpaars und das Datum. Zum Ausdrucken, Rahmen oder Aufstellen am Eingang.",
+  "family": "hochzeit-willkommensschild",
+  "familyName": "Hochzeit: Willkommensschild",
+  "variant": "Botanisch Salbei",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Willkommensschild","Willkommen","Plakat","Poster","A3","Eukalyptus","Salbei","botanisch","Eingang"],
+  "formatKey": "poster-a3-portrait",
+  "number": 167,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":420,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Willkommensschild","background":{"color":"#f6f7f1","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Kranz","x":22,"y":28,"w":253,"h":244.577,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-eukalyptuskranz-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Herzlich","x":78.5,"y":92,"w":140,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"HERZLICH","fontFamily":"Josefin Sans","fontSize":17,"fontWeight":600,"italic":false,"color":"#5f8167","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.46,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Willkommen","x":53.5,"y":104,"w":190,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Willkommen","fontFamily":"Allura","fontSize":80,"fontWeight":400,"italic":false,"color":"#33423a","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":36,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Strich","x":128,"y":164,"w":41,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#9db79f","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"zur Hochzeit","x":73.5,"y":170,"w":150,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"zur Hochzeit von","fontFamily":"Cormorant Garamond","fontSize":24,"fontWeight":500,"italic":true,"color":"#33423a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Namen","x":73.5,"y":186,"w":150,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ANNA & JONAS","fontFamily":"Josefin Sans","fontSize":20,"fontWeight":300,"italic":false,"color":"#33423a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":38.5,"y":322,"w":220,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 12. Juni 2027","fontFamily":"Cormorant Garamond","fontSize":30,"fontWeight":600,"italic":false,"color":"#33423a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"image","name":"Trenner","x":98.5,"y":343,"w":100,"h":10,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-blattreihe-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e9","type":"text","name":"Ort","x":38.5,"y":358,"w":220,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GUT BIRKENHOF · MUSTERSTADT","fontFamily":"Josefin Sans","fontSize":15,"fontWeight":600,"italic":false,"color":"#5f8167","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Schön","x":38.5,"y":376,"w":220,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Schön, dass ihr bei uns seid","fontFamily":"Allura","fontSize":40,"fontWeight":400,"italic":false,"color":"#33423a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

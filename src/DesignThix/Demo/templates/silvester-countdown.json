@@ -1,0 +1,40 @@
+{
+  "name": "Silvester – Countdown",
+  "category": "Poster",
+  "description": "Plakat A3 hoch für die Silvesterparty im Verein, Club oder Dorfgemeinschaftshaus: riesige Jahreszahl in Gold, Feuerwerk aus Sternen und Platz für Programm und Termin. Das Jahr ist ein Feld.",
+  "family": "silvester-party",
+  "familyName": "Silvester-Party",
+  "variant": "Countdown",
+  "occasion": "Feiertage",
+  "tags": ["Silvester","Silvesterparty","Neujahr","Party","Einladung","Jahreswechsel","Feuerwerk","Sekt","Prosit Neujahr","Plakat","Poster","A3","Countdown","Aushang","Verein","Club"],
+  "formatKey": "poster-a3-portrait",
+  "number": 241,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":420,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Jahr","label":"Neues Jahr","type":"text","sample":"2028","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":170,"stops":[{"offset":0,"color":"#05061a"},{"offset":1,"color":"#17205a"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Sterne","x":0,"y":0,"w":297,"h":297,"rotation":0,"opacity":0.4,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-himmel-weiss"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Feuerwerk 1","x":14,"y":20,"w":130,"h":130,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-strahlen-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Feuerwerk 2","x":190,"y":4,"w":96,"h":96,"rotation":0,"opacity":0.85,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-strahlen-weiss"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"image","name":"Feuerwerk 3","x":214,"y":120,"w":70,"h":70,"rotation":0,"opacity":0.9,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-strahlen-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"image","name":"Funkeln","x":150,"y":120,"w":26,"h":24.383,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-funkeln-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"image","name":"Funkeln 2","x":236,"y":214,"w":22,"h":20.632,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-funkeln-weiss"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e7","type":"shape","name":"Band","x":0,"y":336,"w":297,"h":84,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#0b1030","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"shape","name":"Band Linie","x":0,"y":336,"w":297,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#e6c06a","strokeWidth":0.8,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Kopf","x":20,"y":176,"w":257,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SILVESTERPARTY","fontFamily":"Oswald","fontSize":28,"fontWeight":500,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Jahr","x":8,"y":184,"w":285,"h":148,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#000000","opacity":0.4,"blur":4,"x":0,"y":3},"text":"{{Jahr}}","fontFamily":"Anton","fontSize":250,"fontWeight":400,"italic":false,"color":"#e6c06a","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":70,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Programm","x":20,"y":342,"w":257,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Buffet · DJ · Mitternachts-Feuerwerk","fontFamily":"Oswald","fontSize":20,"fontWeight":500,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.05,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Datum","x":20,"y":366,"w":257,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 31. Dezember · ab 20 Uhr","fontFamily":"Oswald","fontSize":24,"fontWeight":600,"italic":false,"color":"#e6c06a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Ort","x":20,"y":391,"w":257,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dorfgemeinschaftshaus Musterstadt · Eintritt 15 €","fontFamily":"Oswald","fontSize":14,"fontWeight":400,"italic":false,"color":"#c9cff0","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Jahr":"2028"},
+    {"Jahr":"2030"},
+    {"Jahr":"2099"}
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Kerzenetikett – Skandinavisch",
+  "category": "Etiketten",
+  "description": "Ruhiges Kerzenetikett (100 × 70 mm) im skandinavischen Stil: helles Beige, viel Weißraum, Duft in schmaler Grotesk, Haarlinien, Angaben in zwei Spalten. Alle Angaben sind Felder für eine Datenliste.",
+  "family": "kerzenetikett",
+  "familyName": "Kerzenetikett",
+  "variant": "Skandinavisch",
+  "occasion": "Handel & Preise",
+  "tags": ["Kerze","Duftkerze","Sojawachs","Kerzenglas","Etikett","Brenndauer","Warnhinweis","Manufaktur","Wohnen","Skandinavisch","Minimal","Beige","Hell","Ruhig","Hygge"],
+  "formatKey": "label-100x70",
+  "number": 435,
+  "document": {
+    "schema":2,"unit":"mm","width":100,"height":70,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Duft","type":"text","sample":"Vanille & Zimt","decimals":null,"category":null,"required":true},
+      {"key":"Zusatz","label":"Zusatz","type":"text","sample":"Duftkerze aus Sojawachs","decimals":null,"category":null,"required":false},
+      {"key":"Brenndauer","label":"Brenndauer","type":"text","sample":"ca. 40 Stunden","decimals":null,"category":null,"required":false},
+      {"key":"Gewicht","label":"Gewicht","type":"text","sample":"180 g","decimals":null,"category":null,"required":false},
+      {"key":"Hersteller","label":"Hersteller","type":"text","sample":"Kerzenmanufaktur Wiesengrund","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f1ece3","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Sonne","x":78,"y":7,"w":16,"h":16,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":null,"stroke":"#8a7c6a","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Sonne innen","x":83,"y":12,"w":6,"h":6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#c9b99f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Kopf","x":9,"y":7,"w":66,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Zusatz","flipX":false,"flipY":false,"shadow":null,"text":"{{Zusatz}}","fontFamily":"Josefin Sans","fontSize":7.5,"fontWeight":400,"italic":false,"color":"#6b5f50","align":"left","valign":"top","lineHeight":1.25,"letterSpacing":0.1,"uppercase":true,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Produkt","x":9,"y":16,"w":66,"h":23,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Josefin Sans","fontSize":30,"fontWeight":300,"italic":false,"color":"#2b251d","align":"left","valign":"top","lineHeight":1.05,"letterSpacing":0.06,"uppercase":true,"wrap":true,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Haarlinie","x":9,"y":41,"w":82,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#8a7c6a","strokeWidth":0.25,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Brenndauer Titel","x":9,"y":43.4,"w":28,"h":3.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Brenndauer","fontFamily":"Josefin Sans","fontSize":7,"fontWeight":600,"italic":false,"color":"#8a7c6a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Brenndauer","x":9,"y":46.8,"w":28,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Brenndauer","flipX":false,"flipY":false,"shadow":null,"text":"{{Brenndauer}}","fontFamily":"Josefin Sans","fontSize":10,"fontWeight":400,"italic":false,"color":"#2b251d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Gewicht Titel","x":38,"y":43.4,"w":16,"h":3.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Inhalt","fontFamily":"Josefin Sans","fontSize":7,"fontWeight":600,"italic":false,"color":"#8a7c6a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Gewicht","x":38,"y":46.8,"w":16,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Gewicht}}","fontFamily":"Josefin Sans","fontSize":10,"fontWeight":400,"italic":false,"color":"#2b251d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Hersteller","x":55,"y":46.8,"w":36,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Hersteller","flipX":false,"flipY":false,"shadow":null,"text":"{{Hersteller}}","fontFamily":"Josefin Sans","fontSize":7,"fontWeight":400,"italic":false,"color":"#6b5f50","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Hinweis","x":9,"y":56,"w":82,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Nie unbeaufsichtigt brennen lassen. Von Kindern und Haustieren fernhalten. Docht vor dem Anzünden auf 5 mm kürzen.","fontFamily":"Josefin Sans","fontSize":7,"fontWeight":400,"italic":false,"color":"#8a7c6a","align":"left","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Vanille & Zimt","Zusatz":"Duftkerze aus Sojawachs","Brenndauer":"ca. 40 Stunden","Gewicht":"180 g","Hersteller":"Kerzenmanufaktur Wiesengrund"},
+    {"Produkt":"Wintermärchen: Tannennadel, Orange und Gewürznelke","Zusatz":"Handgegossene Duftkerze aus nachhaltigem Sojawachs im Glas","Brenndauer":"ca. 60 Stunden","Gewicht":"300 g","Hersteller":"Kerzenmanufaktur Wiesengrund"},
+    {"Produkt":"Meeresbrise","Zusatz":"Duftkerze","Brenndauer":"ca. 25 Stunden","Gewicht":"110 g","Hersteller":""},
+    {"Produkt":"Zeder","Zusatz":"","Brenndauer":"","Gewicht":"180 g","Hersteller":"Kerzenmanufaktur Wiesengrund"}
+  ]
+}

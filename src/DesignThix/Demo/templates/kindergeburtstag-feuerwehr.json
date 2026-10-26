@@ -1,0 +1,46 @@
+{
+  "name": "Kindergeburtstag – Feuerwehr",
+  "category": "Einladungen",
+  "description": "Einladung zum Feuerwehr-Geburtstag (A6 hoch): rote Alarmzentrale mit Löschfahrzeug, Sirenen und gelber Zackenkante. Name und Alter sind Felder.",
+  "family": "kindergeburtstag-einladung",
+  "familyName": "Kindergeburtstag-Einladung",
+  "variant": "Feuerwehr",
+  "occasion": "Kinder & Familie",
+  "tags": ["Kindergeburtstag","Einladung","Geburtstag","Kinder","Party","Einladungskarte","Geburtstagseinladung","Feuerwehr","Löschzug","Tatütata","Feuerwehrauto","Einsatz","Jungen","Rot"],
+  "formatKey": "a6-portrait",
+  "number": 205,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Mia","decimals":null,"category":null,"required":false},
+      {"key":"Alter","label":"Alter","type":"text","sample":"6","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffb627","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rot","x":0,"y":0,"w":105,"h":68,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d62828","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"image","name":"Zacken","x":0,"y":60,"w":105,"h":16.337,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":true,"shadow":null,"source":{"asset":"deko-formen-zackenrand-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"shape","name":"Glanz","x":22,"y":12,"w":61,"h":61,"rotation":0,"opacity":0.07,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"icon","name":"Sirene links","x":11,"y":11,"w":14,"h":14,"rotation":-14,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"siren","color":"#ffb627","strokeWidth":1.8},
+        {"id":"e5","type":"icon","name":"Sirene rechts","x":80,"y":11,"w":14,"h":14,"rotation":14,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"siren","color":"#ffb627","strokeWidth":1.8},
+        {"id":"e6","type":"icon","name":"Löschfahrzeug","x":28.5,"y":20,"w":48,"h":48,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"truck","color":"#ffffff","strokeWidth":1.4},
+        {"id":"e7","type":"text","name":"Alarm","x":8,"y":8,"w":89,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"TATÜTATA!","fontFamily":"Anton","fontSize":24,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.06,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Titel","x":6,"y":77,"w":93,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}} wird {{Alter}}!","fontFamily":"Fredoka","fontSize":31,"fontWeight":700,"italic":false,"color":"#d62828","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Einladung","x":8,"y":94,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Einsatz: Geburtstagsfeier!","fontFamily":"Patrick Hand","fontSize":14,"fontWeight":400,"italic":false,"color":"#2b1d1d","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"shape","name":"Datum Chip","x":14,"y":106,"w":8,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#d62828","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"icon","name":"Datum Symbol","x":15.76,"y":107.76,"w":4.48,"h":4.48,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"calendar-days","color":"#ffffff","strokeWidth":2},
+        {"id":"e12","type":"text","name":"Datum","x":24.5,"y":105.5,"w":69.5,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 14. Juni 2027 · 15 Uhr","fontFamily":"Nunito","fontSize":9.5,"fontWeight":700,"italic":false,"color":"#2b1d1d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"shape","name":"Ort Chip","x":14,"y":116.5,"w":8,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#d62828","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e14","type":"icon","name":"Ort Symbol","x":15.76,"y":118.26,"w":4.48,"h":4.48,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"map-pin","color":"#ffffff","strokeWidth":2},
+        {"id":"e15","type":"text","name":"Ort","x":24.5,"y":116,"w":69.5,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Nunito","fontSize":9.5,"fontWeight":700,"italic":false,"color":"#2b1d1d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e16","type":"shape","name":"Zusage Chip","x":14,"y":127,"w":8,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#d62828","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e17","type":"icon","name":"Zusage Symbol","x":15.76,"y":128.76,"w":4.48,"h":4.48,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"phone","color":"#ffffff","strokeWidth":2},
+        {"id":"e18","type":"text","name":"Zusage","x":24.5,"y":126.5,"w":69.5,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 5. Juni: 0170 1234567","fontFamily":"Nunito","fontSize":9.5,"fontWeight":700,"italic":false,"color":"#2b1d1d","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Mia","Alter":"6"},
+    {"Name":"Maximilian","Alter":"10"},
+    {"Name":"Sophie-Charlotte","Alter":"7"}
+  ]
+}

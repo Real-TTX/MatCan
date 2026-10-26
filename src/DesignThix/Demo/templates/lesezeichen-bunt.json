@@ -1,0 +1,34 @@
+{
+  "name": "Lesezeichen – Bunt",
+  "category": "Karten",
+  "description": "Buntes Lesezeichen (50 × 150 mm) für Kinder und Schulen: Regenbogen oben, runde Schrift für den Spruch, kleine Sterne. Zitat und Urheber sind Felder, so entsteht eine ganze Serie. Das Loch für ein Bändchen sitzt oben.",
+  "family": "bookmark",
+  "familyName": "Lesezeichen",
+  "variant": "Bunt",
+  "occasion": "Verein & Schule",
+  "tags": ["Lesezeichen","Buch","Lesen","Bibliothek","Zitat","Geschenk","Schule","Werbegeschenk","Buchhandlung","Bunt","Kinder","Regenbogen","Klasse","Grundschule","Lesemaus","Fredoka"],
+  "formatKey": "bookmark",
+  "number": 447,
+  "document": {
+    "schema":2,"unit":"mm","width":50,"height":150,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Zitat","label":"Zitat","type":"multiline","sample":"Ein Zimmer ohne Bücher ist wie ein Körper ohne Seele.","decimals":null,"category":null,"required":false},
+      {"key":"Autor","label":"Urheber","type":"text","sample":"Cicero","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fff7e6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Regenbogen","x":2,"y":14,"w":46,"h":23.62,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-regenbogen-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Loch","x":22.5,"y":5,"w":5,"h":5,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":"#d9c9a6","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Titel","x":5,"y":42,"w":40,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ich lese!","fontFamily":"Fredoka","fontSize":18,"fontWeight":700,"italic":false,"color":"#ff6b35","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Zitat","x":6,"y":56,"w":38,"h":54,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Zitat}}","fontFamily":"Fredoka","fontSize":11,"fontWeight":500,"italic":false,"color":"#3b2f22","align":"center","valign":"middle","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"image","name":"Sterne","x":4,"y":120,"w":42,"h":9.59,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-girlande-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"text","name":"Autor","x":6,"y":134,"w":38,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Autor","flipX":false,"flipY":false,"shadow":null,"text":"{{Autor}}","fontFamily":"Fredoka","fontSize":8,"fontWeight":500,"italic":false,"color":"#1f6fd1","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Zitat":"Ein Zimmer ohne Bücher ist wie ein Körper ohne Seele.","Autor":"Cicero"},
+    {"Zitat":"Lesen heißt, mit fremden Augen sehen, mit fremden Ohren hören, mit fremdem Herzen fühlen und mit fremdem Verstand denken – und zugleich ganz bei sich selbst bleiben.","Autor":"Sehr langer Name der Autorin"},
+    {"Zitat":"Kurz und gut.","Autor":""}
+  ]
+}

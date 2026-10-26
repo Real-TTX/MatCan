@@ -1,0 +1,33 @@
+{
+  "name": "Flyer A5 – Kurs Yoga",
+  "category": "Flyer",
+  "description": "Ruhiger A5-Flyer für einen Yoga-, Pilates- oder Entspannungskurs: Salbeibogen mit Lotussymbol, Titel in Cormorant, drei Infozeilen zu Termin, Ort und Preis und ein freundlicher Hinweis für Anfänger.",
+  "family": "flyer-kurs",
+  "familyName": "Flyer Kurs",
+  "variant": "Yoga",
+  "occasion": "Verein & Schule",
+  "tags": ["Flyer","Kurs","Yoga","Pilates","Entspannung","Gesundheit","Sport","Salbei","Ruhig","Anfänger"],
+  "formatKey": "a5-portrait",
+  "number": 316,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f3efe6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Bogen","x":34,"y":12,"w":80,"h":105.414,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-bogen-doppelt-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Sonne","x":56,"y":52,"w":36,"h":36,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#e9d3b4","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"icon","name":"Lotus","x":55,"y":51,"w":38,"h":38,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"flower-2","color":"#3f5b47","strokeWidth":1.1},
+        {"id":"e4","type":"text","name":"Titel","x":12,"y":124,"w":124,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Yoga am Morgen","fontFamily":"Cormorant Garamond","fontSize":40,"fontWeight":600,"italic":false,"color":"#3f5b47","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Untertitel","x":12,"y":148,"w":124,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"für Körper und Seele","fontFamily":"Cormorant Garamond","fontSize":17,"fontWeight":500,"italic":true,"color":"#b9826a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Linie","x":64,"y":160,"w":20,"h":0.5,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#b9826a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"icon","name":"Termin Symbol","x":26,"y":167,"w":6,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"calendar","color":"#b9826a","strokeWidth":1.8},
+        {"id":"e8","type":"text","name":"Termin Wert","x":35,"y":167,"w":91,"h":4.586,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dienstags, 18:30–19:45 Uhr, ab 6. Oktober","fontFamily":"Raleway","fontSize":10,"fontWeight":600,"italic":false,"color":"#3f5b47","align":"left","valign":"middle","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"icon","name":"Ort Symbol","x":26,"y":177,"w":6,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"map-pin","color":"#b9826a","strokeWidth":1.8},
+        {"id":"e10","type":"text","name":"Ort Wert","x":35,"y":177,"w":91,"h":4.586,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gymnastikraum der Turnhalle, Musterstadt","fontFamily":"Raleway","fontSize":10,"fontWeight":600,"italic":false,"color":"#3f5b47","align":"left","valign":"middle","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"icon","name":"Preis Symbol","x":26,"y":187,"w":6,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"tag","color":"#b9826a","strokeWidth":1.8},
+        {"id":"e12","type":"text","name":"Preis Wert","x":35,"y":187,"w":91,"h":4.586,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"8 Termine für 96 €  ·  Probestunde gratis","fontFamily":"Raleway","fontSize":10,"fontWeight":600,"italic":false,"color":"#3f5b47","align":"left","valign":"middle","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Hinweis","x":12,"y":198,"w":124,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anmeldung: 0123 456 789  ·  Matte bitte mitbringen","fontFamily":"Raleway","fontSize":8,"fontWeight":400,"italic":false,"color":"#7a8a7e","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

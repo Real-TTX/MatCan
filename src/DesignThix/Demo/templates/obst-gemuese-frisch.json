@@ -1,0 +1,45 @@
+{
+  "name": "Obst & Gemüse – Preisschild frisch",
+  "category": "Etiketten",
+  "description": "Helles, frisches Preisschild (100 × 70 mm) für Obst und Gemüse: großer Produktname in Grün, Herkunft mit Flagge und Siegel und ein auffälliger orangefarbener Preiskreis. Alle Angaben sind Felder für eine Datenliste.",
+  "family": "preisschild-obst-gemuese",
+  "familyName": "Preisschild Obst & Gemüse",
+  "variant": "Frisch",
+  "occasion": "Handel & Preise",
+  "tags": ["Preisschild","Obst","Gemüse","Markt","Hofladen","Preis","Etikett","Herkunft","Frisch","Hell","Supermarkt","Wochenmarkt","Preiskreis"],
+  "formatKey": "label-100x70",
+  "number": 403,
+  "document": {
+    "schema":2,"unit":"mm","width":100,"height":70,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Erdbeeren","decimals":null,"category":null,"required":true},
+      {"key":"Land","label":"Herkunftsland","type":"image","sample":"flag-de","decimals":null,"category":"Flaggen","required":false},
+      {"key":"Siegel","label":"Siegel","type":"image","sample":"icon-bio","decimals":null,"category":"Siegel","required":false},
+      {"key":"Klasse","label":"Klasse","type":"text","sample":"Klasse I","decimals":null,"category":null,"required":false},
+      {"key":"Herkunft","label":"Herkunft","type":"text","sample":"Region Oberrhein","decimals":null,"category":null,"required":false},
+      {"key":"Preis","label":"Preis","type":"price","sample":"3.49","decimals":2,"category":null,"required":true},
+      {"key":"Einheit","label":"Einheit","type":"text","sample":"/ 500 g","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Blob","x":66,"y":-20,"w":52,"h":50.085,"rotation":0,"opacity":0.45,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-blob-3-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Balken","x":0,"y":0,"w":4,"h":70,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#1b4332","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Klasse","x":10,"y":7,"w":36,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Klasse","flipX":false,"flipY":false,"shadow":null,"text":"{{Klasse}}","fontFamily":"Poppins","fontSize":7.5,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":4,"underline":false,"strike":false,"list":"none","outline":null,"background":{"color":"#1b4332","radius":3,"padding":1.8},"curve":0},
+        {"id":"e4","type":"text","name":"Name","x":10,"y":15.5,"w":85,"h":15,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Poppins","fontSize":30,"fontWeight":700,"italic":false,"color":"#1b4332","align":"left","valign":"bottom","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"icon","name":"Ort Symbol","x":10,"y":35.4,"w":4.4,"h":4.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"map-pin","color":"#ff7a1a","strokeWidth":2.2},
+        {"id":"e6","type":"text","name":"Herkunft","x":16,"y":34.6,"w":40,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Herkunft","flipX":false,"flipY":false,"shadow":null,"text":"{{Herkunft}}","fontFamily":"Poppins","fontSize":9.5,"fontWeight":500,"italic":false,"color":"#4a5a52","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Trenner","x":10,"y":48,"w":44,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#d6e4dc","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"imageStrip","name":"Land und Siegel","x":10,"y":53,"w":44,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"items":[{"field":"Land"},{"field":"Siegel"}],"gap":2.5,"align":"left","mask":"none","border":null},
+        {"id":"e9","type":"shape","name":"Preiskreis","x":58,"y":31,"w":37,"h":37,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ff7a1a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e10","type":"text","name":"Preis","x":60.5,"y":38.4,"w":32,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Preis}}","fontFamily":"Poppins","fontSize":34,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Euro Einheit","x":61,"y":53,"w":31,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"€ {{Einheit}}","fontFamily":"Poppins","fontSize":10,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Erdbeeren","Land":"flag-de","Siegel":"icon-bio","Klasse":"Klasse I","Herkunft":"Region Oberrhein","Preis":"3.49","Einheit":"/ 500 g"},
+    {"Name":"Kirschtomaten","Land":"flag-es","Siegel":"","Klasse":"Klasse I","Herkunft":"Almería","Preis":"2.99","Einheit":"/ 250 g"},
+    {"Name":"Bio-Äpfel Elstar","Land":"flag-de","Siegel":"icon-bio","Klasse":"Klasse I","Herkunft":"Bodensee","Preis":"2.79","Einheit":"/ kg"},
+    {"Name":"Zitronen Primofiori","Land":"flag-it","Siegel":"","Klasse":"","Herkunft":"Sizilien","Preis":"12.90","Einheit":"/ kg"}
+  ]
+}

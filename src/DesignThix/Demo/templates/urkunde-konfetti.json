@@ -1,0 +1,43 @@
+{
+  "name": "Urkunde – Konfetti",
+  "category": "Karten",
+  "description": "Fröhliche Urkunde (A4 quer) für Kinder, Sport und Feste: Konfettiregen, goldene Medaille, großer bunter Titel, Name in runder Schrift und Lücke für Anlass, Datum und Unterschrift. Name, Anlass und Datum sind Felder für eine Serie.",
+  "family": "certificate-a4",
+  "familyName": "Urkunde & Zertifikat",
+  "variant": "Konfetti",
+  "occasion": "Verein & Schule",
+  "tags": ["Urkunde","Zertifikat","Auszeichnung","Teilnahme","Gewinner","Schule","Verein","Sport","Teilnahmebescheinigung","Konfetti","Kinder","Bunt","Sportfest","Wettkampf","Kita","Grundschule","Medaille"],
+  "formatKey": "certificate-a4",
+  "number": 421,
+  "document": {
+    "schema":2,"unit":"mm","width":297,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Anna Beispiel","decimals":null,"category":null,"required":true},
+      {"key":"Anlass","label":"Anlass","type":"multiline","sample":"für die erfolgreiche Teilnahme am Sommerlauf 2027","decimals":null,"category":null,"required":false},
+      {"key":"Datum","label":"Datum","type":"text","sample":"12. Juni 2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fff7e0","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Konfettiregen","x":40,"y":-28,"w":257,"h":88.114,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-regen"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Medaille","x":228,"y":56,"w":42,"h":72.333,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-baender-medaille-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Titel","x":24,"y":52,"w":190,"h":34,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Urkunde","fontFamily":"Baloo 2","fontSize":68,"fontWeight":800,"italic":false,"color":"#ff6b35","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Für","x":26,"y":90,"w":190,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Diese Urkunde bekommt","fontFamily":"Fredoka","fontSize":17,"fontWeight":500,"italic":false,"color":"#5a4632","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Name","x":26,"y":99,"w":190,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Fredoka","fontSize":44,"fontWeight":700,"italic":false,"color":"#1f6fd1","align":"left","valign":"middle","lineHeight":1.05,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Namenslinie","x":26,"y":126,"w":188,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#ff6b35","strokeWidth":1.2,"dash":"dotted","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Anlass","x":26,"y":131,"w":214,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Anlass","flipX":false,"flipY":false,"shadow":null,"text":"{{Anlass}}","fontFamily":"Fredoka","fontSize":18,"fontWeight":400,"italic":false,"color":"#3b2f22","align":"left","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Datum","x":28,"y":163,"w":80,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Datum}}","fontFamily":"Fredoka","fontSize":13,"fontWeight":500,"italic":false,"color":"#3b2f22","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"shape","name":"Datumslinie","x":28,"y":171,"w":80,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3b2f22","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e10","type":"text","name":"Datum Beschriftung","x":28,"y":172.4,"w":80,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Datum","fontFamily":"Fredoka","fontSize":7.5,"fontWeight":400,"italic":false,"color":"#7a6a58","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"shape","name":"Unterschriftslinie","x":130,"y":171,"w":80,"h":0,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3b2f22","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e12","type":"text","name":"Unterschrift Beschriftung","x":130,"y":172.4,"w":80,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Unterschrift","fontFamily":"Fredoka","fontSize":7.5,"fontWeight":400,"italic":false,"color":"#7a6a58","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"image","name":"Sterne","x":222,"y":168,"w":66,"h":15.069,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-girlande-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Anna Beispiel","Anlass":"für die erfolgreiche Teilnahme am Sommerlauf 2027","Datum":"12. Juni 2027"},
+    {"Name":"Maximiliane Schneider-Hohenstein","Anlass":"für hervorragende Leistungen im Schuljahr 2026/27 und ihr großes Engagement in der Schulgemeinschaft","Datum":"30. Juni 2027"},
+    {"Name":"Jo Kurz","Anlass":"für den ersten Platz","Datum":""},
+    {"Name":"Prof. Dr. Maximilian Mustermann","Anlass":"","Datum":"1. Oktober 2027"}
+  ]
+}

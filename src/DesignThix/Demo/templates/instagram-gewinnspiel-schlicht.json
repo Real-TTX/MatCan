@@ -1,0 +1,42 @@
+{
+  "name": "Instagram-Beitrag – Gewinnspiel schlicht",
+  "category": "Social Media",
+  "description": "Schlichtes Gewinnspiel für Instagram (1080 × 1080 px): weißer Grund, „Verlosung“ in Antiqua, Preis, drei nummerierte Schritte in Kreisen und ein Knopf mit dem Teilnahmeschluss. Preis, Konto und Frist sind Felder.",
+  "family": "instagram-gewinnspiel",
+  "familyName": "Instagram-Beitrag Gewinnspiel",
+  "variant": "Schlicht",
+  "occasion": "Social Media",
+  "tags": ["Instagram","Beitrag","Gewinnspiel","Verlosung","Giveaway","Gewinn","Social Media","Facebook","Teilnahme","Schlicht","Weiß","Minimal","Antiqua","Nummeriert","Boutique"],
+  "formatKey": "instagram-post",
+  "number": 460,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Preis","label":"Preis","type":"text","sample":"Ein Korb voller Hofladen-Spezialitäten","decimals":null,"category":null,"required":true},
+      {"key":"Konto","label":"Dein Konto","type":"text","sample":"@hofladen.wiesengrund","decimals":null,"category":null,"required":false},
+      {"key":"Frist","label":"Teilnahmeschluss","type":"text","sample":"Teilnahme bis 30. Juni 2027","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fbfaf7","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"text","name":"Titel","x":90,"y":90,"w":900,"h":150,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Verlosung","fontFamily":"Playfair Display","fontSize":84,"fontWeight":700,"italic":false,"color":"#161616","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e2","type":"shape","name":"Akzent","x":94,"y":250,"w":120,"h":6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d85c3a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Preis","x":90,"y":290,"w":900,"h":210,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Preis}}","fontFamily":"Montserrat","fontSize":28,"fontWeight":500,"italic":false,"color":"#2d2d2d","align":"left","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Kreis 1","x":90,"y":560,"w":70,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#161616","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Zahl 1","x":90,"y":560,"w":70,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"1","fontFamily":"Playfair Display","fontSize":26,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Schritt 1","x":190,"y":560,"w":800,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Folge {{Konto}}","fontFamily":"Montserrat","fontSize":24,"fontWeight":600,"italic":false,"color":"#161616","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Kreis 2","x":90,"y":660,"w":70,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#161616","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Zahl 2","x":90,"y":660,"w":70,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"2","fontFamily":"Playfair Display","fontSize":26,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Schritt 2","x":190,"y":660,"w":800,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Like diesen Beitrag","fontFamily":"Montserrat","fontSize":24,"fontWeight":600,"italic":false,"color":"#161616","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"shape","name":"Kreis 3","x":90,"y":760,"w":70,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#161616","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"text","name":"Zahl 3","x":90,"y":760,"w":70,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"3","fontFamily":"Playfair Display","fontSize":26,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Schritt 3","x":190,"y":760,"w":800,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Kommentiere und markiere einen Freund","fontFamily":"Montserrat","fontSize":24,"fontWeight":600,"italic":false,"color":"#161616","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Frist","x":90,"y":900,"w":700,"h":76,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Frist","flipX":false,"flipY":false,"shadow":null,"text":"{{Frist}}","fontFamily":"Montserrat","fontSize":16,"fontWeight":700,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.06,"uppercase":true,"wrap":false,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":{"color":"#d85c3a","radius":38,"padding":28},"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Preis":"Ein Korb voller Hofladen-Spezialitäten","Konto":"@hofladen.wiesengrund","Frist":"Teilnahme bis 30. Juni 2027"},
+    {"Preis":"Drei Gutscheine für ein Wochenende mit Übernachtung, Frühstück und Wellness für zwei Personen","Konto":"@gasthof.zum.wiesengrund.musterstadt","Frist":"Teilnahmeschluss: Sonntag, 31. Oktober 2027, 23:59 Uhr"},
+    {"Preis":"Ein Buch","Konto":"@lesezeit","Frist":""}
+  ]
+}

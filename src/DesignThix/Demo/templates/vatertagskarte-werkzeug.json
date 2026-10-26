@@ -1,0 +1,34 @@
+{
+  "name": "Vatertagskarte A6 quer – Werkzeug",
+  "category": "Karten",
+  "description": "Handfeste Vatertagskarte im Format A6 quer: Kraftpapier-Ton, Hammer, Schraubenschlüssel und Werkzeugkasten als Symbole, „Bester Papa der Welt“ in kräftiger Slab-Schrift. Innen mit Platz für dein Dankeschön.",
+  "family": "vatertagskarte",
+  "familyName": "Vatertagskarte",
+  "variant": "Werkzeug",
+  "occasion": "Feiertage",
+  "tags": ["Vatertag","Papa","Werkzeug","Handwerker","Hammer","Kraftpapier","Karte","bester Papa","rustikal","Männertag"],
+  "formatKey": "a6-landscape",
+  "number": 133,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#e5d1ae","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen","x":6,"y":6,"w":136,"h":93,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#4a3524","strokeWidth":0.8,"dash":"dashed","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"icon","name":"Hammer","x":14,"y":14,"w":18,"h":18,"rotation":-15,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"hammer","color":"#4a3524","strokeWidth":1.6},
+        {"id":"e3","type":"icon","name":"Schlüssel","x":116,"y":14,"w":18,"h":18,"rotation":15,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"wrench","color":"#4a3524","strokeWidth":1.6},
+        {"id":"e4","type":"text","name":"Bester","x":24,"y":20,"w":100,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"BESTER","fontFamily":"Roboto Slab","fontSize":22,"fontWeight":700,"italic":false,"color":"#4a3524","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0.24,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Papa","x":9,"y":33,"w":130,"h":36,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"PAPA","fontFamily":"Roboto Slab","fontSize":66,"fontWeight":900,"italic":false,"color":"#c4572c","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"der Welt","x":24,"y":68,"w":100,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"DER WELT","fontFamily":"Roboto Slab","fontSize":18,"fontWeight":700,"italic":false,"color":"#4a3524","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"icon","name":"Werkzeugkasten","x":66,"y":82,"w":14,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"toolbox","color":"#4a3524","strokeWidth":1.6}
+      ]},
+      {"id":"p2","name":"Innenseite","background":{"color":"#f6ecd9","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e8","type":"shape","name":"Band","x":0,"y":0,"w":148,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#c4572c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Anrede","x":18,"y":18,"w":112,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Lieber Papa,","fontFamily":"Roboto Slab","fontSize":17,"fontWeight":700,"italic":false,"color":"#c4572c","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Text","x":18,"y":32,"w":112,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"du kannst fast alles reparieren – und hast immer Zeit für mich. Danke für deine Geduld, deine Hilfe und deine Ideen. Zum Vatertag gibt es heute mal nichts zu schrauben!","fontFamily":"Roboto Slab","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#4a3524","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Gruß","x":18,"y":82,"w":112,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dein Sohn Max","fontFamily":"Roboto Slab","fontSize":12,"fontWeight":700,"italic":false,"color":"#4a3524","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"icon","name":"Hammer","x":118,"y":14,"w":12,"h":12,"rotation":-15,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"hammer","color":"#4a3524","strokeWidth":1.6}
+      ]}
+    ]
+  }
+}

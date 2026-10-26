@@ -1,0 +1,42 @@
+{
+  "name": "Glasetikett – Landhaus",
+  "category": "Etiketten",
+  "description": "Zentriertes Glasetikett (70 × 50 mm) im Landhaus-Stil: rosa Bogenrand, Produktname in Schreibschrift, Sorte in Kursiv, Herzchen-Trenner, Inhalt und Abfülldatum. Produkt, Sorte, Inhalt, Datum und Erzeuger sind Felder.",
+  "family": "glasetikett",
+  "familyName": "Glasetikett",
+  "variant": "Landhaus",
+  "occasion": "Handel & Preise",
+  "tags": ["Marmelade","Honig","Glas","Etikett","Hofladen","Selbstgemacht","Abfülldatum","Landhaus","Rosa","Romantisch","Konfitüre","Gelee","Beeren","Geschenk"],
+  "formatKey": "label-70x50",
+  "number": 407,
+  "document": {
+    "schema":2,"unit":"mm","width":70,"height":50,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Produkt","label":"Produkt","type":"text","sample":"Waldhonig","decimals":null,"category":null,"required":true},
+      {"key":"Sorte","label":"Sorte oder Zusatz","type":"text","sample":"Sommertracht, cremig","decimals":null,"category":null,"required":false},
+      {"key":"Inhalt","label":"Inhalt","type":"text","sample":"500 g","decimals":null,"category":null,"required":false},
+      {"key":"Datum","label":"Abgefüllt","type":"text","sample":"Abgefüllt 07/2026","decimals":null,"category":null,"required":false},
+      {"key":"Erzeuger","label":"Erzeuger","type":"text","sample":"Imkerei Sonnenhang","decimals":null,"category":null,"required":false},
+      {"key":"URL","label":"Internetadresse für den QR-Code","type":"text","sample":"https://example.org/honig","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fffaf2","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Bogenrand","x":0,"y":0,"w":70,"h":11.881,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-formen-bogenrand-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Erzeuger","x":6,"y":5.6,"w":58,"h":4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Erzeuger","flipX":false,"flipY":false,"shadow":null,"text":"{{Erzeuger}}","fontFamily":"Lora","fontSize":7,"fontWeight":400,"italic":true,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Produkt","x":5,"y":10.6,"w":60,"h":13.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Produkt}}","fontFamily":"Dancing Script","fontSize":27,"fontWeight":700,"italic":false,"color":"#4a1f2a","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Sorte","x":6,"y":24.4,"w":58,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Sorte","flipX":false,"flipY":false,"shadow":null,"text":"{{Sorte}}","fontFamily":"Lora","fontSize":8.5,"fontWeight":400,"italic":true,"color":"#7a5560","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"image","name":"Trenner","x":20,"y":30.4,"w":30,"h":3,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-herz-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"text","name":"Inhalt","x":6,"y":36.4,"w":24,"h":5.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Inhalt}}","fontFamily":"Lora","fontSize":10,"fontWeight":700,"italic":false,"color":"#b3394f","align":"right","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Punkt","x":34.2,"y":38.4,"w":1.6,"h":1.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#e7a1ae","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Datum","x":38.4,"y":36.4,"w":28,"h":5.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":"Datum","flipX":false,"flipY":false,"shadow":null,"text":"{{Datum}}","fontFamily":"Lora","fontSize":8,"fontWeight":400,"italic":false,"color":"#7a5560","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Hinweis","x":6,"y":43.4,"w":58,"h":3.8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Kühl und dunkel lagern","fontFamily":"Lora","fontSize":6.5,"fontWeight":400,"italic":true,"color":"#a58a92","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":5.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Produkt":"Waldhonig","Sorte":"Sommertracht, cremig","Inhalt":"500 g","Datum":"Abgefüllt 07/2026","Erzeuger":"Imkerei Sonnenhang","URL":"https://example.org/honig"},
+    {"Produkt":"Erdbeermarmelade","Sorte":"mit 60 % Frucht","Inhalt":"250 g","Datum":"Abgefüllt 06/2026","Erzeuger":"Hofladen Wiesengrund","URL":"https://example.org/erdbeere"},
+    {"Produkt":"Holunder-Gelee","Sorte":"Herbstlese","Inhalt":"200 g","Datum":"","Erzeuger":"Hofladen Wiesengrund","URL":"https://example.org/gelee"},
+    {"Produkt":"Quittenkonfitüre","Sorte":"","Inhalt":"250 g","Datum":"Abgefüllt 10/2026","Erzeuger":"","URL":""}
+  ]
+}
