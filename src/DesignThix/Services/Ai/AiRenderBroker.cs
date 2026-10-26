@@ -27,7 +27,22 @@ public sealed class AiRenderBroker(TimeProvider clock)
     private readonly ConcurrentDictionary<long, DateTime> _seen = new();
 
     /// <summary>The editor of this conversation is there: called by every poll of the steps.</summary>
-    public void Touch(long conversationId) => _seen[conversationId] = clock.GetUtcNow().UtcDateTime;
+    public void Touch(long conversationId)
+    {
+        var now = clock.GetUtcNow().UtcDateTime;
+        _seen[conversationId] = now;
+        if (_seen.Count > 2000)
+        {
+            // an editor that has not polled for an hour is gone: the table does not grow with every conversation ever followed
+            foreach (var (id, at) in _seen)
+            {
+                if (now - at > TimeSpan.FromHours(1))
+                {
+                    _seen.TryRemove(id, out _);
+                }
+            }
+        }
+    }
 
     /// <summary>Whether the editor of the conversation polled within this time (an editor that is closed cannot draw anything).</summary>
     public bool EditorConnected(long conversationId, TimeSpan within) => _seen.TryGetValue(conversationId, out var at) && clock.GetUtcNow().UtcDateTime - at <= within;

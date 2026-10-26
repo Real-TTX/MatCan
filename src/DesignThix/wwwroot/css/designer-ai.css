@@ -145,6 +145,8 @@
 .dt-ag-notice__x { flex: none; width: 1.4rem; height: 1.4rem; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: inherit; cursor: pointer; }
 .dt-ag-notice__x:hover { background: rgba(0, 0, 0, 0.08); }
 .dt-ag-notice__x .mat-icon { width: 0.85rem; height: 0.85rem; margin: 0; }
+.dt-ag-limits { flex: none; align-self: flex-start; margin-top: 6px; }
+.dt-ag-notice .dt-ag-limits { margin-top: -2px; color: inherit; }
 
 
 .dt-ag-drop { position: absolute; inset: 0; z-index: 5; display: grid; place-content: center; justify-items: center; gap: 6px; background: color-mix(in srgb, var(--mat-surface) 88%, transparent); border: 2px dashed var(--mat-accent); border-radius: var(--mat-radius); color: var(--mat-accent-text); text-align: center; pointer-events: none; }

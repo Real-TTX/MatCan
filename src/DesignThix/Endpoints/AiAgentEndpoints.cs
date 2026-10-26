@@ -96,6 +96,7 @@ public static class AiAgentEndpoints
             var page = await AiAgentLogic.StepsAsync(biz, id, after ?? 0);
             return Results.Json(new
             {
+                designId = page.DesignId,
                 status = page.Status,
                 run = page.Run,
                 runId = page.RunId,
@@ -183,7 +184,7 @@ public static class AiAgentEndpoints
             }
             catch (AiLimitException ex)
             {
-                return Results.Json(new { error = ex.Message, code = "limit" }, statusCode: StatusCodes.Status429TooManyRequests);
+                return Results.Json(new { error = ex.Message, code = "limit", limit = ex.Kind, href = ex.Href }, statusCode: StatusCodes.Status429TooManyRequests);
             }
             catch (AiChangedSinceException ex)
             {

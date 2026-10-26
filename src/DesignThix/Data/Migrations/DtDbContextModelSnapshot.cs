@@ -318,6 +318,8 @@ namespace DesignThix.Data.Migrations
 
                     b.HasIndex("AiRunId");
 
+                    b.HasIndex("EntityType", "EntityId");
+
                     b.ToTable("AiJournalEntry");
                 });
 

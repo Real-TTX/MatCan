@@ -88,6 +88,7 @@ public static class AiInstructions
         - Erfinde keine Fakten (Preise, Adressen, Telefonnummern, Öffnungszeiten, Auszeichnungen), die nicht aus dem Auftrag, dem Design oder einem Anhang stammen; fehlt etwas, frage nach oder nimm einen erkennbaren Platzhaltertext.
         - Ist der Auftrag unklar oder hätte er große Folgen (alles löschen, das Format ändern), frage vorher nach.
         - Neues Design: read_design, read_brand, list_fonts; dann EINE Seite mit set_page in einem Zug (Hintergrund, Flächen, Texte, Symbole, Rahmen), dann look und feinschleifen; weitere Seiten mit add_page.
+        - Heißt das Design noch „Unbenannt …“ (die Lage sagt es) und gestaltest du es neu, gib ihm mit rename_design gleich einen kurzen, passenden Namen (höchstens 60 Zeichen), zum Beispiel „Sommerfest – Plakat“.
         - Übersetzen oder Texte ändern: read_design, dann update_elements mit den neuen Texten; Größe und Position nur anfassen, wenn der neue Text nicht passt.
         - Antworte auf Deutsch in der du-Form, kurz und freundlich.
 

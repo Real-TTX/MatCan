@@ -7,8 +7,10 @@
 //   node screens.js [base url, default http://localhost:3043] [--out ../../docs/images] [--fake-host <host the APP reaches this machine by>] [--fake-port 3066] [--no-ai]
 //
 // Shots: start, create-dialog, templates, datalist, media, output, output-job, phone-start, then the editor (editor, context-menu, text-combinations, download, media-browser, editor-data,
-// text-effects, phone-editor), then the platform (projects, share, team-members, public-view, comments, notifications) and ai-import. The shot of the AI preview needs a provider: the script starts
-// the fake server of ai-check.js, makes a profile through the admin pages, shows the preview of an import (nothing is applied) and removes the profile again. With --no-ai that screenshot is skipped.
+// text-effects, phone-editor), then the platform (projects, share, team-members, public-view, comments, notifications), ai-import and the design assistant (ai-prompt, ai-design, ai-phone). The shot of the AI preview needs a provider: the script starts
+// the fake server of ai-check.js, makes a profile through the admin pages, shows the preview of an import (nothing is applied) and removes the profile again. The shots of the design assistant
+// (plan 4) use the same fake model: the prompt on the start page, the editor after a run (the panel KI with its log) and the sheet on a phone; the design they make is deleted again. With --no-ai all
+// of these are skipped; --ai-only makes just the three shots of the design assistant (for a stack that is clean otherwise; the other shots stay as they are).
 //
 // The platform shots (docs/PLAN-PLATFORM.md) need people: the administrator makes four members (Mia Hofmann, Jonas Weber, Lea Schneider, Tim Brandt), Mia makes the team "Team Marketing", folders and
 // designs from the templates, the others share, comment and ask for access. Everything the platform shots made is removed again at the end (the team by its owner, the accounts by the administrator
@@ -27,6 +29,7 @@ const fakePort = Number(argValue('--fake-port', '3066'));
 const fakeHost = argValue('--fake-host', /localhost:3043|127\.0\.0\.1:3043/.test(base) ? 'host.docker.internal' : '127.0.0.1');
 const withAi = !args.includes('--no-ai');
 const platformOnly = args.includes('--platform-only');
+const aiOnly = args.includes('--ai-only');
 const accountFile = process.env.DT_ACCOUNT_FILE || path.join(__dirname, 'test-account.json'); // DT_ACCOUNT_FILE: another file, for checks that run side by side
 
 const written = [];
@@ -216,6 +219,84 @@ async function platformShots(browser, page) {
   }
 }
 
+/**
+ * The AI shots with the fake provider (nothing leaves the machine): a profile through the admin pages, the preview of an import (nothing is applied; not with --ai-only), then the design assistant: the
+ * prompt on the start page, the editor after the run with the panel KI, the sheet on a phone. The design the run makes is deleted again and the profile removed, so a clean stack stays clean.
+ */
+async function aiShots(page, admin, browser, listId, shot) {
+  const PROFILE = 'Beispiel-Anbieter';
+  await startFake(fakePort);
+  fake.streamDelayMs = 10;
+  fake.restDelayMs = 4;
+  await page.goto(base + '/Admin/Ai/Profiles/Edit');
+  await page.fill('#Input_Name', PROFILE);
+  await page.selectOption('#Input_Preset', 'custom');
+  await page.fill('#Input_BaseUrl', `http://${fakeHost}:${fakePort}/v1`);
+  await page.fill('#Input_ApiKey', 'sk-fake-screens');
+  await page.fill('#Input_Model', 'gpt-4o-mini');   // only a name: the fake server answers whatever it is called
+  await Promise.all([page.waitForNavigation(), page.click('button[type=submit].mat-btn--primary')]);
+  await page.goto(base + '/Admin/Ai/Profiles');
+  const item = page.locator('.mat-item', { hasText: PROFILE });
+  if (await item.locator('button:has-text("Aktivieren")').count()) { await Promise.all([page.waitForNavigation(), item.locator('button:has-text("Aktivieren")').click()]); }
+
+  if (!aiOnly) {
+    await page.goto(`${base}/DataLists/Edit/${listId}?tab=import`);
+    await page.waitForSelector('[data-ai-import]');
+    await page.fill('[data-ai-form] textarea', 'Lieferschein Käse Herbst\nTilsiter, 2,79 € pro 100 g, aus Deutschland\nBrie de Meaux, 3,90 €, Frankreich\nGouda jung, 2,50 € pro 100 g, aus den Niederlanden');
+    await page.fill('[data-ai-form] input[type=text]', 'Land ist das Herkunftsland');
+    await page.click('[data-ai-form] button:has-text("Vorschlag erstellen")');
+    await page.waitForSelector('dialog.dt-ai[open] .dt-ai-table', { timeout: 30000 });
+    await page.waitForTimeout(500);
+    await shot('ai-import.png');
+    // Nothing is taken over: the proposal is discarded, so the clean stack stays as it was.
+    await page.locator('dialog.dt-ai[open] button:has-text("Verwerfen")').first().click().catch(() => page.keyboard.press('Escape'));
+    await page.waitForTimeout(400);
+  }
+
+  // The design assistant: the prompt on the start page, then the editor after the run.
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  await page.waitForSelector('form.dt-aip--hero');
+  await page.fill('form.dt-aip--hero textarea', 'Gestalte ein Plakat für unser „Sommerfest am Hof“: Samstag, 12. Juli, ab 14 Uhr, mit Musik und gutem Essen. Der Eintritt ist frei.');
+  await page.waitForTimeout(300);
+  await shot('ai-prompt.png');
+  await page.click('form.dt-aip--hero [data-ai-submit]');
+  await page.waitForURL(/\/Designs\/\d+\/Designer/, { timeout: 30000 });
+  const designId = Number(page.url().match(/Designs\/(\d+)\//)[1]);
+  await page.waitForFunction(() => window.DtDesigner && window.DtDesigner.ai && window.DtDesigner.ai.state().conv > 0, null, { timeout: 30000 });
+  await page.waitForFunction(() => document.querySelectorAll('.dt-ag-end').length > 0 && document.getElementById('dt-ds').getAttribute('data-ai-state') === 'idle', null, { timeout: 180000, polling: 200 });
+  await idle(page);
+  await page.waitForFunction(() => window.DtDesigner.app.saveState === 'saved', null, { timeout: 15000 }).catch(() => { });
+  await page.waitForTimeout(1200);
+  await shot('ai-design.png');
+
+  // The same conversation on a phone: the sheet with the log.
+  const conversation = await page.evaluate(() => window.DtDesigner.ai.state().conv);
+  const phone = await newContext(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, colorScheme: 'light', deviceScaleFactor: 2 });
+  const p = await phone.newPage();
+  watch(p, 'ai-phone');
+  await login(p, admin);
+  await p.goto(`${base}/Designs/${designId}/Designer?ai=${conversation}`);
+  await p.waitForSelector('.dt-ag-end', { timeout: 30000 });
+  await p.waitForTimeout(1200);
+  await shot('ai-phone.png', p);
+  await phone.close();
+
+  // What the shots made goes again: the design (the trash is emptied for good), the profile.
+  await page.evaluate(async id => {
+    const token = document.querySelector('meta[name=dt-csrf]').content;
+    const call = (url, body) => fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', RequestVerificationToken: token }, body: JSON.stringify(body) });
+    await call('/api/items/trash', { items: [{ kind: 'design', id }] });
+    await call('/api/items/purge', { items: [{ kind: 'design', id }] });
+  }, designId);
+  await page.goto(base + '/Admin/Ai/Profiles');
+  await Promise.all([page.waitForNavigation(), page.locator('.mat-item', { hasText: PROFILE }).locator('a.mat-item__main').click()]);
+  await page.click('button:has-text("Löschen")');
+  await page.click('dialog[open] [data-dlg-ok], dialog[open] .mat-btn--danger').catch(() => { });
+  await page.waitForNavigation().catch(() => { });
+  fake.server.close();
+}
+
 (async () => {
   fs.mkdirSync(out, { recursive: true });
   const browser = await launch();
@@ -225,6 +306,19 @@ async function platformShots(browser, page) {
   const page = await desktop.newPage();
   watch(page, 'screens');
   if (!await login(page, admin)) { throw new Error('Sign-in failed.'); }
+
+  if (aiOnly) {
+    await aiShots(page, admin, browser, 0, async (file, target) => {
+      await page.waitForTimeout(500);
+      await (target || page).screenshot({ path: path.join(out, file) });
+      written.push(file);
+      console.log('wrote ' + file);
+    });
+    await browser.close();
+    console.log(`\n${written.length} screenshots in ${out}`);
+    if (problems.length) { console.log('problems:\n' + problems.join('\n')); process.exit(1); }
+    return;
+  }
 
   if (platformOnly) {
     await platformShots(browser, page);
@@ -381,37 +475,9 @@ async function platformShots(browser, page) {
   // 9. The platform: Projekte with folders, Teilen, a team, the public view, comments and the bell (made with four people who are removed again).
   await platformShots(browser, page);
 
-  // The AI import preview, against the fake provider (last: it leaves one run in the log).
+  // The AI shots, against the fake provider (last: they leave runs in the log).
   if (withAi) {
-    await startFake(fakePort);
-    await page.goto(base + '/Admin/Ai/Profiles/Edit');
-    await page.fill('#Input_Name', 'Beispiel-Anbieter');
-    await page.selectOption('#Input_Preset', 'custom');
-    await page.fill('#Input_BaseUrl', `http://${fakeHost}:${fakePort}/v1`);
-    await page.fill('#Input_ApiKey', 'sk-fake-screens');
-    await page.fill('#Input_Model', 'fake-model');
-    await Promise.all([page.waitForNavigation(), page.click('button[type=submit].mat-btn--primary')]);
-    await page.goto(base + '/Admin/Ai/Profiles');
-    const item = page.locator('.mat-item', { hasText: 'Beispiel-Anbieter' });
-    if (await item.locator('button:has-text("Aktivieren")').count()) { await Promise.all([page.waitForNavigation(), item.locator('button:has-text("Aktivieren")').click()]); }
-
-    await page.goto(`${base}/DataLists/Edit/${listId}?tab=import`);
-    await page.waitForSelector('[data-ai-import]');
-    await page.fill('[data-ai-form] textarea', 'Lieferschein Käse Herbst\nTilsiter, 2,79 € pro 100 g, aus Deutschland\nBrie de Meaux, 3,90 €, Frankreich\nGouda jung, 2,50 € pro 100 g, aus den Niederlanden');
-    await page.fill('[data-ai-form] input[type=text]', 'Land ist das Herkunftsland');
-    await page.click('[data-ai-form] button:has-text("Vorschlag erstellen")');
-    await page.waitForSelector('dialog.dt-ai[open] .dt-ai-table', { timeout: 30000 });
-    await page.waitForTimeout(500);
-    await shot('ai-import.png');
-    // Nothing is taken over: the proposal is discarded, the profile removed, so the clean stack stays as it was.
-    await page.locator('dialog.dt-ai[open] button:has-text("Verwerfen")').first().click().catch(() => page.keyboard.press('Escape'));
-    await page.waitForTimeout(400);
-    await page.goto(base + '/Admin/Ai/Profiles');
-    await Promise.all([page.waitForNavigation(), page.locator('.mat-item', { hasText: 'Beispiel-Anbieter' }).locator('a.mat-item__main').click()]);
-    await page.click('button:has-text("Löschen")');
-    await page.click('dialog[open] [data-dlg-ok], dialog[open] .mat-btn--danger').catch(() => { });
-    await page.waitForNavigation().catch(() => { });
-    fake.server.close();
+    await aiShots(page, admin, browser, listId, shot);
   }
 
   await browser.close();

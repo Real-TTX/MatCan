@@ -154,6 +154,7 @@ public class DtDbContext(DbContextOptions<DtDbContext> options, ICurrentUser cur
         b.Entity<AiJournalEntry>(e =>
         {
             e.HasIndex(x => x.AiRunId);
+            e.HasIndex(x => new { x.EntityType, x.EntityId });   // "the newest change of this design": asked by the poll of every open editor
             e.HasOne(x => x.AiRun).WithMany().HasForeignKey(x => x.AiRunId).OnDelete(DeleteBehavior.Cascade);
         });
 

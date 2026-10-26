@@ -157,6 +157,7 @@ public static class AiAgentLoop
         var history = ReadHistory(conv.HistoryJson);
         var number = await db.AiRunStep.Where(s => s.AiRunId == run.Id).Select(s => (int?)s.Number).MaxAsync(CancellationToken.None) ?? 0;
         (string State, string Text) end = ("stalled", "Die KI hat aufgehört, ohne den Auftrag abzuschließen.");
+        string? limitKind = null;   // which limit ended the run: the end step names it, so the panel can offer the way to the settings to an administrator
         var session = new AiToolSession
         {
             ConversationId = conv.Id,
@@ -233,11 +234,22 @@ public static class AiAgentLoop
                     break;
                 }
 
+                // the person may have been deactivated, declined or deleted, or their role changed, since the run began: a run works as the person and stops with them
+                var who = await db.User.AsNoTracking().Where(u => u.Id == conv.UserId).Select(u => new { u.IsActive, u.ApprovalState, u.Role }).FirstOrDefaultAsync(CancellationToken.None);
+                if (who is null || !who.IsActive || who.ApprovalState != ApprovalState.Approved || (who.Role == UserRole.Admin) != biz.IsAdmin)
+                {
+                    const string gone = "Dein Konto oder deine Rolle hat sich geändert: die KI arbeitet nicht weiter.";
+                    await Step(AiStepKind.Error, gone);
+                    end = ("error", gone);
+                    break;
+                }
+
                 // the limits count per call: the budgets and the brake per address and minute
                 if (await AiLogic.BudgetReasonAsync(db, settings, conv.UserId, clock.GetUtcNow().UtcDateTime, CancellationToken.None) is { } budget)
                 {
-                    await Step(AiStepKind.Info, budget);
-                    end = ("limit", budget);
+                    await Step(AiStepKind.Info, budget.Text);
+                    end = ("limit", budget.Text);
+                    limitKind = budget.Kind;
                     break;
                 }
 
@@ -245,6 +257,7 @@ public static class AiAgentLoop
                 {
                     await Step(AiStepKind.Info, AiLogic.RateReason);
                     end = ("limit", AiLogic.RateReason);
+                    limitKind = AiLogic.RateKind;
                     break;
                 }
 
@@ -436,13 +449,21 @@ public static class AiAgentLoop
         {
             partial.End(run.Id);
             broker.Forget(run.Id);
-            await FinishAsync(biz, conv.Id, run.Id, end, run.PromptTokens, run.CompletionTokens, run.TokensEstimated, run.ProfileName, run.Model, run.Transport, history);
+            if (session.Wrote && FirstRunFlag(conv, "autoName"))
+            {
+                // a design made from a prompt does not stay "Unbenannt …" when the model forgot to name it
+                await AiAgentLogic.NameFromConversationAsync(biz, conv.SubjectId, conv.Title);
+            }
+
+            await FinishAsync(biz, conv.Id, run.Id, end, limitKind, run.PromptTokens, run.CompletionTokens, run.TokensEstimated, run.ProfileName, run.Model, run.Transport, history);
         }
     }
 
-    private static bool AutoFormat(AiConversation conv)
+    private static bool AutoFormat(AiConversation conv) => FirstRunFlag(conv, "autoFormat");
+
+    /// <summary>A flag that only the very first run of a conversation that was started from a prompt carries ("autoFormat": no format chosen, "autoName": the design is named after the run).</summary>
+    private static bool FirstRunFlag(AiConversation conv, string flag)
     {
-        // only the very first run of a conversation that was started from a prompt without a chosen format
         if (conv.Runs != 1)
         {
             return false;
@@ -450,7 +471,7 @@ public static class AiAgentLoop
 
         try
         {
-            return JsonNode.Parse(conv.ScopeJson) is JsonObject o && AiDocOps.Flag(o["autoFormat"]);
+            return JsonNode.Parse(conv.ScopeJson) is JsonObject o && AiDocOps.Flag(o[flag]);
         }
         catch (JsonException)
         {
@@ -494,7 +515,7 @@ public static class AiAgentLoop
     /// Writes how the run ended: the state of the run, the history, the tokens, the end step, the conversation idle. Through a fresh scope, so a context that a failed step left in a bad state cannot stop
     /// the end from being written.
     /// </summary>
-    private static async Task FinishAsync(Biz biz, long conversationId, long runId, (string State, string Text) end, int promptTokens, int completionTokens, bool estimated, string profile, string model, string transport, List<HistoryMessage> history)
+    private static async Task FinishAsync(Biz biz, long conversationId, long runId, (string State, string Text) end, string? limitKind, int promptTokens, int completionTokens, bool estimated, string profile, string model, string transport, List<HistoryMessage> history)
     {
         using var scope = biz.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<DtDbContext>();
@@ -527,7 +548,7 @@ public static class AiAgentLoop
                 Kind = AiStepKind.End,
                 Text = end.Text,
                 OccurredDate = now,
-                DataJson = new JsonObject { ["state"] = end.State }.ToJsonString(),
+                DataJson = new JsonObject { ["state"] = end.State, ["limit"] = limitKind, ["href"] = limitKind is null ? null : AiLogic.LimitsHref(biz) }.ToJsonString(),
             });
         }
 

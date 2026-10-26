@@ -12,7 +12,14 @@ using Microsoft.EntityFrameworkCore;
 namespace DesignThix.Logic;
 
 /// <summary>A limit of the AI is reached (budget, runs per day, calls per minute): the message says which; the request answers 429.</summary>
-public sealed class AiLimitException(string message) : Exception(message);
+public sealed class AiLimitException(string message, string kind = "limit", string? href = null) : Exception(message)
+{
+    /// <summary>Which limit: <c>user-day</c>, <c>user-month</c>, <c>all-month</c>, <c>address-day</c> or <c>minute</c>.</summary>
+    public string Kind { get; } = kind;
+
+    /// <summary>Where an administrator changes the limits (null for everybody else).</summary>
+    public string? Href { get; } = href;
+}
 
 /// <summary>The design was changed by somebody after the run that is to be undone: the undo asks again with <c>force</c> (HTTP 409 with <c>changedSince</c>).</summary>
 public sealed class AiChangedSinceException(int currentRevision) : Exception("Seitdem wurde das Design geändert. Trotzdem zurücksetzen? Diese Änderungen gehen verloren.")
@@ -38,7 +45,7 @@ public static partial class AiAgentLogic
     // ================================================================================================ may the AI be used here
 
     /// <summary>Whether the panel of the design assistant is offered, and why not: a member sees it when they may edit the design and the AI works; an administrator also when it is off or has no profile (the panel then says why).</summary>
-    public sealed record Availability(bool CanEdit, bool Enabled, bool Available, bool ShowEntry, string? Reason, string? SettingsHref, long? RunningConversationId, int MaxFiles, long MaxFileBytes, int MaxLooks);
+    public sealed record Availability(bool CanEdit, bool Enabled, bool Available, bool ShowEntry, string? Reason, string? SettingsHref, long? RunningConversationId, int MaxFiles, long MaxFileBytes, int MaxLooks, string? LimitsHref = null);
 
     public static async Task<Availability> AvailabilityAsync(Biz biz, long designId)
     {
@@ -66,7 +73,7 @@ public static partial class AiAgentLogic
 
         var show = canEdit && (available || biz.IsAdmin);
         var running = await biz.Db.AiConversation.AsNoTracking().Where(c => c.SubjectType == nameof(Design) && c.SubjectId == designId && c.Status == AiConversationStatus.Running).Select(c => (long?)c.Id).FirstOrDefaultAsync();
-        return new Availability(canEdit, settings.Enabled, available, show, reason, href, running, settings.AgentMaxFilesPerMessage, AiAttachmentLogic.MaxFileBytes, settings.AgentMaxLooks);
+        return new Availability(canEdit, settings.Enabled, available, show, reason, href, running, settings.AgentMaxFilesPerMessage, AiAttachmentLogic.MaxFileBytes, settings.AgentMaxLooks, AiLogic.LimitsHref(biz));
     }
 
     /// <summary>The checks before anything is stored: the AI is on and set up, no limit is reached (the budgets, the runs per address and day, the calls per address and minute).</summary>
@@ -86,19 +93,19 @@ public static partial class AiAgentLogic
         var now = biz.Now;
         if (await AiLogic.BudgetReasonAsync(biz.Db, settings, biz.UserId, now, default) is { } budget)
         {
-            throw new AiLimitException(budget);
+            throw new AiLimitException(budget.Text, budget.Kind, AiLogic.LimitsHref(biz));
         }
 
         var limiter = biz.Service<AiRateLimiter>();
         var address = biz.User.IpAddress;
         if (await AiLogic.RunsPerDayReasonAsync(biz.Db, settings, address is null ? null : limiter.Hash(address), now, default) is { } perDay)
         {
-            throw new AiLimitException(perDay);
+            throw new AiLimitException(perDay.Text, perDay.Kind, AiLogic.LimitsHref(biz));
         }
 
         if (!limiter.WouldAllow(address, settings.PerMinutePerAddress))
         {
-            throw new AiLimitException(AiLogic.RateReason);
+            throw new AiLimitException(AiLogic.RateReason, AiLogic.RateKind, AiLogic.LimitsHref(biz));
         }
     }
 
@@ -109,17 +116,36 @@ public static partial class AiAgentLogic
         biz.RequireSignedIn();
         var query = tracked ? biz.Db.AiConversation : biz.Db.AiConversation.AsNoTracking();
         var conv = await query.FirstOrDefaultAsync(c => c.Id == id && c.SubjectType == nameof(Design));
-        if (conv is null || (conv.UserId != biz.UserId && !biz.IsAdmin))
+        await CheckOwnAsync(biz, conv?.UserId, conv?.SubjectId);
+        return conv!;
+    }
+
+    /// <summary>
+    /// The rule of every conversation endpoint: the person of the conversation (as long as they may still see the design) or an administrator; everybody else, and a conversation that is not there, gets 404.
+    /// </summary>
+    private static async Task CheckOwnAsync(Biz biz, long? userId, long? designId)
+    {
+        if (userId is null || designId is null || (userId != biz.UserId && !biz.IsAdmin))
         {
             throw new NotFoundException();
         }
 
-        if (conv.UserId == biz.UserId && !biz.IsAdmin && await Access.LevelAsync(biz, ItemKind.Design, conv.SubjectId) == AccessLevel.None)
+        if (userId == biz.UserId && !biz.IsAdmin && await Access.LevelAsync(biz, ItemKind.Design, designId.Value) == AccessLevel.None)
         {
             throw new NotFoundException();
         }
+    }
 
-        return conv;
+    /// <summary>What the poll needs of a conversation. Not the history (hundreds of KB): the poll of an open editor comes every second.</summary>
+    private sealed record ConversationHead(long Id, long UserId, long SubjectId, AiConversationStatus Status, int Runs, int Tokens);
+
+    private static async Task<ConversationHead> OwnHeadAsync(Biz biz, long id)
+    {
+        biz.RequireSignedIn();
+        var head = await biz.Db.AiConversation.AsNoTracking().Where(c => c.Id == id && c.SubjectType == nameof(Design))
+            .Select(c => new ConversationHead(c.Id, c.UserId, c.SubjectId, c.Status, c.Runs, c.Tokens)).FirstOrDefaultAsync();
+        await CheckOwnAsync(biz, head?.UserId, head?.SubjectId);
+        return head!;
     }
 
     public sealed record ConversationRow(long Id, string Title, string Status, int Runs, int Tokens, DateTime UpdateDate);
@@ -147,31 +173,25 @@ public static partial class AiAgentLogic
         var runIds = runs.Select(r => r.Id).ToList();
         var journal = await biz.Db.AiJournalEntry.AsNoTracking().Where(j => runIds.Contains(j.AiRunId) && j.EntityType == nameof(Design)).Select(j => new { j.AiRunId, j.RevertedDate }).ToListAsync();
         var info = runs.Select(r => new RunInfo(r.Id, r.Number, r.Status.ToString(), r.Error, r.TotalTokens, r.StartDate, r.EndDate, journal.Any(j => j.AiRunId == r.Id), journal.Any(j => j.AiRunId == r.Id && j.RevertedDate is not null))).ToList();
-        return new ConversationInfo(conv.Id, conv.SubjectId, conv.Title, conv.Status.ToString(), AiScope.Parse(conv.ScopeJson), conv.Tokens, info, await UndoInfoAsync(biz, conv));
+        return new ConversationInfo(conv.Id, conv.SubjectId, conv.Title, conv.Status.ToString(), AiScope.Parse(conv.ScopeJson), conv.Tokens, info, await UndoInfoAsync(biz, conv.Id, conv.SubjectId));
     }
 
-    private static async Task<UndoInfo?> UndoInfoAsync(Biz biz, AiConversation conv)
+    private static async Task<UndoInfo?> UndoInfoAsync(Biz biz, long conversationId, long designId)
     {
-        var newest = await NewestChangeAsync(biz.Db, conv.SubjectId);
-        if (newest is null)
-        {
-            return null;
-        }
-
-        var run = await biz.Db.AiRun.AsNoTracking().Where(r => r.Id == newest.AiRunId).Select(r => new { r.Id, r.ConversationId, r.Number }).FirstOrDefaultAsync();
-        return run is null ? null : run.ConversationId == conv.Id ? new UndoInfo(run.Number, false, run.Id) : new UndoInfo(null, true, run.Id);
+        // the poll of every open editor asks this once a second: ONE query, and only the three columns it needs (the journal entry holds whole documents)
+        var db = biz.Db;
+        var run = await (from j in db.AiJournalEntry.AsNoTracking()
+                         join r in db.AiRun.AsNoTracking() on j.AiRunId equals r.Id
+                         where j.EntityType == nameof(Design) && j.EntityId == designId && j.RevertedDate == null && r.Action == AiAction.DesignAgent
+                         orderby j.Id descending
+                         select new { r.Id, r.ConversationId, r.Number }).FirstOrDefaultAsync();
+        return run is null ? null : run.ConversationId == conversationId ? new UndoInfo(run.Number, false, run.Id) : new UndoInfo(null, true, run.Id);
     }
-
-    /// <summary>The newest journal entry of the design that the AI made and nobody took back.</summary>
-    private static Task<AiJournalEntry?> NewestChangeAsync(Data.DtDbContext db, long designId)
-        => db.AiJournalEntry.AsNoTracking()
-            .Where(j => j.EntityType == nameof(Design) && j.EntityId == designId && j.RevertedDate == null && db.AiRun.Any(r => r.Id == j.AiRunId && r.Action == AiAction.DesignAgent))
-            .OrderByDescending(j => j.Id).FirstOrDefaultAsync();
 
     // ================================================================================================ sending
 
     /// <summary>What comes with a message: the words, where the AI may work, the conversation it continues (null = a new one), references and files.</summary>
-    public sealed record SendInput(string? Text, AiScope? Scope, long? ConversationId, IReadOnlyList<IncomingRef>? Refs, IReadOnlyList<IncomingFile>? Files, bool AutoFormat = false);
+    public sealed record SendInput(string? Text, AiScope? Scope, long? ConversationId, IReadOnlyList<IncomingRef>? Refs, IReadOnlyList<IncomingFile>? Files, bool AutoFormat = false, bool AutoName = false);
 
     public sealed record Sent(long ConversationId, long RunId, int RunNumber, IReadOnlyList<AttachedFile> Files);
 
@@ -272,7 +292,7 @@ public static partial class AiAgentLogic
                 db.AiRun.Add(run);
                 conv.Runs = runNumber;
                 conv.Status = AiConversationStatus.Running;
-                conv.ScopeJson = WithAutoFormat(scope, input.AutoFormat && conv.Runs == 1);
+                conv.ScopeJson = WithFlags(scope, input.AutoFormat && conv.Runs == 1, input.AutoName && conv.Runs == 1);
                 conv.HistoryJson = AiAgentLoop.WriteHistory(history);
                 if (conv.Title.Length == 0)
                 {
@@ -304,7 +324,7 @@ public static partial class AiAgentLogic
         }
     }
 
-    private static string WithAutoFormat(AiScope scope, bool autoFormat)
+    private static string WithFlags(AiScope scope, bool autoFormat, bool autoName)
     {
         var o = (JsonObject)JsonNode.Parse(scope.ToJson())!;
         if (autoFormat)
@@ -312,7 +332,54 @@ public static partial class AiAgentLogic
             o["autoFormat"] = true;
         }
 
+        if (autoName)
+        {
+            o["autoName"] = true;
+        }
+
         return o.ToJsonString();
+    }
+
+    /// <summary>A design that still carries the placeholder name of a new one ("Unbenannt – A4 Hochformat", "Unbenanntes Design").</summary>
+    internal static bool IsPlaceholderName(string? name) => (name ?? "").TrimStart().StartsWith("Unbenannt", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The name a design gets from the first message when the model did not name it: the title of the conversation (the words of the person, at most 80 characters) without the closing punctuation, cut
+    /// at a word at about 60 characters. Null when nothing usable is left.
+    /// </summary>
+    internal static string? DesignNameFromTitle(string? title)
+    {
+        var t = string.Join(' ', (title ?? "").Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)).Trim();
+        t = t.Trim('.', '!', '?', ',', ':', ';', '„', '“', '"', ' ', '…');
+        if (t.Length > 60)
+        {
+            var cut = t.LastIndexOf(' ', 60);
+            t = (cut >= 20 ? t[..cut] : t[..60]).TrimEnd('.', ',', ':', ';', ' ') + "…";
+        }
+
+        return t.Length < 3 || IsPlaceholderName(t) ? null : t;
+    }
+
+    /// <summary>
+    /// A design made from a prompt must not stay "Unbenannt …": when the run changed it and the model did not name it, it is named after the first message (the title of the conversation). Never throws: a name is not
+    /// worth a run's end.
+    /// </summary>
+    internal static async Task NameFromConversationAsync(Biz biz, long designId, string conversationTitle)
+    {
+        try
+        {
+            var current = await biz.Db.Design.AsNoTracking().Where(d => d.Id == designId).Select(d => d.Name).FirstOrDefaultAsync();
+            if (!IsPlaceholderName(current) || DesignNameFromTitle(conversationTitle) is not { } name)
+            {
+                return;
+            }
+
+            await DesignLogic.RenameAsync(biz, designId, name);
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            // the name stays as it is
+        }
     }
 
     private static JsonObject Merge(JsonObject a, JsonObject b)
@@ -383,7 +450,7 @@ public static partial class AiAgentLogic
         var design = await DesignLogic.CreateFromFormatAsync(biz, auto ? "a4-portrait" : preset, input.Width, input.Height, input.Unit, null, input.SpaceId, input.FolderId);
         try
         {
-            var sent = await SendAsync(biz, design.Id, new SendInput(text, AiScope.Whole, null, input.Refs, input.Files, auto));
+            var sent = await SendAsync(biz, design.Id, new SendInput(text, AiScope.Whole, null, input.Refs, input.Files, auto, true));
             return new Started(design.Id, $"/Designs/{design.Id}/Designer?ai={sent.ConversationId}", sent);
         }
         catch
@@ -399,7 +466,7 @@ public static partial class AiAgentLogic
 
     public sealed record RenderRequestInfo(long RunId, string Token, string PageId, int PageNumber, int Revision, int MaxWidth);
 
-    public sealed record StepsPage(string Status, int Run, long? RunId, int Tokens, int? UndoRun, bool UndoOther, string? Partial, RenderRequestInfo? RenderRequest, IReadOnlyList<StepRow> Steps);
+    public sealed record StepsPage(long DesignId, string Status, int Run, long? RunId, int Tokens, int? UndoRun, bool UndoOther, string? Partial, RenderRequestInfo? RenderRequest, IReadOnlyList<StepRow> Steps);
 
     /// <summary>
     /// What the editor polls: the steps after the last one it has (at most 400), whether the run still works, the words of the answer being written, a request for a picture of a page, and which run
@@ -407,7 +474,7 @@ public static partial class AiAgentLogic
     /// </summary>
     public static async Task<StepsPage> StepsAsync(Biz biz, long conversationId, long after)
     {
-        var conv = await OwnConversationAsync(biz, conversationId, tracked: false);
+        var conv = await OwnHeadAsync(biz, conversationId);
         var owner = conv.UserId == biz.UserId;
         var broker = biz.Service<AiRenderBroker>();
         if (owner)
@@ -427,8 +494,8 @@ public static partial class AiAgentLogic
         var request = owner && broker.PendingFor(conv.Id) is { } pending
             ? new RenderRequestInfo(pending.RunId, pending.Token, pending.PageId, pending.PageNumber, pending.Revision, 1024)
             : null;
-        var undo = await UndoInfoAsync(biz, conv);
-        return new StepsPage(conv.Status.ToString(), conv.Runs, newest?.Id, conv.Tokens, undo?.Run, undo is { Other: true }, partial, request, steps);
+        var undo = await UndoInfoAsync(biz, conv.Id, conv.SubjectId);
+        return new StepsPage(conv.SubjectId, conv.Status.ToString(), conv.Runs, newest?.Id, conv.Tokens, undo?.Run, undo is { Other: true }, partial, request, steps);
     }
 
     private static JsonNode? ParseData(string json)
@@ -489,14 +556,22 @@ public static partial class AiAgentLogic
         var now = await biz.Db.Design.AsNoTracking().Where(d => d.Id == designId).Select(d => new { d.Revision, d.DocumentJson }).FirstOrDefaultAsync() ?? throw new NotFoundException();
         var current = now.Revision;
 
+        // the design already is what it was before the run (the editor's own Strg+Z saved it, or a second tab undid it): nothing to write, the entry is only marked, and no question about "changed since"
+        var alreadyBack = !string.IsNullOrEmpty(entry.OldValue) && EqualDocuments(entry.OldValue, now.DocumentJson);
+
         // "changed since": the design is not what the run left (a person saved something different after it). Compared by the document, not by the number of the revision: an undo of a later run
         // also makes a revision, and a save of the editor that changes nothing is no change
-        if (!force && !SameDocument(entry.NewValue, now.DocumentJson, run.ResultJson, current))
+        if (!alreadyBack && !force && !SameDocument(entry.NewValue, now.DocumentJson, run.ResultJson, current))
         {
             throw new AiChangedSinceException(current);
         }
 
-        var saved = await DesignLogic.SaveDocumentAsync(biz, designId, current, entry.OldValue, false, "KI rückgängig");
+        var revision = current;
+        if (!alreadyBack)
+        {
+            revision = (await DesignLogic.SaveDocumentAsync(biz, designId, current, entry.OldValue, false, "KI rückgängig")).Revision;
+        }
+
         entry.RevertedDate = biz.Now;
         await biz.Db.SaveChangesAsync();
         await biz.Log.LogAsync("KI-Änderungen am Design rückgängig gemacht", nameof(Design), designId, $"Lauf {run.Number}");
@@ -534,8 +609,10 @@ public static partial class AiAgentLogic
         }
 
         await biz.Db.SaveChangesAsync();
-        return new UndoResult($"Die Änderungen von Lauf {run.Number} sind rückgängig gemacht.", run.Number, run.Id, saved.Revision);
+        return new UndoResult(alreadyBack ? $"Das Design sieht schon wieder so aus wie vor Lauf {run.Number}." : $"Die Änderungen von Lauf {run.Number} sind rückgängig gemacht.", run.Number, run.Id, revision);
     }
+
+    private static bool EqualDocuments(string left, string right) => (DocumentValidator.Validate(left).Json ?? left) == (DocumentValidator.Validate(right).Json ?? right);
 
     private static bool SameDocument(string? left, string right, string resultJson, int currentRevision)
     {
@@ -545,7 +622,7 @@ public static partial class AiAgentLogic
             return RevisionAfter(resultJson) is not { } expected || expected == currentRevision;
         }
 
-        return (DocumentValidator.Validate(left).Json ?? left) == (DocumentValidator.Validate(right).Json ?? right);
+        return EqualDocuments(left, right);
     }
 
     private static int? RevisionAfter(string resultJson)
@@ -614,7 +691,7 @@ public static partial class AiAgentLogic
         return biz.Service<AiRenderBroker>().TryFail(runId, token ?? "", biz.UserId);
     }
 
-    [GeneratedRegex(@"^[A-Za-z0-9][A-Za-z0-9._-]{0,120}$")]
+    [GeneratedRegex(@"^[A-Za-z0-9][A-Za-z0-9._-]{0,120}\z")]
     private static partial Regex FileNamePattern();
 
     /// <summary>A picture of a conversation (what <c>look</c> drew, the copy of an attachment): by its file name, for the person of the conversation or an administrator. Null when there is none.</summary>
@@ -670,6 +747,11 @@ public static partial class AiAgentLogic
         var sb = new StringBuilder();
         sb.AppendLine($"Heute ist {Services.Fmt.Date(biz.Now)}.");
         sb.AppendLine($"Design: „{AiDesignTools.Clip(design.Name, 80)}“ (Revision {design.Revision}). Format: {Num(AiDocOps.Num(doc["width"]))} × {Num(AiDocOps.Num(doc["height"]))} {unit} bei {AiDocOps.Num(doc["dpi"]):0} dpi. Alle Längen sind in {unit}, Schriftgrößen in pt.");
+        if (IsPlaceholderName(design.Name))
+        {
+            sb.AppendLine("Das Design heißt noch wie ein neues („Unbenannt …“). Gestaltest du es im Wesentlichen neu (ein neues Plakat, eine neue Karte), gib ihm gleich mit rename_design einen kurzen, passenden Namen (höchstens 60 Zeichen, ohne „Unbenannt“), zum Beispiel in deinem ersten Schritt.");
+        }
+
         if (autoFormat)
         {
             sb.AppendLine("Die Person hat kein Format gewählt: das Design ist leer und steht auf A4 hoch. Wähle als Erstes mit resize_design (preset aus list_formats, oder Maße) ein Format, das zum Auftrag passt, und gestalte dann.");

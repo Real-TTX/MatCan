@@ -20,19 +20,23 @@ public sealed class AiSettings
     /// <summary>The additions of the site per action (the key is the name of <c>AiAction</c>): the layer between the base instruction and the fixed part. Empty = none.</summary>
     public Dictionary<string, string> ActionInstructions { get; set; } = [];
 
-    public int UserDailyTokens { get; set; } = 200_000;
+    /// <summary>
+    /// How many tokens one person may use per day (0 = no limit). A run of the design assistant makes one call per step and every call carries the whole conversation, so a run costs about 60 000 tokens:
+    /// the default fits a working day with about 25 runs. (These are the defaults of settings that were never saved; what an administrator saved stays.)
+    /// </summary>
+    public int UserDailyTokens { get; set; } = 1_500_000;
 
-    /// <summary>How many tokens one person may use per month (0 = no limit).</summary>
-    public int UserMonthlyTokens { get; set; } = 2_000_000;
+    /// <summary>How many tokens one person may use per month (0 = no limit): about 13 full working days.</summary>
+    public int UserMonthlyTokens { get; set; } = 20_000_000;
 
-    public int MonthlyTokens { get; set; } = 5_000_000;
+    /// <summary>How many tokens all people together may use per month (0 = no limit).</summary>
+    public int MonthlyTokens { get; set; } = 100_000_000;
 
-    /// <summary>How many runs one address (by the daily hash of the address) may start per day.</summary>
-    public int AddressDailyRuns { get; set; } = 60;
+    /// <summary>How many runs one address (by the daily hash of the address) may start per day. An office behind one address shares it.</summary>
+    public int AddressDailyRuns { get; set; } = 200;
 
-    /// <summary>How many calls one address may start per minute.</summary>
-    /// <summary>How many calls one address may start per minute. A run of the design assistant makes one call per step, so the default leaves room for several runs.</summary>
-    public int PerMinutePerAddress { get; set; } = 30;
+    /// <summary>How many calls one address may start per minute. A run of the design assistant makes one call per step, so the default leaves room for several runs (and people) at once.</summary>
+    public int PerMinutePerAddress { get; set; } = 60;
 
     public int MaxTokens { get; set; } = 16_000;
 

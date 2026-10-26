@@ -249,11 +249,18 @@
     return line;
   }
 
+  /** The link of an administrator to the limits of the AI (only the server gives the address, and only to an administrator). */
+  function limitsLink(href) {
+    return D.el('a', { class: 'mat-btn mat-btn--ghost mat-btn--sm dt-ag-limits', href: href, target: '_blank', rel: 'noopener', 'data-limits-link': '' }, [D.icon('sliders'), D.el('span', { text: 'Limits anpassen' })]);
+  }
+
   function endLine(step) {
     var st = (step.data && step.data.state) || 'stalled';
     var m = END_TEXT[st] || END_TEXT.stalled;
     var line = D.el('div', { class: 'dt-ag-end ' + m[0], 'data-kind': 'end', 'data-state': st }, D.el('div', { class: 'dt-ag-end__head' }, [D.icon(m[1]), D.el('strong', { text: m[2] })]));
     if (step.text && st !== 'done' && st !== 'waiting' && st !== 'cancelled') { line.appendChild(D.el('p', { class: 'dt-ag-end__why', text: step.text })); }
+    // an administrator can change the limit that stopped the run
+    if (st === 'limit' && step.data && step.data.href) { line.appendChild(limitsLink(step.data.href)); }
     if (st === 'stalled' || st === 'error' || st === 'limit') {
       var go = D.el('button', { type: 'button', class: 'mat-btn mat-btn--secondary mat-btn--sm dt-ag-goon' }, [D.icon('play'), D.el('span', { text: 'Weitermachen' })]);
       go.addEventListener('click', function () { send('Mach weiter.'); });
@@ -608,6 +615,8 @@
 
   /** One answer of the steps endpoint: new steps into the log, the canvas follows, a request to look is answered, the end of a run is handled. */
   function handle(data) {
+    // a conversation of another design (a hand-made ?ai= address) is not followed here
+    if (data.designId && Number(data.designId) !== Number(app.id)) { lostConversation(); return Promise.resolve(); }
     var fresh = [];
     (data.steps || []).forEach(function (s) { if (s.id > state.lastStep) { state.lastStep = s.id; fresh.push(s); } });
     state.steps = state.steps.concat(fresh);
@@ -693,8 +702,8 @@
     return { kind: 'design', locked: false };
   }
 
-  function setNotice(text, tone) {
-    state.notice = text ? { text: text, tone: tone || 'danger' } : null;
+  function setNotice(text, tone, href) {
+    state.notice = text ? { text: text, tone: tone || 'danger', href: href || '' } : null;
     drawNotice();
   }
 
@@ -706,6 +715,7 @@
     ui.notice.className = 'dt-ag-notice is-' + state.notice.tone;
     ui.notice.appendChild(D.icon(state.notice.tone === 'danger' ? 'alert' : 'info'));
     ui.notice.appendChild(D.el('span', { text: state.notice.text }));
+    if (state.notice.href) { ui.notice.appendChild(limitsLink(state.notice.href)); }
     var x = D.el('button', { type: 'button', class: 'dt-ag-notice__x', 'aria-label': 'Hinweis schließen' }, D.icon('x'));
     x.addEventListener('click', function () { setNotice(null); });
     ui.notice.appendChild(x);
@@ -721,7 +731,7 @@
     setNotice(null);
     state.sending = true;
     syncCompose();
-    var failed = function (message) { state.sending = false; syncCompose(); setNotice(message, 'danger'); return false; };
+    var failed = function (message, href) { state.sending = false; syncCompose(); setNotice(message, 'danger', href); return false; };
     return D.save.flush().then(function (saved) {
       if (!saved) { return failed('Dein Design konnte gerade nicht gespeichert werden, deshalb habe ich nichts an die KI geschickt. Versuche es gleich noch einmal.'); }
       return attach.ready().then(function () {
@@ -738,7 +748,7 @@
         return request('POST', '/api/ai/designs/' + app.id + '/messages', fd, { formData: true }).then(function (res) {
           if (!res.ok || !res.data) {
             endBusy();
-            if (res.status === 429 || (res.data && res.data.code === 'limit')) { return failed(errorText(res, 'Das Limit der KI ist erreicht.')); }
+            if (res.status === 429 || (res.data && res.data.code === 'limit')) { return failed(errorText(res, 'Das Limit der KI ist erreicht.'), res.data && res.data.href); }
             return failed(errorText(res, 'Die Nachricht ging nicht an die KI.'));
           }
           state.sending = false;

@@ -469,11 +469,11 @@ const IMPORT_TEXT = 'Lieferschein Käse Herbst\nGouda jung, 2,50 € pro 100 g, 
   check('the brake per address answers before the model is called', braked.status === 422 && braked.body.status === 'LimitReached' && /Zu viele Anfragen/.test(braked.body.error), JSON.stringify(braked));
   await admin.goto(base + '/Admin/Ai');
   await admin.click('#ai-tabs-tab-limits');
-  await admin.fill('#Input_PerMinutePerAddress', '30');
-  await admin.fill('#Input_AddressDailyRuns', '60');
-  await admin.fill('#Input_UserDailyTokens', '200000');
-  await admin.fill('#Input_UserMonthlyTokens', '2000000');
-  await admin.fill('#Input_MonthlyTokens', '5000000');
+  await admin.fill('#Input_PerMinutePerAddress', '60');
+  await admin.fill('#Input_AddressDailyRuns', '200');
+  await admin.fill('#Input_UserDailyTokens', '1500000');
+  await admin.fill('#Input_UserMonthlyTokens', '20000000');
+  await admin.fill('#Input_MonthlyTokens', '100000000');
   await admin.click('#ai-tabs-tab-instructions');
   await admin.fill('textarea[name="Input.ActionInstructions[DataImport]"]', '');   // the addition of this check goes away again
   await Promise.all([admin.waitForNavigation(), admin.click('button[type=submit].mat-btn--primary')]);

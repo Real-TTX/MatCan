@@ -30,9 +30,20 @@
     fileInput.setAttribute('accept', attach.accept);
     form.hidden = false;
 
-    function showError(message) {
+    function showError(message, href) {
       errorBox.textContent = message || '';
       errorBox.hidden = !message;
+      if (message && href) {
+        // a limit of the AI: an administrator gets the way to the settings (the server gives the address only to them)
+        var link = document.createElement('a');
+        link.href = href;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.setAttribute('data-limits-link', '');
+        link.textContent = 'Limits anpassen';
+        errorBox.appendChild(document.createTextNode(' '));
+        errorBox.appendChild(link);
+      }
     }
 
     function autosize() {
@@ -101,10 +112,10 @@
       var label = submit.querySelector('span');
       var before = label.textContent;
       label.textContent = 'Wird angelegt …';
-      var done = function (message) {
+      var done = function (message, href) {
         submit.removeAttribute('aria-busy');
         label.textContent = before;
-        showError(message);
+        showError(message, href);
       };
       attach.ready().then(function () {
         attach.append(body);
@@ -112,7 +123,7 @@
       }).then(function (response) {
         return response.json().catch(function () { return null; }).then(function (data) {
           if (response.ok && data && data.url) { window.location.assign(data.url); return; }
-          done(data && data.error ? data.error : (response.status === 403 ? 'Dafür fehlt dir die Berechtigung.' : 'Das hat nicht geklappt (Fehler ' + response.status + ').'));
+          done(data && data.error ? data.error : (response.status === 403 ? 'Dafür fehlt dir die Berechtigung.' : 'Das hat nicht geklappt (Fehler ' + response.status + ').'), data && data.code === 'limit' ? data.href : '');
         });
       }, function () { done('Keine Verbindung. Versuche es gleich noch einmal.'); });
     });

@@ -13,7 +13,7 @@
 
 <form class="mat-form" method="post" novalidate>
     <dt-summary />
-    <dt-tabs id="ai-tabs" label="Bereiche der KI">
+    <dt-tabs id="ai-tabs" label="Bereiche der KI" selected="@Model.Tab">
         <dt-tab id="general" title="Allgemein" icon="sparkles">
             <dt-card title="KI in DesignThix" icon="sparkles">
                 <div class="mat-form__grid">
@@ -115,7 +115,7 @@
                     <dt-input for="Input.MaxTokens" label="Längenlimit einer Antwort (Tokens)" type="number" min="1000" max="64000" step="1000" hint="Großzügig lassen: denkende Modelle verbrauchen ihr Budget zuerst fürs Nachdenken." />
                     <dt-input for="Input.TimeoutSeconds" label="Zeitlimit (Sekunden)" type="number" min="30" max="600" step="10" />
                 </div>
-                <p class="mat-hint">Nennt ein Anbieter keine Tokenzahl, wird geschätzt (Zeichen geteilt durch 4).</p>
+                <p class="mat-hint">Nennt ein Anbieter keine Tokenzahl, wird geschätzt (Zeichen geteilt durch 4). Ein Auftrag an den Design-Assistenten braucht etwa 60.000 Tokens (ein Aufruf je Schritt, jeder mit dem ganzen Gespräch); die Voreinstellung von 1,5 Mio. pro Person und Tag reicht für etwa 25 Aufträge.</p>
             </dt-card>
             <dt-card title="Design-Assistent" icon="sparkles" sub="Der Assistent im Designer arbeitet in Schritten; jeder Schritt ist ein Aufruf der KI und zählt gegen die Grenzen oben.">
                 <div class="mat-form__grid">

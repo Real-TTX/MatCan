@@ -112,12 +112,12 @@ public static class AiLogic
 
         if (await BudgetReasonAsync(db, settings, call.UserId, now, ct) is { } budget)
         {
-            return await End(AiRunStatus.LimitReached, budget, Codes.Limit);
+            return await End(AiRunStatus.LimitReached, budget.Text, Codes.Limit);
         }
 
         if (await RunsPerDayReasonAsync(db, settings, run.AddressHash, now, ct) is { } perDay)
         {
-            return await End(AiRunStatus.LimitReached, perDay, Codes.Limit);
+            return await End(AiRunStatus.LimitReached, perDay.Text, Codes.Limit);
         }
 
         // ---- transport ----
@@ -196,13 +196,13 @@ public static class AiLogic
     }
 
     /// <summary>The token budgets, per call: all users per month, this user per day and per month. The text of the one that is used up, or null.</summary>
-    internal static async Task<string?> BudgetReasonAsync(DtDbContext db, AiSettings settings, long? userId, DateTime now, CancellationToken ct)
+    internal static async Task<LimitHit?> BudgetReasonAsync(DtDbContext db, AiSettings settings, long? userId, DateTime now, CancellationToken ct)
     {
         var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         var monthTokens = await db.AiRun.Where(r => r.StartDate >= monthStart).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
         if (settings.MonthlyTokens > 0 && monthTokens >= settings.MonthlyTokens)
         {
-            return "Das Monatsbudget der KI ist aufgebraucht.";
+            return new LimitHit("all-month", $"Das gemeinsame Monatsbudget der KI (alle Benutzer zusammen, {Number(settings.MonthlyTokens)} Tokens) ist aufgebraucht.");
         }
 
         if (userId is { } uid)
@@ -212,7 +212,7 @@ public static class AiLogic
                 var dayTokens = await db.AiRun.Where(r => r.UserId == uid && r.StartDate >= now.Date).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
                 if (dayTokens >= settings.UserDailyTokens)
                 {
-                    return "Dein Tagesbudget der KI ist aufgebraucht. Morgen geht es weiter.";
+                    return new LimitHit("user-day", $"Dein Tagesbudget der KI ({Number(settings.UserDailyTokens)} Tokens pro Tag) ist aufgebraucht. Morgen geht es weiter.");
                 }
             }
 
@@ -221,7 +221,7 @@ public static class AiLogic
                 var userMonth = await db.AiRun.Where(r => r.UserId == uid && r.StartDate >= monthStart).SumAsync(r => r.PromptTokens + r.CompletionTokens, ct);
                 if (userMonth >= settings.UserMonthlyTokens)
                 {
-                    return "Dein Monatsbudget der KI ist aufgebraucht.";
+                    return new LimitHit("user-month", $"Dein Monatsbudget der KI ({Number(settings.UserMonthlyTokens)} Tokens pro Monat) ist aufgebraucht.");
                 }
             }
         }
@@ -230,12 +230,22 @@ public static class AiLogic
     }
 
     /// <summary>The brake per address and day (runs started from this address today, counted by the daily hash). The text, or null.</summary>
-    internal static async Task<string?> RunsPerDayReasonAsync(DtDbContext db, AiSettings settings, string? addressHash, DateTime now, CancellationToken ct)
+    internal static async Task<LimitHit?> RunsPerDayReasonAsync(DtDbContext db, AiSettings settings, string? addressHash, DateTime now, CancellationToken ct)
         => addressHash is { } address && settings.AddressDailyRuns > 0 && await db.AiRun.CountAsync(r => r.AddressHash == address && r.StartDate >= now.Date, ct) >= settings.AddressDailyRuns
-            ? "Von diesem Anschluss aus sind für heute keine weiteren KI-Aufrufe möglich."
+            ? new LimitHit("address-day", $"Von diesem Anschluss aus sind für heute keine weiteren KI-Aufrufe möglich (Grenze: {Number(settings.AddressDailyRuns)} Aufrufe pro Adresse und Tag).")
             : null;
 
-    internal const string RateReason = "Zu viele Anfragen in kurzer Zeit. Bitte in einer Minute erneut versuchen.";
+    internal const string RateReason = "Zu viele Anfragen in kurzer Zeit (Grenze pro Adresse und Minute). Bitte in einer Minute erneut versuchen.";
+
+    internal const string RateKind = "minute";
+
+    private static string Number(int n) => Services.Fmt.Integer(n);
+
+    /// <summary>A limit that is reached: which one (<c>user-day</c>, <c>user-month</c>, <c>all-month</c>, <c>address-day</c>, <c>minute</c>) and the sentence for the person.</summary>
+    internal sealed record LimitHit(string Kind, string Text);
+
+    /// <summary>The place where an administrator changes the limits: the person gets the link only when they may use it.</summary>
+    internal static string? LimitsHref(Biz biz) => biz.IsAdmin ? "/Admin/Ai?tab=limits" : null;
 
     /// <summary>
     /// The transport of a call: the test seam when the tests registered one, else the profile with this id (the one that is tested, active or not), else the active profile, else the relay of the

@@ -256,6 +256,10 @@ let restored = false;
     check('the poster has title, subtitle, details, an icon and a QR code', texts.some(t => /Sommerfest/.test(t)) && texts.length >= 3 && allElements(finalDoc).some(e => e.type === 'icon') && allElements(finalDoc).some(e => e.type === 'qr'), texts.join(' | '));
     check('the title got its warmer colour (the later change took effect)', allElements(finalDoc).some(e => e.type === 'text' && e.color === '#ffe08a'));
     check('the title says "Sommerfest" (taken from the quotes of the prompt)', texts.some(t => t === 'Sommerfest'));
+    // the design made by "Automatisch" is named by the AI (rename_design), not "Unbenannt – A4 Hochformat"
+    const named = await serverDoc(A, createdId);
+    check('the design got a name from the AI instead of "Unbenannt ..."', /Sommerfest – Plakat/.test(named.name) && !/^Unbenannt/.test(named.name), named.name);
+    check('the editor shows the new name (field and tab title)', await A.inputValue('#dt-name') === named.name && (await A.title()).startsWith(named.name), await A.inputValue('#dt-name') + ' / ' + await A.title());
     await shot(A, 'run-done');
 
     // the whole run is ONE undo step
@@ -338,6 +342,21 @@ let restored = false;
     check('the undo is in the log as an info line', true);
     check('the button is gone after the undo', await A.locator('.dt-ag-undo').count() === 0);
     check('no 409 dialog came up, the editor is saved', await A.locator('dialog[open]').count() === 0 && await A.evaluate(() => window.DtDesigner.app.saveState) === 'saved');
+
+    // after the editor's own Strg+Z the server's "Rückgängig" recognises that the design already is as before: no second question
+    await run(A, 'Übersetze alle Texte ins Englische');
+    await A.evaluate(() => { if (document.activeElement && document.activeElement.blur) { document.activeElement.blur(); } });
+    await A.keyboard.press('Control+z');
+    await E.idle(A);
+    await saved(A);
+    check('Strg+Z took the translation back', !/Summer Festival/.test(JSON.stringify(await doc(A))));
+    check('the button "Rückgängig" is still offered (the panel does not know)', await A.locator('.dt-ag-undo').count() === 1);
+    await A.click('.dt-ag-undo');
+    await A.waitForSelector('dialog[open]');
+    await A.click('dialog[open] .mat-btn--danger, dialog[open] [data-dlg-ok]');
+    await A.waitForFunction(() => !document.querySelector('.dt-ag-undo'), null, { timeout: 15000 });
+    check('the server marks the run as taken back without the question "Seitdem wurde das Design geändert"', await A.locator('dialog[open]').count() === 0 && /schon wieder so aus/.test(await A.locator('.mat-toast').allTextContents().then(t => t.join(' '))), await A.locator('.mat-toast').allTextContents().then(t => t.join(' | ')));
+    check('the German texts are still there and the editor is saved', !/Summer Festival/.test(JSON.stringify(await doc(A))) && await A.evaluate(() => window.DtDesigner.app.saveState) === 'saved');
 
     // the second question: somebody changed the design after the run
     await run(A, 'Übersetze alle Texte ins Englische');
@@ -544,10 +563,26 @@ let restored = false;
     await say(A, 'Mach weiter.');
     await A.waitForSelector('.dt-ag-notice.is-danger:not([hidden])', { timeout: 15000 });
     check('a limit of the AI is a red notice above the field (nothing was sent, the editor stays free)', /Token|Limit|Grenze|erreicht|Budget|aufgebraucht/i.test(await A.locator('.dt-ag-notice').textContent()) && await A.evaluate(() => window.DtDesigner.app.editable()), await A.locator('.dt-ag-notice').textContent());
+    check('the notice says WHICH limit it is (the daily budget, with its number) and a member gets no link to the settings', /Tagesbudget/.test(await A.locator('.dt-ag-notice').textContent()) && /1.000 Tokens pro Tag/.test(await A.locator('.dt-ag-notice').textContent()) && await A.locator('.dt-ag-notice [data-limits-link]').count() === 0, await A.locator('.dt-ag-notice').textContent());
     await shot(A, 'limit-notice');
     await A.click('.dt-ag-notice__x');
     await limits({ UserDailyTokens: lim2.UserDailyTokens || 50000000 });
     await A.fill('.dt-ag-input', '');
+
+    // an administrator is told where to change the limit: first one run (so there is something used), then a limit of 1 000 tokens (the field has step 1000)
+    const limitDesign = await makeDesign(admin, 'KI-Limit ' + stamp, 'price-tag', 1);
+    await inEditor(admin, limitDesign);
+    await run(admin, 'Mach weiter.');
+    const lim3 = await limits({ UserDailyTokens: 1000 });
+    await inEditor(admin, limitDesign);
+    await say(admin, 'Mach weiter.');
+    await admin.waitForSelector('.dt-ag-notice.is-danger:not([hidden])', { timeout: 15000 });
+    const adminLink = admin.locator('.dt-ag-notice [data-limits-link]');
+    check('an administrator gets the link "Limits anpassen" in the notice', await adminLink.count() === 1 && await adminLink.getAttribute('href') === '/Admin/Ai?tab=limits' && /Limits anpassen/.test(await adminLink.textContent()), await admin.locator('.dt-ag-notice').textContent());
+    await shot(admin, 'limit-notice-admin');
+    await admin.goto(base + '/Admin/Ai?tab=limits');
+    check('the link opens the settings on the tab of the limits', await admin.locator('#ai-tabs-tab-limits').getAttribute('aria-selected') === 'true' && await admin.locator('#Input_UserDailyTokens').isVisible());
+    await limits({ UserDailyTokens: lim3.UserDailyTokens || 50000000 });
 
     // a run followed after a reload
     await A.click('.dt-ag-new-btn');

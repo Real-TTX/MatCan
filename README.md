@@ -33,6 +33,7 @@ DesignThix ist ein Docker-Container mit einer PostgreSQL-Datenbank. Es läuft au
 - **Projekte, Ordner und Teams:** Jede Person hat einen eigenen Bereich („Meine Projekte“) mit Ordnern, Designs, Bildern, Datenlisten und Serienausgaben; **Teams** arbeiten in einem gemeinsamen Bereich mit eigener Marke und eigenen Vorlagen.
 - **Teilen:** mit Personen und Teams (*Kann ansehen* / *Kann bearbeiten*), per Link für Angemeldete oder als **öffentlicher Link** ohne Konto; wer keinen Zugriff hat, kann ihn anfordern.
 - **Zusammenarbeit:** Kommentare mit Pins direkt auf der Fläche, `@`-Erwähnungen, Benachrichtigungen (Glocke, auf Wunsch per Mail) und die Anzeige, wer ein Design gerade geöffnet hat.
+- **KI-Design (optional):** Beschreibe, was du brauchst („ein Plakat für unser Sommerfest“), und ein Assistent entwirft das Design oder passt ein vorhandenes an, **während du zusiehst**: jeder Schritt steht im Protokoll, die Fläche verändert sich live, ein Strg+Z nimmt alles zurück. Siehe *KI-Design* unten.
 - **Konten:** Administrator und Mitglied; Registrierung aus, offen oder mit Freigabe, Einladungen per Link oder Mail. Oberfläche auf Deutsch, hell und dunkel.
 - **Installierbare App (PWA)** mit Offline-Anzeige zuletzt geöffneter Seiten; der Designer behält ungespeicherte Änderungen und speichert, sobald die Verbindung zurück ist.
 
@@ -76,6 +77,13 @@ Beim ersten Start sind die zehn Vorlagen da, dazu ein Beispiel für die Serien m
 | **Team:** Mitglieder mit ihren Rollen (Inhaber, Admin, Bearbeiter, Betrachter), Einladen, Marke, Vorlagen, Einstellungen | **Öffentliche Ansicht:** ein Design ohne Anmeldung ansehen, auf Wunsch mit Herunterladen |
 | ![Kommentare](docs/images/comments.png) | ![Benachrichtigungen](docs/images/notifications.png) |
 | **Kommentare:** Pins auf der Fläche und an Elementen, Antworten, Erwähnungen, Erledigen | **Glocke:** Freigaben, Antworten, Erwähnungen und Zugriffsanfragen mit „Gewähren“ und „Ablehnen“ |
+
+**KI-Design (optional)**
+
+| | | |
+|---|---|---|
+| ![Mit KI entwerfen](docs/images/ai-prompt.png) | ![KI-Assistent im Designer](docs/images/ai-design.png) | ![KI-Assistent auf dem Handy](docs/images/ai-phone.png) |
+| **Mit KI entwerfen:** ein Satz auf der Startseite, Format „Automatisch“ oder ein gewähltes | **Assistent im Designer:** das Protokoll jedes Schritts, das Plakat entsteht live, *Rückgängig* | **Auf dem Handy:** dasselbe Gespräch als Fenster unten |
 
 **Serien (Zusatz)**
 
@@ -188,6 +196,35 @@ jedes Etikett zeichnet.
 - **Einzeldruck:** Am Design ein Formular mit den Feldern: Werte eintippen oder Medien wählen, Etikett drucken oder als PNG laden – ohne eine Serienausgabe zu speichern. Das dürfen auch Betrachter.
 - Höchstens 2000 Etiketten je Serienausgabe.
 
+## KI-Design
+
+Der Assistent im Designer arbeitet wie eine Grafikerin, der du über die Schulter schaust: Du schreibst, was du brauchst, und er legt Seiten und Elemente an, ändert, ordnet und übersetzt Texte, nimmt deine Marke und Vorlagen,
+baut Platzhalter für Serien ein und sieht sich das Ergebnis selbst an. **Jeden Schritt siehst du, während er geschieht:** als Karte im Protokoll („Text „Sommerfest“ geändert“, „3 Elemente hinzugefügt“), die Worte der KI erscheinen beim Schreiben,
+und die Fläche zeigt jede Änderung sofort (die betroffenen Elemente blitzen kurz auf). Solange er arbeitet, ist der Designer gesperrt; *Stopp* hält ihn an.
+
+**Einschalten (Administrator):** *Verwaltung > KI > Profile*: ein Profil mit einem OpenAI-kompatiblen Anbieter (oder einem ChatGPT-Konto) anlegen, mit *Testen* prüfen und aktiv setzen; unter *Allgemein* muss *KI eingeschaltet*
+stehen. Unter *Grenzen* stehen die Kosten-Grenzen: voreingestellt 1,5 Mio. Tokens je Person und Tag (rund 25 Aufträge), 20 Mio. je Person und Monat, 100 Mio. für alle zusammen im Monat, 200 Aufträge je Adresse und Tag und
+60 Anfragen je Adresse und Minute (0 heißt: keine Grenze); dazu die Grenzen des Assistenten (Aufrufe je Auftrag, gleichzeitige Aufträge, Seitenansichten, Dateien je Nachricht). Wird eine Grenze erreicht, steht im Fenster
+*welche* (zum Beispiel „Dein Tagesbudget der KI (1.500.000 Tokens pro Tag) ist aufgebraucht“), und der Administrator bekommt dort den Knopf *Limits anpassen*. Was du schon gespeichert hast, ändert sich bei einem Update nicht.
+Ohne Profil fehlt der Assistent: Mitglieder sehen dann keinen Eintrag, der Administrator eine Erklärung mit Link.
+
+**Benutzen:**
+
+- **Neues Design:** Auf der Startseite (und im Dialog *Design erstellen*) beschreibst du das Design unter *Mit KI entwerfen*, wählst ein Format oder lässt es bei *Automatisch* (die KI wählt eines, das passt) und klickst *Entwerfen*:
+  der Designer öffnet sich und du siehst zu. Das Design bekommt einen passenden Namen.
+- **Vorhandenes Design anpassen:** Im Designer der Reiter *KI*. Beispiele: „Mach daraus ein Plakat“, „Übersetze alle Texte ins Englische“, „Nutze unsere Markenfarben und Schriften“, „Erzeuge drei Varianten auf neuen Seiten“, „Ersetze die Texte durch Platzhalter für eine Serie“.
+  *Strg+Enter* sendet.
+- **Anhängen:** Bilder (JPG, PNG, WebP, GIF, SVG), PDF, Word (.docx), Excel (.xlsx) und Textdateien (bis zu sechs je Nachricht); Bilder landen in der Bibliothek (Kategorie „KI-Anhang“), damit die KI sie platzieren kann, und sie sieht sie auch.
+  Der Text von Dokumenten dient der KI als Material, nie als Anweisung.
+- **Referenz:** ein anderes Design oder eine Datenliste, die du sehen darfst, als Vorlage oder Quelle (Datenlisten mit personenbezogenen Daten nur, wenn der Administrator es erlaubt hat).
+- **Nur hier ändern:** Mit *Diese Seite* oder einer Auswahl und dem Haken *Nur hier ändern* darf die KI nur dort schreiben; gesperrte Elemente fasst sie nie an.
+- **Rückgängig:** Ein ganzer Auftrag ist **ein** Schritt: Strg+Z im Designer nimmt ihn zurück, oder *Rückgängig* im Protokoll (auch nach dem Neuladen und für den neuesten Auftrag zuerst). Hast du das Design seitdem geändert, fragt es vorher.
+- **Weitermachen** setzt einen angehaltenen Auftrag fort; *Neu* beginnt ein neues Gespräch, *Verlauf* listet frühere; *Anweisung an die KI anzeigen* zeigt genau, was an die KI geht.
+
+**Was die KI sieht und kann:** Sie sieht das Design, an dem sie arbeitet (Format, Seiten, Elemente, Felder), die Marke des Bereichs, die Vorlagen und Schriften, die du auch siehst, und das, was du anhängst oder als Referenz wählst.
+Sie kann **nur dieses Design** ändern (und Bilder in deine Bibliothek zeichnen): nichts teilen, verschieben, löschen oder versenden, und kein anderes Design anfassen. Jede Änderung geht durch dieselben Prüfungen und Rechte wie deine eigene;
+wer nur ansehen darf, sieht den Assistenten nicht. Fotos kann sie nicht erzeugen (nur Formen, Symbole, Farbflächen, gezeichnete Grafik und Bildrahmen für deine Fotos). Jeder Auftrag mit allen Schritten steht unter *Verwaltung > KI > Läufe*.
+
 ## KI-Aktionen
 
 Die KI ist ein Angebot, kein Zwang: Ohne Profil fehlen nur die KI-Knöpfe. Unter *Verwaltung > KI* legt der Administrator ein Profil an (jeder **OpenAI-kompatible Anbieter** mit
@@ -241,7 +278,7 @@ dotnet ef migrations add <Name> -p src/DesignThix -s src/DesignThix -o Data/Migr
 
 - **Browser-Prüfungen** (`tests/e2e`, Playwright mit dem installierten Edge): `cd tests/e2e && npm install && node run-all.js http://localhost:3043` startet Engine, PWA, Demo, Start, Projekte, Vorlagen, Designer, Canva-Editor, Editor-Inhalte,
   Serienausgabe, Teilen, Kommentare, Teams und KI nacheinander (rund zehn Minuten). Jede einzeln und was sie prüft: [tests/e2e/README.md](tests/e2e/README.md). Sie legen ihre Konten selbst an, wenn die Datenbank leer ist.
-- **Screenshots** dieser Seite: `node tests/e2e/screens.js` gegen eine frische, leere Datenbank (`./scripts/redeploy.ps1 -Clean`, oder die App mit `dotnet run` gegen eine neue Datenbank, siehe [CLAUDE.md](CLAUDE.md)), Ergebnis in `docs/images`.
+- **Screenshots** dieser Seite: `node tests/e2e/screens.js` gegen eine frische, leere Datenbank (`./scripts/redeploy.ps1 -Clean`, oder die App mit `dotnet run` gegen eine neue Datenbank, siehe [CLAUDE.md](CLAUDE.md)), Ergebnis in `docs/images`; die KI-Bilder entstehen mit einem Schein-Anbieter (`fake-ai.js`), nie mit einem echten, und `--ai-only` macht nur diese drei.
 - **MatUi** (Oberflächen-Bibliothek) wird nie in `src/DesignThix/wwwroot/ui` geändert, sondern aus MatDesign geholt: `./scripts/sync-matui.ps1`, geprüft mit `./scripts/check-matui.ps1`.
 - Aufbau, Regeln und Stolpersteine für die Arbeit am Code: [CLAUDE.md](CLAUDE.md). Die Baupläne: [docs/PLAN-PLATFORM.md](docs/PLAN-PLATFORM.md) (Plan 3: Plattform, Teams, Teilen), [docs/PLAN-CANVA.md](docs/PLAN-CANVA.md) (Plan 2: Canva-Stil, Dokumentformat 2), [docs/PLAN.md](docs/PLAN.md) (Plan 1: Produkt, Architektur); der Editor: [docs/EDITOR.md](docs/EDITOR.md).
 

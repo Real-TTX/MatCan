@@ -13,6 +13,10 @@ public sealed class IndexModel(Biz biz) : PageModelBase
     [BindProperty]
     public AiSettings Input { get; set; } = new();
 
+    /// <summary>The tab to open (<c>?tab=limits</c>: the link of the limit notice of the design assistant).</summary>
+    [BindProperty(SupportsGet = true)]
+    public string? Tab { get; set; }
+
     public AiLogic.Usage Usage { get; private set; } = null!;
 
     public string OperatorInstruction { get; private set; } = "";

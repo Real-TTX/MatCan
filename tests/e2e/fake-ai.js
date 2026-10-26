@@ -20,7 +20,7 @@
 //   varianten     ("variante"): two copies of page 1 with other background colours
 //   weiter        ("mach weiter"): says it is done
 //   plakat        everything else ("gestalte", "plakat", "entwirf", ... or anything): in seven steps (read, background and title, subtitle and icon, details and QR, a change of the title, look, done)
-//                 that make the canvas change one step after the other; with an automatic format (the situation says "kein Format gewählt") it chooses the poster A3 first.
+//                 that make the canvas change one step after the other; with an automatic format (the situation says "kein Format gewählt") it chooses the poster A3 first; a design that is still called "Unbenannt …" (the situation says so) gets a name with rename_design in the second step (not when the message says "ohne-name": then the server names it after the message).
 // Every answer is streamed in small pieces (about 12 characters, 20 ms apart) when the request says "stream": true; mode 'nostream' answers such a request with a 400 so the fall back can be tested.
 const http = require('http');
 
@@ -130,6 +130,7 @@ function agentAnswer(system, msgs) {
   const step = list.length;
   const situation = slot(system, '## Die Lage\n', '\u0000');
   const autoFormat = situation.includes('kein Format gewählt');
+  const unnamed = situation.includes('heißt noch wie ein neues') && !/ohne-name/i.test(person.text);
   const read = resultOf(list, 'read_design');
   const format = read && read.result && read.result.format ? read.result.format : { width: 297, height: 420, unit: 'mm' };
   const W = Number(format.width), H = Number(format.height), unit = format.unit || 'mm';
@@ -217,11 +218,13 @@ function agentAnswer(system, msgs) {
   switch (n) {
     case 0: return { body: say('Ich schaue mir zuerst an, was schon im Design ist.', false, ['read_design']) };
     case 1: return { body: say('Ich lege den dunklen Hintergrund und die Überschrift an.', false,
+      ...(unnamed ? [['rename_design', { name: title + ' – Plakat' }]] : []),
       ['set_page', { page: 'p1', background: { color: '#0b3d5c' } }],
       ['add_elements', { elements: [{ type: 'text', name: 'Titel', x: m, y: H * 0.14, w: W - 2 * m, h: box(titlePt), text: title, fontFamily: 'Montserrat', fontSize: titlePt, fontWeight: 800, color: '#ffffff', align: 'center', fit: 'shrink' }] }]) };
     case 2: return { body: say('Jetzt kommen der Untertitel und ein Symbol dazu.', false,
       ['add_elements', { elements: [
         { type: 'text', name: 'Untertitel', x: m, y: H * 0.14 + box(titlePt) + H * 0.02, w: W - 2 * m, h: box(subPt), text: 'Musik, Essen und gute Laune für alle', fontFamily: 'Open Sans', fontSize: subPt, fontWeight: 400, color: '#cfe8f5', align: 'center' },
+        { type: 'shape', shape: 'rect', name: 'Linie', x: W / 2 - W * 0.08, y: H * 0.14 + box(titlePt) + H * 0.02 + box(subPt) + H * 0.025, w: W * 0.16, h: Math.max(0.8, H * 0.003), fill: '#ffcc00' },
         { type: 'icon', name: 'Sonne', icon: 'sun', x: W / 2 - W * 0.09, y: H * 0.42, w: W * 0.18, h: W * 0.18, color: '#ffcc00', strokeWidth: 1.5 }] }]) };
     case 3: return { body: say('Zum Schluss die Angaben und ein QR-Code.', false,
       ['add_elements', { elements: [

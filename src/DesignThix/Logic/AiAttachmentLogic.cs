@@ -46,6 +46,14 @@ public static class AiAttachmentLogic
     private const int MaxSvgChars = 20_000;
     private const long MaxZipUncompressed = 100L * 1024 * 1024;
 
+    /// <summary>One XML part of a Word or Excel file (the document, the shared strings, a sheet) may be this big unpacked: the Open XML SDK builds a tree of it in memory.</summary>
+    private const long MaxXmlPartBytes = 30L * 1024 * 1024;
+
+    /// <summary>A PDF: what one stream (a page's content, a font) and all streams together may unpack to, and how many streams are looked at.</summary>
+    private const long MaxPdfStreamBytes = 64L * 1024 * 1024;
+    private const long MaxPdfExpandedBytes = 256L * 1024 * 1024;
+    private const int MaxPdfStreams = 20_000;
+
     /// <summary>Where the files of the conversations are kept.</summary>
     public static string Root(Biz biz) => Path.Combine(biz.Config.DataDir, "ai-files");
 
@@ -299,13 +307,17 @@ public static class AiAttachmentLogic
     private static async Task<string> ReadPdfAsync(byte[] bytes)
     {
         // a PDF can be built to be slow: it gets twenty seconds
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(20));
+        var token = cts.Token;
         var task = Task.Run(() =>
         {
+            RejectPdfBomb(bytes, token);
             var sb = new StringBuilder();
             using var doc = PdfDocument.Open(bytes);
             var pages = 0;
             foreach (var page in doc.GetPages())
             {
+                token.ThrowIfCancellationRequested();   // the work stops with the wait: a slow file does not go on in the background
                 string text;
                 try
                 {
@@ -329,13 +341,94 @@ public static class AiAttachmentLogic
         {
             return await task.WaitAsync(TimeSpan.FromSeconds(20));
         }
-        catch (TimeoutException)
+        catch (Exception ex) when (ex is TimeoutException or OperationCanceledException)
         {
+            cts.Cancel();
             throw new BizException("Die PDF-Datei ist zu aufwendig zu lesen.");
         }
         catch (Exception ex) when (ex is not (BizException or OutOfMemoryException))
         {
             throw new BizException("Die PDF-Datei lässt sich nicht lesen.");
+        }
+    }
+
+    /// <summary>
+    /// A PDF whose compressed streams unpack to far more than a document ever needs (a "decompression bomb": a few KB that become gigabytes in memory) is refused before the PDF library touches it. Every stream that
+    /// starts with a zlib header is unpacked into nothing and counted, with a cap per stream and for all; pictures are not looked at (the text reading never unpacks them). Streams that are no zlib data fall through.
+    /// </summary>
+    internal static void RejectPdfBomb(byte[] pdf, CancellationToken ct)
+    {
+        const string Refusal = "Die PDF-Datei enthält ungewöhnlich stark gepackte Daten und wird nicht gelesen.";
+        var marker = "stream"u8;
+        long total = 0;
+        var seen = 0;
+        var from = 0;
+        var buffer = new byte[81920];
+        while (from < pdf.Length)
+        {
+            ct.ThrowIfCancellationRequested();
+            var at = pdf.AsSpan(from).IndexOf(marker);
+            if (at < 0)
+            {
+                break;
+            }
+
+            var pos = from + at;
+            from = pos + marker.Length;
+            if (pos >= 3 && pdf[pos - 3] == (byte)'e' && pdf[pos - 2] == (byte)'n' && pdf[pos - 1] == (byte)'d')
+            {
+                continue;   // "endstream"
+            }
+
+            var start = from;
+            if (start < pdf.Length && pdf[start] == 13)
+            {
+                start++;
+            }
+
+            if (start < pdf.Length && pdf[start] == 10)
+            {
+                start++;
+            }
+
+            if (start + 2 >= pdf.Length || pdf[start] != 0x78)
+            {
+                continue;   // not zlib data
+            }
+
+            var head = Encoding.Latin1.GetString(pdf, Math.Max(0, pos - 400), Math.Min(400, pos));
+            var dict = head[(head.LastIndexOf("obj", StringComparison.Ordinal) + 1)..];
+            if (dict.Contains("/Image", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (++seen > MaxPdfStreams)
+            {
+                throw new BizException(Refusal);
+            }
+
+            try
+            {
+                using var z = new System.IO.Compression.ZLibStream(new MemoryStream(pdf, start, pdf.Length - start, false), System.IO.Compression.CompressionMode.Decompress);
+                long one = 0;
+                int n;
+                while ((n = z.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    one += n;
+                    total += n;
+                    if (one > MaxPdfStreamBytes || total > MaxPdfExpandedBytes)
+                    {
+                        throw new BizException(Refusal);
+                    }
+
+                    ct.ThrowIfCancellationRequested();
+                }
+            }
+            catch (InvalidDataException)
+            {
+                // a stream that only looked like zlib data
+            }
         }
     }
 
@@ -345,7 +438,8 @@ public static class AiAttachmentLogic
         bool word, sheet;
         using (var zip = new ZipArchive(new MemoryStream(bytes), ZipArchiveMode.Read))
         {
-            if (zip.Entries.Count > 3000 || zip.Entries.Sum(e => e.Length) > MaxZipUncompressed)
+            if (zip.Entries.Count > 3000 || zip.Entries.Sum(e => e.Length) > MaxZipUncompressed
+                || zip.Entries.Any(e => e.Length > MaxXmlPartBytes && e.FullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)))
             {
                 throw new BizException("Die Datei ist ungewöhnlich groß entpackt und wird nicht gelesen.");
             }
