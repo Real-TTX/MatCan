@@ -683,7 +683,9 @@ html.dt-designer-page, .dt-designer-body { height: 100%; margin: 0; overflow: hi
 .dt-photos__cat:hover, .dt-photos__chip:hover { border-color: var(--mat-accent); }
 .dt-photos__cat:focus-visible, .dt-photos__chip:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
 .dt-photos__cat[aria-pressed="true"], .dt-photos__chip[aria-pressed="true"] { border-color: var(--mat-accent); background: var(--mat-accent-soft); color: var(--mat-accent-text); font-weight: 600; }
-.dt-photos__orient { width: 100%; }
+.dt-photos__orient { width: 100%; min-width: 0; }
+.dt-photos__filters { display: flex; gap: var(--mat-space-2); }
+.dt-photos__filters > select { flex: 1 1 0; }
 .dt-photos__providerlink { color: var(--mat-accent-text); text-decoration: underline; }
 .dt-photos__more { justify-self: center; }
 .dt-photo { position: relative; }

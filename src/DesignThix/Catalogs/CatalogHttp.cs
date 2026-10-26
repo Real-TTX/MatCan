@@ -31,8 +31,11 @@ public sealed class CatalogException(string message, CatalogFailure failure, int
     public int RetryAfterSeconds { get; } = retryAfterSeconds;
 }
 
+/// <summary>What the provider said about its limits in the headers of an answer (<c>X-RateLimit-*</c>): how many, how many are left, in how many seconds the window ends.</summary>
+public sealed record CatalogRate(int? Limit, int? Remaining, int? ResetSeconds, DateTime Seen);
+
 /// <summary>What a successful request brought.</summary>
-public sealed record CatalogHttpResult(int Status, string ContentType, byte[] Bytes);
+public sealed record CatalogHttpResult(int Status, string ContentType, byte[] Bytes, CatalogRate? Rate = null);
 
 /// <summary>
 /// The only way the server talks to a provider (docs/PLAN-CATALOGS.md section 4): GET only, to hosts the catalogue names (the request and every redirect), no cookies, a time limit, a size
@@ -80,7 +83,16 @@ public sealed class CatalogHttp : IDisposable
     /// Asks for <paramref name="url"/>. <paramref name="allowedHosts"/> are the hosts this catalogue may reach; a redirect to another host is refused (the key is only sent to the host it was meant for),
     /// plain http is only allowed with <paramref name="allowHttp"/> (an address the operator set by hand). Throws <see cref="CatalogException"/>.
     /// </summary>
-    public async Task<CatalogHttpResult> GetAsync(Uri url, IReadOnlyCollection<string> allowedHosts, bool allowHttp, string provider, IReadOnlyDictionary<string, string>? headers, TimeSpan timeout, long maxBytes, CancellationToken ct)
+    public Task<CatalogHttpResult> GetAsync(Uri url, IReadOnlyCollection<string> allowedHosts, bool allowHttp, string provider, IReadOnlyDictionary<string, string>? headers, TimeSpan timeout, long maxBytes, CancellationToken ct)
+        => SendAsync(HttpMethod.Get, null, url, allowedHosts, allowHttp, provider, headers, timeout, maxBytes, ct);
+
+    /// <summary>
+    /// A POST of a small form (the token request of a provider): the same rules as <see cref="GetAsync"/>, but it is never redirected (a form with a secret goes to the address the catalogue built and nowhere else).
+    /// </summary>
+    public Task<CatalogHttpResult> PostFormAsync(Uri url, IReadOnlyCollection<string> allowedHosts, bool allowHttp, string provider, IReadOnlyDictionary<string, string> form, TimeSpan timeout, long maxBytes, CancellationToken ct)
+        => SendAsync(HttpMethod.Post, form, url, allowedHosts, allowHttp, provider, null, timeout, maxBytes, ct);
+
+    private async Task<CatalogHttpResult> SendAsync(HttpMethod method, IReadOnlyDictionary<string, string>? form, Uri url, IReadOnlyCollection<string> allowedHosts, bool allowHttp, string provider, IReadOnlyDictionary<string, string>? headers, TimeSpan timeout, long maxBytes, CancellationToken ct)
     {
         using var limit = CancellationTokenSource.CreateLinkedTokenSource(ct);
         limit.CancelAfter(timeout);
@@ -88,7 +100,12 @@ public sealed class CatalogHttp : IDisposable
         for (var hop = 0; ; hop++)
         {
             Check(current, allowedHosts, allowHttp, provider);
-            using var request = new HttpRequestMessage(HttpMethod.Get, current);
+            using var request = new HttpRequestMessage(method, current);
+            if (form is not null)
+            {
+                request.Content = new FormUrlEncodedContent(form);
+            }
+
             request.Headers.UserAgent.ParseAdd(AiProfileLogic.UserAgent);
             if (headers is not null && string.Equals(current.Host, url.Host, StringComparison.OrdinalIgnoreCase))
             {
@@ -117,7 +134,7 @@ public sealed class CatalogHttp : IDisposable
                 var status = (int)response.StatusCode;
                 if (status is 301 or 302 or 303 or 307 or 308)
                 {
-                    if (response.Headers.Location is not { } location || hop >= MaxRedirects)
+                    if (form is not null || response.Headers.Location is not { } location || hop >= MaxRedirects)
                     {
                         throw new CatalogException($"{provider} leitet die Anfrage zu oft oder ohne Ziel weiter.", CatalogFailure.Refused);
                     }
@@ -128,13 +145,27 @@ public sealed class CatalogHttp : IDisposable
 
                 if (status == 429)
                 {
-                    var wait = response.Headers.RetryAfter?.Delta is { } delta ? (int)Math.Min(3600, delta.TotalSeconds) : 60;
-                    throw new CatalogException($"{provider} hat für diese Zeit genug Anfragen bekommen. Versuch es in ein paar Minuten wieder.", CatalogFailure.Limit, wait);
+                    // Retry-After (seconds or a date), else the end of the window the rate headers name, else a minute; never more than an hour, never less than a second
+                    var rate = ReadRate(response);
+                    var after = response.Headers.RetryAfter;
+                    // (a "Retry-After: 0" says nothing: Pixabay sends it with its 429 and names the end of the window in X-RateLimit-Reset)
+                    var seconds = after?.Delta is { TotalSeconds: > 0 } delta ? delta.TotalSeconds
+                        : after?.Date is { } date && date > DateTimeOffset.UtcNow ? (date - DateTimeOffset.UtcNow).TotalSeconds
+                        : rate?.ResetSeconds is > 0 ? rate.ResetSeconds.Value
+                        : 60;
+                    var wait = (int)Math.Clamp(Math.Ceiling(seconds), 1, 3600);
+                    throw new CatalogException($"{provider} bremst gerade: Der Anbieter lässt im Moment keine weiteren Anfragen zu. Versuch es in {WaitText(wait)} wieder.", CatalogFailure.Limit, wait);
                 }
 
                 if (status is 401 or 403)
                 {
                     throw new CatalogException($"{provider} nimmt den Schlüssel nicht an. Bitte frag eine Administratorin oder einen Administrator.", CatalogFailure.Key);
+                }
+
+                if (status is 400 or 422)
+                {
+                    // a provider that refuses the request itself (Pixabay answers 400 for a key it does not know)
+                    throw new CatalogException($"{provider} hat die Anfrage nicht angenommen. Wenn ein Schlüssel eingetragen ist, prüfe ihn.", CatalogFailure.Refused);
                 }
 
                 if (status == 404 || status == 410)
@@ -166,9 +197,55 @@ public sealed class CatalogHttp : IDisposable
                     throw new CatalogException($"{provider} ist gerade nicht erreichbar.", CatalogFailure.Unavailable);
                 }
 
-                return new CatalogHttpResult(status, response.Content.Headers.ContentType?.MediaType ?? "", bytes);
+                return new CatalogHttpResult(status, response.Content.Headers.ContentType?.MediaType ?? "", bytes, ReadRate(response));
             }
         }
+    }
+
+    /// <summary>"in einer Minute", "in 5 Minuten", "in 2 Stunden": how long to wait, for a message (the verb of the sentence is "versuch es in ... wieder").</summary>
+    public static string WaitText(int seconds)
+        => seconds <= 90 ? "einer Minute" : seconds < 5400 ? $"{(int)Math.Ceiling(seconds / 60.0)} Minuten" : $"{(int)Math.Ceiling(seconds / 3600.0)} Stunden";
+
+    /// <summary>
+    /// What the provider says about its limits: <c>X-RateLimit-Limit</c> (also with a scope after the name, "20/min" counts as 20), <c>X-RateLimit-Remaining</c> or Openverse's <c>X-RateLimit-Available-*</c> (the smallest wins) and
+    /// <c>X-RateLimit-Reset</c> (seconds, or a Unix time as Pexels sends it). Null when the answer names none of them.
+    /// </summary>
+    internal static CatalogRate? ReadRate(HttpResponseMessage response)
+    {
+        int? limit = null;
+        int? remaining = null;
+        int? reset = null;
+        foreach (var header in response.Headers)
+        {
+            var name = header.Key.ToLowerInvariant();
+            if (!name.StartsWith("x-ratelimit-", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            var raw = header.Value.FirstOrDefault() ?? "";
+            var digits = new string(raw.TakeWhile(char.IsAsciiDigit).ToArray());
+            if (digits.Length == 0 || !long.TryParse(digits, out var number))
+            {
+                continue;
+            }
+
+            if (name == "x-ratelimit-limit" || name.StartsWith("x-ratelimit-limit-", StringComparison.Ordinal))
+            {
+                limit = (int)Math.Min(int.MaxValue, number);
+            }
+            else if (name == "x-ratelimit-remaining" || name.StartsWith("x-ratelimit-available", StringComparison.Ordinal))
+            {
+                remaining = (int)Math.Min(remaining ?? int.MaxValue, Math.Min(int.MaxValue, number));
+            }
+            else if (name == "x-ratelimit-reset")
+            {
+                var seconds = number > 1_000_000_000 ? number - DateTimeOffset.UtcNow.ToUnixTimeSeconds() : number;
+                reset = (int)Math.Clamp(seconds, 0, 86400 * 40);
+            }
+        }
+
+        return limit is null && remaining is null && reset is null ? null : new CatalogRate(limit, remaining, reset, DateTime.UtcNow);
     }
 
     /// <summary>The rules for every address a request goes to: absolute, https (http only when allowed), no credentials in it, and a host of the list.</summary>

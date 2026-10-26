@@ -420,7 +420,7 @@ const shot = async (page, name, width) => {
   // payload: no data rows, no foreign things
   const payload = await X.evaluate(async t => (await fetch('/api/s/' + t)).json(), tokenPublic);
   const keys = Object.keys(payload).sort().join(',');
-  check('the payload holds the design, fonts and addresses of images, nothing else', keys === 'allowDownload,assets,document,folderId,fonts,id,kind,name,pages,warnings', keys);
+  check('the payload holds the design, fonts, addresses of images and the credits of catalogue images, nothing else', keys === 'allowDownload,assets,credits,document,folderId,fonts,id,kind,name,pages,warnings', keys);
   check('the payload has no rows or values of a data list', !/"rows"|"values"|"labels"|"copies"/.test(JSON.stringify(payload)));
   // download: PNG of the current page
   await X.click('.dt-pv__download');

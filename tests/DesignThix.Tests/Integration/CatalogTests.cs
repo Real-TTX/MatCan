@@ -159,12 +159,12 @@ public sealed class CatalogTests(AppTests.AppFactory factory) : PlatformTestBase
         }
 
         var ids = Svc.Registry.All.Select(c => c.Id).ToList();
-        Assert.Equal(["builtin", "uploads", "folder", "example-browse", "example-search"], ids);
+        Assert.Equal(["builtin", "uploads", "folder", "pexels", "pixabay", "openverse", "example-browse", "example-search"], ids);
         Assert.Equal(ids.Count, ids.Distinct().Count());
 
         var plain = new ConfigStore(Path.Combine(Path.GetTempPath(), "designthix-registry-" + Guid.NewGuid().ToString("N")));
         plain.Current.Catalogs.Clear();
-        Assert.Equal(["builtin", "uploads", "folder"], new CatalogRegistry(plain).All.Select(c => c.Id));
+        Assert.Equal(["builtin", "uploads", "folder", "pexels", "pixabay", "openverse"], new CatalogRegistry(plain).All.Select(c => c.Id));
         await Task.CompletedTask;
     }
 
@@ -1006,6 +1006,7 @@ public sealed class CatalogTests(AppTests.AppFactory factory) : PlatformTestBase
         Assert.Equal("CC-BY-4.0", search["items"]![0]!["licence"]!["code"]!.GetValue<string>());
         Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync("/api/catalogs/example-search/search?q=berg")).StatusCode);
         Assert.Equal(HttpStatusCode.TooManyRequests, (await client.GetAsync("/api/catalogs/example-browse/search?q=limit")).StatusCode);
+        Svc.Limiter.Reset();   // the provider asked for a pause (see the provider tests): the next request would be turned away until it is over
         Assert.Equal(HttpStatusCode.ServiceUnavailable, (await client.GetAsync("/api/catalogs/example-browse/search?q=down")).StatusCode);
 
         var noToken = await client.PostAsync("/api/catalogs/example-browse/import", new StringContent("""{"itemId":"p2"}""", Encoding.UTF8, "application/json"));

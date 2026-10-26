@@ -8,6 +8,8 @@
 //   GET /img/{id}.png   thumbnails   GET /files/{id}.png   the picture itself
 //   GET /__stats       what was asked (counts per path), POST /__reset
 //
+// Since plan 5 / C2 the same server also plays Pexels, Pixabay and Openverse (fake-providers.js: their documented shapes, keys "testkey-pexels" / "testkey-pixabay", credentials "cid:sec" for Openverse).
+//
 // What it holds: 45 pictures (nature, food, city) with authors and licences (CC0-1.0 and CC-BY-4.0), and the ones that must never appear: a CC-BY-NC picture, a CC-BY-ND picture, one without a
 // licence, one whose thumbnail points to another host. Special words: "limit" answers 429 with Retry-After, "down" answers 500, "leer" finds nothing. The key of the search-only catalogue is "testkey-123"
 // (header Authorization); a request without it answers 401. Used by catalogs-check.js; the app reaches it through DESIGNTHIX__Catalogs__example-browse__BaseUrl (and example-search).
@@ -15,6 +17,7 @@
 //   node fake-catalogs.js [port, default 3073]     (standalone)      const { startFakeCatalogs } = require('./fake-catalogs.js')
 const http = require('http');
 const zlib = require('zlib');
+const providers = require('./fake-providers.js');
 
 const KEY = 'testkey-123';
 const COLLECTIONS = [{ id: 'nature', name: 'Natur' }, { id: 'food', name: 'Essen' }, { id: 'city', name: 'Stadt' }];
@@ -108,6 +111,9 @@ function startFakeCatalogs(port) {
     if (path === '/__stats') { return json(200, stats); }
     if (path === '/__reset') { for (const k of Object.keys(stats)) { delete stats[k]; } return json(200, {}); }
 
+    // Pexels, Pixabay and Openverse as their documentation shows them (fake-providers.js)
+    if (providers.handle(req, res, { items, base, png, stats, collectionNames: Object.fromEntries(COLLECTIONS.map(c => [c.id, c.name])) })) { return; }
+
     // a key that is sent must be the right one (the browsable catalogue sends none)
     if (path.startsWith('/api/') && req.headers.authorization !== undefined && req.headers.authorization !== KEY) { return json(401, { error: 'bad key' }); }
 
@@ -162,7 +168,7 @@ function startFakeCatalogs(port) {
   });
 }
 
-module.exports = { startFakeCatalogs, KEY };
+module.exports = { startFakeCatalogs, KEY, providers };
 
 if (require.main === module) {
   const port = Number(process.argv[2]) || 3073;

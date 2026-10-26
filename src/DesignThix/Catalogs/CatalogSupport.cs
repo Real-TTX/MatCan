@@ -25,14 +25,67 @@ public sealed class CatalogLimiter(TimeProvider clock)
         }
     }
 
-    /// <summary>Takes one request of the key of the catalogue (all people together); throws when the hour's budget is used up.</summary>
-    public void TakeBudget(ICatalog catalog, int perHour)
+    /// <summary>
+    /// Takes one request of the key of the catalogue (all people together); throws when the hour's budget (or the provider's limit per minute for the key, <paramref name="perMinute"/>) is used up.
+    /// </summary>
+    public void TakeBudget(ICatalog catalog, int perHour, int perMinute = 0)
     {
+        if (perMinute > 0 && !TryTake($"m:{catalog.Id}", perMinute, TimeSpan.FromMinutes(1)))
+        {
+            throw new CatalogException($"{catalog.Name} bremst gerade: Es waren zu viele Anfragen in einer Minute. Versuch es in einer Minute wieder.", CatalogFailure.Limit, 60);
+        }
+
         if (perHour > 0 && !TryTake($"h:{catalog.Id}", perHour, TimeSpan.FromHours(1)))
         {
             throw new CatalogException($"{catalog.Name} hat für diese Stunde genug Anfragen bekommen. Versuch es in ein paar Minuten wieder.", CatalogFailure.Limit, 300);
         }
     }
+
+    private readonly ConcurrentDictionary<string, DateTime> _blocked = new();
+    private readonly ConcurrentDictionary<string, CatalogRate> _rates = new();
+
+    /// <summary>
+    /// The provider said "not now" (429 with Retry-After, or an answer that says nothing is left): until then no request goes to it, so a limit is never hammered. Throws a German message with the
+    /// time that is left.
+    /// </summary>
+    public void CheckBlock(ICatalog catalog)
+    {
+        if (_blocked.TryGetValue(catalog.Id, out var until))
+        {
+            var left = (int)Math.Ceiling((until - clock.GetUtcNow().UtcDateTime).TotalSeconds);
+            if (left > 0)
+            {
+                throw new CatalogException($"{catalog.Name} bremst gerade. Versuch es in {CatalogHttp.WaitText(left)} wieder.", CatalogFailure.Limit, left);
+            }
+
+            _blocked.TryRemove(catalog.Id, out _);
+        }
+    }
+
+    /// <summary>No request to this catalogue for <paramref name="seconds"/> (at most an hour).</summary>
+    public void Block(ICatalog catalog, int seconds)
+        => _blocked[catalog.Id] = clock.GetUtcNow().UtcDateTime.AddSeconds(Math.Clamp(seconds, 1, 3600));
+
+    /// <summary>Ends the pause (the administrator's "Testen" asks the provider once, whatever it said before).</summary>
+    public void Unblock(ICatalog catalog) => _blocked.TryRemove(catalog.Id, out _);
+
+    /// <summary>Remembers what the provider reported about its limits (shown on the administration page); an answer that says nothing is left closes the door for a moment.</summary>
+    public void Note(ICatalog catalog, CatalogRate? rate)
+    {
+        if (rate is null)
+        {
+            return;
+        }
+
+        _rates[catalog.Id] = rate;
+        if (rate.Remaining == 0)
+        {
+            Block(catalog, Math.Clamp(rate.ResetSeconds ?? 30, 5, 60));
+        }
+    }
+
+    /// <summary>The last limits the provider reported, or null.</summary>
+    public CatalogRate? RateOf(string catalogId) => _rates.TryGetValue(catalogId, out var rate) ? rate : null;
 
     /// <summary>The brake of the thumbnail proxy: a page of results asks for dozens at once, so the number is generous (600 a minute per person), but it is no way to pull the internet through the server.</summary>
     public void TakeThumb(long userId)
@@ -65,7 +118,12 @@ public sealed class CatalogLimiter(TimeProvider clock)
     }
 
     /// <summary>Forgets what was counted (the tests that measure the brake).</summary>
-    public void Reset() => _calls.Clear();
+    public void Reset()
+    {
+        _calls.Clear();
+        _blocked.Clear();
+        _rates.Clear();
+    }
 }
 
 /// <summary>

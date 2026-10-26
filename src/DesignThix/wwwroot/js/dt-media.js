@@ -29,6 +29,7 @@
   var LOCAL_CATALOGS = { builtin: true, uploads: true };
   var SUGGESTIONS = ['Natur', 'Essen', 'Büro', 'Hintergrund', 'Textur', 'Menschen'];
   var ORIENTATIONS = [['any', 'Alle Formate'], ['landscape', 'Querformat'], ['portrait', 'Hochformat'], ['square', 'Quadrat']];
+  var COLOURS = [['any', 'Alle Farben'], ['red', 'Rot'], ['orange', 'Orange'], ['yellow', 'Gelb'], ['green', 'Grün'], ['turquoise', 'Türkis'], ['blue', 'Blau'], ['violet', 'Violett'], ['pink', 'Rosa'], ['brown', 'Braun'], ['black', 'Schwarz'], ['gray', 'Grau'], ['white', 'Weiß']];
   var catalogPromise = null;
   var catalogAt = 0;
 
@@ -129,7 +130,7 @@
     var o = options || {};
     var id = 'dt-media-' + (++counter);
     var TABLIST = tabsFor(o).slice();
-    var state = { tab: tabFor(o, TABLIST), q: '', token: 0, items: [], loading: true, failed: false, uploading: false, done: false, page: 1, hasMore: false, collection: '', orientation: 'any', error: '', message: '', importing: false };
+    var state = { tab: tabFor(o, TABLIST), q: '', token: 0, items: [], loading: true, failed: false, uploading: false, done: false, page: 1, hasMore: false, collection: '', orientation: 'any', colour: 'any', error: '', message: '', importing: false };
     var dlg = el('dialog', { class: 'mat-dialog mat-dialog--xl dt-media', 'data-static': '', 'aria-labelledby': id + '-t' });
     var close = el('button', { type: 'button', class: 'mat-btn mat-btn--ghost mat-btn--icon mat-dialog__close', 'aria-label': 'Schließen', 'data-dialog-close': '' }, icon('x'));
     var head = el('div', { class: 'mat-dialog__head' }, [icon('images'), el('h2', { class: 'mat-dialog__title', id: id + '-t', text: o.title || 'Bild wählen' }), close]);
@@ -160,8 +161,11 @@
     var provider = el('a', { class: 'dt-media__provider', target: '_blank', rel: 'noopener noreferrer', hidden: true });
     // the format filter is only in the page while a catalogue that has one is shown (the library tabs have no dropdown)
     var orient = el('select', { class: 'mat-select dt-media__orient', 'aria-label': 'Format' }, ORIENTATIONS.map(function (p) { return el('option', { value: p[0], text: p[1] }); }));
+    var colour = el('select', { class: 'mat-select dt-media__colour', 'aria-label': 'Farbe' }, COLOURS.map(function (p) { return el('option', { value: p[0], text: p[1] }); }));
     var chips = el('div', { class: 'dt-media__chips', role: 'group', 'aria-label': 'Sammlungen' });
-    var catbar = el('div', { class: 'dt-media__catbar', hidden: true }, [chips, provider]);
+    // what the provider's rules ask us to say next to its results (who the pictures are from, what the licence means)
+    var notice = el('p', { class: 'dt-media__notice', hidden: true });
+    var catbar = el('div', { class: 'dt-media__catbar', hidden: true }, [chips, provider, notice]);
     var status = el('p', { class: 'dt-media__status', role: 'status', 'aria-live': 'polite' });
     var grid = el('div', { class: 'dt-media__grid', role: 'listbox', 'aria-label': 'Bilder', 'data-media-grid': '' });
     var more = el('button', { type: 'button', class: 'mat-btn mat-btn--secondary dt-media__more', hidden: true, text: 'Mehr laden' });
@@ -275,14 +279,17 @@
     function drawBar(t) {
       var isCatalog = t.kind === 'catalog';
       catbar.hidden = !isCatalog;
-      if (!isCatalog) { orient.remove(); }
+      if (!isCatalog) { orient.remove(); colour.remove(); }
       search.placeholder = isCatalog ? t.catalog.name + ' durchsuchen' : 'Bilder suchen';
       search.setAttribute('aria-label', search.placeholder);
       if (!isCatalog) { return; }
       var c = t.catalog;
       provider.hidden = !c.provider;
       if (c.provider) { provider.href = c.provider.url; provider.textContent = c.provider.text; }
+      notice.hidden = !c.notice;
+      notice.textContent = c.notice || '';
       if (c.caps.filters) { catbar.insertBefore(orient, provider); orient.value = state.orientation; } else { orient.remove(); }
+      if (c.caps.colour) { catbar.insertBefore(colour, provider); colour.value = state.colour; } else { colour.remove(); }
       chips.textContent = '';
       var addChip = function (label, value, pressed, onClick) {
         var b = el('button', { type: 'button', class: 'dt-media__chip', 'aria-pressed': pressed ? 'true' : 'false', 'data-chip': value, text: label });
@@ -326,7 +333,7 @@
       draw();
       var url = '/api/catalogs/' + encodeURIComponent(c.id) + '/search?page=' + state.page + '&perPage=30'
         + (state.q ? '&q=' + encodeURIComponent(state.q) : '') + (state.collection ? '&collection=' + encodeURIComponent(state.collection) : '')
-        + (state.orientation !== 'any' ? '&orientation=' + state.orientation : '');
+        + (state.orientation !== 'any' ? '&orientation=' + state.orientation : '') + (c.caps.colour && state.colour !== 'any' ? '&colour=' + state.colour : '');
       fetch(url, { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(function (r) {
         return jsonOrNull(r).then(function (data) { return { ok: r.ok, status: r.status, data: data }; });
       }).then(function (res) {
@@ -410,6 +417,7 @@
     new IntersectionObserver(function (entries) { if (entries.some(function (e) { return e.isIntersecting; })) { nextPage(); } }, { root: scroller, rootMargin: '200px' }).observe(more);
     more.addEventListener('click', nextPage);
     orient.addEventListener('change', function () { state.orientation = orient.value; load(); });
+    colour.addEventListener('change', function () { state.colour = colour.value; load(); });
 
     // ---- upload (button, drop, paste): one file is chosen at once, several are shown in "Uploads"
     function takeFiles(files) {

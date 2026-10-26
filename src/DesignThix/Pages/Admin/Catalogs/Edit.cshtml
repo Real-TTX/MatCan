@@ -27,17 +27,31 @@
         @if (Model.BaseUrlNote is { } note) { <p class="mat-hint">@note</p> }
     </dt-card>
 
+    @if (c.Info.Rules is { Count: > 0 } rules)
+    {
+        <dt-card title="Regeln und Grenzen des Anbieters" icon="shield">
+            <ul class="dt-steps" data-catalog-rules>
+                @foreach (var rule in rules)
+                {
+                    <li>@rule</li>
+                }
+            </ul>
+            @if (Model.RateNote is { } rate) { <p class="mat-hint" data-catalog-rate>@rate</p> }
+        </dt-card>
+    }
+
     @if (needsKey || external)
     {
         <dt-card title="Schlüssel" icon="key">
             <div class="mat-form__grid">
-                <dt-input for="Input.Key" label="Schlüssel des Anbieters" type="password" autocomplete="off" full="true"
+                <dt-input for="Input.Key" label="@(c.Info.KeyLabel ?? "Schlüssel des Anbieters")" type="password" autocomplete="off" full="true"
                           hint="@(Model.Row.HasKey ? "Ein Schlüssel ist gespeichert (verschlüsselt, nie wieder sichtbar). Leer lassen, um ihn zu behalten." : "Wird verschlüsselt im Datenvolume gespeichert – nie in der Datenbank, nie in einem Backup, nie im Browser.")" />
                 @if (Model.Row.HasKey)
                 {
                     <dt-switch for="Input.RemoveKey" label="Gespeicherten Schlüssel entfernen" full="true" />
                 }
             </div>
+            @if (c.Info.KeyHint is { } keyHint) { <p class="mat-hint" data-catalog-keyhint>@keyHint</p> }
             @if (c.Info.KeyHelpUrl is { } help && help.StartsWith("https://", StringComparison.Ordinal))
             {
                 <p class="mat-hint">Einen Schlüssel bekommst du hier: <a href="@help" target="_blank" rel="noopener noreferrer">@help</a></p>
@@ -51,8 +65,18 @@
             <div class="mat-form__grid">
                 <dt-input for="Input.PerUserPerMinute" label="Suchen pro Person und Minute" type="number" min="0" max="1000" step="1" inputmode="numeric" hint="@($"0 = Standard ({c.Info.DefaultPerUserPerMinute}).")" />
                 <dt-input for="Input.PerHour" label="Anfragen pro Stunde (alle zusammen)" type="number" min="0" max="100000" step="1" inputmode="numeric" hint="@(c.Info.DefaultPerHour > 0 ? $"0 = Standard ({c.Info.DefaultPerHour}), so viele erlaubt der Anbieter dem Schlüssel." : "0 = keine Grenze von DesignThix.")" />
-                <dt-switch for="Input.SafeSearch" label="Nur jugendfreie Bilder (Safe Search)" full="true" />
-                <dt-textarea for="Input.AllowedLicences" label="Erlaubte Lizenzen" rows="3" full="true" hint="Eine pro Zeile, zum Beispiel CC0-1.0 oder CC-BY-4.0. Leer: die Standardlizenzen des Katalogs. Lizenzen mit NC oder ND sind nie möglich." />
+                @if (c.Info.HasSafeSearch)
+                {
+                    <dt-switch for="Input.SafeSearch" label="Nur jugendfreie Bilder (Safe Search)" full="true" />
+                }
+                else
+                {
+                    <input type="hidden" name="Input.SafeSearch" value="true" />
+                }
+                @if (c.Info.HasLicenceChoice)
+                {
+                    <dt-textarea for="Input.AllowedLicences" label="Erlaubte Lizenzen" rows="3" full="true" hint="Eine pro Zeile, zum Beispiel CC0, CC-BY oder CC-BY-SA. Leer: die Standardlizenzen des Katalogs. Lizenzen mit NC oder ND sind nie möglich." />
+                }
             </div>
         </dt-card>
     }

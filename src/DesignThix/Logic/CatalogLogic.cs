@@ -66,6 +66,10 @@ public static class CatalogLogic
         };
     }
 
+    /// <summary>The headers a catalogue wants for its thumbnails (Openverse: the token), for the proxy.</summary>
+    public static async Task<IReadOnlyDictionary<string, string>?> ThumbHeadersAsync(Biz biz, ICatalog catalog, CancellationToken ct)
+        => await catalog.ThumbHeadersAsync(await ContextAsync(biz, catalog, ct), ct);
+
     // ------------------------------------------------------------------------------------------------ for people
 
     /// <summary>The catalogues a signed-in person may use: switched on, and with a key where one is needed. In the order the administrator gave.</summary>
@@ -320,6 +324,15 @@ public static class CatalogLogic
     {
         await Access.RequireAsync(biz, ItemKind.Design, designId, AccessLevel.View);
         var keys = await biz.Db.ItemAssetRef.AsNoTracking().Where(r => r.ItemKind == ItemKind.Design && r.ItemId == designId).Select(r => r.AssetKey).ToListAsync();
+        return await CreditsOfKeysAsync(biz, keys);
+    }
+
+    /// <summary>
+    /// The credit lines for these library keys: the ones whose image came from an external catalogue. No permission check of its own: the caller has decided that these keys may be shown (the design
+    /// the person may see, or the images a public link delivers). Each item of a catalogue is listed once.
+    /// </summary>
+    public static async Task<List<CreditRow>> CreditsOfKeysAsync(Biz biz, IReadOnlyCollection<string> keys)
+    {
         if (keys.Count == 0)
         {
             return [];
@@ -511,6 +524,8 @@ public static class CatalogLogic
 
         try
         {
+            // one request, whatever the provider said before: if it still says "not now" the pause starts again
+            Svc(biz).Limiter.Unblock(catalog);
             var ctx = await ContextAsync(biz, catalog, ct);
             var page = await catalog.SearchAsync(ctx, new CatalogQuery { Text = catalog.Caps.HasFlag(CatalogCaps.Browse) ? "" : "natur", PerPage = 10 }, ct);
             return page.Items.Count == 0

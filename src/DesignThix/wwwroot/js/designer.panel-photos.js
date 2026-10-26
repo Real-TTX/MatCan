@@ -12,10 +12,11 @@
   var LOCAL = { builtin: true, uploads: true };
   var SUGGESTIONS = ['Natur', 'Essen', 'Büro', 'Hintergrund', 'Textur', 'Menschen'];
   var ORIENTATIONS = [['any', 'Alle Formate'], ['landscape', 'Querformat'], ['portrait', 'Hochformat'], ['square', 'Quadrat']];
+  var COLOURS = [['any', 'Alle Farben'], ['red', 'Rot'], ['orange', 'Orange'], ['yellow', 'Gelb'], ['green', 'Grün'], ['turquoise', 'Türkis'], ['blue', 'Blau'], ['violet', 'Violett'], ['pink', 'Rosa'], ['brown', 'Braun'], ['black', 'Schwarz'], ['gray', 'Grau'], ['white', 'Weiß']];
 
   var app = null;
   var catalogs = [];
-  var state = { catalogId: '', q: '', collection: '', orientation: 'any', items: [], page: 1, hasMore: false, loading: false, failed: false, error: '', message: '', token: 0, collections: {}, importing: false };
+  var state = { catalogId: '', q: '', collection: '', orientation: 'any', colour: 'any', items: [], page: 1, hasMore: false, loading: false, failed: false, error: '', message: '', token: 0, collections: {}, importing: false };
 
   function current() { return catalogs.find(function (c) { return c.id === state.catalogId; }) || catalogs[0] || null; }
 
@@ -46,6 +47,7 @@
       var catRow = D.el('div', { class: 'dt-photos__cats', role: 'group', 'aria-label': 'Katalog' });
       var chips = D.el('div', { class: 'dt-photos__chips', role: 'group' });
       var orient = D.el('select', { class: 'mat-select dt-photos__orient', 'aria-label': 'Format' }, ORIENTATIONS.map(function (p) { return D.el('option', { value: p[0], text: p[1] }); }));
+      var colour = D.el('select', { class: 'mat-select dt-photos__orient dt-photos__colour', 'aria-label': 'Farbe' }, COLOURS.map(function (p) { return D.el('option', { value: p[0], text: p[1] }); }));
       var providerRow = D.el('p', { class: 'dt-pnote dt-photos__provider' });
       var info = D.el('p', { class: 'dt-empty', role: 'status', 'aria-live': 'polite' });
       var grid = D.el('div', { class: 'dt-assetgrid dt-photos__grid', role: 'list' });
@@ -60,10 +62,17 @@
         bar.appendChild(catRow);
       }
       bar.appendChild(searchInput);
-      if (catalog.caps.filters) { orient.value = state.orientation; bar.appendChild(orient); }
+      if (catalog.caps.filters || catalog.caps.colour) {
+        // the format and the colour side by side
+        var filters = D.el('div', { class: 'dt-photos__filters' });
+        if (catalog.caps.filters) { orient.value = state.orientation; filters.appendChild(orient); }
+        if (catalog.caps.colour) { colour.value = state.colour; filters.appendChild(colour); }
+        bar.appendChild(filters);
+      }
       bar.appendChild(chips);
       host.appendChild(bar);
       if (catalog.provider) { providerRow.appendChild(link(catalog.provider.url, catalog.provider.text, 'dt-photos__providerlink')); host.appendChild(providerRow); }
+      if (catalog.notice) { host.appendChild(D.el('p', { class: 'dt-pnote dt-photos__notice', text: catalog.notice })); }
       host.appendChild(info);
       host.appendChild(grid);
       host.appendChild(D.el('div', { class: 'dt-pbar' }, moreBtn));
@@ -74,6 +83,7 @@
         state.q = '';
         state.collection = '';
         state.orientation = 'any';
+        state.colour = 'any';
         state.items = [];
         api.rebuild();
       }
@@ -152,7 +162,7 @@
         draw();
         var url = '/api/catalogs/' + encodeURIComponent(c.id) + '/search?page=' + state.page + '&perPage=30'
           + (state.q ? '&q=' + encodeURIComponent(state.q) : '') + (state.collection ? '&collection=' + encodeURIComponent(state.collection) : '')
-          + (state.orientation !== 'any' ? '&orientation=' + state.orientation : '');
+          + (state.orientation !== 'any' ? '&orientation=' + state.orientation : '') + (c.caps.colour && state.colour !== 'any' ? '&colour=' + state.colour : '');
         D.request('GET', url).then(function (res) {
           if (token !== state.token) { return; }
           state.loading = false;
@@ -199,6 +209,7 @@
 
       searchInput.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(function () { state.q = searchInput.value.trim(); drawChips(); reload(); }, 250); });
       orient.addEventListener('change', function () { state.orientation = orient.value; reload(); });
+      colour.addEventListener('change', function () { state.colour = colour.value; reload(); });
       moreBtn.addEventListener('click', function () { if (state.hasMore && !state.loading) { state.page += 1; load(true); } });
       new IntersectionObserver(function (entries) { if (entries.some(function (e) { return e.isIntersecting; }) && state.hasMore && !state.loading) { state.page += 1; load(true); } }, { root: host.closest('.dt-panel__body') || null, rootMargin: '200px' }).observe(moreBtn);
       api.cleanup(function () { clearTimeout(timer); });

@@ -46,7 +46,9 @@ dialog.dt-media { height: min(86dvh, 760px); }
 .dt-media__chip:hover { border-color: var(--mat-accent); }
 .dt-media__chip:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
 .dt-media__chip[aria-pressed="true"] { border-color: var(--mat-accent); background: var(--mat-accent-soft); color: var(--mat-accent-text); font-weight: 600; }
-.dt-media__orient { flex: none; width: auto; min-width: 9rem; }
+.dt-media__orient, .dt-media__colour { flex: none; width: auto; min-width: 9rem; }
+.dt-media__notice { flex: 1 1 100%; margin: 0; font-size: var(--mat-fs-xs); color: var(--mat-text-muted); }
+.dt-media__notice[hidden], .dt-media__colour[hidden] { display: none; }
 .dt-media__provider { flex: none; font-size: var(--mat-fs-xs); color: var(--mat-accent-text); text-decoration: underline; }
 .dt-media__tile--item { position: relative; }
 .dt-media__credit { font-size: var(--mat-fs-xs); color: var(--mat-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -61,6 +63,6 @@ dialog.dt-media { height: min(86dvh, 760px); }
 @media (max-width: 640px) {
   .dt-media__chips { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
   .dt-media__chip { flex: none; }
-  .dt-media__orient { flex: 1 1 auto; }
+  .dt-media__orient, .dt-media__colour { flex: 1 1 auto; }
   .dt-media__badge { display: none; }
 }

@@ -171,6 +171,7 @@ public static class ShareEndpoints
             fonts = d.Fonts.Select(f => new { family = f.Family, weight = f.Weight, style = f.Style, url = f.Url }),
             assets = d.Assets,
             warnings = d.Warnings,
+            credits = d.Credits.Select(c => new { title = c.Title, author = c.Author, authorUrl = c.AuthorUrl, sourceUrl = c.SourceUrl, catalogName = c.CatalogName, licence = new { name = c.LicenceName, url = c.LicenceUrl }, attribution = c.Attribution }),
         };
     }
 

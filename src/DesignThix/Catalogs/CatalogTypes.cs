@@ -27,6 +27,9 @@ public enum CatalogCaps
 
     /// <summary>The pictures live at a provider on the internet: they are imported when they are used, and their licence and author travel with them.</summary>
     External = 32,
+
+    /// <summary>The provider can filter by colour (the colour select of the media browser and of Fotos appears).</summary>
+    Colour = 64,
 }
 
 /// <summary>A link with the text the provider's rules ask for ("Fotos von Pexels").</summary>
@@ -40,7 +43,15 @@ public sealed record CatalogLink(string Text, string Url);
 /// <param name="Description">What is in the catalogue, German, one sentence.</param>
 /// <param name="DefaultPerUserPerMinute">How many searches one person may make per minute unless the administrator sets another number.</param>
 /// <param name="DefaultPerHour">The budget of the key per hour (0 = no budget).</param>
-public sealed record CatalogInfo(string Homepage, string? KeyHelpUrl, CatalogLink? ProviderLink, string LicenceSummary, string Description, int DefaultPerUserPerMinute = 30, int DefaultPerHour = 0);
+/// <param name="Notice">One short German sentence shown under the results of the catalogue (what the provider's rules ask us to say, e.g. "Fotos von Pexels ...").</param>
+/// <param name="Rules">The provider's rules and limits in German, one sentence each: shown on the administration page of the catalogue.</param>
+/// <param name="KeyLabel">The name of the key field when it is not simply "Schlüssel des Anbieters".</param>
+/// <param name="KeyHint">How the key is written and where it comes from, German.</param>
+/// <param name="HasSafeSearch">The provider can leave out pictures that are not for all ages (the switch on the administration page applies).</param>
+/// <param name="HasLicenceChoice">The catalogue lets through several licences and the administrator may narrow them (the list on the administration page applies).</param>
+/// <param name="KeyPerMinute">The requests per minute the provider allows the key (0 = no such limit); the brake of the catalogue stays below it.</param>
+public sealed record CatalogInfo(string Homepage, string? KeyHelpUrl, CatalogLink? ProviderLink, string LicenceSummary, string Description, int DefaultPerUserPerMinute = 30, int DefaultPerHour = 0,
+    string? Notice = null, IReadOnlyList<string>? Rules = null, string? KeyLabel = null, string? KeyHint = null, bool HasSafeSearch = false, bool HasLicenceChoice = false, int KeyPerMinute = 0);
 
 /// <summary>A collection (a category, an area, a folder) a browsable catalogue lists.</summary>
 public sealed record CatalogCollection(string Id, string Name, int? Count = null);
@@ -179,6 +190,10 @@ public sealed class CatalogContext
     public Task<string> GetTextAsync(Uri url, IReadOnlyDictionary<string, string>? headers, TimeSpan ttl, CancellationToken ct)
         => Services.GetTextAsync(this, url, headers, ttl, ct);
 
+    /// <summary>A POST of a small form to the provider (a token request); never redirected, not cached.</summary>
+    public Task<CatalogHttpResult> PostFormAsync(Uri url, IReadOnlyDictionary<string, string> form, CancellationToken ct)
+        => Services.PostFormAsync(this, url, form, ct);
+
     /// <summary>The bytes of a file at the provider (the download of the import): not cached, at most <paramref name="maxBytes"/>.</summary>
     public Task<CatalogHttpResult> DownloadAsync(Uri url, IReadOnlyDictionary<string, string>? headers, long maxBytes, CancellationToken ct)
         => Services.DownloadAsync(this, url, headers, maxBytes, ct);
@@ -224,4 +239,10 @@ public interface ICatalog
 
     /// <summary>The bytes (or font files) and the metadata of one item, for the import. The id is one this catalogue made; it is never trusted as an address.</summary>
     Task<CatalogFetch> FetchAsync(CatalogContext ctx, string itemId, CancellationToken ct);
+
+    /// <summary>True when the thumbnails of the catalogue are asked for with the headers of <see cref="ThumbHeadersAsync"/> (Openverse: a token for the higher limits).</summary>
+    bool ThumbsNeedAuth => false;
+
+    /// <summary>The headers of a request for a thumbnail (only called when <see cref="ThumbsNeedAuth"/>); they are only sent to the host of the thumbnail address.</summary>
+    Task<IReadOnlyDictionary<string, string>?> ThumbHeadersAsync(CatalogContext ctx, CancellationToken ct) => Task.FromResult<IReadOnlyDictionary<string, string>?>(null);
 }

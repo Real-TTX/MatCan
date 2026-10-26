@@ -380,7 +380,7 @@ public sealed class PublicShareTests(AppTests.AppFactory factory) : PlatformTest
         Assert.Contains("noindex", ok.Headers.GetValues("X-Robots-Tag").Single());
         using var json = JsonDocument.Parse(await ok.Content.ReadAsStringAsync());
         var names = json.RootElement.EnumerateObject().Select(p => p.Name).Order().ToList();
-        Assert.Equal(["allowDownload", "assets", "document", "folderId", "fonts", "id", "kind", "name", "pages", "warnings"], names);
+        Assert.Equal(["allowDownload", "assets", "credits", "document", "folderId", "fonts", "id", "kind", "name", "pages", "warnings"], names);
 
         Assert.Equal(HttpStatusCode.NotFound, (await anonymous.GetAsync($"/api/s/{Guid.NewGuid()}")).StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, (await anonymous.GetAsync("/api/s/not-a-guid")).StatusCode);

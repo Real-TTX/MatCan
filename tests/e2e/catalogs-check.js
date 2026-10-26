@@ -23,7 +23,7 @@ const os = require('os');
 const path = require('path');
 const lib = require('./lib.js');
 const E = require('./editor-lib.js');
-const { startFakeCatalogs, KEY } = require('./fake-catalogs.js');
+const { startFakeCatalogs, KEY, providers } = require('./fake-catalogs.js');
 
 const args = process.argv.slice(2);
 const argValue = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
@@ -49,7 +49,12 @@ const { idle, state, openDesigner, createDesign, openPanel, nodeOf, raf2 } = E;
 /** Types a search into the media browser and waits until the results are exactly these titles (a search is answered after the pause of the field, so the results of earlier words may still be there). */
 async function searchMedia(page, text, titles) {
   await page.fill('.dt-media__search', text);
-  await page.waitForFunction(t => { const names = Array.from(document.querySelectorAll('.dt-media__tile--item .dt-media__name')).map(x => x.textContent); return names.length === t.length && t.every(n => names.includes(n)); }, titles, { timeout: 10000 });
+  try {
+    await page.waitForFunction(t => { const names = Array.from(document.querySelectorAll('.dt-media__tile--item .dt-media__name')).map(x => x.textContent); return names.length === t.length && t.every(n => names.includes(n)); }, titles, { timeout: 10000 });
+  } catch (e) {
+    const seen = await page.evaluate(() => ({ status: (document.querySelector('.dt-media__status') || {}).textContent, names: Array.from(document.querySelectorAll('.dt-media__tile--item .dt-media__name')).map(x => x.textContent).slice(0, 8) }));
+    throw new Error('search "' + text + '" did not show ' + titles.join(',') + ': ' + JSON.stringify(seen));
+  }
 }
 /** The same for the panel Fotos. */
 async function searchPhotos(page, text, titles) {
@@ -67,7 +72,7 @@ const api = (page, method, url, body) => page.evaluate(async ({ method: m, url: 
 /** Removes every image that came from a catalogue of this check (what an earlier run left behind, and what this run made): trash, then purge. */
 async function purgeImported(page) {
   const keys = new Set();
-  for (const category of ['Katalog: Beispiel-Katalog', 'Katalog: Beispiel-Suche', 'Katalog: Ordner']) {
+  for (const category of ['Katalog: Beispiel-Katalog', 'Katalog: Beispiel-Suche', 'Katalog: Ordner', 'Katalog: Pexels', 'Katalog: Pixabay', 'Katalog: Openverse']) {
     const list = await api(page, 'GET', '/api/assets?category=' + encodeURIComponent(category) + '&take=100');
     (list.body || []).forEach(a => keys.add(a.key));
   }
@@ -116,7 +121,7 @@ async function purgeImported(page) {
     if (values.enabled !== undefined && on !== values.enabled) { await admin.click('label.mat-switch:has(input[name="Input.Enabled"])'); }
     for (const [field, value] of Object.entries(values.fields || {})) { await admin.fill('#Input_' + field, String(value)); }
     if (values.key !== undefined) { await admin.fill('#Input_Key', values.key); }
-    if (values.removeKey) { await admin.click('label.mat-switch:has(input[name="Input.RemoveKey"])'); }
+    if (values.removeKey && await admin.$('input[name="Input.RemoveKey"]')) { await admin.click('label.mat-switch:has(input[name="Input.RemoveKey"])'); }
     await Promise.all([admin.waitForNavigation(), admin.click('button[type=submit].mat-btn--primary')]);
     return admin.url();
   }
@@ -133,6 +138,7 @@ async function purgeImported(page) {
   // a clean start: both examples off, no key, no folders (earlier runs)
   await configure('example-browse', { enabled: false });
   await configure('example-search', { enabled: false, removeKey: true }).catch(() => {});
+  for (const id of ['pexels', 'pixabay', 'openverse']) { await configure(id, { enabled: false, removeKey: true }); }   // the providers (C2) too: a run that stopped half way leaves them on
   await admin.goto(base + '/Admin/Catalogs');
   const pill = id => admin.$eval(`[data-catalog="${id}"] .mat-item__end`, e => e.textContent.replace(/\s+/g, ' ').trim());
   check('Mitgeliefert and Uploads are on by themselves, the examples are off', /an/.test(await pill('builtin')) && /an/.test(await pill('uploads')) && /aus/.test(await pill('example-browse')), await pill('builtin') + ' / ' + await pill('example-browse'));
@@ -246,8 +252,12 @@ async function purgeImported(page) {
   await A.waitForFunction(() => /nicht erreichbar/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
   check('a provider that is down is "nicht erreichbar" in the browser, the rest still works', (await A.$$('.dt-media__tab')).length >= 7);
   await A.fill('.dt-media__search', 'limit');
-  await A.waitForFunction(() => /genug Anfragen/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
+  await A.waitForFunction(() => /bremst gerade/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
   check('a provider over its limit says so (no retry loop: one request per search)', true);
+  // the provider asked for a pause (Retry-After 120): the app leaves it alone until it is over; the "Testen" of the administrator ends the pause by asking once
+  await admin.goto(base + '/Admin/Catalogs');
+  await admin.click('[data-catalog="example-browse"] button:has-text("Testen")');
+  await admin.waitForSelector('.mat-toast');
   await A.fill('.dt-media__search', '');
   await A.waitForTimeout(500);   // the field answers after a short pause
 
@@ -544,6 +554,331 @@ async function purgeImported(page) {
   await shot(phone, 'media-catalogue');
   await phone.keyboard.press('Escape');
   await phoneContext.close();
+
+  // ---------------------------------------------------------------------------------------- the three providers (plan 5 / C2)
+  current = 'providers: ';
+  const PROVIDERS = ['pexels', 'pixabay', 'openverse'];
+  const stats = async () => (await (await fetch(`http://127.0.0.1:${fakePort}/__stats`)).json());
+  let pointed = true;
+  for (const id of PROVIDERS) {
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=' + id);
+    if (!/in der Konfiguration festgelegt/.test(await admin.textContent('body'))) { pointed = false; }
+  }
+  if (!pointed) {
+    // never switch a real provider on from a check: without the address of the fake there is nothing to test against
+    console.log(`(the app does not know the fake of the providers: start it with DESIGNTHIX__Catalogs__<pexels|pixabay|openverse>__BaseUrl=http://127.0.0.1:${fakePort}; the checks of the providers are skipped)`);
+  } else {
+    const lemon = fake.items.find(i => i.title === 'Zitronen');
+    const lemonColour = providers.COLOURS[Math.floor(lemon.hue / 30) % 12];
+    const otherColour = providers.COLOURS[(providers.COLOURS.indexOf(lemonColour) + 3) % 12];
+
+    // ---- the administration (a start from a clean state: an earlier run may have stopped half way)
+    for (const id of PROVIDERS) { await configure(id, { enabled: false, removeKey: true }); }
+    await admin.goto(base + '/Admin/Catalogs');
+    const providerNames = await admin.$$eval('[data-catalog] .mat-item__title', t => t.map(x => x.textContent.trim()));
+    check('the list names Pexels, Pixabay and Openverse', ['Pexels', 'Pixabay', 'Openverse'].every(n => providerNames.includes(n)), providerNames.join('|'));
+    check('all three are off, and the two that need a key say so', PROVIDERS.every(id => true) && /aus/.test(await pill('pexels')) && /Schlüssel fehlt/.test(await pill('pexels')) && /Schlüssel fehlt/.test(await pill('pixabay')) && /aus/.test(await pill('openverse')) && !/Schlüssel fehlt/.test(await pill('openverse')), await pill('pexels') + ' / ' + await pill('openverse'));
+    for (const id of PROVIDERS) {
+      await admin.goto(base + '/Admin/Catalogs/Edit?id=' + id);
+      const rules = await admin.$$eval('[data-catalog-rules] li', l => l.map(x => x.textContent.trim()));
+      check(`${id}: the page lists the rules of the provider`, rules.length >= 4, String(rules.length));
+      check(`${id}: it says where to get a key and how it is written`, await admin.isVisible('[data-catalog-keyhint]') && (await admin.$$eval('main a[href^="https://"]', a => a.length)) >= 1);
+      await shot(admin, 'admin-' + id);
+    }
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=pexels');
+    check('Pexels: no switch for safe search (Pexels has none) and no list of licences', !(await admin.$('input[type=checkbox][name="Input.SafeSearch"]')) && !(await admin.$('#Input_AllowedLicences')));
+    check('Pexels: the rules name the limits of 200 an hour and 20 000 a month', /200 Anfragen pro Stunde/.test(await admin.textContent('[data-catalog-rules]')) && /20 000/.test(await admin.textContent('[data-catalog-rules]')));
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=pixabay');
+    check('Pixabay: safe search can be switched, the 24 hours of the cache are in the rules', !!(await admin.$('input[type=checkbox][name="Input.SafeSearch"]')) && /24 Stunden/.test(await admin.textContent('[data-catalog-rules]')));
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=openverse');
+    check('Openverse: the key is optional (credentials), the licences can be narrowed', /Zugangsdaten \(optional\)/.test(await admin.textContent('body')) && !!(await admin.$('#Input_AllowedLicences')));
+
+    await configure('pexels', { enabled: true, key: providers.KEYS.pexels, fields: { PerUserPerMinute: 500 } });
+    await configure('pixabay', { enabled: true, key: providers.KEYS.pixabay, fields: { PerUserPerMinute: 500 } });
+    await configure('openverse', { enabled: true, fields: { PerUserPerMinute: 500 } });
+    for (const id of PROVIDERS) {
+      await admin.goto(base + '/Admin/Catalogs/Edit?id=' + id);
+      await admin.click('[data-catalog-test]');
+      await admin.waitForLoadState();
+      await admin.waitForSelector('.mat-toast');
+      check(`${id}: "Testen" finds pictures`, /Verbindung steht/.test(await admin.textContent('.mat-toast')), await admin.textContent('.mat-toast'));
+    }
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=pexels');
+    check('Pexels: the page shows what the provider reported about its limits', /noch \d+ von 20000/.test((await admin.textContent('[data-catalog-rate]')).replace(/\s/g, ' ')), await admin.textContent('[data-catalog-rate]').catch(() => '-'));
+    check('no key is in any page of the administration', !(await admin.content()).includes(providers.KEYS.pexels));
+
+    // ---- the media browser
+    const pdesign = await createDesign(A, postJson, { preset: 'price-tag' });
+    cleanup.designs.push(pdesign.id);
+    await openDesigner(A, base, pdesign.id);
+    const openMedia = async (page, id) => {
+      await page.evaluate(i => { window.DtMedia.pick({ title: 'Bild wählen', tab: 'cat-' + i }, function () {}); }, id);
+      await page.waitForSelector('dialog.dt-media[open]');
+      await page.waitForSelector(`.dt-media__tab[data-tab="cat-${id}"]`);
+      if ((await page.getAttribute(`.dt-media__tab[data-tab="cat-${id}"]`, 'aria-selected')) !== 'true') { await page.click(`.dt-media__tab[data-tab="cat-${id}"]`); }
+    };
+    const closeMedia = async page => { await page.click('dialog.dt-media button:has-text("Abbrechen")'); await page.waitForSelector('dialog.dt-media', { state: 'detached' }); };
+    const tileCount = page => page.$$eval('.dt-media__tile--item', t => t.length);
+    const titlesOf = page => page.$$eval('.dt-media__tile--item .dt-media__name', t => t.map(x => x.textContent));
+    const importedBy = async category => ((await api(A, 'GET', '/api/assets?category=' + encodeURIComponent(category) + '&take=50')).body || []);
+
+    const until = async (fn, what) => { const end = Date.now() + 8000; while (Date.now() < end) { if (await fn()) { return true; } await sleep(150); } throw new Error('timeout: ' + what); };
+
+    // Pexels
+    await openMedia(A, 'pexels');
+    await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile--item').length >= 30);
+    const allTabs = await A.$$eval('.dt-media__tab', t => t.map(x => x.textContent));
+    check('the three providers are tabs behind the five of the library', allTabs.slice(0, 5).join('|') === 'Uploads|Flaggen|Siegel|Logos|Alle' && ['Pexels', 'Pixabay', 'Openverse'].every(n => allTabs.includes(n)), allTabs.join('|'));
+    check('Pexels: the first page is the curated one (30 tiles, more to come)', (await tileCount(A)) === 30 && await A.isVisible('.dt-media__more'));
+    check('Pexels: the collections are chips: Alle, Kuratiert and the featured ones of Pexels', (await A.$$eval('.dt-media__chip', c => c.map(x => x.textContent.trim()))).join('|') === 'Alle|Kuratiert|Käse & Co (15)|Natur pur (15)');
+    check('Pexels: the visible link to Pexels and the notice are there (their rule)', /Fotos von Pexels/.test(await A.textContent('.dt-media__provider')) && (await A.getAttribute('.dt-media__provider', 'href')) === 'https://www.pexels.com' && /Fotografin oder des Fotografen/.test(await A.textContent('.dt-media__notice')));
+    check('Pexels: it has the format filter and the colour filter', await A.isVisible('.dt-media__orient') && await A.isVisible('.dt-media__colour') && (await A.$$eval('.dt-media__colour option', o => o.length)) === 13);
+    const pexelsTile = await A.$eval('.dt-media__tile--item', t => ({ credit: t.querySelector('.dt-media__credit').textContent, badge: t.querySelector('.dt-media__badge').textContent, src: t.querySelector('img').getAttribute('src') }));
+    check('Pexels: a tile names the photographer and the licence', /Pexels-Lizenz/.test(pexelsTile.credit) && pexelsTile.badge === 'Pexels' && /^\/api\/catalogs\/thumb\//.test(pexelsTile.src), JSON.stringify(pexelsTile));
+    await A.waitForFunction(() => Array.from(document.querySelectorAll('.dt-media__tile--item img')).slice(0, 8).every(i => i.complete && i.naturalWidth > 0));
+    check('Pexels: the thumbnails load through the proxy (the bytes are PNG, the label says JPEG)', true);
+    await shot(A, 'media-pexels');
+    await A.click('.dt-media__chip:has-text("Käse")');
+    await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile--item').length === 15, null, { timeout: 8000 });
+    check('Pexels: a featured collection lists its photos (no video)', (await titlesOf(A)).every(t => !/video/i.test(t)));
+    await A.click('.dt-media__chip:has-text("Alle")');
+    await searchMedia(A, 'zitron', ['Zitronen']);
+    await A.selectOption('.dt-media__colour', otherColour);
+    await A.waitForFunction(() => /Nichts gefunden/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
+    check('Pexels: another colour finds nothing', (await tileCount(A)) === 0);
+    await A.selectOption('.dt-media__colour', lemonColour);
+    await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile--item').length === 1, null, { timeout: 8000 });
+    check('Pexels: the right colour finds the photo again', (await titlesOf(A))[0] === 'Zitronen');
+    const importsBefore = (await stats())['pexels-img:large2x'] || 0;
+    await A.click('.dt-media__tile--item');
+    await A.waitForSelector('dialog.dt-media', { state: 'detached', timeout: 15000 });
+    const pexelsAssets = await importedBy('Katalog: Pexels');
+    check('Pexels: a click downloads the large file into the library (category "Katalog: Pexels")', pexelsAssets.some(a => /^zitronen/.test(a.key)) && ((await stats())['pexels-img:large2x'] || 0) === importsBefore + 1, JSON.stringify(pexelsAssets.map(a => a.key)));
+
+    // a limit: the message, then no request while the provider asked for a pause
+    await openMedia(A, 'pexels');
+    await A.selectOption('.dt-media__colour', 'any');
+    await A.fill('.dt-media__search', 'limit');
+    await A.waitForFunction(() => /bremst gerade/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
+    const searchesAfterLimit = (await stats())['/v1/search'];
+    await A.fill('.dt-media__search', 'wiese');
+    await A.waitForFunction(() => /bremst gerade/.test(document.querySelector('.dt-media__status').textContent) && /Minute/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
+    await A.waitForTimeout(400);
+    check('Pexels: a 429 says "bremst gerade" and the provider is not asked again meanwhile', (await stats())['/v1/search'] === searchesAfterLimit, String((await stats())['/v1/search']) + ' / ' + searchesAfterLimit);
+    await shot(A, 'media-pexels-limit');
+    await closeMedia(A);
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=pexels');
+    await admin.click('[data-catalog-test]');
+    await admin.waitForLoadState();
+    await admin.waitForSelector('.mat-toast');
+    check('Pexels: "Testen" of the administrator asks once more, whatever was said before', /Verbindung steht/.test(await admin.textContent('.mat-toast')));
+
+    // Pixabay
+    await openMedia(A, 'pixabay');
+    await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile--item').length >= 30);
+    const pixChips = await A.$$eval('.dt-media__chip', c => c.map(x => x.textContent.trim()));
+    check('Pixabay: the categories are chips (Alle, Empfehlung, Hintergründe, Natur, Essen ...)', pixChips.slice(0, 5).join('|') === 'Alle|Empfehlung|Hintergründe|Natur|Essen' && pixChips.length === 22, pixChips.join('|'));
+    check('Pixabay: the first page is the popular images, with the link "Bilder von Pixabay" and the note about the copy', (await tileCount(A)) === 30 && /Bilder von Pixabay/.test(await A.textContent('.dt-media__provider')) && /auf diesen Server/.test(await A.textContent('.dt-media__notice')));
+    const sent = (await stats()).__lastPixabay;
+    check('Pixabay: the request was in German with safe search on (the settings of the administrator)', sent.lang === 'de' && sent.safesearch === 'true', JSON.stringify(sent));
+    await shot(A, 'media-pixabay');
+    await A.click('.dt-media__chip:has-text("Essen")');
+    await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile--item').length === 15, null, { timeout: 8000 });
+    check('Pixabay: a category filters (Essen: 15 images)', (await stats()).__lastPixabay.category === 'food');
+    await A.click('.dt-media__chip:has-text("Alle")');
+    await A.selectOption('.dt-media__colour', 'violet');
+    await until(async () => (await stats()).__lastPixabay.colors === 'lilac', 'lilac');
+    check('Pixabay: "Violett" is asked for as "lilac"', true);
+    await A.selectOption('.dt-media__colour', 'any');
+    await searchMedia(A, 'zitron', ['Zitronen, essen']);   // Pixabay has no titles: the tags are the title
+    const cdnBefore = (await stats())['pixabay-cdn:1280'] || 0;
+    await A.click('.dt-media__tile--item');
+    await A.waitForSelector('dialog.dt-media', { state: 'detached', timeout: 15000 });
+    const pixAssets = await importedBy('Katalog: Pixabay');
+    check('Pixabay: a click downloads the 1280 px file (through the redirect to the CDN) into the library', pixAssets.some(a => /^zitronen/.test(a.key)) && ((await stats())['pixabay-cdn:1280'] || 0) === cdnBefore + 1, JSON.stringify(pixAssets.map(a => a.key)));
+    await openMedia(A, 'pixabay');
+    await A.fill('.dt-media__search', 'down');
+    await A.waitForFunction(() => /nicht erreichbar/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
+    check('Pixabay: a provider that is down is "nicht erreichbar" and the other tabs stay', (await A.$$('.dt-media__tab')).length >= 8);
+    await closeMedia(A);
+
+    // Openverse
+    await openMedia(A, 'openverse');
+    await A.waitForSelector('.dt-media__chip');
+    check('Openverse: search only (suggestions, "Gib einen Suchbegriff ein."), no colour filter', /Gib einen Suchbegriff ein/.test(await A.textContent('.dt-media__status')) && (await A.$$('.dt-media__chip')).length === 6 && !(await A.isVisible('.dt-media__colour').catch(() => false)));
+    check('Openverse: the link and the notice (Openverse does not endorse DesignThix)', /Bilder über Openverse/.test(await A.textContent('.dt-media__provider')) && /empfiehlt oder prüft DesignThix nicht/.test(await A.textContent('.dt-media__notice')));
+    await searchMedia(A, 'zitron', ['Zitronen']);
+    const ovTile = await A.$eval('.dt-media__tile--item', t => t.querySelector('.dt-media__credit').textContent);
+    check('Openverse: the tile names the author and the licence (CC0 1.0)', /CC0 1\.0/.test(ovTile), ovTile);
+    const ovSent = (await stats()).__lastOpenverse;
+    check('Openverse: only licences that allow commercial use and changes are asked for, in pages of 20, without credentials', ovSent.license_type === 'commercial,modification' && ovSent.page_size === '20' && ovSent.bearer === false, JSON.stringify(ovSent));
+    await shot(A, 'media-openverse');
+    await searchMedia(A, 'morgentau', ['Morgentau']);
+    check('Openverse: a CC BY-SA picture says so on its tile', /CC BY SA 4\.0/.test(await A.$eval('.dt-media__tile--item .dt-media__credit', c => c.textContent)));
+    await A.fill('.dt-media__search', 'privat');
+    await A.waitForFunction(() => /Nichts gefunden/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
+    check('Openverse: the NC picture is not found', (await tileCount(A)) === 0);
+    const leaked = await api(A, 'GET', '/api/catalogs/openverse/search?q=leck&page=3&perPage=20');
+    const leakTitles = ((leaked.body && leaked.body.items) || []).map(i => i.title);
+    check('Openverse: even when the provider ignores its own filter, no NC, no ND and no unknown licence is offered', leaked.status === 200 && leakTitles.length > 0 && !leakTitles.some(t => /Nur privat|Unveränderbar|Ohne Lizenz/.test(t)) && !(leaked.body.items || []).some(i => /NC|ND/.test(i.licence.code)), leakTitles.join('|'));
+    const forbiddenId = '00000000-0000-4000-8000-' + String(fake.items.findIndex(i => i.id === 'nc1') + 1).padStart(12, '0');
+    const crafted = await api(A, 'POST', '/api/catalogs/openverse/import', { itemId: forbiddenId });
+    check('Openverse: the NC picture cannot be imported by its id either', crafted.status === 503 && /Lizenz/.test((crafted.body && crafted.body.error) || ''), crafted.status + ' ' + JSON.stringify(crafted.body));
+    const injected = await api(A, 'POST', '/api/catalogs/openverse/import', { itemId: '../../v1/auth_tokens/token/' });
+    check('Openverse: an id that is an address is refused', injected.status === 400, String(injected.status));
+    await searchMedia(A, 'zitron', ['Zitronen']);
+    const fullBefore = (await stats())['openverse:full'] || 0;
+    await A.click('.dt-media__tile--item');
+    await A.waitForSelector('dialog.dt-media', { state: 'detached', timeout: 15000 });
+    const ovAssets = await importedBy('Katalog: Openverse');
+    check('Openverse: a click downloads the file through Openverse itself (full size) into the library', ovAssets.some(a => /^zitronen/.test(a.key)) && ((await stats())['openverse:full'] || 0) === fullBefore + 1, JSON.stringify(ovAssets.map(a => a.key)));
+
+    // credentials: a token once, then with every request and thumbnail
+    await configure('openverse', { enabled: true, key: 'cid:sec' });
+    await openMedia(A, 'openverse');
+    await searchMedia(A, 'wiese', ['Wiese im Sommer']);
+    await A.waitForFunction(() => Array.from(document.querySelectorAll('.dt-media__tile--item img')).every(i => i.complete && i.naturalWidth > 0), null, { timeout: 8000 });
+    const withToken = await stats();
+    check('Openverse: with credentials a token is asked for once and sent with the search and the thumbnails', (withToken['openverse:token'] || 0) <= 1 && withToken.__lastOpenverse.bearer === true && (withToken['openverse:bearer'] || 0) >= 2, JSON.stringify({ token: withToken['openverse:token'], bearer: withToken['openverse:bearer'] }));
+    check('Openverse: the credentials are not in the page of the administration', !(await (async () => { await admin.goto(base + '/Admin/Catalogs/Edit?id=openverse'); return (await admin.content()).includes('cid:sec'); })()));
+    await configure('openverse', { enabled: true, key: 'cid:falsch' });
+    await A.fill('.dt-media__search', 'berg');
+    await A.waitForFunction(() => /Schlüssel/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 8000 });
+    check('Openverse: wrong credentials are a message, not a silent fall back', !/falsch/.test(await A.textContent('.dt-media__status')));
+    await configure('openverse', { enabled: true, removeKey: true });
+    await closeMedia(A);
+
+    // ---- the panel Fotos, with the providers
+    await openDesigner(A, base, pdesign.id);
+    await openPanel(A, 'photos');
+    const photoCats = await A.$$eval('.dt-photos__cat', c => c.map(x => x.textContent));
+    check('Fotos: a chip per catalogue with photos, the providers among them', ['Pexels', 'Pixabay', 'Openverse'].every(n => photoCats.includes(n)), photoCats.join('|'));
+    await A.click('.dt-photos__cat:has-text("Pexels")');
+    await A.waitForFunction(() => document.querySelectorAll('.dt-photo').length === 30);
+    check('Fotos: the link to Pexels, the notice and the colour filter are in the panel', /Fotos von Pexels/.test(await A.textContent('.dt-photos__providerlink')) && /Fotografin/.test(await A.textContent('.dt-photos__notice')) && await A.isVisible('.dt-photos__colour'));
+    await shot(A, 'fotos-pexels');
+    await searchPhotos(A, 'Zitronen', ['Zitronen']);
+    const placed = (await state(A)).elements.length;
+    await A.click('.dt-photo');
+    await A.waitForFunction(n => window.DtDesigner.app.elements().length === n + 1, placed, { timeout: 15000 });
+    await openPanel(A, 'photos');
+    await A.click('.dt-photos__cat:has-text("Pixabay")');
+    await A.waitForFunction(() => document.querySelectorAll('.dt-photo').length === 30);
+    check('Fotos: Pixabay shows its categories and its link', (await A.$$('.dt-photos__chip')).length === 22 && /Bilder von Pixabay/.test(await A.textContent('.dt-photos__providerlink')));
+    await shot(A, 'fotos-pixabay');
+    await searchPhotos(A, 'Zitronen', ['Zitronen, essen']);
+    await A.click('.dt-photo');
+    await A.waitForFunction(n => window.DtDesigner.app.elements().length === n + 2, placed, { timeout: 15000 });
+    await openPanel(A, 'photos');
+    await A.click('.dt-photos__cat:has-text("Openverse")');
+    await A.waitForSelector('.dt-photos__chip');
+    check('Fotos: Openverse shows the suggestions and the hint, no colour filter', /Gib einen Suchbegriff ein/.test(await A.textContent('#dt-panel-body')) && !(await A.$('.dt-photos__colour')));
+    await searchPhotos(A, 'Zitronen', ['Zitronen']);
+    await shot(A, 'fotos-openverse');
+    await A.click('.dt-photo');
+    await A.waitForFunction(n => window.DtDesigner.app.elements().length === n + 3, placed, { timeout: 15000 });
+    await idle(A);
+
+    // ---- the credits in the editor and in the public view
+    current = 'providers/credits: ';
+    await A.waitForFunction(() => window.DtDesigner.app.saveState === 'saved', null, { timeout: 15000 });
+    await A.click('#dt-file');
+    await A.waitForSelector('.dt-menu');
+    await A.click('.dt-menu__item:has(.dt-menu__label:text-is("Bildnachweise …"))');
+    await A.waitForSelector('dialog.dt-credits[open] .dt-credits__item', { timeout: 10000 });
+    const providerCredits = await A.$$eval('.dt-credits__item', c => c.map(x => x.textContent.replace(/\s+/g, ' ').trim()));
+    check('the editor lists the three photos with their catalogue, author and licence', providerCredits.length === 3 && ['Pexels', 'Pixabay', 'Openverse'].every(n => providerCredits.some(c => c.includes(n))) && providerCredits.every(c => /Ben Muster/.test(c)), providerCredits.join(' || '));
+    await A.click('dialog.dt-credits button:has-text("Text kopieren")');
+    await A.waitForSelector('.mat-toast');
+    const copied = await A.evaluate(() => navigator.clipboard.readText());
+    check('"Text kopieren" gives the lines the providers\' rules ask for', /Foto von Ben Muster auf Pexels/.test(copied) && /Bild von Ben Muster auf Pixabay/.test(copied) && /über Openverse/.test(copied), copied.split('\n').join(' / '));
+    await shot(A, 'credits-providers');
+    await A.click('dialog.dt-credits button:has-text("Schließen")');
+    await A.waitForSelector('dialog.dt-credits', { state: 'detached' });
+
+    await api(A, 'POST', `/api/share/design/${pdesign.id}/link`, { audience: 'Public', permission: 'View', allowDownload: false });
+    const token = ((await api(A, 'GET', `/api/share/design/${pdesign.id}`)).body.link || {}).token;
+    const plainDesign = await createDesign(A, postJson, { preset: 'price-tag' });
+    cleanup.designs.push(plainDesign.id);
+    await api(A, 'POST', `/api/share/design/${plainDesign.id}/link`, { audience: 'Public', permission: 'View', allowDownload: false });
+    const plainToken = ((await api(A, 'GET', `/api/share/design/${plainDesign.id}`)).body.link || {}).token;
+    check('the two links are public', !!token && !!plainToken);
+    const publicContext = await newContext(browser, { viewport: { width: 1440, height: 900 } });
+    await publicContext.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: base });
+    const P = await publicContext.newPage();
+    watch(P, 'public');
+    P.on('request', r => { const u = r.url(); if (!u.startsWith(base) && !/^(data|blob):/.test(u)) { outside.push(u); } });
+    await P.goto(`${base}/s/${token}`);
+    await P.waitForSelector('#dt-pv[data-state="ready"]', { timeout: 15000 });
+    check('the public view has a link "Bildnachweise" in its footer (three pictures from catalogues)', await P.isVisible('.dt-pv__credits') && (await P.getAttribute('#dt-pv', 'data-credits')) === '3');
+    await shot(P, 'public-credits-link');
+    await P.click('.dt-pv__credits');
+    await P.waitForSelector('dialog.dt-pv-cr[open] .dt-pv-cr__item');
+    const publicCredits = await P.$$eval('.dt-pv-cr__item', c => c.map(x => x.textContent.replace(/\s+/g, ' ').trim()));
+    check('the dialog lists the three sources with author, catalogue and licence', publicCredits.length === 3 && ['Pexels', 'Pixabay', 'Openverse'].every(n => publicCredits.some(c => c.includes(n))) && publicCredits.every(c => /Ben Muster/.test(c)), publicCredits.join(' || '));
+    check('author, licence and source are links to http(s) addresses only, opened safely', (await P.$$eval('.dt-pv-cr__item a', a => a.map(x => x.getAttribute('href') + '|' + x.getAttribute('rel')))).every(v => /^https?:\/\/.*\|noopener noreferrer$/.test(v)));
+    await shot(P, 'public-credits');
+    await P.click('dialog.dt-pv-cr button:has-text("Text kopieren")');
+    await P.waitForSelector('.mat-toast');
+    check('"Text kopieren" works without a sign-in', (await P.evaluate(() => navigator.clipboard.readText())).split('\n').length === 3);
+    await P.click('dialog.dt-pv-cr button:has-text("Schließen")');
+    await P.waitForSelector('dialog.dt-pv-cr', { state: 'detached' });
+    const apiPayload = await P.evaluate(async t => (await fetch('/api/s/' + t)).json(), token);
+    check('the public payload carries the credits and nothing of the library behind them', Array.isArray(apiPayload.credits) && apiPayload.credits.length === 3 && !JSON.stringify(apiPayload.credits).includes('SourceJson') && !JSON.stringify(apiPayload).includes(providers.KEYS.pexels));
+    await P.goto(`${base}/s/${plainToken}`);
+    await P.waitForSelector('#dt-pv[data-state="ready"]', { timeout: 15000 });
+    check('a design without catalogue pictures has no such link', !(await P.$('.dt-pv__credits')));
+    // the phone
+    await P.setViewportSize({ width: 390, height: 844 });
+    await P.goto(`${base}/s/${token}`);
+    await P.waitForSelector('.dt-pv__credits', { timeout: 15000 });
+    await P.click('.dt-pv__credits');
+    await P.waitForSelector('dialog.dt-pv-cr[open] .dt-pv-cr__item');
+    check('on a phone the dialog fits and does not scroll sideways', await P.evaluate(() => { const d = document.querySelector('dialog.dt-pv-cr').getBoundingClientRect(); return d.width <= 392 && document.documentElement.scrollWidth <= 392; }));
+    await shot(P, 'public-credits');
+    await publicContext.close();
+
+    // ---- tablet and phone: every provider in the media browser, the panel Fotos
+    current = 'providers/responsive: ';
+    for (const [width, height, touch] of [[900, 800, false], [390, 844, true]]) {
+      const ctx = await newContext(browser, touch ? { viewport: { width, height }, hasTouch: true, isMobile: true } : { viewport: { width, height } });
+      const R = await ctx.newPage();
+      watch(R, 'provider-' + width);
+      R.on('request', r => { const u = r.url(); if (!u.startsWith(base) && !/^(data|blob):/.test(u)) { outside.push(u); } });
+      await login(R, accounts.designer);
+      await openDesigner(R, base, pdesign.id);
+      for (const id of PROVIDERS) {
+        await openMedia(R, id);
+        if (id === 'openverse') { await searchMedia(R, 'berg', ['Berglandschaft', 'Bergsee', 'Schneeberg']); } else { await R.waitForSelector('.dt-media__tile--item', { timeout: 10000 }); }
+        await R.waitForFunction(() => Array.from(document.querySelectorAll('.dt-media__tile--item img')).slice(0, 6).every(i => i.complete && i.naturalWidth > 0), null, { timeout: 10000 });
+        check(`${id} at ${width} px: the media browser fits, the provider link and the notice are visible, nothing scrolls sideways`, await R.evaluate(w => { const d = document.querySelector('dialog.dt-media').getBoundingClientRect(); const link = document.querySelector('.dt-media__provider'); const note = document.querySelector('.dt-media__notice'); return d.width <= w + 2 && document.documentElement.scrollWidth <= w + 2 && link && link.offsetParent !== null && note && note.offsetParent !== null; }, width));
+        if (id !== 'pixabay') { await shot(R, 'media-' + id); }
+        await closeMedia(R);
+      }
+      if (!touch) {
+        await R.click('.dt-rail__btn[data-panel="photos"]');
+        await R.waitForSelector('.dt-photo', { timeout: 10000 });
+        check('the panel Fotos with the providers is a drawer on a tablet and does not scroll sideways', await R.evaluate(() => { const p = document.getElementById('dt-panel').getBoundingClientRect(); return p.width > 200 && p.width < 460 && document.documentElement.scrollWidth <= 902; }));
+        await shot(R, 'fotos-providers');
+      } else {
+        await R.tap('#dt-tabbar-more');
+        await R.waitForSelector('.dt-menu');
+        await R.tap('.dt-menu__item:has(.dt-menu__label:text-is("Fotos"))');
+        await R.waitForSelector('.dt-photo', { timeout: 10000 });
+        check('the panel Fotos with the providers is a sheet on a phone and does not scroll sideways', await R.evaluate(() => document.documentElement.scrollWidth <= 392 && !!document.querySelector('.dt-photos__colour')));
+        await shot(R, 'fotos-providers');
+      }
+      await ctx.close();
+    }
+
+    // ---- put the providers back
+    current = 'providers/cleanup: ';
+    await configure('pexels', { enabled: false, removeKey: true });
+    await configure('pixabay', { enabled: false, removeKey: true });
+    await configure('openverse', { enabled: false });
+    await admin.goto(base + '/Admin/Catalogs');
+    check('all three are off again', /aus/.test(await pill('pexels')) && /aus/.test(await pill('pixabay')) && /aus/.test(await pill('openverse')));
+  }
 
   // ---------------------------------------------------------------------------------------- put it back
   current = 'cleanup: ';

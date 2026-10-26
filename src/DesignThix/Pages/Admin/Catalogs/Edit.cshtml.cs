@@ -52,6 +52,9 @@ public sealed class EditModel(Biz biz) : PageModelBase
 
     public string? BaseUrlNote { get; private set; }
 
+    /// <summary>What the provider last said about its limits ("noch 187 von 200"), or null.</summary>
+    public string? RateNote { get; private set; }
+
     public async Task<IActionResult> OnGetAsync()
     {
         await LoadAsync();
@@ -120,6 +123,13 @@ public sealed class EditModel(Biz biz) : PageModelBase
         {
             FolderRoot = ServerFolders.Root(biz.Config.DataDir);
             FoldersOnDisk = ServerFolders.Existing(biz.Config.DataDir);
+        }
+
+        if (CatalogLogic.Svc(biz).Limiter.RateOf(Row.Id) is { } rate && (rate.Remaining is not null || rate.Limit is not null))
+        {
+            var left = rate.Remaining is { } remaining ? "noch " + remaining : "";
+            var of = rate.Limit is { } limit ? (left.Length > 0 ? " von " : "Grenze ") + limit : "";
+            RateNote = $"Zuletzt von {Row.Catalog.Name} gemeldet ({rate.Seen.ToLocalTime():dd.MM.yyyy HH:mm}): {left}{of} Anfragen im Zeitraum des Anbieters.";
         }
 
         BaseUrlNote = CatalogLogic.Svc(biz).Config.Current.Catalogs.ContainsKey(Row.Id) ? "Die Adresse des Anbieters hat der Betreiber in der Konfiguration festgelegt." : null;

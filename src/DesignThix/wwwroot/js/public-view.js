@@ -257,6 +257,7 @@
     var allowDownload = !!payload.allowDownload;
     document.title = payload.name + ' · DesignThix';
     setState('ready');
+    showCreditsLink(payload.credits);
     root.setAttribute('data-pages', String(pages));
     root.setAttribute('data-download', allowDownload ? 'true' : 'false');
 
@@ -583,6 +584,72 @@
         root.setAttribute('data-print-pages', String(d.pages.length));
         requestAnimationFrame(function () { setTimeout(function () { window.print(); if (!('onafterprint' in window)) { finish(); } }, 50); });
       });
+    });
+  }
+
+  // ================================================================================================ Bildnachweise
+
+  function httpLink(url, text) {
+    return /^https?:\/\//i.test(String(url || '')) ? el('a', { href: url, target: '_blank', rel: 'noopener noreferrer', text: text }) : null;
+  }
+
+  function creditLine(c) {
+    return c.attribution || ((c.title || 'Bild') + (c.author ? ' von ' + c.author : '') + ' auf ' + c.catalogName);
+  }
+
+  function copyCredits(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return false; });
+    }
+    return Promise.resolve(false);
+  }
+
+  /** The dialog "Bildnachweise": the pictures of the design that came from a catalogue, with author, licence and links (the attribution of CC BY material has to travel with the design). */
+  function creditsDialog(credits) {
+    var dlg = el('dialog', { class: 'mat-dialog mat-dialog--sm dt-pv-cr', 'data-static': '', 'aria-labelledby': 'dt-pv-cr-title' });
+    var list = el('ul', { class: 'dt-pv-cr__list', 'data-credits': '' });
+    credits.forEach(function (c) {
+      var meta = el('span', { class: 'dt-pv-cr__meta' });
+      var parts = [];
+      if (c.author) { parts.push(httpLink(c.authorUrl, c.author) || el('span', { text: c.author })); }
+      parts.push(el('span', { text: c.catalogName }));
+      if (c.licence && c.licence.name) { parts.push(httpLink(c.licence.url, c.licence.name) || el('span', { text: c.licence.name })); }
+      var source = httpLink(c.sourceUrl, 'Quelle');
+      if (source) { parts.push(source); }
+      parts.forEach(function (node, i) { if (i) { meta.appendChild(doc.createTextNode(' · ')); } meta.appendChild(node); });
+      list.appendChild(el('li', { class: 'dt-pv-cr__item' }, [el('strong', { text: c.title || 'Bild' }), meta]));
+    });
+    var copy = el('button', { type: 'button', class: 'mat-btn mat-btn--secondary' }, [icon('copy'), el('span', { text: 'Text kopieren' })]);
+    copy.addEventListener('click', function () {
+      copyCredits(credits.map(creditLine).join(String.fromCharCode(10))).then(function (ok) { toast(ok ? 'Der Text ist kopiert.' : 'Das Kopieren hat nicht geklappt.', ok ? 'success' : 'warning'); });
+    });
+    var close = el('button', { type: 'button', class: 'mat-btn mat-btn--primary', 'data-dialog-close': '', text: 'Schließen' });
+    var head = el('div', { class: 'mat-dialog__head' }, [icon('images'), el('h2', { class: 'mat-dialog__title', id: 'dt-pv-cr-title', text: 'Bildnachweise' }),
+      el('button', { type: 'button', class: 'mat-btn mat-btn--ghost mat-btn--icon mat-dialog__close', 'aria-label': 'Schließen', 'data-dialog-close': '' }, [icon('x')])]);
+    var body = el('div', { class: 'mat-dialog__body' }, [el('p', { class: 'mat-muted', text: 'Diese Bilder des Designs stammen aus Bildkatalogen im Internet.' }), list]);
+    var foot = el('div', { class: 'mat-dialog__foot' }, [el('div', { class: 'mat-btn-row mat-btn-row--plain' }, [copy, close])]);
+    var form = el('form', { class: 'mat-dialog__form', method: 'dialog' }, [head, body, foot]);
+    form.addEventListener('submit', function (ev) { ev.preventDefault(); });
+    dlg.appendChild(form);
+    dlg.addEventListener('close', function () { setTimeout(function () { dlg.remove(); }, 0); });
+    doc.body.appendChild(dlg);
+    window.MatUi.dialog.open(dlg);
+  }
+
+  /** A link "Bildnachweise" in the footer while a design with pictures from catalogues is shown; the next view takes it away again (runCleanup). */
+  function showCreditsLink(credits) {
+    var foot = root.querySelector('.dt-pv__foot');
+    if (!foot || !credits || !credits.length) { return; }
+    var button = el('button', { type: 'button', class: 'dt-pv__credits' }, [icon('images'), el('span', { text: 'Bildnachweise' })]);
+    button.addEventListener('click', function () { creditsDialog(credits); });
+    foot.appendChild(el('span', { class: 'dt-pv__foot-sep', 'aria-hidden': 'true', text: ' · ' }));
+    foot.appendChild(button);
+    root.setAttribute('data-credits', String(credits.length));
+    cleanup.push(function () {
+      button.remove();
+      var sep = foot.querySelector('.dt-pv__foot-sep');
+      if (sep) { sep.remove(); }
+      root.removeAttribute('data-credits');
     });
   }
 

@@ -23,6 +23,9 @@ public sealed class CatalogRegistry
             new BuiltinCatalog(),
             new UploadsCatalog(),
             new FolderCatalog(),
+            new PexelsCatalog(),
+            new PixabayCatalog(),
+            new OpenverseCatalog(),
             new ExampleCatalog("example-browse", "Beispiel-Katalog", browsable: true),
             new ExampleCatalog("example-search", "Beispiel-Suche", browsable: false),
         ];
@@ -93,9 +96,10 @@ public sealed class CatalogServices(CatalogRegistry registry, CatalogHttp http, 
         }
 
         // only a request to the provider costs: the brake of the person (so one person cannot use up the key) and the hourly budget of the key
+        Limiter.CheckBlock(ctx.Catalog);
         Limiter.TakePerson(ctx.Biz.UserId, ctx.Catalog, EffectivePerMinute(ctx.Catalog, ctx.Settings));
-        Limiter.TakeBudget(ctx.Catalog, EffectivePerHour(ctx.Catalog, ctx.Settings));
-        var result = await Http.GetAsync(url, AllowedHosts(ctx.Catalog), AllowsHttp(ctx.Catalog), ctx.Catalog.Name, headers, CatalogHttp.SearchTimeout, CatalogHttp.MaxJsonBytes, ct);
+        Limiter.TakeBudget(ctx.Catalog, EffectivePerHour(ctx.Catalog, ctx.Settings), ctx.Catalog.Info.KeyPerMinute);
+        var result = await RequestAsync(ctx.Catalog, () => Http.GetAsync(url, AllowedHosts(ctx.Catalog), AllowsHttp(ctx.Catalog), ctx.Catalog.Name, headers, CatalogHttp.SearchTimeout, CatalogHttp.MaxJsonBytes, ct));
         var text = Encoding.UTF8.GetString(result.Bytes);
         try
         {
@@ -125,7 +129,34 @@ public sealed class CatalogServices(CatalogRegistry registry, CatalogHttp http, 
     }
 
     public Task<CatalogHttpResult> DownloadAsync(CatalogContext ctx, Uri url, IReadOnlyDictionary<string, string>? headers, long maxBytes, CancellationToken ct)
-        => Http.GetAsync(url, AllowedHosts(ctx.Catalog), AllowsHttp(ctx.Catalog), ctx.Catalog.Name, headers, CatalogHttp.DownloadTimeout, Math.Min(maxBytes, CatalogHttp.MaxDownloadBytes), ct);
+        => RequestAsync(ctx.Catalog, () => Http.GetAsync(url, AllowedHosts(ctx.Catalog), AllowsHttp(ctx.Catalog), ctx.Catalog.Name, headers, CatalogHttp.DownloadTimeout, Math.Min(maxBytes, CatalogHttp.MaxDownloadBytes), ct));
+
+    /// <summary>A thumbnail for the proxy: the same door as every other request (a provider that said "not now" is left alone), with the size limit of a thumbnail.</summary>
+    public Task<CatalogHttpResult> GetThumbAsync(ICatalog catalog, Uri url, IReadOnlyDictionary<string, string>? headers, CancellationToken ct)
+        => RequestAsync(catalog, () => Http.GetAsync(url, AllowedHosts(catalog), AllowsHttp(catalog), catalog.Name, headers, CatalogHttp.SearchTimeout, CatalogHttp.MaxThumbBytes, ct));
+
+    public Task<CatalogHttpResult> PostFormAsync(CatalogContext ctx, Uri url, IReadOnlyDictionary<string, string> form, CancellationToken ct)
+        => RequestAsync(ctx.Catalog, () => Http.PostFormAsync(url, AllowedHosts(ctx.Catalog), AllowsHttp(ctx.Catalog), ctx.Catalog.Name, form, CatalogHttp.SearchTimeout, 64 * 1024, ct));
+
+    /// <summary>
+    /// Every request to a provider goes through here: a provider that asked for a pause is left alone until it is over (the person is told in German how long), a 429 starts such a pause with the
+    /// time the provider named, and what it reports about its limits is remembered (and closes the door for a moment when nothing is left).
+    /// </summary>
+    private async Task<CatalogHttpResult> RequestAsync(ICatalog catalog, Func<Task<CatalogHttpResult>> call)
+    {
+        Limiter.CheckBlock(catalog);
+        try
+        {
+            var result = await call();
+            Limiter.Note(catalog, result.Rate);
+            return result;
+        }
+        catch (CatalogException ex) when (ex.Failure == CatalogFailure.Limit && ex.RetryAfterSeconds > 0)
+        {
+            Limiter.Block(catalog, ex.RetryAfterSeconds);
+            throw;
+        }
+    }
 
     public static int EffectivePerMinute(ICatalog catalog, CatalogSetting setting) => setting.PerUserPerMinute > 0 ? setting.PerUserPerMinute : catalog.Info.DefaultPerUserPerMinute;
 

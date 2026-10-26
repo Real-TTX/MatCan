@@ -24,7 +24,7 @@ public sealed partial class ExampleCatalog(string id, string name, bool browsabl
     public CatalogCaps Caps => CatalogCaps.External | CatalogCaps.Search | CatalogCaps.Filters | (browsable ? CatalogCaps.Browse | CatalogCaps.Collections : CatalogCaps.NeedsKey);
 
     public CatalogInfo Info { get; } = new("https://example.invalid", browsable ? null : "https://example.invalid/key", new CatalogLink("Bilder vom Beispielanbieter", "https://example.invalid"),
-        "Beispielbilder für Tests: frei verwendbar.", "Ein Katalog zum Ausprobieren und für die Tests.", DefaultPerUserPerMinute: 30, DefaultPerHour: 0);
+        "Beispielbilder für Tests: frei verwendbar.", "Ein Katalog zum Ausprobieren und für die Tests.", DefaultPerUserPerMinute: 30, DefaultPerHour: 0, HasSafeSearch: true, HasLicenceChoice: true);
 
     public bool EnabledByDefault => false;
 

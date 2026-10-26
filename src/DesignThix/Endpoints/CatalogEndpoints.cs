@@ -80,14 +80,16 @@ public static class CatalogEndpoints
                 return Results.NotFound();
             }
 
-            svc.Limiter.TakeThumb(biz.UserId);
             byte[]? bytes;
             if (read.Url is { } url && Uri.TryCreate(url, UriKind.Absolute, out var uri) && row.External)
             {
                 bytes = svc.Thumbs.TryGet(row.Id, uri.AbsoluteUri, biz.Now);
                 if (bytes is null)
                 {
-                    bytes = (await svc.Http.GetAsync(uri, svc.AllowedHosts(row.Catalog), svc.AllowsHttp(row.Catalog), row.Catalog.Name, null, CatalogHttp.SearchTimeout, CatalogHttp.MaxThumbBytes, http.RequestAborted)).Bytes;
+                    // only a thumbnail that has to be fetched from the provider counts for the brake (a day on disk is free: browsing back and forth costs the provider nothing)
+                    svc.Limiter.TakeThumb(biz.UserId);
+                    var headers = row.Catalog.ThumbsNeedAuth ? await CatalogLogic.ThumbHeadersAsync(biz, row.Catalog, http.RequestAborted) : null;
+                    bytes = (await svc.GetThumbAsync(row.Catalog, uri, headers, http.RequestAborted)).Bytes;
                     if (FileSniffer.Sniff(bytes).IsImage)
                     {
                         svc.Thumbs.Put(row.Id, uri.AbsoluteUri, bytes);
@@ -96,6 +98,7 @@ public static class CatalogEndpoints
             }
             else if (read.ItemId is { } itemId && !row.External)
             {
+                svc.Limiter.TakeThumb(biz.UserId);
                 var ctx = new CatalogContext { Biz = biz, Catalog = row.Catalog, Services = svc, Settings = row.Setting, BaseUrl = "" };
                 bytes = (await row.Catalog.FetchAsync(ctx, itemId, http.RequestAborted)).Bytes;
             }
@@ -165,6 +168,7 @@ public static class CatalogEndpoints
             search = r.Catalog.Caps.HasFlag(CatalogCaps.Search),
             collections = r.Catalog.Caps.HasFlag(CatalogCaps.Collections),
             filters = r.Catalog.Caps.HasFlag(CatalogCaps.Filters),
+            colour = r.Catalog.Caps.HasFlag(CatalogCaps.Colour),
             needsKey = r.Catalog.Caps.HasFlag(CatalogCaps.NeedsKey),
         },
         local = !r.External,
@@ -172,6 +176,7 @@ public static class CatalogEndpoints
         hasPictures = r.HasPictures,
         provider = r.Catalog.Info.ProviderLink is { } link ? new { text = link.Text, url = link.Url } : null,
         licence = r.Catalog.Info.LicenceSummary,
+        notice = r.Catalog.Info.Notice,
         description = r.Catalog.Info.Description,
     };
 
