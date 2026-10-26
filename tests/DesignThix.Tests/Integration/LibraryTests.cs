@@ -58,6 +58,29 @@ public sealed class LibraryTests(AppTests.AppFactory factory) : PlatformTestBase
         });
     }
 
+    [Fact]
+    public async Task The_groups_of_a_category_count_every_piece_and_the_search_pages_and_filters_by_group()
+    {
+        if (!Enabled)
+        {
+            return;
+        }
+
+        await As(Role.Designer, async biz =>
+        {
+            var deko = await AssetLogic.Query(biz).CountAsync(a => a.Category == "Deko" && a.Name.Contains(" · "));
+            var groups = await AssetLogic.GroupsAsync(biz, null, "Deko");
+            Assert.True(groups.Count >= 9);
+            Assert.Equal(deko, groups.Sum(g => g.Count));
+            var first = groups[0];
+            var page1 = await AssetLogic.SearchAsync(biz, null, "Deko", 5, null, null, 0, first.Group);
+            var page2 = await AssetLogic.SearchAsync(biz, null, "Deko", 5, null, null, 5, first.Group);
+            Assert.All(page1.Concat(page2), a => Assert.StartsWith(first.Group + " · ", a.Name));
+            Assert.Empty(page1.Select(a => a.Key).Intersect(page2.Select(a => a.Key)));
+            Assert.Equal(first.Count, (await AssetLogic.SearchAsync(biz, null, "Deko", 500, null, null, 0, first.Group)).Count);
+        });
+    }
+
     // ------------------------------------------------------------------------------------------------ roles
 
     [Fact]

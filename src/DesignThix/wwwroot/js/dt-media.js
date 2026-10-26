@@ -20,7 +20,7 @@
     { id: 'flags', label: 'Flaggen', query: 'category=Flaggen', empty: 'Keine Flaggen gefunden.' },
     { id: 'seals', label: 'Siegel', query: 'category=Siegel', empty: 'Keine Siegel gefunden.' },
     { id: 'logos', label: 'Logos', query: 'category=Logos&sort=new', empty: 'Noch keine Logos. Lade ein Logo hoch und ordne es der Kategorie „Logos“ zu.' },
-    { id: 'deko', label: 'Deko', query: 'category=Deko', groups: true, take: 500, empty: 'Keine Dekoration gefunden.' },
+    { id: 'deko', label: 'Deko', query: 'category=Deko', groups: true, take: 120, empty: 'Keine Dekoration gefunden.' },
     { id: 'all', label: 'Alle', query: 'sort=new', empty: 'Nichts gefunden.' },
   ];
   var CATEGORY_TAB = { uploads: 'uploads', flaggen: 'flags', siegel: 'seals', logos: 'logos', deko: 'deko' };
@@ -131,7 +131,7 @@
     var o = options || {};
     var id = 'dt-media-' + (++counter);
     var TABLIST = tabsFor(o).slice();
-    var state = { tab: tabFor(o, TABLIST), q: '', token: 0, items: [], loading: true, failed: false, uploading: false, done: false, page: 1, hasMore: false, collection: '', group: '', orientation: 'any', colour: 'any', error: '', message: '', importing: false };
+    var state = { tab: tabFor(o, TABLIST), q: '', token: 0, items: [], loading: true, failed: false, uploading: false, done: false, page: 1, hasMore: false, collection: '', group: '', groups: null, groupsToken: 0, orientation: 'any', colour: 'any', error: '', message: '', importing: false };
     var dlg = el('dialog', { class: 'mat-dialog mat-dialog--xl dt-media', 'data-static': '', 'aria-labelledby': id + '-t' });
     var close = el('button', { type: 'button', class: 'mat-btn mat-btn--ghost mat-btn--icon mat-dialog__close', 'aria-label': 'Schließen', 'data-dialog-close': '' }, icon('x'));
     var head = el('div', { class: 'mat-dialog__head' }, [icon('images'), el('h2', { class: 'mat-dialog__title', id: id + '-t', text: o.title || 'Bild wählen' }), close]);
@@ -237,8 +237,8 @@
     /** The group of a Deko piece: the part of its name before " · " ("Rahmen · Goldene Ranke" is in "Rahmen"). */
     function groupOf(a) { var i = String(a.name || '').indexOf(' \u00b7 '); return i > 0 ? a.name.slice(0, i) : ''; }
 
-    /** The items of the tab: all, or (tab Deko with a chosen group) the ones of that group. */
-    function shownItems(t) { return t.groups && state.group ? state.items.filter(function (a) { return groupOf(a) === state.group; }) : state.items; }
+    /** The items of the tab (the server already filters by the chosen group and pages). */
+    function shownItems() { return state.items; }
 
     /** The chips of the groups of the tab Deko: "Alle" and one per group with its number of pieces. */
     function drawGroups() {
@@ -246,18 +246,18 @@
       if (!t || !t.groups) { return; }
       chips.textContent = '';
       chips.setAttribute('aria-label', 'Gruppen');
-      var counts = {};
-      var order = [];
-      state.items.forEach(function (a) { var g = groupOf(a); if (g) { if (!counts[g]) { counts[g] = 0; order.push(g); } counts[g]++; } });
-      if (state.group && !counts[state.group]) { state.group = ''; }
+      var list = state.groups || [];
+      var total = 0;
+      list.forEach(function (g) { total += g.count; });
+      if (state.group && !list.some(function (g) { return g.name === state.group; })) { state.group = ''; }
       var addChip = function (label, value) {
         var b = el('button', { type: 'button', class: 'dt-media__chip', 'aria-pressed': state.group === value ? 'true' : 'false', 'data-chip': value, text: label });
-        b.addEventListener('click', function () { state.group = value; drawGroups(); draw(); });
+        b.addEventListener('click', function () { if (state.group === value) { return; } state.group = value; drawGroups(); load(); });
         chips.appendChild(b);
       };
-      addChip('Alle (' + state.items.length + ')', '');
-      order.forEach(function (g) { addChip(g + ' (' + counts[g] + ')', g); });
-      catbar.hidden = order.length < 2;
+      addChip('Alle (' + total + ')', '');
+      list.forEach(function (g) { addChip(g.name + ' (' + g.count + ')', g.name); });
+      catbar.hidden = list.length < 2;
     }
 
     function draw() {
@@ -267,7 +267,7 @@
       status.hidden = !text;
       status.textContent = text;
       if (state.uploading) { status.hidden = false; }
-      more.hidden = !(t.kind === 'catalog' && state.hasMore && !state.failed);
+      more.hidden = !(state.hasMore && !state.failed);
       more.disabled = state.loading;
       if (t.kind === 'catalog') {
         state.items.forEach(function (item, i) { grid.appendChild(catalogTile(item, t.catalog, i === 0)); });
@@ -285,29 +285,40 @@
       if (current) { grid.querySelectorAll('.dt-media__tile').forEach(function (x) { x.tabIndex = -1; }); current.tabIndex = 0; }
     }
 
-    function load() {
+    /** The chips of a grouped tab come from the server: the counts of ALL pieces (that match the search), not of the page that is shown. */
+    function loadGroups(t) {
+      var token = ++state.groupsToken;
+      fetch('/api/assets/groups?' + t.query + (state.q ? '&q=' + encodeURIComponent(state.q) : ''), { credentials: 'same-origin', headers: { Accept: 'application/json' } })
+        .then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; })
+        .then(function (list) { if (token !== state.groupsToken || currentTab() !== t) { return; } var was = state.group; state.groups = Array.isArray(list) ? list : []; drawGroups(); if (state.group !== was) { load(); } });
+    }
+
+    function load(append) {
       var t = currentTab();
       if (t.kind === 'catalog') { loadCatalog(t, false); return; }
       var token = ++state.token;
+      var take = t.take || 300;
+      var skip = append === true ? state.items.length : 0;
       state.loading = true;
       state.failed = false;
-      state.hasMore = false;
+      if (append !== true) { state.hasMore = false; state.items = []; }
       draw();
-      var url = '/api/assets?take=' + (t.take || 300) + '&' + t.query + (state.q ? '&q=' + encodeURIComponent(state.q) : '');
+      var url = '/api/assets?take=' + take + (skip ? '&skip=' + skip : '') + '&' + t.query + (state.q ? '&q=' + encodeURIComponent(state.q) : '') + (t.groups && state.group ? '&group=' + encodeURIComponent(state.group) : '');
       fetch(url, { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(function (r) { if (!r.ok) { throw new Error('HTTP ' + r.status); } return r.json(); }).then(function (list) {
         if (token !== state.token) { return; }
-        state.items = Array.isArray(list) ? list : [];
+        list = Array.isArray(list) ? list : [];
+        state.items = append === true ? state.items.concat(list) : list;
+        state.hasMore = !!t.groups && list.length >= take;
         state.loading = false;
-        drawGroups();
         draw();
-      }, function () { if (token !== state.token) { return; } state.items = []; state.loading = false; state.failed = true; draw(); });
+      }, function () { if (token !== state.token) { return; } if (append !== true) { state.items = []; } state.loading = false; state.failed = true; draw(); });
     }
 
     // ---- catalogues (plan 5): the bar, the pages of results, the import
     function drawBar(t) {
       var isCatalog = t.kind === 'catalog';
       catbar.hidden = !isCatalog;
-      if (!isCatalog) { provider.hidden = true; notice.hidden = true; if (t.groups) { drawGroups(); } else { chips.textContent = ''; } }
+      if (!isCatalog) { provider.hidden = true; notice.hidden = true; if (t.groups) { drawGroups(); loadGroups(t); } else { chips.textContent = ''; } }
       if (!isCatalog) { orient.remove(); colour.remove(); }
       search.placeholder = isCatalog ? t.catalog.name + ' durchsuchen' : 'Bilder suchen';
       search.setAttribute('aria-label', search.placeholder);
@@ -384,7 +395,8 @@
 
     function nextPage() {
       var t = currentTab();
-      if (t.kind !== 'catalog' || !state.hasMore || state.loading) { return; }
+      if (!state.hasMore || state.loading) { return; }
+      if (t.kind !== 'catalog') { load(true); return; }
       state.page += 1;
       loadCatalog(t, true);
     }
@@ -423,6 +435,8 @@
     function setTab(tabId, focusSearch) {
       state.tab = tabId;
       state.collection = '';
+      state.group = '';
+      state.groups = null;
       tabButtons.forEach(function (b) { var on = b.getAttribute('data-tab') === tabId; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; b.classList.toggle('is-active', on); });
       grid.setAttribute('aria-labelledby', id + '-tab-' + tabId);
       var t = currentTab();
@@ -500,7 +514,7 @@
 
     // ---- search
     var timer = 0;
-    search.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(function () { state.q = search.value.trim(); var t = currentTab(); if (t.kind === 'catalog') { drawBar(t); } load(); }, 250); });
+    search.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(function () { state.q = search.value.trim(); var t = currentTab(); if (t.kind === 'catalog' || t.groups) { drawBar(t); } load(); }, 250); });
     search.addEventListener('keydown', function (ev) {
       if (ev.key === 'ArrowDown') { var first = grid.querySelector('.dt-media__tile'); if (first) { ev.preventDefault(); first.focus(); } }
     });

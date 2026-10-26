@@ -328,6 +328,7 @@ async function purgeImported(page) {
   await A.fill('.dt-media__search', 'flag-fr');
   await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile').length === 1 && document.querySelector('.dt-media__tile').getAttribute('data-key') === 'flag-fr', null, { timeout: 8000 });
   check('"Alle" still shows the library, a catalogue tab does not touch it', (await A.getAttribute('.dt-media__tile >> nth=0', 'data-key')) === 'flag-fr' && !(await A.isVisible('.dt-media__catbar')));
+  await A.fill('.dt-media__search', '');
   await A.click('.dt-media__tab[data-tab="uploads"]');
   await A.waitForSelector('.dt-media__tile');
   check('the Uploads tab shows what was imported as well', await A.isVisible(`.dt-media__tile[data-key="${assetKey}"]`) || (await A.$$('.dt-media__tile')).length > 0);

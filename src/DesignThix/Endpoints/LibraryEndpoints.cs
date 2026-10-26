@@ -113,8 +113,13 @@ public static partial class LibraryEndpoints
 
         // q, category ("uploads" finds the category Uploads, case does not matter), sort ("new" = newest first, else by name), take (at most 500)
         // space = the images of one area only
-        app.MapGet("/api/assets", async (string? q, string? category, string? sort, int? take, long? space, Biz biz) =>
-            Results.Json((await AssetLogic.SearchAsync(biz, q, category, take ?? 60, sort, space)).Select(a => new { key = a.Key, spaceId = a.SpaceId, isBuiltIn = a.IsBuiltIn, name = a.Name, category = a.Category, tags = a.Tags, url = a.Url, width = a.Width, height = a.Height, contentType = a.ContentType }), Web))
+        // the groups of a category named "Group · Name" with their counts (the chips of the tab Deko): [{ name, count }]
+        app.MapGet("/api/assets/groups", async (string? q, string? category, long? space, Biz biz) =>
+            Results.Json((await AssetLogic.GroupsAsync(biz, q, category, space)).Select(g => new { name = g.Group, count = g.Count }), Web))
+            .RequireAuthorization("SignedIn");
+
+        app.MapGet("/api/assets", async (string? q, string? category, string? sort, int? take, long? space, int? skip, string? group, Biz biz) =>
+            Results.Json((await AssetLogic.SearchAsync(biz, q, category, take ?? 60, sort, space, skip ?? 0, group)).Select(a => new { key = a.Key, spaceId = a.SpaceId, isBuiltIn = a.IsBuiltIn, name = a.Name, category = a.Category, tags = a.Tags, url = a.Url, width = a.Width, height = a.Height, contentType = a.ContentType }), Web))
             .RequireAuthorization("SignedIn");
 
         // context = "design:{id}" | "datalist:{id}" | "output:{id}" (the item the images belong to; the person must be allowed to view it), keys = comma separated asset keys.

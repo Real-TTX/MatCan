@@ -119,9 +119,35 @@ public static class AssetLogic
     /// The pickers' search: by name, key, tag or category (the category without regard to case: <c>uploads</c> finds "Uploads"); ordered by name, or with
     /// <paramref name="sort"/> <c>new</c> newest first (the media browser's uploads); <paramref name="spaceId"/> keeps the images of one area.
     /// </summary>
-    public static async Task<List<AssetRow>> SearchAsync(Biz biz, string? q, string? category, int take, string? sort = null, long? spaceId = null)
+    public static async Task<List<AssetRow>> SearchAsync(Biz biz, string? q, string? category, int take, string? sort = null, long? spaceId = null, int skip = 0, string? group = null)
+    {
+        var query = FilterSearch(biz, q, category, spaceId, group);
+        var ordered = string.Equals(sort, "new", StringComparison.OrdinalIgnoreCase)
+            ? query.OrderByDescending(a => a.CreateDate).ThenByDescending(a => a.Id)
+            : query.OrderBy(a => a.Name).ThenBy(a => a.Key);
+        return await ordered.Skip(Math.Max(0, skip)).Take(Math.Clamp(take, 1, 500)).ToListAsync();
+    }
+
+    /// <summary>
+    /// The groups of a category whose pieces are named "Group · Name" (the Deko pack) with their number of pieces, for the chips of the media browser: counted over ALL pieces
+    /// that match <paramref name="q"/>, not over one page.
+    /// </summary>
+    public static async Task<List<(string Group, int Count)>> GroupsAsync(Biz biz, string? q, string? category, long? spaceId = null)
+    {
+        var names = await FilterSearch(biz, q, category, spaceId, null).Select(a => a.Name).ToListAsync();
+        return names.Select(n => { var i = n.IndexOf(" · ", StringComparison.Ordinal); return i > 0 ? n[..i] : ""; })
+            .Where(g => g.Length > 0).GroupBy(g => g).OrderBy(g => g.Key, StringComparer.CurrentCultureIgnoreCase).Select(g => (g.Key, g.Count())).ToList();
+    }
+
+    private static IQueryable<AssetRow> FilterSearch(Biz biz, string? q, string? category, long? spaceId, string? group)
     {
         var query = Query(biz);
+        if (!string.IsNullOrWhiteSpace(group))
+        {
+            var prefix = group.Trim() + " · ";
+            query = query.Where(a => a.Name.StartsWith(prefix));
+        }
+
         if (spaceId is { } space)
         {
             query = query.Where(a => a.SpaceId == space);
@@ -139,10 +165,7 @@ public static class AssetLogic
             query = query.Where(a => EF.Functions.ILike(a.Name, like) || EF.Functions.ILike(a.Key, like) || EF.Functions.ILike(a.Tags, like));
         }
 
-        var ordered = string.Equals(sort, "new", StringComparison.OrdinalIgnoreCase)
-            ? query.OrderByDescending(a => a.CreateDate).ThenByDescending(a => a.Id)
-            : query.OrderBy(a => a.Name).ThenBy(a => a.Key);
-        return await ordered.Take(Math.Clamp(take, 1, 500)).ToListAsync();
+        return query;
     }
 
     /// <summary>
