@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using DesignThix.Core.Data;
 using DesignThix.Logic;
+using DesignThix.Services;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,8 +29,13 @@ public static partial class LibraryEndpoints
     {
         // ---------------------------------------------------------------------------------------- media and fonts
 
-        app.MapGet("/media/{key}", async (string key, HttpContext http, Biz biz) =>
+        app.MapGet("/media/{key}", async (string key, HttpContext http, Biz biz, PublicRateLimiter limiter) =>
         {
+            if (Probing(biz, limiter))
+            {
+                return TooMany(http);
+            }
+
             var known = http.Request.Headers.IfNoneMatch.ToString().Trim().Trim('"');
             if (known.StartsWith("W/", StringComparison.Ordinal))
             {
@@ -39,6 +45,7 @@ public static partial class LibraryEndpoints
             var content = await AssetLogic.ContentAsync(biz, key, known.Length == 0 ? null : known, http.Request.Query["v"].ToString());
             if (content is null)
             {
+                Missed(biz, limiter);
                 return biz.User.UserId is null ? Results.StatusCode(StatusCodes.Status401Unauthorized) : Results.NotFound();
             }
 
@@ -61,17 +68,24 @@ public static partial class LibraryEndpoints
             return Results.File(content.Bytes, content.ContentType, download);
         }).AllowAnonymous();
 
-        app.MapGet("/fonts/{name}", async (string name, HttpContext http, Biz biz) =>
+        app.MapGet("/fonts/{name}", async (string name, HttpContext http, Biz biz, PublicRateLimiter limiter) =>
         {
+            if (Probing(biz, limiter))
+            {
+                return TooMany(http);
+            }
+
             var match = FontFileRegex().Match(name);
             if (!match.Success)
             {
+                Missed(biz, limiter);
                 return Results.NotFound();
             }
 
             var content = await FontLogic.ContentAsync(biz, long.Parse(match.Groups[1].Value), match.Groups[2].Value);
             if (content is not { } font || font.Format != match.Groups[3].Value)
             {
+                Missed(biz, limiter);
                 return Results.NotFound();
             }
 
@@ -127,11 +141,17 @@ public static partial class LibraryEndpoints
 
         // ---------------------------------------------------------------------------------------- designs
 
-        app.MapGet("/designs/{id:long}/thumbnail.png", async (long id, HttpContext http, Biz biz) =>
+        app.MapGet("/designs/{id:long}/thumbnail.png", async (long id, HttpContext http, Biz biz, PublicRateLimiter limiter) =>
         {
+            if (Probing(biz, limiter))
+            {
+                return TooMany(http);
+            }
+
             var thumb = await DesignLogic.ThumbnailAsync(biz, id, http.Request.Query["v"].ToString());
             if (thumb is not { } t)
             {
+                Missed(biz, limiter);
                 return biz.User.UserId is null ? Results.StatusCode(StatusCodes.Status401Unauthorized) : Results.NotFound();
             }
 
@@ -266,6 +286,29 @@ public static partial class LibraryEndpoints
         })).RequireAuthorization("SignedIn");
     }
 
+    /// <summary>What an address that is not signed in may miss per minute on the routes that serve by capability (the hash in the address) before it is turned away: a miss costs <see cref="MissCost"/>.</summary>
+    internal const int ProbesPerMinute = 120;
+
+    private const int MissCost = 4;
+
+    /// <summary>A caller who is not signed in and has missed too often lately (guessing hashes) is turned away before any work is done. People who are signed in are never counted.</summary>
+    private static bool Probing(Biz biz, PublicRateLimiter limiter) => biz.User.UserId is null && limiter.IsOver("probe:" + biz.User.IpAddress, ProbesPerMinute);
+
+    /// <summary>A request of a caller who is not signed in found nothing: it costs.</summary>
+    private static void Missed(Biz biz, PublicRateLimiter limiter)
+    {
+        if (biz.User.UserId is null)
+        {
+            limiter.Charge("probe:" + biz.User.IpAddress, MissCost);
+        }
+    }
+
+    private static IResult TooMany(HttpContext http)
+    {
+        http.Response.Headers.RetryAfter = "60";
+        return Results.StatusCode(StatusCodes.Status429TooManyRequests);
+    }
+
     private sealed record DesignBody(int Revision, JsonElement Document, bool Autosave = false);
 
     private sealed record CopyBody(JsonElement Document);
@@ -321,6 +364,6 @@ public static partial class LibraryEndpoints
         }
     }
 
-    [GeneratedRegex(@"^(\d{1,18})-([0-9a-fA-F]{6,64})\.(ttf|otf|woff2?)$")]
+    [GeneratedRegex(@"^(\d{1,18})-([0-9a-fA-F]{12,64})\.(ttf|otf|woff2?)$")]
     private static partial Regex FontFileRegex();
 }

@@ -183,9 +183,14 @@ app.Use(async (context, next) =>
 
 app.Use(async (context, next) =>
 {
-    PublicUrl.Remember(context);
     var headers = context.Response.Headers;
     headers["X-Content-Type-Options"] = "nosniff";
+    // The app is private: nothing of it is indexed (robots.txt and llms.txt are the two files that are meant to be read by crawlers).
+    if (context.Request.Path.Value is not ("/robots.txt" or "/llms.txt"))
+    {
+        headers["X-Robots-Tag"] = "noindex, nofollow";
+    }
+
     headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
     headers["X-Frame-Options"] = "SAMEORIGIN";
     headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
@@ -216,6 +221,17 @@ app.UseStaticFiles(new StaticFileOptions
     },
 });
 app.UseAuthentication();
+
+// Links in mails (no request at hand) use the address an administrator reached the app by: the Host header of a visitor is never trusted for that.
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity?.IsAuthenticated == true && context.User.IsInRole(nameof(UserRole.Admin)))
+    {
+        PublicUrl.RememberAdmin(context);
+    }
+
+    await next();
+});
 
 // While there is no administrator the only page is the one that makes the first one.
 app.Use(async (context, next) =>

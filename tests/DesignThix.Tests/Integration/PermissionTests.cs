@@ -356,6 +356,7 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
         ["AiProfileLogic.ChatGptLogoutAsync"] = biz => AiProfileLogic.ChatGptLogoutAsync(biz, Nobody),
         ["AiProfileLogic.MoveChatGptLoginAsync"] = biz => AiProfileLogic.MoveChatGptLoginAsync(biz, Nobody, Nobody),
         ["AiLogic.TestAsync"] = biz => AiLogic.TestAsync(biz, null),
+        ["AiProfileLogic.LoadModelsAsync"] = biz => AiProfileLogic.LoadModelsAsync(biz, null, AiProvider.OpenAiCompatible, null, null),
         ["AiLogic.FullInstruction"] = Wrap(biz => AiLogic.FullInstruction(biz, AiAction.Test)),
         ["AiLogic.Runs"] = Wrap(biz => AiLogic.Runs(biz)),
         ["AiLogic.RunDetailsAsync"] = biz => AiLogic.RunDetailsAsync(biz, Nobody),
@@ -378,7 +379,7 @@ public sealed class PermissionTests(AppTests.AppFactory factory) : PlatformTestB
     }
 
     /// <summary>Methods that would really call the model for an administrator (and count against the limits the AI tests measure): only the refusals are tried.</summary>
-    private static readonly HashSet<string> RefusalsOnly = ["AiLogic.TestAsync"];
+    private static readonly HashSet<string> RefusalsOnly = ["AiLogic.TestAsync", "AiProfileLogic.LoadModelsAsync"];
 
     [Theory]
     [MemberData(nameof(AdminMethods))]

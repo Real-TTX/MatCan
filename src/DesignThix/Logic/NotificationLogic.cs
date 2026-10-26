@@ -93,7 +93,19 @@ public static class NotificationLogic
 {
     public const int KeepPerPerson = 500;
 
+    /// <summary>
+    /// The brake against being pinged to death: one person writes at most this many notifications of ONE kind to ONE person within <see cref="ThrottleMinutes"/> minutes. Every further one is merged into the newest
+    /// of those (its <c>repeats</c> count goes up, "und N weitere" is shown) and is neither a new unread row nor a mail.
+    /// </summary>
+    public const int PerActorPerWindow = 10;
+
+    public const int ThrottleMinutes = 10;
+
     private static readonly JsonSerializerOptions Web = new(JsonSerializerDefaults.Web);
+
+    /// <summary>An address a notification may lead to: one of this app (starts with a single slash; not <c>//host</c>, not <c>/\host</c>, no control characters). Everything else is dropped.</summary>
+    public static string? SafeUrl(string? url)
+        => !string.IsNullOrEmpty(url) && url[0] == '/' && (url.Length == 1 || (url[1] != '/' && url[1] != '\\')) && !url.Any(char.IsControl) ? url : null;
 
     // ------------------------------------------------------------------------------------------------ writing (called by the logic that did the thing)
 
@@ -116,10 +128,22 @@ public static class NotificationLogic
             // only people who can still sign in
             var active = await db.User.AsNoTracking().Where(u => receivers.Contains(u.Id) && u.IsActive && u.ApprovalState == ApprovalState.Approved).Select(u => u.Id).ToListAsync();
             var json = JsonSerializer.Serialize(data, Web);
-            var rows = active.Select(id => new Notification { UserId = id, Kind = kind, DataJson = json, Url = url }).ToList();
+            // somebody who is told too often by the same person gets the rest merged into the newest notice (no new row, no mail)
+            var told = new List<long>();
+            foreach (var id in active)
+            {
+                if (actor is { } by && await MergeIfTooManyAsync(db, id, by, kind, biz.Now))
+                {
+                    continue;
+                }
+
+                told.Add(id);
+            }
+
+            var rows = told.Select(id => new Notification { UserId = id, Kind = kind, DataJson = json, Url = SafeUrl(url) }).ToList();
             db.Notification.AddRange(rows);
             await db.SaveChangesAsync();
-            foreach (var id in active)
+            foreach (var id in told)
             {
                 await TrimAsync(db, id);
             }
@@ -137,6 +161,30 @@ public static class NotificationLogic
         {
             biz.Service<ILoggerFactory>().CreateLogger("Notifications").LogWarning(ex, "A notification of kind {Kind} could not be written.", kind);
         }
+    }
+
+    /// <summary>
+    /// When <paramref name="actor"/> has already written <see cref="PerActorPerWindow"/> notifications of this kind to this person within the window, counts this one in the newest of them and returns true
+    /// (the caller writes nothing). The author of a row is its <c>CreateUserId</c>, which the context fills with the person who acts.
+    /// </summary>
+    private static async Task<bool> MergeIfTooManyAsync(Data.DtDbContext db, long recipient, long actor, string kind, DateTime now)
+    {
+        var since = now.AddMinutes(-ThrottleMinutes);
+        var recent = db.Notification.Where(n => n.UserId == recipient && n.CreateUserId == actor && n.Kind == kind && n.CreateDate > since);
+        if (await recent.CountAsync() < PerActorPerWindow)
+        {
+            return false;
+        }
+
+        var newest = await recent.OrderByDescending(n => n.Id).FirstAsync();
+        var data = System.Text.Json.Nodes.JsonNode.Parse(newest.DataJson) as System.Text.Json.Nodes.JsonObject ?? new System.Text.Json.Nodes.JsonObject();
+        var repeats = data["repeats"] is { } r && r.GetValueKind() == JsonValueKind.Number ? r.GetValue<int>() : 0;
+        data["repeats"] = Math.Min(repeats + 1, 9999);
+        newest.DataJson = data.ToJsonString(Web);
+        // one row stays the notice of "more": a person who read it is told again that there is more, but is never given more rows than that
+        newest.ReadDate = null;
+        await db.SaveChangesAsync();
+        return true;
     }
 
     private static async Task TrimAsync(Data.DtDbContext db, long userId)
@@ -234,7 +282,7 @@ public static class NotificationLogic
             long? requestId = r.Kind == NotificationKinds.AccessRequest ? data.Long("requestId") : null;
             string? state = requestId is { } rid && states.TryGetValue(rid, out var s) ? s.ToString().ToLowerInvariant() : null;
             var (text, message, icon) = Describe(r.Kind, data);
-            items.Add(new NotificationView(r.Id, r.Kind, text, message, icon, r.Url, r.CreateDate, r.ReadDate is not null, requestId, state));
+            items.Add(new NotificationView(r.Id, r.Kind, text, message, icon, SafeUrl(r.Url), r.CreateDate, r.ReadDate is not null, requestId, state));
         }
 
         return new NotificationPage(items, total, unread);
@@ -247,7 +295,7 @@ public static class NotificationLogic
         var uid = biz.UserId;
         var url = await biz.Db.Notification.AsNoTracking().Where(n => n.Id == id && n.UserId == uid).Select(n => n.Url).FirstOrDefaultAsync();
         await ReadAsync(biz, id);
-        return url;
+        return SafeUrl(url);
     }
 
     public static async Task<int> UnreadCountAsync(Biz biz)
@@ -330,6 +378,13 @@ public static class NotificationLogic
         var team = Quote(d.Str("teamName", "ein Team"));
         var message = d.Str("message");
         var note = message.Length == 0 ? null : message;
+        var more = d.Long("repeats") is { } repeats and > 0 ? $" (und {Services.Fmt.Integer(repeats)} weitere)" : "";
+        var (sentence, noteOut, icon) = Sentence(kind, d, by, item, team, note);
+        return (more.Length == 0 ? sentence : sentence.TrimEnd('.') + more + ".", noteOut, icon);
+    }
+
+    private static (string Text, string? Message, string Icon) Sentence(string kind, Fields d, string by, string item, string team, string? note)
+    {
         return kind switch
         {
             NotificationKinds.Share => (d.Str("viaTeam").Length > 0

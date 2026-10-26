@@ -16,6 +16,7 @@
             <dt-input for="Input.Password" label="Passwort" type="password" autocomplete="new-password" hint="@(Model.HasPassword ? "Gespeichert (verschlüsselt). Leer lassen, um es zu behalten." : "Wird verschlüsselt gespeichert.")" />
             <dt-input for="Input.FromAddress" label="Absenderadresse" type="email" placeholder="designthix@example.com" />
             <dt-input for="Input.FromName" label="Absendername" />
+            <dt-input for="Input.PublicBase" label="Adresse für Links in Mails" type="url" placeholder="@Model.CurrentBase" full="true" hint="Damit beginnen die Links in Einladungen und Hinweisen. Leer lassen: die Adresse, unter der du gerade arbeitest." />
         </div>
         <p class="mat-hint">Verschickt werden Einladungen in Teams, Hinweise auf Freigaben, Zugriffsanfragen und Erwähnungen. Jede Person stellt in ihrem Profil ein, bei welchen Anlässen sie eine Mail möchte. Ohne Mailserver zeigt DesignThix den Link einer Einladung zum Kopieren an.</p>
     </dt-card>

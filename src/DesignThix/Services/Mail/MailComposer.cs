@@ -103,7 +103,8 @@ public sealed class MailComposer(IServiceScopeFactory scopes, SettingStore setti
         };
     }
 
-    private string Absolute(string path) => Services.PublicUrl.Base(config) + path;
+    /// <summary>A link of a mail: starts with the address the administrator chose (or was last seen at), never with a Host header of a visitor.</summary>
+    private string Absolute(string path) => Services.PublicUrl.ForMail(config, settings.Get<MailSettings>(SettingStore.Mail).PublicBase) + path;
 
     private async Task<OutgoingMail?> InvitationAsync(DtDbContext db, long id, CancellationToken ct)
     {
@@ -161,7 +162,7 @@ public sealed class MailComposer(IServiceScopeFactory scopes, SettingStore setti
             paragraphs.Add("„" + MailContent.Block(message) + "“");
         }
 
-        var link = row.Url is { Length: > 0 } url && url.StartsWith('/') && !url.StartsWith("//") ? Absolute(url) : null;
+        var link = NotificationLogic.SafeUrl(row.Url) is { } url ? Absolute(url) : null;
         var subject = row.Kind switch
         {
             NotificationKinds.AccessRequest => "Zugriffsanfrage auf DesignThix",

@@ -83,6 +83,9 @@ public sealed class MailSettings
 
     public string FromName { get; set; } = "DesignThix";
 
+    /// <summary>The address links in mails start with (<c>https://design.example.de</c>). Chosen by the administrator, never taken from a request of a visitor; empty = the address the administrator was last seen at.</summary>
+    public string PublicBase { get; set; } = "";
+
     public bool IsUsable => Enabled && Host.Length > 0 && FromAddress.Contains('@');
 }
 

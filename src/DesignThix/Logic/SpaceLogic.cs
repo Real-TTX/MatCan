@@ -279,6 +279,12 @@ public static class SpaceLogic
         biz.RequireSignedIn();
         if (biz.IsAdmin && userId == biz.UserId && await Access.RoleInAsync(biz, spaceId) is null)
         {
+            // support, not takeover: the role "Owner" (delete the team, hand it over) is for the people of the team
+            if (role == SpaceRole.Owner)
+            {
+                throw new ForbiddenException("Als Administrator kannst du dem Team zur Unterstützung als Admin beitreten, nicht als Inhaber.");
+            }
+
             var asAdmin = await biz.Db.Space.FirstOrDefaultAsync(s => s.Id == spaceId) ?? throw new NotFoundException();
             return asAdmin.Kind == SpaceKind.Team ? asAdmin : throw new BizException("Das geht nur bei einem Team.");
         }

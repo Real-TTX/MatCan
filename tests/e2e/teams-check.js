@@ -86,7 +86,7 @@ const shot = async (page, name) => {
     await go(A, '/Teams');
     check('the overview has "Team erstellen"', await A.isVisible('a[href="/Teams/Create"]'));
     await shot(A, 'teams-overview');
-    await A.click('.mat-actions a[href="/Teams/Create"]');
+    await A.locator('a[href="/Teams/Create"]:visible').first().click();   // in the page and, when the person has no team yet, in the empty state
     await A.waitForURL(/\/Teams\/Create$/);
     await A.fill('#Input_Name', teamName);
     await A.fill('#Input_Description', 'Das Team der Browser-Prüfung.');
@@ -298,24 +298,25 @@ const shot = async (page, name) => {
 
   // ------------------------------------------------------------------------------------------------ 5. the bell: a share with a message, the popover, an access request, the page
   await section('the bell', async () => {
-    const shared = await postJson(A, '/api/designs', { preset: 'price-tag' });
+    // the sender is the person this check registered: the brake on notifications counts per sender and receiver (10 of one kind in 10 minutes), and the other checks have used up the pair designer -> viewer
+    const shared = await postJson(X, '/api/designs', { preset: 'price-tag' });
     const sharedId = shared.body.id;
-    await postJson(A, `/api/designs/${sharedId}/rename`, { name: `Geteilt ${stamp}` });
-    const found = await A.evaluate(async q => (await fetch('/api/share/search?q=' + encodeURIComponent(q))).json(), accounts.viewer.email);
+    await postJson(X, `/api/designs/${sharedId}/rename`, { name: `Geteilt ${stamp}` });
+    const found = await X.evaluate(async q => (await fetch('/api/share/search?q=' + encodeURIComponent(q))).json(), accounts.viewer.email);
     const person = found.find(r => r.type === 'user' && r.email === accounts.viewer.email);
-    const result = await postJson(A, `/api/share/design/${sharedId}`, { userId: person.id, permission: 'Edit', message: 'Schau mal, ist noch <b>roh</b>.' });
-    check('A shares a design with B and a message', result.status === 200, JSON.stringify(result.body));
+    const result = await postJson(X, `/api/share/design/${sharedId}`, { userId: person.id, permission: 'Edit', message: 'Schau mal, ist noch <b>roh</b>.' });
+    check('the new person shares a design with B and a message', result.status === 200, JSON.stringify(result.body));
 
     await go(B, '/Teams');
-    await B.waitForFunction(() => { const b = document.querySelector('[data-notify-badge]'); return b && !b.hidden && Number(b.textContent) >= 1; }, null, { timeout: 10000 });
-    const unread = Number(await B.textContent('[data-notify-badge]'));
+    await B.waitForFunction(() => { const b = document.querySelector('[data-notify-badge]'); return b && !b.hidden && parseInt(b.textContent, 10) >= 1; }, null, { timeout: 10000 });
+    const unread = (await get(B, '/api/notifications/count')).body.unread;   // the badge says 99+ on a database that has been used for long: the exact number comes from the API
     check('the bell shows the count of the unread ones', unread >= 1 && /ungelesen/.test(await B.getAttribute('[data-notify-toggle]', 'aria-label')), String(unread));
     check('the bell sits in the header bar', await B.isVisible('.mat-topbar__actions [data-notify-toggle]'));
     await B.click('[data-notify-toggle]');
     await B.waitForSelector('.dt-notify:not([hidden]) .dt-notif[data-kind="share"]');
     const first = B.locator('.dt-notify .dt-notif[data-kind="share"]').first();
     const text = (await first.textContent()).replace(/\s+/g, ' ');
-    check('the popover lists the share with its text, the message as text and the time', text.includes(`E2E Gestalter hat „Geteilt ${stamp}“ mit dir geteilt (Kann bearbeiten)`) && text.includes('Schau mal, ist noch <b>roh</b>.') && /gerade eben|vor \d+ Min/.test(text), text);
+    check('the popover lists the share with its text, the message as text and the time', text.includes(`${newName} hat „Geteilt ${stamp}“ mit dir geteilt (Kann bearbeiten)`) && text.includes('Schau mal, ist noch <b>roh</b>.') && /gerade eben|vor \d+ Min/.test(text), text);
     check('the message is text, not markup', (await B.$$('.dt-notify .dt-notif__message b')).length === 0);
     check('the first item is unread (dot)', await first.evaluate(e => e.classList.contains('is-unread')));
     await shot(B, 'bell-popover');
@@ -360,8 +361,10 @@ const shot = async (page, name) => {
     if (await X.isEnabled('main button:has-text("Alle als gelesen markieren")')) { await Promise.all([X.waitForNavigation(), X.click('main button:has-text("Alle als gelesen markieren")')]); }
     check('"Alle als gelesen markieren" on the page leaves nothing unread', (await get(X, '/api/notifications/count')).body.unread === 0);
 
-    await postJson(A, '/api/items/trash', { items: [{ kind: 'design', id: sharedId }, { kind: 'design', id: secret.body.id }] });
-    await postJson(A, '/api/items/purge', { items: [{ kind: 'design', id: sharedId }, { kind: 'design', id: secret.body.id }] });
+    await postJson(X, '/api/items/trash', { items: [{ kind: 'design', id: sharedId }] });
+    await postJson(X, '/api/items/purge', { items: [{ kind: 'design', id: sharedId }] });
+    await postJson(A, '/api/items/trash', { items: [{ kind: 'design', id: secret.body.id }] });
+    await postJson(A, '/api/items/purge', { items: [{ kind: 'design', id: secret.body.id }] });
   });
 
   await section('profile mail settings', async () => {
@@ -450,7 +453,7 @@ const shot = async (page, name) => {
     await confirmOk(C);
     check('"Mir beitreten (Support)" makes the administrator an Admin of the team', /Du bist dem Team als Admin beigetreten/.test(await toastText(C)) && (await C.$$('a:has-text("Team öffnen")')).length === 1);
     await go(A, `/Teams/${slug}/Mitglieder`);
-    check('the team sees the administrator in its list', (await A.textContent('#members-table')).includes('E2E Admin') || (await A.textContent('#members-table')).includes('Test Admin'), (await A.textContent('#members-table')).replace(/\s+/g, ' ').slice(0, 200));
+    check('the team sees the administrator in its list', (await A.textContent('#members-table')).includes(accounts.admin.email), (await A.textContent('#members-table')).replace(/\s+/g, ' ').slice(0, 200));
     const log = await C.goto(base + '/Admin/Activity?q=beigetreten', { waitUntil: 'networkidle' });
     check('the activity log has the join', log.status() === 200 && /Administrator ist einem Team beigetreten/.test(await C.textContent('main')));
   });

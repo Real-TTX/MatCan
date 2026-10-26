@@ -7,8 +7,12 @@
 //   node screens.js [base url, default http://localhost:3043] [--out ../../docs/images] [--fake-host <host the APP reaches this machine by>] [--fake-port 3066] [--no-ai]
 //
 // Shots: start, create-dialog, templates, datalist, media, output, output-job, phone-start, then the editor (editor, context-menu, text-combinations, download, media-browser, editor-data,
-// text-effects, phone-editor) and ai-import. The shot of the AI preview needs a provider: the script starts the fake server of ai-check.js, makes a profile through the admin pages, shows the preview of an
-// import (nothing is applied) and removes the profile again. With --no-ai that screenshot is skipped.
+// text-effects, phone-editor), then the platform (projects, share, team-members, public-view, comments, notifications) and ai-import. The shot of the AI preview needs a provider: the script starts
+// the fake server of ai-check.js, makes a profile through the admin pages, shows the preview of an import (nothing is applied) and removes the profile again. With --no-ai that screenshot is skipped.
+//
+// The platform shots (docs/PLAN-PLATFORM.md) need people: the administrator makes four members (Mia Hofmann, Jonas Weber, Lea Schneider, Tim Brandt), Mia makes the team "Team Marketing", folders and
+// designs from the templates, the others share, comment and ask for access. Everything the platform shots made is removed again at the end (the team by its owner, the accounts by the administrator
+// with their content), so the checks that follow find the stack as the shots before found it. --platform-only runs just these (for a stack that is clean otherwise).
 const fs = require('fs');
 const path = require('path');
 const lib = require('./lib.js');
@@ -17,11 +21,12 @@ const { openDesigner, openPanel, idle, raf2 } = require('./editor-lib.js');
 
 const args = process.argv.slice(2);
 const argValue = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
-const { base, problems, watch, launch, newContext, login, PASSWORD } = lib(args);
+const { base, problems, watch, launch, newContext, login, postJson, PASSWORD } = lib(args);
 const out = path.resolve(__dirname, argValue('--out', '../../docs/images'));
 const fakePort = Number(argValue('--fake-port', '3066'));
 const fakeHost = argValue('--fake-host', /localhost:3043|127\.0\.0\.1:3043/.test(base) ? 'host.docker.internal' : '127.0.0.1');
 const withAi = !args.includes('--no-ai');
+const platformOnly = args.includes('--platform-only');
 const accountFile = process.env.DT_ACCOUNT_FILE || path.join(__dirname, 'test-account.json'); // DT_ACCOUNT_FILE: another file, for checks that run side by side
 
 const written = [];
@@ -48,6 +53,169 @@ async function ensureAdmin(browser) {
   return accounts.admin;
 }
 
+/** The images of the page are loaded (the tiles of the browser fetch them after they are drawn). */
+const picturesLoaded = (pg, selector = 'img') => pg.waitForFunction(s => Array.from(document.querySelectorAll(s)).every(i => i.complete && i.naturalWidth > 0), selector, { timeout: 20000 }).catch(() => { });
+
+/**
+ * The shots of the platform (plan 3): Projekte with folders, the Teilen dialog, a team (Mitglieder), the public view, the comments with a pin and the bell. Four people are made by the
+ * administrator (page) and removed again at the end; what they made goes with them. Returns nothing; the files are written to `out`.
+ */
+async function platformShots(browser, page) {
+  const snap = async (pg, file) => {
+    await pg.waitForTimeout(500);
+    await pg.screenshot({ path: path.join(out, file) });
+    written.push(file);
+    console.log('wrote ' + file);
+  };
+  const people = {
+    mia: { name: 'Mia Hofmann', email: 'mia.hofmann@example.com' },
+    jonas: { name: 'Jonas Weber', email: 'jonas.weber@example.com' },
+    lea: { name: 'Lea Schneider', email: 'lea.schneider@example.com' },
+    tim: { name: 'Tim Brandt', email: 'tim.brandt@example.com' },
+  };
+  for (const p of Object.values(people)) {
+    await page.goto(base + '/Admin/Users/Edit');
+    await page.fill('#Input_DisplayName', p.name);
+    await page.fill('#Input_Email', p.email);
+    await page.selectOption('#Input_Role', { label: 'Mitglied' });
+    await page.fill('#Input_Password', PASSWORD);
+    await Promise.all([page.waitForNavigation(), page.click('button[type=submit].mat-btn--primary')]);
+    p.password = PASSWORD;
+  }
+
+  const contexts = [];
+  const signIn = async (p, viewport) => {
+    const ctx = await newContext(browser, { viewport: viewport || { width: 1440, height: 900 }, colorScheme: 'light', deviceScaleFactor: 1 });
+    contexts.push(ctx);
+    const pg = await ctx.newPage();
+    watch(pg, p.email);
+    if (!await login(pg, p)) { throw new Error('Sign-in of ' + p.email + ' failed.'); }
+    return pg;
+  };
+  const mia = await signIn(people.mia);
+  const jonas = await signIn(people.jonas);
+  const lea = await signIn(people.lea);
+  const tim = await signIn(people.tim);
+  const must = (res, what) => { if (res.status !== 200) { throw new Error(`${what} failed: ${res.status} ${JSON.stringify(res.body)}`); } return res.body; };
+  const userId = async (pg, p) => (await pg.evaluate(async q => (await fetch('/api/share/search?q=' + encodeURIComponent(q))).json(), p.email)).find(r => r.type === 'user' && r.email === p.email).id;
+  // a person does not find themselves in the search: Mia finds the others, Jonas finds Mia
+  for (const p of [people.jonas, people.lea, people.tim]) { p.id = await userId(mia, p); }
+  people.mia.id = await userId(jonas, people.mia);
+
+  // the team, its people and its roles
+  const team = must(await postJson(mia, '/api/spaces', { name: 'Team Marketing', description: 'Plakate, Flyer und Beiträge für Hof und Wochenmarkt.', color: '#1fb3d6' }), 'team');
+  for (const [p, role] of [[people.jonas, 'Editor'], [people.lea, 'Admin'], [people.tim, 'Viewer']]) {
+    must(await postJson(mia, `/api/spaces/${team.id}/members`, { userId: p.id, role }), 'member ' + p.name);
+  }
+
+  // folders and designs of Mia (copies of the templates with names of a farm shop), each with a picture of its own
+  const templates = await mia.evaluate(async () => (await (await fetch('/api/templates')).json()));
+  const template = prefix => { const t = templates.find(x => x.name.indexOf(prefix) === 0); if (!t) { throw new Error('No template ' + prefix); } return t.id; };
+  const folder = async (name, color) => must(await postJson(mia, '/api/folders', { name, color }), 'folder ' + name).id;
+  const folders = { hofladen: await folder('Hofladen Sommer', '#f2a65a'), markt: await folder('Wochenmarkt', '#7cb518'), herbst: await folder('Herbstkampagne', '#e5634d') };
+  const made = [];
+  const design = async (templatePrefix, name, folderId) => {
+    const copy = must(await postJson(mia, `/api/designs/${template(templatePrefix)}/use-template`, folderId ? { folderId } : {}), 'copy ' + name);
+    must(await postJson(mia, `/api/designs/${copy.id}/rename`, { name }), 'rename ' + name);
+    made.push(copy.id);
+    return copy.id;
+  };
+  const poster = await design('Poster A3', 'Hoffest-Plakat', folders.hofladen);
+  await design('Flyer A5', 'Wochenangebot Flyer', folders.hofladen);
+  await design('Instagram-Beitrag', 'Sommeraktion Instagram', folders.hofladen);
+  await design('Glasetikett', 'Honig-Etikett', folders.hofladen);
+  await design('Obst', 'Preisschilder Obst und Gemüse', folders.markt);
+  await design('Regaletikett', 'Regaletikett Hofladen', folders.markt);
+  await design('Grußkarte', 'Herbstgruß an Stammkunden', folders.herbst);
+  await design('Instagram-Story', 'Erntedank Story', folders.herbst);
+  const cheese = await design('Käsetheke', 'Käsetheke – Preisschild');
+  await design('Flyer A5', 'Flyer Herbstmarkt');
+  await design('Poster A3', 'Plakat Wochenmarkt');
+  await design('Instagram-Beitrag', 'Angebot der Woche');
+  await design('Glasetikett', 'Marmeladen-Etikett');
+  // the picture of a design is made by the editor after a save: open each one and let it make the picture
+  for (const id of made) {
+    await openDesigner(mia, base, id);
+    await mia.evaluate(() => window.DtDesigner.save.thumbnail());
+  }
+
+  // 1. Projekte: the folders with their pictures, loose designs
+  await mia.goto(base + '/Projekte', { waitUntil: 'networkidle' });
+  await mia.waitForSelector('.dt-bitem[data-kind=folder]');
+  await picturesLoaded(mia, '.dt-bitem img');
+  await snap(mia, 'projects.png');
+
+  // 2. Teilen: a design of the folder shared with a person, with the team and by a link for signed-in people
+  must(await postJson(mia, `/api/share/design/${poster}`, { userId: people.jonas.id, permission: 'Edit', message: 'Schau bitte mal über die Texte.' }), 'share with Jonas');
+  must(await postJson(mia, `/api/share/design/${poster}`, { teamId: team.id, permission: 'View' }), 'share with the team');
+  must(await postJson(mia, `/api/share/design/${poster}/link`, { audience: 'SignedIn', permission: 'View' }), 'link');
+  await mia.goto(`${base}/Projekte/Ordner/${folders.hofladen}`, { waitUntil: 'networkidle' });
+  await mia.evaluate(id => { window.DtShare.open({ kind: 'design', id, name: 'Hoffest-Plakat' }); }, poster);   // resolves when the dialog closes: not awaited
+  await mia.waitForSelector('dialog.dt-share[open]');
+  await mia.waitForFunction(() => { const d = document.querySelector('dialog.dt-share[open]'); return !!d && /Jonas Weber/.test(d.textContent) && /Team Marketing/.test(d.textContent); }, null, { timeout: 15000 });
+  // the address of the link is the one of this test stack: the picture shows an address like the one of a real installation
+  await mia.evaluate(() => { const i = document.querySelector('dialog.dt-share[open] input[readonly]'); if (i) { i.value = i.value.replace(new RegExp('^https?://[^/]+'), 'https://design.wiesengrund.example'); } });
+  await snap(mia, 'share.png');
+  await mia.keyboard.press('Escape');
+  await mia.waitForSelector('dialog.dt-share', { state: 'detached' }).catch(() => { });
+
+  // 3. The team: its members and their roles
+  await mia.goto(`${base}/Teams/${team.slug}/Mitglieder`, { waitUntil: 'networkidle' });
+  await snap(mia, 'team-members.png');
+
+  // 4. The public view of a design (no sign-in): the demo label with a public link that allows downloads
+  const link = must(await postJson(mia, `/api/share/design/${cheese}/link`, { audience: 'Public', permission: 'View', allowDownload: true }), 'public link');
+  const anonymous = await newContext(browser, { viewport: { width: 1440, height: 900 }, colorScheme: 'light', deviceScaleFactor: 1 });
+  contexts.push(anonymous);
+  const visitor = await anonymous.newPage();
+  watch(visitor, 'visitor');
+  await visitor.goto(`${base}/s/${link.token}`);
+  await visitor.waitForSelector('#dt-pv[data-state="ready"]', { timeout: 30000 });
+  await picturesLoaded(visitor, '.dt-pv__thumbs img');
+  await snap(visitor, 'public-view.png');
+
+  // 5. Comments: a pin on the date, an answer, a comment on the page
+  const info = await mia.evaluate(async id => { const d = await (await fetch('/api/designs/' + id)).json(); return { page: d.document.pages[0].id }; }, poster);
+  const thread = must(await postJson(mia, `/api/designs/${poster}/comments`, { text: '@Jonas Weber, kannst du das Datum noch etwas größer machen?', pageId: info.page, elementId: 'e24', x: 228, y: 264, mentions: [people.jonas.id] }), 'comment');
+  must(await postJson(jonas, `/api/designs/${poster}/comments`, { text: 'Klar, mache ich heute Nachmittag.', parentId: thread.id }), 'reply');
+  must(await postJson(lea, `/api/designs/${poster}/comments`, { text: 'Die Farben passen gut zu unserem Herbstflyer. @Mia Hofmann, hast du die Adresse geprüft?', pageId: info.page, elementId: 'e33', x: 100, y: 396, mentions: [people.mia.id] }), 'comment of Lea');
+  await openDesigner(mia, base, poster);
+  await openPanel(mia, 'comments');
+  await mia.waitForFunction(() => window.DtDesigner.comments.state().loaded);
+  await mia.waitForFunction(() => document.querySelectorAll('.dt-cm-thread').length >= 2);
+  await mia.locator('.dt-cm-thread', { hasText: 'Datum' }).first().locator('.dt-cm-text').first().click();
+  await idle(mia);
+  await snap(mia, 'comments.png');
+
+  // 6. The bell: a share with a message, an answer, a mention and a request for access with its two buttons
+  const jonasDesign = must(await postJson(jonas, '/api/designs', { preset: 'a4-portrait', name: 'Plakat Herbstmarkt' }), 'design of Jonas');
+  must(await postJson(jonas, `/api/share/design/${jonasDesign.id}`, { userId: people.mia.id, permission: 'Edit', message: 'Hier ist mein Entwurf fürs Plakat. Magst du drüberschauen?' }), 'share of Jonas');
+  must(await postJson(tim, '/api/access-requests', { kind: 'design', id: poster, permission: 'edit', message: 'Darf ich die Texte ändern?' }), 'request of Tim');
+  await mia.goto(base + '/Projekte', { waitUntil: 'networkidle' });
+  await mia.waitForFunction(() => { const b = document.querySelector('[data-notify-badge]'); return !!b && !b.hidden && parseInt(b.textContent, 10) > 0; }, null, { timeout: 15000 });
+  await mia.click('[data-notify-toggle]');
+  await mia.waitForSelector('[data-notify-list] li', { timeout: 15000 });
+  await mia.waitForFunction(() => document.querySelectorAll('[data-notify-list] li').length >= 4, null, { timeout: 15000 });
+  await snap(mia, 'notifications.png');
+  await mia.keyboard.press('Escape');
+
+  // clean up: the team goes (its owner types the name), then the accounts with what they made (the administrator hands nothing over)
+  must(await postJson(mia, `/api/spaces/${team.id}/delete`, { name: 'Team Marketing' }), 'delete team');
+  for (const c of contexts) { await c.close(); }
+  for (const p of Object.values(people)) {
+    await page.goto(`${base}/Admin/Users?q=${encodeURIComponent(p.email)}`, { waitUntil: 'networkidle' });
+    const row = page.locator('#user-table a[href^="/Admin/Users/Edit"]').first();
+    if ((await row.count()) === 0) { continue; }
+    await row.click();
+    await page.waitForURL(/\/Admin\/Users\/Edit/);
+    await page.click('button[data-dialog-open="dt-delete-user"]');
+    await page.waitForSelector('dialog#dt-delete-user[open]');
+    await page.waitForTimeout(250);
+    await page.click('#dt-delete-user label.mat-check:has-text("Nicht übertragen")');
+    await Promise.all([page.waitForNavigation(), page.click('#dt-delete-user button[type=submit]')]);
+  }
+}
+
 (async () => {
   fs.mkdirSync(out, { recursive: true });
   const browser = await launch();
@@ -57,6 +225,14 @@ async function ensureAdmin(browser) {
   const page = await desktop.newPage();
   watch(page, 'screens');
   if (!await login(page, admin)) { throw new Error('Sign-in failed.'); }
+
+  if (platformOnly) {
+    await platformShots(browser, page);
+    await browser.close();
+    console.log(`\n${written.length} screenshots in ${out}`);
+    if (problems.length) { console.log('problems:\n' + problems.join('\n')); process.exit(1); }
+    return;
+  }
 
   async function shot(file, target) {
     await page.waitForTimeout(500);
@@ -201,6 +377,9 @@ async function ensureAdmin(browser) {
   await p.screenshot({ path: path.join(out, 'phone-editor.png') });
   written.push('phone-editor.png');
   console.log('wrote phone-editor.png');
+
+  // 9. The platform: Projekte with folders, Teilen, a team, the public view, comments and the bell (made with four people who are removed again).
+  await platformShots(browser, page);
 
   // The AI import preview, against the fake provider (last: it leaves one run in the log).
   if (withAi) {

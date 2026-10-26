@@ -41,7 +41,7 @@ public sealed class SessionCache(IMemoryCache cache, TimeProvider clock)
 
         var now = clock.GetUtcNow().UtcDateTime;
         var snapshot = await db.UserSession.AsNoTracking()
-            .Where(s => s.Token == token && s.RevokedDate == null && s.ExpiresDate > now && s.User!.IsActive)
+            .Where(s => s.Token == token && s.RevokedDate == null && s.ExpiresDate > now && s.User!.IsActive && s.User.ApprovalState == ApprovalState.Approved)
             .Select(s => new SessionSnapshot(s.UserId, s.User!.DisplayName, s.User.Email, s.User.Role, s.User.Theme, s.User.Totp != null && s.User.Totp.IsConfirmed))
             .FirstOrDefaultAsync(ct);
 

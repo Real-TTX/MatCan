@@ -46,6 +46,9 @@ public static partial class FontLogic
 {
     public const long MaxFontBytes = 8 * 1024 * 1024;
 
+    /// <summary>How much of the content hash an address of a font must carry (the addresses made by <see cref="Url"/> carry 12): the hash is the capability, so a short one could be guessed.</summary>
+    public const int MinHashPrefix = 12;
+
     public static string Url(long id, string hash, string format) => $"/fonts/{id}-{hash[..Math.Min(12, hash.Length)]}.{format}";
 
     public static string CssFormat(string format) => format switch
@@ -103,7 +106,7 @@ public static partial class FontLogic
     public static async Task<(byte[] Bytes, string Format, string Hash)?> ContentAsync(Biz biz, long id, string? hashPrefix)
     {
         var font = await biz.Db.Font.AsNoTracking().Where(f => f.Id == id).Select(f => new { f.Bytes, f.Format, f.ContentHash }).FirstOrDefaultAsync();
-        if (font is null || string.IsNullOrEmpty(hashPrefix) || hashPrefix.Length < 6 || !font.ContentHash.StartsWith(hashPrefix, StringComparison.OrdinalIgnoreCase))
+        if (font is null || string.IsNullOrEmpty(hashPrefix) || hashPrefix.Length < MinHashPrefix || !font.ContentHash.StartsWith(hashPrefix, StringComparison.OrdinalIgnoreCase))
         {
             return null;
         }

@@ -142,7 +142,7 @@
   }
 
   function choose(n, li) {
-    var go = function () { if (n.url) { window.location.href = n.url; } };
+    var go = function () { if (typeof n.url === 'string' && /^\/(?![\/\\])/.test(n.url)) { window.location.href = n.url; } };
     if (n.read) { go(); return; }
     api('POST', '/api/notifications/' + n.id + '/read').then(function (r) {
       setUnread(r.unread);

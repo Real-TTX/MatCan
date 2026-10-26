@@ -330,6 +330,8 @@ public static class DataListLogic
     public static async Task<(int Revision, List<long> RowIds)> SaveRowsAsync(Biz biz, long id, int revision, IReadOnlyList<GridRow> rows)
     {
         await Access.RequireAsync(biz, ItemKind.DataList, id, AccessLevel.Edit);
+        // saves of one list take turns (see ItemLock): the second of two at the same moment gets the ordinary conflict
+        await using var turn = await ItemLock.AcquireAsync(biz.Db, ItemKind.DataList, id);
         var list = await biz.Db.DataList.FirstOrDefaultAsync(l => l.Id == id) ?? throw new NotFoundException();
         if (list.Revision != revision)
         {
@@ -387,6 +389,7 @@ public static class DataListLogic
             throw new RevisionConflictException(current);
         }
 
+        await turn.CommitAsync();
         await biz.Log.LogAsync("Zeilen gespeichert", nameof(DataList), id, $"{list.Name}: {rows.Count} Zeilen");
         return (list.Revision, [.. ordered.Select(r => r.Id)]);
     }

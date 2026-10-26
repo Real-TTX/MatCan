@@ -30,7 +30,10 @@ DesignThix ist ein Docker-Container mit einer PostgreSQL-Datenbank. Es läuft au
 - **Uploads per Drag & Drop und Einfügen:** Bilder und Schriften aus dem Explorer auf die Fläche ziehen oder mit Strg+V einfügen (auch Screenshots und Text); ein **Medienbrowser** zeigt alles mit Vorschau.
 - **Marke:** Markenfarben, Markenschriften und Logos einmal festlegen, im Designer überall bereit.
 - **Herunterladen und Drucken:** PNG, JPG, SVG und PDF/Druck, einzelne Seiten oder alle (mehrere Seiten als ZIP), transparenter Hintergrund, ×1 bis ×4 oder eigene Auflösung.
-- **Rollen:** Administrator, Gestalter, Betrachter. Oberfläche auf Deutsch, hell und dunkel.
+- **Projekte, Ordner und Teams:** Jede Person hat einen eigenen Bereich („Meine Projekte“) mit Ordnern, Designs, Bildern, Datenlisten und Serienausgaben; **Teams** arbeiten in einem gemeinsamen Bereich mit eigener Marke und eigenen Vorlagen.
+- **Teilen:** mit Personen und Teams (*Kann ansehen* / *Kann bearbeiten*), per Link für Angemeldete oder als **öffentlicher Link** ohne Konto; wer keinen Zugriff hat, kann ihn anfordern.
+- **Zusammenarbeit:** Kommentare mit Pins direkt auf der Fläche, `@`-Erwähnungen, Benachrichtigungen (Glocke, auf Wunsch per Mail) und die Anzeige, wer ein Design gerade geöffnet hat.
+- **Konten:** Administrator und Mitglied; Registrierung aus, offen oder mit Freigabe, Einladungen per Link oder Mail. Oberfläche auf Deutsch, hell und dunkel.
 - **Installierbare App (PWA)** mit Offline-Anzeige zuletzt geöffneter Seiten; der Designer behält ungespeicherte Änderungen und speichert, sobald die Verbindung zurück ist.
 
 ### Zusatz: Serien mit Daten
@@ -62,6 +65,17 @@ Beim ersten Start sind die zehn Vorlagen da, dazu ein Beispiel für die Serien m
 | **Design erstellen:** ein Format wählen oder eine eigene Größe in mm oder px eingeben | **Herunterladen:** PNG, JPG, SVG oder PDF, Größe und transparenter Hintergrund |
 | ![Handy](docs/images/phone-editor.png) | ![Start auf dem Handy](docs/images/phone-start.png) |
 | **Auf dem Handy:** der Designer mit Reiterleiste unten und einer Werkzeugleiste zum Wischen | **Start auf dem Handy:** dieselben Formate, Vorlagen und Designs, einspaltig |
+
+**Projekte, Teams und Teilen**
+
+| | |
+|---|---|
+| ![Projekte](docs/images/projects.png) | ![Teilen](docs/images/share.png) |
+| **Projekte:** der eigene Bereich mit Ordnern (mit Vorschau ihres Inhalts), Designs und Datenlisten; Raster oder Liste, Suche, Sortierung | **Teilen:** Personen und Teams hinzufügen, wer schon Zugriff hat, und der Link (nur Personen mit Zugriff, alle Angemeldeten oder öffentlich) |
+| ![Team](docs/images/team-members.png) | ![Öffentliche Ansicht](docs/images/public-view.png) |
+| **Team:** Mitglieder mit ihren Rollen (Inhaber, Admin, Bearbeiter, Betrachter), Einladen, Marke, Vorlagen, Einstellungen | **Öffentliche Ansicht:** ein Design ohne Anmeldung ansehen, auf Wunsch mit Herunterladen |
+| ![Kommentare](docs/images/comments.png) | ![Benachrichtigungen](docs/images/notifications.png) |
+| **Kommentare:** Pins auf der Fläche und an Elementen, Antworten, Erwähnungen, Erledigen | **Glocke:** Freigaben, Antworten, Erwähnungen und Zugriffsanfragen mit „Gewähren“ und „Ablehnen“ |
 
 **Serien (Zusatz)**
 
@@ -95,8 +109,8 @@ docker compose -f docker-compose.dev.yml up -d
 ```
 
 **Der erste Aufruf** von http://localhost:3043 öffnet den **Einrichtungsassistenten**: Er legt das Konto der Administration an (es gibt kein Standardpasswort). Danach
-legst du unter *Verwaltung > Benutzer* weitere Konten an: *Gestalter* ändern Designs, Medien, Schriften, Marke, Datenlisten und Serienausgaben, *Betrachter* sehen alles an und führen Serienausgaben
-aus. Für mehr als das lokale Netz gehört ein Reverse-Proxy mit TLS davor.
+kommen weitere Menschen über *Verwaltung > Benutzer* (Konto anlegen), über eine **Einladung** (Link oder Mail) oder, wenn du es einschaltest, über die **Registrierung** dazu (siehe unten).
+Für mehr als das lokale Netz gehört ein Reverse-Proxy mit TLS davor; in den Mail-Einstellungen steht dann die öffentliche Adresse, mit der die Links in Mails beginnen.
 
 Updates: `docker compose pull && docker compose up -d`. Im Volume `web-data` liegen die Schlüssel der App und die KI-Schlüssel; ohne sie sind gespeicherte Geheimnisse nicht lesbar
 (sie gehören nicht in ein Backup der Datenbank, aber in ein eigenes). Die Datenbank liegt im Volume `db-data`.
@@ -113,6 +127,37 @@ Es gibt zwei Branches: **`main`** ist das Release, **`dev`** der Entwicklungssta
 | lokal gebaut | `local-<datum>` | `designthix:local` |
 
 Major und Minor stehen in `Directory.Build.props`, die Build-Nummer ist die Nummer des Laufs der Action. Die Version steht links unten im Menü; ein Klick öffnet *Über DesignThix*.
+
+## Projekte, Teams und Teilen
+
+**Bereiche.** Jede Person hat `Meine Projekte`, jedes Team einen eigenen Bereich. Ein Bereich enthält Ordner (bis acht Ebenen tief), Designs, Bilder, Datenlisten und Serienausgaben; Schriften und Druckbögen gehören zum Bereich, aber nicht in Ordner.
+Die Seite *Projekte* ist ein Dateibrowser: Raster oder Liste, Filter nach Art, Suche, Sortierung, Mehrfachauswahl (Klick, Umschalt, Strg), Ziehen auf Ordner und den Pfad, Kontextmenü, *Neu* (Design, Ordner, Bilder hochladen, Datenliste) und Dateien aus dem Explorer direkt in den
+geöffneten Ordner ziehen. *Mit Stern* merkt dir Lieblinge, *Zuletzt verwendet* steht auf der Startseite. Gelöschtes liegt 30 Tage im **Papierkorb** (die Zahl stellt die Administration ein) und lässt sich zurückholen; ein Ordner nimmt seinen Inhalt mit hin und zurück.
+Für Bilder und Schriften gibt es Speicherplatz (2 GB je Person, 10 GB je Team, einstellbar); die Anzeige steht am Bereich.
+
+**Teams.** Wer ein Team anlegt, ist sein *Inhaber*. Die Rollen: **Inhaber** (alles, auch das Team löschen oder übergeben), **Admin** (Mitglieder, Einladungen, Marke, Vorlagen, Einstellungen), **Bearbeiter** (legt an und ändert alles im Bereich des Teams, teilt, verschiebt, löscht)
+und **Betrachter** (sieht den Bereich nur an). Ein Team hat Reiter für Projekte, Mitglieder, Marke, Vorlagen und Einstellungen. Eingeladen wird per E-Mail-Adresse (ist ein Mailserver eingerichtet, geht die Mail raus, sonst zeigt DesignThix den Link zum Kopieren)
+oder mit einem Einladungslink (Rolle, 1/7/30 Tage, Höchstzahl der Nutzungen). Ein Link, den ein Mailprogramm nur abruft, nimmt niemanden auf: Beitreten ist ein Knopf.
+
+**Teilen.** Der Knopf *Teilen* (Editor, Kontextmenü, Ordnerkopf) öffnet den Dialog: Personen oder Teams suchen (ab zwei Zeichen, nach Name oder Adresse), *Kann ansehen* oder *Kann bearbeiten*, auf Wunsch mit Nachricht; darunter, wer schon Zugriff hat – auch über einen Ordner
+weiter oben –, und der **Link**: *Nur Personen mit Zugriff*, *Alle Angemeldeten mit dem Link* (ansehen oder bearbeiten) oder *Öffentlich* (nur ansehen, jeder mit dem Link, ohne Konto; Designs und Ordner; *Herunterladen erlauben* und ein Ablaufdatum sind einstellbar).
+Ein Link lässt sich zurücksetzen; der alte ist dann tot. Die Ansicht `/s/<Link>` zeigt das Design mit den eigenen Beispielwerten – nie die Zeilen einer Datenliste – und ist für Suchmaschinen gesperrt. Was mit dir geteilt wurde, steht unter *Freigegeben*.
+Wer ein Element ohne Zugriff öffnet, sieht *Zugriff anfordern* (die Seite sagt nie, ob es das Element gibt); die Verwaltenden bekommen eine Benachrichtigung mit *Gewähren* und *Ablehnen*. Ein Design, das du nur ansehen darfst, öffnet der Editor schreibgeschützt mit *Kopie erstellen*.
+Wer ein Design gerade geöffnet hat, zeigen kleine Avatare; speichern zwei gleichzeitig, fragt der zweite, ob er seine Fassung als Kopie sichern will.
+
+**Kommentare.** Im Editor schreibst du Kommentare an die Seite oder heftest sie als Pin an ein Element (Taste `K`); mit `@Name` erwähnst du Personen, die das Design sehen dürfen. Antworten, Erledigen und Wiedereröffnen; wer ansehen darf, darf kommentieren. Die Pins gehören nie in
+einen Download, einen Druck oder ein Vorschaubild.
+
+**Konten.** Die Administration stellt unter *Verwaltung > Plattform* ein: Registrierung *aus* (nur Einladungen), *offen* oder *mit Freigabe* (das Konto wartet, bis es freigegeben ist), erlaubte E-Mail-Domains, ob Mitglieder einladen und Teams anlegen dürfen, öffentliche Links, Speicherplatz und Papierkorb.
+Die Registrierung sagt nie, ob eine Adresse schon ein Konto hat, und bremst Versuche je Adresse und je Rechner. Die E-Mail-Adresse wird nicht bestätigt: für eine geschlossene Gruppe ist *Mit Freigabe* der richtige Weg. Unter *Verwaltung > E-Mail* steht der Mailserver, unter
+*Verwaltung > Teams* sind alle Teams mit Mitgliedern und Speicher (ohne Inhalte; zur Hilfe kann die Administration einem Team als Admin beitreten, das steht im Protokoll). Ein Konto löschen heißt: die Inhalte gehen an eine Person oder ein Team oder in den Papierkorb.
+
+**Benachrichtigungen.** Die Glocke zählt, was neu ist: eine Freigabe, eine Zugriffsanfrage, eine Antwort, eine Erwähnung, eine Einladung, eine Änderung im Team. Ein Klick öffnet die Sache und markiert sie als gelesen. Im Profil stellst du ein, wofür du zusätzlich eine Mail willst.
+Schreibt dir jemand mehr als zehnmal in zehn Minuten dieselbe Art von Hinweis, werden die weiteren in der neuesten Zeile zusammengefasst („und 5 weitere“, sie gilt wieder als ungelesen) und lösen keine neue Mail aus.
+
+**Sicherheit.** Was jemand mit einem Element darf (*Nichts, Ansehen, Bearbeiten, Verwalten*), entscheidet die Logik hinter jeder Seite und jedem Aufruf (`Access`): Bereich, Team, Freigabe, Link. Ein Element, das es nicht gibt oder das du nicht sehen darfst, antwortet gleich mit 404, damit niemand Nummern
+durchprobiert. Bilder, Schriften und Vorschaubilder haben einen Hash in der Adresse (wer ihn kennt, darf laden – nur die Aufrufe, die den Zugriff geprüft haben, verraten ihn); ein Design darf nur Bilder benutzen, die dem Speichernden zur Verfügung stehen. Die Prüfung der Plattform (Rechte je Rolle,
+Links, öffentliche Ansicht, Einladungen, Registrierung, Mails) steht in [docs/PLAN-PLATFORM.md](docs/PLAN-PLATFORM.md), Abschnitt „Security review (P6)“.
 
 ## Serien mit Daten: Platzhalter
 
@@ -194,11 +239,11 @@ dotnet ef migrations add <Name> -p src/DesignThix -s src/DesignThix -o Data/Migr
 ./scripts/redeploy.ps1                        # Image bauen und den lokalen Stack starten (-Clean: leere Datenbank)
 ```
 
-- **Browser-Prüfungen** (`tests/e2e`, Playwright mit dem installierten Edge): `cd tests/e2e && npm install && node run-all.js http://localhost:3043` startet Engine, PWA, Demo, Start, Vorlagen, Designer, Canva-Editor, Editor-Inhalte,
-  Serienausgabe und KI nacheinander (rund zehn Minuten). Jede einzeln und was sie prüft: [tests/e2e/README.md](tests/e2e/README.md). Sie legen ihre Konten selbst an, wenn die Datenbank leer ist.
+- **Browser-Prüfungen** (`tests/e2e`, Playwright mit dem installierten Edge): `cd tests/e2e && npm install && node run-all.js http://localhost:3043` startet Engine, PWA, Demo, Start, Projekte, Vorlagen, Designer, Canva-Editor, Editor-Inhalte,
+  Serienausgabe, Teilen, Kommentare, Teams und KI nacheinander (rund zehn Minuten). Jede einzeln und was sie prüft: [tests/e2e/README.md](tests/e2e/README.md). Sie legen ihre Konten selbst an, wenn die Datenbank leer ist.
 - **Screenshots** dieser Seite: `node tests/e2e/screens.js` gegen eine frische, leere Datenbank (`./scripts/redeploy.ps1 -Clean`, oder die App mit `dotnet run` gegen eine neue Datenbank, siehe [CLAUDE.md](CLAUDE.md)), Ergebnis in `docs/images`.
 - **MatUi** (Oberflächen-Bibliothek) wird nie in `src/DesignThix/wwwroot/ui` geändert, sondern aus MatDesign geholt: `./scripts/sync-matui.ps1`, geprüft mit `./scripts/check-matui.ps1`.
-- Aufbau, Regeln und Stolpersteine für die Arbeit am Code: [CLAUDE.md](CLAUDE.md). Die Baupläne: [docs/PLAN-CANVA.md](docs/PLAN-CANVA.md) (Plan 2: Canva-Stil, Dokumentformat 2), [docs/PLAN.md](docs/PLAN.md) (Plan 1: Produkt, Architektur); der Editor: [docs/EDITOR.md](docs/EDITOR.md).
+- Aufbau, Regeln und Stolpersteine für die Arbeit am Code: [CLAUDE.md](CLAUDE.md). Die Baupläne: [docs/PLAN-PLATFORM.md](docs/PLAN-PLATFORM.md) (Plan 3: Plattform, Teams, Teilen), [docs/PLAN-CANVA.md](docs/PLAN-CANVA.md) (Plan 2: Canva-Stil, Dokumentformat 2), [docs/PLAN.md](docs/PLAN.md) (Plan 1: Produkt, Architektur); der Editor: [docs/EDITOR.md](docs/EDITOR.md).
 
 **Technik:** ASP.NET Core 10 (Razor Pages), Entity Framework Core 10, PostgreSQL 17, MatUi aus MatDesign, GitHub Actions (Build, Tests gegen PostgreSQL, Multi-Arch-Image nach GHCR).
 

@@ -127,6 +127,27 @@ public sealed class PublicRateLimiter(TimeProvider clock)
         }
     }
 
+    /// <summary>Whether the address has used up its minute (what it has used stays as it is: a look, nothing is taken). Used before work that should not be done for a caller who keeps missing.</summary>
+    public bool IsOver(string? address, int perMinute)
+    {
+        if (perMinute <= 0)
+        {
+            return false;
+        }
+
+        var now = clock.GetUtcNow().UtcDateTime;
+        var queue = _calls.GetOrAdd(Key(address ?? "unknown", now), _ => new Queue<DateTime>());
+        lock (queue)
+        {
+            while (queue.Count > 0 && queue.Peek() < now.AddMinutes(-1))
+            {
+                queue.Dequeue();
+            }
+
+            return queue.Count >= perMinute;
+        }
+    }
+
     /// <summary>Forgets everything (the tests that use up the brake of the shared host).</summary>
     public void Reset() => _calls.Clear();
 

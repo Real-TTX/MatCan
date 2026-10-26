@@ -314,6 +314,11 @@ public static class UserLogic
             return;
         }
 
+        if (!approve && (user.Id == biz.User.UserId || user.Role == UserRole.Admin))
+        {
+            throw new BizException("Das Konto eines Administrators lehnst du nicht ab. Deaktiviere es stattdessen.");
+        }
+
         user.ApprovalState = approve ? ApprovalState.Approved : ApprovalState.Declined;
         if (approve)
         {
@@ -322,6 +327,12 @@ public static class UserLogic
 
         await biz.Db.SaveChangesAsync();
         biz.Service<SessionCache>().InvalidateUser(id);
+        if (!approve)
+        {
+            // a person who was approved and is declined now is signed out everywhere
+            await biz.Service<SignInService>().EndAllSessionsAsync(id, null);
+        }
+
         await biz.Log.LogAsync(approve ? "Konto freigegeben" : "Konto abgelehnt", nameof(User), id, user.Email);
     }
 

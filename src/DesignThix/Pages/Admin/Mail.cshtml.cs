@@ -24,6 +24,8 @@ public sealed class MailModel(Biz biz, MailQueue queue) : PageModelBase
         public string FromAddress { get; set; } = "";
 
         public string FromName { get; set; } = "DesignThix";
+
+        public string? PublicBase { get; set; }
     }
 
     [BindProperty]
@@ -37,9 +39,14 @@ public sealed class MailModel(Biz biz, MailQueue queue) : PageModelBase
     public void OnGet()
     {
         var s = SettingLogic.Get<MailSettings>(biz, SettingStore.Mail);
-        Input = new InputModel { Enabled = s.Enabled, Host = s.Host, Port = s.Port, Security = s.Security, UserName = s.UserName, FromAddress = s.FromAddress, FromName = s.FromName };
+        Input = new InputModel { Enabled = s.Enabled, Host = s.Host, Port = s.Port, Security = s.Security, UserName = s.UserName, FromAddress = s.FromAddress, FromName = s.FromName, PublicBase = s.PublicBase };
+        // what the administrator reaches the app by is the proposal for the address of the links in mails
+        CurrentBase = Services.PublicUrl.Base(biz.Config, HttpContext);
         Load(s);
     }
+
+    /// <summary>The address of this request, offered as the address of the links in mails.</summary>
+    public string CurrentBase { get; private set; } = "";
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -48,6 +55,17 @@ public sealed class MailModel(Biz biz, MailQueue queue) : PageModelBase
         if (Input.Enabled && (string.IsNullOrWhiteSpace(Input.Host) || !InviteLogic.IsEmail(Input.FromAddress)))
         {
             ModelState.AddModelError(string.Empty, "Zum Einschalten braucht es den Server und eine gültige Absenderadresse.");
+            CurrentBase = Services.PublicUrl.Base(biz.Config, HttpContext);
+            Load(current);
+            return Page();
+        }
+
+        // an empty field takes the address the administrator is using right now (they are the only person whose address counts); a typed one must be a plain web address
+        var publicBase = string.IsNullOrWhiteSpace(Input.PublicBase) ? Services.PublicUrl.Base(biz.Config, HttpContext) : Services.PublicUrl.Normalize(Input.PublicBase);
+        if (publicBase is null)
+        {
+            ModelState.AddModelError("Input.PublicBase", "Das ist keine Webadresse. Schreibe sie so: https://design.example.de");
+            CurrentBase = Services.PublicUrl.Base(biz.Config, HttpContext);
             Load(current);
             return Page();
         }
@@ -62,6 +80,7 @@ public sealed class MailModel(Biz biz, MailQueue queue) : PageModelBase
             PasswordProtected = SettingLogic.KeepOrProtect(biz, Input.Password, current.PasswordProtected),
             FromAddress = (Input.FromAddress ?? "").Trim(),
             FromName = string.IsNullOrWhiteSpace(Input.FromName) ? "DesignThix" : Input.FromName.Trim(),
+            PublicBase = publicBase,
         }, "Mail-Einstellungen geändert");
         Flash("Die Mail-Einstellungen sind gespeichert.");
         return RedirectToPage();

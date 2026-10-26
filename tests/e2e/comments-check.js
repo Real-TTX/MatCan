@@ -330,8 +330,8 @@ const shot = async (page, name) => {
   check('the server keeps the mention (id and name) with the comment', serverMention.mentions.length === 1 && serverMention.mentions[0].name === 'E2E Betrachter');
   // the bell of B in the app shell
   await B.goto(base + '/');
-  await B.waitForFunction(() => { const b = document.querySelector('[data-notify-badge]'); return b && !b.hidden && Number(b.textContent) >= 2; }, null, { timeout: 10000 });
-  check('the bell of B counts them', Number(await B.textContent('[data-notify-badge]')) >= 2);
+  await B.waitForFunction(() => { const b = document.querySelector('[data-notify-badge]'); return b && !b.hidden && parseInt(b.textContent, 10) >= 2; }, null, { timeout: 10000 });
+  check('the bell of B counts them', parseInt(await B.textContent('[data-notify-badge]'), 10) >= 2);
   await B.click('[data-notify-toggle]');
   await B.waitForSelector('.dt-notify:not([hidden]) .dt-notif[data-kind="mention"]');
   const bellText = (await B.locator('.dt-notify .dt-notif[data-kind="mention"]').first().textContent()).replace(/\s+/g, ' ');

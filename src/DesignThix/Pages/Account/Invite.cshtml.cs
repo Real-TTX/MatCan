@@ -27,6 +27,7 @@ public sealed class InviteModel(Biz biz, PublicRateLimiter limiter) : PageModelB
     public async Task<IActionResult> OnGetAsync(Guid token)
     {
         ViewData["Title"] = "Einladung";
+        Response.Headers.CacheControl = "no-store";
         Token = token;
         if (!limiter.TryTake("invite:" + biz.User.IpAddress, 30))
         {

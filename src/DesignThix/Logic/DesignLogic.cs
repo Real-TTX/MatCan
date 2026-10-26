@@ -604,6 +604,8 @@ public static class DesignLogic
             throw new BizException(result.Error ?? "Das Dokument ist ungültig.");
         }
 
+        // saves of one design take turns: the second of two at the same moment reads the new revision and gets the ordinary conflict (not a unique-index error)
+        await using var turn = await ItemLock.AcquireAsync(biz.Db, ItemKind.Design, id);
         var design = await biz.Db.Design.FirstOrDefaultAsync(d => d.Id == id) ?? throw new NotFoundException();
         if (design.Revision != revision)
         {
@@ -642,6 +644,7 @@ public static class DesignLogic
             throw new RevisionConflictException(current);
         }
 
+        await turn.CommitAsync();
         var oldest = design.Revision - KeptRevisions;
         if (oldest > 0)
         {

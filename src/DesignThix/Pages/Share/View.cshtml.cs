@@ -1,5 +1,6 @@
 using DesignThix.Data.Entities;
 using DesignThix.Logic;
+using DesignThix.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DesignThix.Pages.Share;
@@ -9,7 +10,7 @@ namespace DesignThix.Pages.Share;
 /// needs a person: not signed in goes to the sign-in and comes back here, signed in gets the access the link gives and lands on the item. A link that is revoked, reset, expired or whose item is gone shows a
 /// friendly "Dieser Link ist nicht mehr gültig" (status 404). Never indexed, never cached.
 /// </summary>
-public sealed class ViewModel(Biz biz) : PageModelBase
+public sealed class ViewModel(Biz biz, PublicRateLimiter limiter) : PageModelBase
 {
     [BindProperty(SupportsGet = true)]
     public string Token { get; set; } = "";
@@ -31,14 +32,23 @@ public sealed class ViewModel(Biz biz) : PageModelBase
     {
         Response.Headers["X-Robots-Tag"] = "noindex, nofollow";
         Response.Headers.CacheControl = "no-store";
+        // the same brake as the public endpoints (a request that finds nothing costs more): the page is the other way to try tokens
+        if (!limiter.TryTake(biz.User.IpAddress, PublicShareLogic.RequestsPerMinute))
+        {
+            Response.Headers.RetryAfter = "60";
+            return StatusCode(StatusCodes.Status429TooManyRequests);
+        }
+
         if (!Guid.TryParse(Token, out var token))
         {
+            limiter.Charge(biz.User.IpAddress, 4);
             return Gone();
         }
 
         var target = await ShareLogic.ResolveAsync(biz.Db, token, biz.Now);
         if (target is null)
         {
+            limiter.Charge(biz.User.IpAddress, 4);
             return Gone();
         }
 

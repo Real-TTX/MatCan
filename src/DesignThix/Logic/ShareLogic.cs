@@ -32,6 +32,9 @@ public static class ShareLogic
 {
     public const int MaxSearchResults = 8;
 
+    /// <summary>How often a person may search for people to share with per minute (the dialog asks once per pause in typing).</summary>
+    public const int SearchesPerMinute = 120;
+
     private static bool CanShareKind(ItemKind kind) => kind is ItemKind.Folder or ItemKind.Design or ItemKind.DataList or ItemKind.OutputJob;
 
     private static void RequireShareable(ItemKind kind)

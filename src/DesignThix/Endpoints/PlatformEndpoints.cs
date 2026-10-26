@@ -131,8 +131,16 @@ public static class PlatformEndpoints
         // ---------------------------------------------------------------------------------------- sharing
 
         // ?q= (at least two characters) -> [{ type: "user"|"team", id, name, email, color }]
-        app.MapGet("/api/share/search", async (string? q, Biz biz) => Results.Json((await ShareLogic.SearchAsync(biz, q)).Select(r => new { type = r.Type, id = r.Id, name = r.Name, email = r.Email, color = r.Color }), Web))
-            .RequireAuthorization("SignedIn");
+        // The search lists people by name and address, so it is the way to read the member list of the platform a few at a time (open registration lets anybody in): a brake per person.
+        app.MapGet("/api/share/search", async (string? q, Biz biz, Services.PublicRateLimiter limiter) =>
+        {
+            if (!limiter.TryTake("share-search:" + biz.User.UserId, ShareLogic.SearchesPerMinute))
+            {
+                return Results.Json(new { error = "Zu viele Suchanfragen. Bitte warte einen Moment." }, statusCode: StatusCodes.Status429TooManyRequests);
+            }
+
+            return Results.Json((await ShareLogic.SearchAsync(biz, q)).Select(r => new { type = r.Type, id = r.Id, name = r.Name, email = r.Email, color = r.Color }), Web);
+        }).RequireAuthorization("SignedIn");
 
         // a signed-in person opens a link: { token } -> { kind, id, name, audience, permission } or 404 when the link is dead
         app.MapPost("/api/share/open", (HttpContext http, IAntiforgery antiforgery, Biz biz) => Post<TokenBody>(http, antiforgery, async body =>
