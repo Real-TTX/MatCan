@@ -1,0 +1,28 @@
+{
+  "name": "Oktoberfest – Wiesn",
+  "category": "Einladungen",
+  "description": "Instagram-Post auf Himmelblau mit riesigem Lebkuchenherz: „Einladung zum Oktoberfest“ im Herz, darunter Datum, Zelt und Zusage.",
+  "family": "oktoberfest",
+  "familyName": "Oktoberfest",
+  "variant": "Wiesn",
+  "occasion": "Feste & Events",
+  "tags": ["Oktoberfest","Wiesn","Bayerisch","Tracht","Dirndl","Lederhose","Bier","Brezel","Einladung","Party","Prosit","Instagram","Post","Social Media","Lebkuchenherz","Himmelblau"],
+  "formatKey": "instagram-post",
+  "number": 877,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#2b86d6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rauten","x":0,"y":0,"w":1080,"h":140.967,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-rautenband"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Rauten unten","x":0,"y":940,"w":1080,"h":140.967,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-rautenband"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Herz","x":234.568,"y":110,"w":610.863,"h":640,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-lebkuchenherz-guss"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":340,"y":392,"w":400,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"EINLADUNG ZUM","fontFamily":"Josefin Sans","fontSize":15,"fontWeight":700,"italic":false,"color":"#fffdf6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel","x":350,"y":432,"w":380,"h":80,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Oktoberfest","fontFamily":"Abril Fatface","fontSize":30,"fontWeight":400,"italic":false,"color":"#fffdf6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":60,"y":760,"w":960,"h":64,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 25. September 2027 · ab 17 Uhr","fontFamily":"Nunito","fontSize":34,"fontWeight":800,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Ort","x":60,"y":828,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Festzelt Musterwiese · Musterweg 5","fontFamily":"Nunito","fontSize":28,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zusage","x":60,"y":890,"w":960,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Tracht erwünscht · Zusage bis 18. September","fontFamily":"Nunito","fontSize":22,"fontWeight":700,"italic":false,"color":"#ffe58a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

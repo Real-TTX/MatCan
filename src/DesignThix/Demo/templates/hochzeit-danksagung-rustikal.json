@@ -1,0 +1,32 @@
+{
+  "name": "Hochzeit Danksagung – Rustikal",
+  "category": "Karten",
+  "description": "Danksagungskarte als Postkarte A6 quer auf Kraftpapier: vorne ein Einmachglas mit Wiesenblumen und „DANKE“ in Amatic, hinten ein cremefarbenes Etikett für den persönlichen Gruß. Scheune, Landhaus, Gartenfest.",
+  "family": "hochzeit-danksagung",
+  "familyName": "Hochzeit: Danksagung",
+  "variant": "Rustikal",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Rustikal","Scheune","Landhaus","Kraftpapier","Holz","Lichterkette","Vintage","Brautpaar","Danksagung","Danke","Dankeskarte","Postkarte","Einmachglas"],
+  "formatKey": "postcard-a6-landscape",
+  "number": 694,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#d8bd93","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Einmachglas","x":14,"y":8,"w":56,"h":100.772,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-einmachglas"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Danke","x":70,"y":20,"w":80,"h":38,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"DANKE","fontFamily":"Amatic SC","fontSize":90,"fontWeight":700,"italic":false,"color":"#3b2a1a","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"shape","name":"Strich","x":90,"y":62,"w":40,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#3b2a1a","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Namen","x":75,"y":66,"w":70,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Caveat","fontSize":22,"fontWeight":700,"italic":false,"color":"#3b2a1a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Datum","x":80,"y":79,"w":60,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12.06.2027","fontFamily":"Lora","fontSize":7.5,"fontWeight":700,"italic":false,"color":"#9c3f2a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#d8bd93","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e6","type":"shape","name":"Etikett","x":10,"y":10,"w":128,"h":85,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#fbf4e4","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"shape","name":"Etikett Naht","x":12.5,"y":12.5,"w":123,"h":80,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c7a678","strokeWidth":0.6,"dash":"dashed","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Titel","x":24,"y":17,"w":100,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Von Herzen danke!","fontFamily":"Caveat","fontSize":24,"fontWeight":700,"italic":false,"color":"#9c3f2a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Text","x":21,"y":34,"w":106,"h":34,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ihr habt mit uns gefeiert, getanzt und gelacht. Danke für eure Geschenke, eure Wünsche und diesen wunderbaren Tag in der Scheune.","fontFamily":"Lora","fontSize":10,"fontWeight":400,"italic":false,"color":"#3b2a1a","align":"center","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Gruß","x":29,"y":74,"w":90,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eure Anna & Jonas","fontFamily":"Lora","fontSize":12,"fontWeight":400,"italic":true,"color":"#3b2a1a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

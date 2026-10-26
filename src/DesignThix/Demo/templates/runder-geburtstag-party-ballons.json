@@ -1,0 +1,34 @@
+{
+  "name": "Runder Geburtstag – Ballons",
+  "category": "Einladungen",
+  "description": "Bunter Instagram-Post zum runden Geburtstag: Luftballons, eine riesige weiße Zahl auf Verlauf von Pink zu Orange und die Angaben zur Party. Alter und Name sind Felder.",
+  "family": "runder-geburtstag-party",
+  "familyName": "Runder Geburtstag – Party",
+  "variant": "Ballons",
+  "occasion": "Geburtstag",
+  "tags": ["Runder Geburtstag","Geburtstag","Party","Einladung","30","40","50","Zahl","Feier","Jubiläum","Geburtstagsparty","Ballons","Instagram","Post","Social Media","Bunt","Pink"],
+  "formatKey": "instagram-post",
+  "number": 885,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Alter","label":"Alter","type":"text","sample":"40","decimals":null,"category":null,"required":false},
+      {"key":"Name","label":"Name","type":"text","sample":"Katrin","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":160,"stops":[{"offset":0,"color":"#ff4f8b"},{"offset":1,"color":"#ff9a3d"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Ballons","x":379.488,"y":40,"w":321.024,"h":440,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-ballons-fuenf-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Zahl","x":60,"y":380,"w":960,"h":330,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#7a1f4a","opacity":0.5,"blur":0,"x":8,"y":8},"text":"{{Alter}}","fontFamily":"Righteous","fontSize":210,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.05,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":80,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Name","x":60,"y":700,"w":960,"h":80,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}} lädt zur Party","fontFamily":"Poppins","fontSize":32,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Datum","x":60,"y":800,"w":960,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 13. November 2027 · ab 19 Uhr","fontFamily":"Poppins","fontSize":30,"fontWeight":700,"italic":false,"color":"#3a1428","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Ort","x":60,"y":868,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Poppins","fontSize":26,"fontWeight":500,"italic":false,"color":"#3a1428","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Zusage","x":60,"y":938,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 30. Oktober: 0170 1234567","fontFamily":"Poppins","fontSize":24,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Alter":"40","Name":"Katrin"},
+    {"Alter":"30","Name":"Maximilian"},
+    {"Alter":"50","Name":"Dr. Maximiliane Schneider"}
+  ]
+}

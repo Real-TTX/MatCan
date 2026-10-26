@@ -1,0 +1,37 @@
+{
+  "name": "Firmenfeier – Präsentation",
+  "category": "Einladungen",
+  "description": "Einladung als Bildschirmfolie (1920 x 1080 px) für Intranet, Bildschirm im Flur oder Bildschirmpräsentation: großer Titel, Farbband und die Angaben in drei Spalten.",
+  "family": "firmenfeier",
+  "familyName": "Firmenfeier",
+  "variant": "Präsentation",
+  "occasion": "Business",
+  "tags": ["Firmenfeier","Betriebsfeier","Firma","Team","Mitarbeiter","Einladung","Sommerfest","Jubiläum","Business","Event","Präsentation","Folie","Bildschirm","Intranet","16:9","Digital"],
+  "formatKey": "presentation",
+  "number": 889,
+  "document": {
+    "schema":2,"unit":"px","width":1920,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Firma","label":"Firma","type":"text","sample":"Muster GmbH","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":135,"stops":[{"offset":0,"color":"#0f7c8a"},{"offset":1,"color":"#14233b"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Band","x":100,"y":560,"w":160,"h":10,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#e8651a","stroke":null,"strokeWidth":1,"dash":"solid","radius":5,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"icon","name":"Sektglas","x":1520,"y":150,"w":220,"h":220,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"wine","color":"#ffffff","strokeWidth":1.2},
+        {"id":"e3","type":"text","name":"Kopf","x":100,"y":120,"w":1100,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Firma}} LÄDT EIN","fontFamily":"Montserrat","fontSize":30,"fontWeight":700,"italic":false,"color":"#c8f2f0","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Titel","x":100,"y":210,"w":1300,"h":320,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Unsere Firmenfeier","fontFamily":"Montserrat","fontSize":100,"fontWeight":800,"italic":false,"color":"#ffffff","align":"left","valign":"top","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Datum","x":100,"y":640,"w":560,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wann","fontFamily":"Montserrat","fontSize":26,"fontWeight":700,"italic":false,"color":"#9fd9d6","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum 2","x":100,"y":700,"w":560,"h":140,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 2. Juli 2027\nab 18 Uhr","fontFamily":"Montserrat","fontSize":30,"fontWeight":600,"italic":false,"color":"#ffffff","align":"left","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Ort","x":720,"y":640,"w":560,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wo","fontFamily":"Montserrat","fontSize":26,"fontWeight":700,"italic":false,"color":"#9fd9d6","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Ort 2","x":720,"y":700,"w":560,"h":140,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eventlocation Musterhof\nMusterweg 5","fontFamily":"Montserrat","fontSize":30,"fontWeight":600,"italic":false,"color":"#ffffff","align":"left","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zusage","x":1340,"y":640,"w":480,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage","fontFamily":"Montserrat","fontSize":26,"fontWeight":700,"italic":false,"color":"#9fd9d6","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Zusage 2","x":1340,"y":700,"w":480,"h":140,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"bis 18. Juni\nfeier@muster.de","fontFamily":"Montserrat","fontSize":30,"fontWeight":600,"italic":false,"color":"#ffffff","align":"left","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Firma":"Muster GmbH"},
+    {"Firma":"Schneider & Söhne Metallbau"},
+    {"Firma":"Atelier Neun"}
+  ]
+}

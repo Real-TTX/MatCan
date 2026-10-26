@@ -1,0 +1,36 @@
+{
+  "name": "Junggesellenabschied – Ihn",
+  "category": "Einladungen",
+  "description": "Dunkle Einladung (A6 hoch) zum Junggesellenabschied des Bräutigams: Fliege, Anton-Schrift in Weiß und Rot, Name des Bräutigams als Feld.",
+  "family": "junggesellenabschied",
+  "familyName": "Junggesellenabschied",
+  "variant": "Ihn",
+  "occasion": "Feste & Events",
+  "tags": ["Junggesellenabschied","JGA","Junggesellinnenabschied","Hochzeit","Einladung","Party","Brautparty","Feier","Polterabend","Ihn","Bräutigam","Herren","Fliege","Männer","Dunkel"],
+  "formatKey": "a6-portrait",
+  "number": 858,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Lena","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#14141b","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Fliege","x":17,"y":14.127,"w":71,"h":33.747,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-fliege"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Band","x":0,"y":58,"w":105,"h":3,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#b3202c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Band 2","x":0,"y":63,"w":105,"h":1,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#b3202c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Kopf","x":8,"y":70,"w":89,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"DIE LETZTEN STUNDEN IN FREIHEIT VON","fontFamily":"Oswald","fontSize":8,"fontWeight":500,"italic":false,"color":"#b3202c","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.15,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Name","x":6,"y":77,"w":93,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Anton","fontSize":40,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Titel","x":8,"y":99,"w":89,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"JUNGGESELLENABSCHIED","fontFamily":"Oswald","fontSize":15,"fontWeight":600,"italic":false,"color":"#b3202c","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":8,"y":114,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 8. Mai 2027","fontFamily":"Oswald","fontSize":11,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.05,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zeit","x":8,"y":122,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Treffpunkt 13 Uhr · Hauptbahnhof","fontFamily":"Oswald","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#bdbdc4","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.05,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zusage","x":8,"y":130,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 20. April · Bargeld nicht vergessen","fontFamily":"Oswald","fontSize":8.5,"fontWeight":400,"italic":false,"color":"#b3202c","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.05,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Lena"},
+    {"Name":"Maximiliane"},
+    {"Name":"Tim"}
+  ]
+}

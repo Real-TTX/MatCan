@@ -1,0 +1,42 @@
+{
+  "name": "Hochzeit Tischkarte – Silberne Hochzeit",
+  "category": "Karten",
+  "description": "Tischkarte zur Silbernen Hochzeit als Zeltkarte (gefaltet 90 × 50 mm): ein silbernes Band links, der Name des Gastes in großer Antiqua, die Tischnummer in Kapitälchen. Innen die silberne 25. Für Serien mit Gästelisten.",
+  "family": "hochzeit-tischkarte",
+  "familyName": "Hochzeit: Tischkarte",
+  "variant": "Silberne Hochzeit",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Jubiläum","Hochzeitstag","Ehejubiläum","groß gedruckt","gut lesbar","Familienfeier","Jubelpaar","Silberne Hochzeit","25 Jahre","Silber","Silberhochzeit","silbern","Tischkarte","Platzkarte","Namenskarte","Zeltkarte","Gäste","Serie"],
+  "formatKey": "table-card",
+  "number": 743,
+  "document": {
+    "schema":2,"unit":"mm","width":90,"height":100,"dpi":300,"locale":"de-DE","fold":"horizontal",
+    "fields": [
+      {"key":"Name","label":"Name des Gastes","type":"text","sample":"Marie Hoffmann","decimals":null,"category":null,"required":false},
+      {"key":"Tisch","label":"Tisch","type":"text","sample":"4","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"Außen (Rückseite oben | Vorderseite unten)","background":{"color":"#f3f5f7","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Band","x":80,"y":0,"w":10,"h":50,"rotation":180,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#cfd5db","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Name","x":6,"y":22,"w":64,"h":16,"rotation":180,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Playfair Display","fontSize":21,"fontWeight":400,"italic":false,"color":"#2f3a45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"shape","name":"Strich","x":28,"y":19,"w":20,"h":0,"rotation":180,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#7d8791","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Tisch","x":8,"y":10,"w":60,"h":6,"rotation":180,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"TISCH {{Tisch}}","fontFamily":"Josefin Sans","fontSize":8.5,"fontWeight":600,"italic":false,"color":"#7d8791","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Band","x":0,"y":50,"w":10,"h":50,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#cfd5db","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Name","x":20,"y":62,"w":64,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Playfair Display","fontSize":21,"fontWeight":400,"italic":false,"color":"#2f3a45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Strich","x":42,"y":81,"w":20,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#7d8791","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Tisch","x":22,"y":84,"w":60,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"TISCH {{Tisch}}","fontFamily":"Josefin Sans","fontSize":8.5,"fontWeight":600,"italic":false,"color":"#7d8791","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innen","background":{"color":"#e4e8ec","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e9","type":"text","name":"Zahl","x":20,"y":55,"w":50,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"25","fontFamily":"Playfair Display","fontSize":56,"fontWeight":400,"italic":false,"color":"#7d8791","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":28,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Namen","x":7,"y":80,"w":76,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Playfair Display","fontSize":18,"fontWeight":400,"italic":true,"color":"#2f3a45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Datum","x":10,"y":91,"w":70,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12.06.2027","fontFamily":"Josefin Sans","fontSize":7.5,"fontWeight":600,"italic":false,"color":"#7d8791","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Marie Hoffmann","Tisch":"4"},
+    {"Name":"Familie Meyer","Tisch":"1"},
+    {"Name":"Maximiliane Schneider-Hohenstein","Tisch":"12"},
+    {"Name":"Jo","Tisch":"7"}
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Save the Date – Standesamt schlicht",
+  "category": "Karten",
+  "description": "Schlichte Save-the-Date-Postkarte A6 hoch für die standesamtliche Trauung: zwei kleine goldene Ringe, die Namen in kursiver Antiqua und Datum samt Standesamt in feinen Kapitälchen. Rückseite mit kurzem Hinweis auf die Einladung im kleinen Kreis.",
+  "family": "hochzeit-save-the-date",
+  "familyName": "Hochzeit: Save the Date",
+  "variant": "Standesamt schlicht",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Standesamt","standesamtlich","schlicht","zurückhaltend","klein","Trauung","Ringe","Brautpaar","Save the Date","Termin","Postkarte"],
+  "formatKey": "postcard-a6-portrait",
+  "number": 720,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Ringe","x":38,"y":22,"w":29,"h":22.101,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-trauringe-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Kopf","x":12.5,"y":50,"w":80,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WIR HEIRATEN","fontFamily":"Montserrat","fontSize":7.5,"fontWeight":500,"italic":false,"color":"#7f9186","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Namen","x":7.5,"y":60,"w":90,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Lora","fontSize":28,"fontWeight":400,"italic":true,"color":"#2b2b2b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Linie","x":42,"y":84,"w":21,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a98334","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Datum","x":7.5,"y":90,"w":90,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12. Juni 2027","fontFamily":"Lora","fontSize":14,"fontWeight":400,"italic":false,"color":"#2b2b2b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Ort","x":7.5,"y":102,"w":90,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"STANDESAMT MUSTERSTADT\nRATHAUSPLATZ 1","fontFamily":"Montserrat","fontSize":7,"fontWeight":500,"italic":false,"color":"#2b2b2b","align":"center","valign":"top","lineHeight":1.6,"letterSpacing":0.3,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#f1f3f0","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"text","name":"Text","x":17.5,"y":54,"w":70,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir würden uns freuen, diesen Tag im kleinen Kreis mit euch zu verbringen. Die Einladung mit allen Einzelheiten folgt in Kürze.","fontFamily":"Lora","fontSize":11,"fontWeight":400,"italic":true,"color":"#2b2b2b","align":"center","valign":"top","lineHeight":1.6,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"shape","name":"Linie","x":42,"y":104,"w":21,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a98334","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"}
+      ]}
+    ]
+  }
+}

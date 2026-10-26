@@ -1,0 +1,45 @@
+{
+  "name": "Firmenfeier – Farbblock",
+  "category": "Einladungen",
+  "description": "Klare Einladung (A5 quer) mit türkisem Farbblock links und Angaben mit Symbolen rechts; ruhig, modern und auf jede Firma anpassbar. Die Firma ist ein Feld.",
+  "family": "firmenfeier",
+  "familyName": "Firmenfeier",
+  "variant": "Farbblock",
+  "occasion": "Business",
+  "tags": ["Firmenfeier","Betriebsfeier","Firma","Team","Mitarbeiter","Einladung","Sommerfest","Jubiläum","Business","Event","Farbblock","Modern","Türkis","A5 quer","Sauber","Symbole"],
+  "formatKey": "a5-landscape",
+  "number": 888,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Firma","label":"Firma","type":"text","sample":"Muster GmbH","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Block","x":0,"y":0,"w":84,"h":148,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#0f7c8a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"icon","name":"Sektglas","x":12,"y":14,"w":18,"h":18,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"wine","color":"#ffffff","strokeWidth":1.5},
+        {"id":"e3","type":"text","name":"Kopf","x":12,"y":40,"w":62,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Firma}}","fontFamily":"Montserrat","fontSize":10,"fontWeight":700,"italic":false,"color":"#c8f2f0","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.05,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Titel","x":12,"y":50,"w":66,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Unsere Firmenfeier","fontFamily":"Montserrat","fontSize":26,"fontWeight":800,"italic":false,"color":"#ffffff","align":"left","valign":"top","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Sub","x":12,"y":112,"w":66,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danke für ein starkes Jahr – lasst uns gemeinsam feiern.","fontFamily":"Montserrat","fontSize":9.5,"fontWeight":500,"italic":false,"color":"#ffffff","align":"left","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Datum Chip","x":100,"y":28,"w":11,"h":11,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#0f7c8a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"icon","name":"Datum Symbol","x":102.42,"y":30.42,"w":6.16,"h":6.16,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"calendar-days","color":"#ffffff","strokeWidth":2},
+        {"id":"e8","type":"text","name":"Datum","x":113.5,"y":27.5,"w":86.5,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 2. Juli 2027","fontFamily":"Montserrat","fontSize":12,"fontWeight":700,"italic":false,"color":"#14233b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"shape","name":"Zeit Chip","x":100,"y":50,"w":11,"h":11,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#0f7c8a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e10","type":"icon","name":"Zeit Symbol","x":102.42,"y":52.42,"w":6.16,"h":6.16,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"clock","color":"#ffffff","strokeWidth":2},
+        {"id":"e11","type":"text","name":"Zeit","x":113.5,"y":49.5,"w":86.5,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 18 Uhr · Einlass 17:30 Uhr","fontFamily":"Montserrat","fontSize":12,"fontWeight":600,"italic":false,"color":"#14233b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"shape","name":"Ort Chip","x":100,"y":72,"w":11,"h":11,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#0f7c8a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e13","type":"icon","name":"Ort Symbol","x":102.42,"y":74.42,"w":6.16,"h":6.16,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"map-pin","color":"#ffffff","strokeWidth":2},
+        {"id":"e14","type":"text","name":"Ort","x":113.5,"y":71.5,"w":86.5,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eventlocation Musterhof, Musterweg 5","fontFamily":"Montserrat","fontSize":11.5,"fontWeight":600,"italic":false,"color":"#14233b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e15","type":"shape","name":"Zusage Chip","x":100,"y":94,"w":11,"h":11,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#e8651a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e16","type":"icon","name":"Zusage Symbol","x":102.42,"y":96.42,"w":6.16,"h":6.16,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"mail","color":"#ffffff","strokeWidth":2},
+        {"id":"e17","type":"text","name":"Zusage","x":113.5,"y":93.5,"w":86.5,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 18. Juni: feier@muster.de","fontFamily":"Montserrat","fontSize":11.5,"fontWeight":600,"italic":false,"color":"#14233b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e18","type":"text","name":"Hinweis","x":100,"y":122,"w":100,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Familie und Partner sind herzlich willkommen.","fontFamily":"Montserrat","fontSize":9.5,"fontWeight":500,"italic":true,"color":"#5a6a7a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Firma":"Muster GmbH"},
+    {"Firma":"Schneider & Söhne Metallbau"},
+    {"Firma":"Atelier Neun"}
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Weinprobe – Wein & Käse",
+  "category": "Einladungen",
+  "description": "Instagram-Post auf Tiefrot: Weinglas und Flasche links und rechts, in der Mitte „Wein & Käse“ und die Angaben zur Verkostung.",
+  "family": "weinprobe",
+  "familyName": "Weinprobe",
+  "variant": "Wein & Käse",
+  "occasion": "Feste & Events",
+  "tags": ["Wein","Weinprobe","Weinabend","Verkostung","Einladung","Winzer","Rotwein","Weißwein","Genuss","Feier","Instagram","Post","Social Media","Wein und Käse","Dunkel"],
+  "formatKey": "instagram-post",
+  "number": 853,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":160,"stops":[{"offset":0,"color":"#3a0f1c"},{"offset":1,"color":"#17060c"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Glas","x":70,"y":303.787,"w":220,"h":412.427,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-weinglas-rot"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Flasche","x":800,"y":135.806,"w":220,"h":688.387,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-weinflasche"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Trenner","x":340,"y":0,"w":400,"h":40,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-deco-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":330,"y":120,"w":420,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"EINLADUNG ZUR","fontFamily":"Cinzel","fontSize":20,"fontWeight":400,"italic":false,"color":"#d4af6a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel","x":320,"y":175,"w":440,"h":250,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wein & Käse","fontFamily":"Playfair Display","fontSize":60,"fontWeight":700,"italic":true,"color":"#f3e8d0","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":320,"y":510,"w":440,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 9. Oktober 2027","fontFamily":"Cinzel","fontSize":24,"fontWeight":400,"italic":false,"color":"#f3e8d0","align":"center","valign":"top","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Zeit","x":320,"y":610,"w":440,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Beginn 18 Uhr","fontFamily":"Cormorant Garamond","fontSize":34,"fontWeight":600,"italic":false,"color":"#d4af6a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Ort","x":320,"y":680,"w":440,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Weingut Musterhof","fontFamily":"Cormorant Garamond","fontSize":30,"fontWeight":600,"italic":false,"color":"#f3e8d0","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zusage","x":320,"y":800,"w":440,"h":80,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 25. September","fontFamily":"Cormorant Garamond","fontSize":28,"fontWeight":600,"italic":true,"color":"#d4af6a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

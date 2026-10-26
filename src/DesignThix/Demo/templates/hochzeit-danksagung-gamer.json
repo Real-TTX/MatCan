@@ -1,0 +1,33 @@
+{
+  "name": "Hochzeit Danksagung – Gamer",
+  "category": "Karten",
+  "description": "Danksagungskarte als Postkarte A6 quer im Retro-Spielstil: Pixelrahmen, „Game completed“ mit Pixelstern, hinten „Thanks for playing“ mit Lebensleiste und Platz für einen persönlichen Gruß. Ohne Marken und Spielfiguren.",
+  "family": "hochzeit-danksagung",
+  "familyName": "Hochzeit: Danksagung",
+  "variant": "Gamer",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Gamer","Nerd","Zocker","Pixel","Retro","8-Bit","Controller","Player 1","Brautpaar","Danksagung","Danke","Dankeskarte","Postkarte","Game Over"],
+  "formatKey": "postcard-a6-landscape",
+  "number": 709,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#16143a","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Pixelrahmen","x":4.007,"y":3,"w":139.986,"h":99,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelrahmen-quer-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Stern","x":64,"y":14,"w":20,"h":20,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelstern"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Game","x":19,"y":38,"w":110,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GAME COMPLETED","fontFamily":"Righteous","fontSize":28,"fontWeight":400,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Danke","x":19,"y":58,"w":110,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"DANKE FÜRS MITSPIELEN!","fontFamily":"IBM Plex Mono","fontSize":11,"fontWeight":700,"italic":false,"color":"#f4f1ff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Namen","x":24,"y":72,"w":100,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ANNA + JONAS","fontFamily":"IBM Plex Mono","fontSize":9,"fontWeight":700,"italic":false,"color":"#ff5d8f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"image","name":"Leben","x":52,"y":82,"w":44,"h":8.677,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelherzen-leiste"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#201c52","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"text","name":"Titel","x":19,"y":14,"w":110,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"THANKS FOR PLAYING","fontFamily":"Righteous","fontSize":22,"fontWeight":400,"italic":false,"color":"#3ad4c0","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Text","x":18,"y":32,"w":112,"h":36,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ihr habt mit uns den Hochzeits-Level gemeistert: gefeiert, getanzt und jeden Bonus eingesammelt. Danke für eure Geschenke und diesen unvergesslichen Tag.","fontFamily":"IBM Plex Mono","fontSize":10,"fontWeight":400,"italic":false,"color":"#f4f1ff","align":"center","valign":"top","lineHeight":1.6,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Gruß","x":24,"y":76,"w":100,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Player 1 + Player 2","fontFamily":"IBM Plex Mono","fontSize":11,"fontWeight":700,"italic":false,"color":"#ff5d8f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"image","name":"Münze","x":14,"y":82,"w":12,"h":12,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelmuenze"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e11","type":"image","name":"Münze 2","x":122,"y":82,"w":12,"h":12,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelmuenze"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]}
+    ]
+  }
+}

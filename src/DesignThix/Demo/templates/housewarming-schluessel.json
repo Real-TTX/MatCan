@@ -1,0 +1,36 @@
+{
+  "name": "Housewarming – Schlüssel",
+  "category": "Einladungen",
+  "description": "Instagram-Post auf Dunkelblau: goldener Schlüssel, „Wir sind umgezogen!“ und die neue Adresse zum Einweihen. Der Name der Gastgeber ist ein Feld.",
+  "family": "housewarming",
+  "familyName": "Housewarming",
+  "variant": "Schlüssel",
+  "occasion": "Feste & Events",
+  "tags": ["Housewarming","Einweihungsparty","Einweihung","Umzug","Neues Zuhause","Einladung","Party","Wohnung","Haus","Feier","Schlüssel","Instagram","Post","Social Media","Dunkelblau","Gold"],
+  "formatKey": "instagram-post",
+  "number": 862,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Familie Muster","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#223a5e"},{"offset":1,"color":"#14233b"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Schlüssel","x":130,"y":110,"w":244.809,"h":700,"rotation":20,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-schluessel-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Funkeln 1","x":330,"y":130,"w":110,"h":103.161,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-funkeln-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Funkeln 2","x":280,"y":740,"w":80,"h":75.026,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-funkeln-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":480,"y":150,"w":560,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"EINWEIHUNGSPARTY","fontFamily":"Josefin Sans","fontSize":22,"fontWeight":600,"italic":false,"color":"#e3c479","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.35,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel","x":480,"y":210,"w":560,"h":300,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir sind umgezogen!","fontFamily":"Playfair Display","fontSize":56,"fontWeight":700,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":28,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Name","x":480,"y":540,"w":560,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Josefin Sans","fontSize":30,"fontWeight":600,"italic":false,"color":"#e3c479","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":480,"y":660,"w":560,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 24. April 2027","fontFamily":"Josefin Sans","fontSize":28,"fontWeight":700,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zeit","x":480,"y":730,"w":560,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 15 Uhr · Musterweg 5","fontFamily":"Josefin Sans","fontSize":26,"fontWeight":400,"italic":false,"color":"#ffffff","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zusage","x":480,"y":800,"w":560,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 17. April","fontFamily":"Josefin Sans","fontSize":26,"fontWeight":600,"italic":false,"color":"#e3c479","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Familie Muster"},
+    {"Name":"Anna & Jonas"},
+    {"Name":"Maximiliane Schneider-Hohenstein"}
+  ]
+}

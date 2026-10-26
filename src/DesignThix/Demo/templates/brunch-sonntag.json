@@ -1,0 +1,28 @@
+{
+  "name": "Brunch – Sonntag",
+  "category": "Einladungen",
+  "description": "Instagram-Post in Sonnengelb: „Sonntagsbrunch“ in Schreibschrift, Croissant und Kaffeetasse, darunter Zeit und Ort des Buffets.",
+  "family": "brunch",
+  "familyName": "Brunch",
+  "variant": "Sonntag",
+  "occasion": "Feste & Events",
+  "tags": ["Brunch","Frühstück","Sonntagsbrunch","Einladung","Buffet","Croissant","Kaffee","Feier","Genuss","Morgen","Sonntag","Instagram","Post","Social Media","Gelb","Sonnig"],
+  "formatKey": "instagram-post",
+  "number": 870,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#ffe27a"},{"offset":1,"color":"#ffc94d"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Kreis","x":220,"y":130,"w":640,"h":640,"rotation":0,"opacity":0.8,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#fff3b8","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"image","name":"Croissant","x":300,"y":214,"w":480,"h":292,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-croissant"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Tasse","x":640,"y":343.282,"w":260,"h":253.437,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-kaffeetasse-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":60,"y":50,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"EINLADUNG ZUM","fontFamily":"Josefin Sans","fontSize":24,"fontWeight":700,"italic":false,"color":"#7a4a1a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel","x":60,"y":590,"w":960,"h":170,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Sonntagsbrunch","fontFamily":"Pacifico","fontSize":80,"fontWeight":400,"italic":false,"color":"#7a2a1a","align":"center","valign":"middle","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":36,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":60,"y":780,"w":960,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Sonntag, 18. April 2027 · ab 11 Uhr","fontFamily":"Josefin Sans","fontSize":32,"fontWeight":700,"italic":false,"color":"#3a2410","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Ort","x":60,"y":850,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Josefin Sans","fontSize":28,"fontWeight":500,"italic":false,"color":"#3a2410","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zusage","x":60,"y":930,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 11. April · Buffet ohne Ende","fontFamily":"Josefin Sans","fontSize":26,"fontWeight":700,"italic":false,"color":"#7a2a1a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

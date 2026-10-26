@@ -1,0 +1,31 @@
+{
+  "name": "Hochzeit Danksagung – Tropisch",
+  "category": "Karten",
+  "description": "Danksagungskarte als Postkarte A6 quer für eine Sommerhochzeit: vorne „Danke“ in Pacifico mit Hibiskus und Palmenblatt, hinten ein Gruß auf Rosa mit Flamingo. Bunt und sommerlich.",
+  "family": "hochzeit-danksagung",
+  "familyName": "Hochzeit: Danksagung",
+  "variant": "Tropisch",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Tropisch","Sommer","Palme","Hibiskus","Flamingo","Ananas","Hawaii","Dschungel","Brautpaar","Danksagung","Danke","Dankeskarte","Postkarte"],
+  "formatKey": "postcard-a6-landscape",
+  "number": 737,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#1f6b45","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Palmenblatt","x":4,"y":4,"w":60,"h":43.222,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-palmenblatt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Hibiskus","x":12,"y":58,"w":34,"h":33.487,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-hibiskus"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Danke","x":63,"y":24,"w":74,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danke!","fontFamily":"Pacifico","fontSize":48,"fontWeight":400,"italic":false,"color":"#ffc933","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Namen","x":65,"y":56,"w":70,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Pacifico","fontSize":18,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Datum","x":70,"y":70,"w":60,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12.06.2027","fontFamily":"Josefin Sans","fontSize":7,"fontWeight":700,"italic":false,"color":"#ffe3e8","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#ffe3e8","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e6","type":"image","name":"Flamingo","x":108,"y":12,"w":28,"h":59.586,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-flamingo"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e7","type":"text","name":"Titel","x":13,"y":16,"w":90,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ihr wart spitze!","fontFamily":"Pacifico","fontSize":22,"fontWeight":400,"italic":false,"color":"#ff5d7a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Text","x":14,"y":36,"w":88,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danke, dass ihr mit uns gefeiert, getanzt und gelacht habt. Eure Geschenke und Wünsche haben uns riesig gefreut. Wir denken noch lange an diesen Sommertag.","fontFamily":"Nunito","fontSize":10.5,"fontWeight":600,"italic":false,"color":"#1d3b2c","align":"center","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Gruß","x":18,"y":82,"w":80,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eure Anna & Jonas","fontFamily":"Pacifico","fontSize":16,"fontWeight":400,"italic":false,"color":"#1f6b45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

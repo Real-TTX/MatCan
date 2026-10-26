@@ -1,0 +1,33 @@
+{
+  "name": "Save the Date – Tropisch",
+  "category": "Karten",
+  "description": "Save-the-Date-Postkarte A6 quer für eine Sommerhochzeit: Palmenblatt und Hibiskus in Dschungelgrün und Pink, Namen in Pacifico. Die Rückseite in Rosa mit Flamingo und Ananas kündigt die Party an.",
+  "family": "hochzeit-save-the-date",
+  "familyName": "Hochzeit: Save the Date",
+  "variant": "Tropisch",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Tropisch","Sommer","Palme","Hibiskus","Flamingo","Ananas","Hawaii","Dschungel","Brautpaar","Save the Date","Termin","Postkarte"],
+  "formatKey": "postcard-a6-landscape",
+  "number": 733,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#fffaf0","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Palmenblatt","x":78,"y":4,"w":64,"h":46.104,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-palmenblatt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Hibiskus","x":108,"y":58,"w":34,"h":33.487,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-hibiskus"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Save the Date","x":8,"y":16,"w":76,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SAVE THE DATE","fontFamily":"Josefin Sans","fontSize":7.5,"fontWeight":700,"italic":false,"color":"#ff5d7a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Namen","x":6,"y":26,"w":80,"h":34,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna\n& Jonas","fontFamily":"Pacifico","fontSize":34,"fontWeight":400,"italic":false,"color":"#1f6b45","align":"center","valign":"top","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Datum","x":8,"y":66,"w":76,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12. Juni 2027","fontFamily":"Nunito","fontSize":15,"fontWeight":800,"italic":false,"color":"#1f6b45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Ort","x":8,"y":77,"w":76,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GUT BIRKENHOF","fontFamily":"Josefin Sans","fontSize":7,"fontWeight":600,"italic":false,"color":"#1f6b45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#ffe3e8","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"image","name":"Flamingo","x":12,"y":12,"w":34,"h":72.355,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-flamingo"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e8","type":"image","name":"Ananas","x":120,"y":40,"w":20,"h":37.464,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-ananas"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e9","type":"text","name":"Titel","x":51,"y":20,"w":70,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir heiraten!","fontFamily":"Pacifico","fontSize":26,"fontWeight":400,"italic":false,"color":"#ff5d7a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Text","x":53,"y":40,"w":66,"h":38,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Hawaiihemd raus, Sonnencreme rein: Wir feiern unsere Hochzeit mit Palmen, Cocktails und guter Laune. Die Einladung folgt.","fontFamily":"Nunito","fontSize":10,"fontWeight":600,"italic":false,"color":"#1d3b2c","align":"center","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Namen","x":56,"y":84,"w":60,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ANNA & JONAS","fontFamily":"Josefin Sans","fontSize":8,"fontWeight":700,"italic":false,"color":"#1f6b45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

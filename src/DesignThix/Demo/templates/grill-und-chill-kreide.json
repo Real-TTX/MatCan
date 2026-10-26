@@ -1,0 +1,27 @@
+{
+  "name": "Grill & Chill – Kreide",
+  "category": "Einladungen",
+  "description": "Einladung (A6 hoch) auf Tafelschwarz: Kugelgrill mit Würstchen, orange Flamme und Schrift wie mit Kreide geschrieben.",
+  "family": "grill-und-chill",
+  "familyName": "Grill & Chill",
+  "variant": "Kreide",
+  "occasion": "Feste & Events",
+  "tags": ["Grillen","Grillparty","Grill","Chillen","Barbecue","BBQ","Einladung","Sommer","Würstchen","Draußen","Kreide","Tafel","Schwarz","Orange","Kugelgrill"],
+  "formatKey": "a6-portrait",
+  "number": 890,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#202225","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen","x":4,"y":4,"w":97,"h":140,"rotation":0,"opacity":0.35,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#ffffff","strokeWidth":0.8,"dash":"solid","radius":2,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"image","name":"Grill","x":24.574,"y":12,"w":55.852,"h":58,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-grill"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Titel","x":8,"y":74,"w":89,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GRILL & CHILL","fontFamily":"Permanent Marker","fontSize":26,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Sub","x":8,"y":93,"w":89,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Würstchen, Salat und kühle Getränke","fontFamily":"Caveat","fontSize":16,"fontWeight":600,"italic":false,"color":"#ffb14a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Datum","x":8,"y":106,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 31. Juli 2027 · ab 17 Uhr","fontFamily":"Caveat","fontSize":17,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Ort","x":8,"y":114,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Garten Familie Muster · Musterweg 5","fontFamily":"Caveat","fontSize":15,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Zusage","x":8,"y":124,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 24. Juli · Hunger mitbringen!","fontFamily":"Caveat","fontSize":15,"fontWeight":600,"italic":false,"color":"#ffb14a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Flyer DIN lang – Party & Club-Nacht Vertikal",
+  "category": "Flyer",
+  "description": "DIN-lang-Flyer mit senkrechtem Titel auf einer Farbfläche, daneben Motiv, Datumsplakette, Uhrzeit, Ort, Preis und QR-Code. Thema: Party & Club-Nacht; Texte, Datum (2027) und QR-Code ersetzen.",
+  "family": "flyer-clubnacht",
+  "familyName": "Flyer Party & Club-Nacht",
+  "variant": "Vertikal",
+  "occasion": "Feste & Events",
+  "tags": ["Flyer","Veranstaltung","Einladung","Party","Club","Clubnacht","Disco","DJ","Tanzen","Nachtleben","Feiern"],
+  "formatKey": "din-lang-portrait",
+  "number": 954,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#15171c","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Seitenfläche","x":0,"y":0,"w":42,"h":210,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffc400","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Linie","x":42,"y":0,"w":1.6,"h":210,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ff5a36","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Titel","x":-73,"y":89.5,"w":188,"h":31,"rotation":-90,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Club-Nacht","fontFamily":"Righteous","fontSize":70,"fontWeight":400,"italic":false,"color":"#14171f","align":"center","valign":"middle","lineHeight":1.14,"letterSpacing":0,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":42,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Anlass","x":49,"y":10,"w":42,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Jugendzentrum Musterstadt","fontFamily":"Inter","fontSize":7,"fontWeight":800,"italic":false,"color":"#ffc400","align":"left","valign":"top","lineHeight":1.3,"letterSpacing":0.12,"uppercase":true,"wrap":true,"fit":"none","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Kreis hinter Motiv","x":49,"y":26,"w":42,"h":42,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ff5a36","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"image","name":"Motiv","x":55.017,"y":29,"w":29.967,"h":36,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-discokugel"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e7","type":"group","name":"Datum Plakette","x":55,"y":72,"w":30,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"children":[
+          {"id":"e8","type":"shape","name":"Datum Plakette Kreis","x":55,"y":72,"w":30,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+          {"id":"e9","type":"text","name":"Datum Plakette Tag","x":58,"y":76.8,"w":24,"h":13.8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"30","fontFamily":"Righteous","fontSize":34,"fontWeight":400,"italic":false,"color":"#14171f","align":"center","valign":"middle","lineHeight":1.05,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+          {"id":"e10","type":"text","name":"Datum Plakette Monat","x":58,"y":90,"w":24,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"OKT","fontFamily":"Inter","fontSize":11.338582677165356,"fontWeight":800,"italic":false,"color":"#14171f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.14,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+        ]},
+        {"id":"e11","type":"text","name":"Zeit","x":49,"y":108,"w":42,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"22:00 Uhr","fontFamily":"Inter","fontSize":10,"fontWeight":800,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Ort","x":49,"y":116,"w":42,"h":17,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Jugendzentrum","fontFamily":"Inter","fontSize":9,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Preis","x":49,"y":132,"w":42,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eintritt 8 €","fontFamily":"Inter","fontSize":9,"fontWeight":800,"italic":false,"color":"#ffc400","align":"center","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"qr","name":"QR-Code","x":59,"y":180,"w":22,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"value":"https://www.beispiel.de/clubnacht","color":"#111111","background":"#ffffff","ecc":"M","quiet":true}
+      ]}
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "Spieleabend – Würfel",
+  "category": "Einladungen",
+  "description": "Bunte Einladung (A6 hoch) zum Spieleabend: zwei Würfel, runde Schrift und Konfetti auf warmem Papierton; mit allen Angaben zum Mitbringen.",
+  "family": "spieleabend",
+  "familyName": "Spieleabend",
+  "variant": "Würfel",
+  "occasion": "Feste & Events",
+  "tags": ["Spieleabend","Spiele","Brettspiele","Kartenspiele","Einladung","Gesellschaftsspiele","Würfel","Freunde","Feier","Spaß","Bunt","Konfetti","Fröhlich"],
+  "formatKey": "a6-portrait",
+  "number": 854,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fff6e0","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Würfel","x":19.877,"y":12,"w":65.247,"h":56,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-wuerfel"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Titel","x":8,"y":72,"w":89,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Spieleabend","fontFamily":"Fredoka","fontSize":31,"fontWeight":700,"italic":false,"color":"#d8283c","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Sub","x":8,"y":90,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Brettspiele · Karten · Knabberzeug","fontFamily":"Fredoka","fontSize":11,"fontWeight":500,"italic":false,"color":"#2358c9","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Datum Chip","x":14,"y":104,"w":8,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#d8283c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"icon","name":"Datum Symbol","x":15.76,"y":105.76,"w":4.48,"h":4.48,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"calendar-days","color":"#ffffff","strokeWidth":2},
+        {"id":"e6","type":"text","name":"Datum","x":24.5,"y":103.5,"w":67.5,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 15. Januar 2027 · 19 Uhr","fontFamily":"Fredoka","fontSize":10,"fontWeight":500,"italic":false,"color":"#1d1a3a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Ort Chip","x":14,"y":114,"w":8,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#2358c9","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"icon","name":"Ort Symbol","x":15.76,"y":115.76,"w":4.48,"h":4.48,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"map-pin","color":"#ffffff","strokeWidth":2},
+        {"id":"e9","type":"text","name":"Ort","x":24.5,"y":113.5,"w":67.5,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Fredoka","fontSize":10,"fontWeight":500,"italic":false,"color":"#1d1a3a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"shape","name":"Zusage Chip","x":14,"y":124,"w":8,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#f2b631","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"icon","name":"Zusage Symbol","x":15.76,"y":125.76,"w":4.48,"h":4.48,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"gamepad-2","color":"#1d1a3a","strokeWidth":2},
+        {"id":"e12","type":"text","name":"Zusage","x":24.5,"y":123.5,"w":67.5,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Bring dein Lieblingsspiel mit!","fontFamily":"Fredoka","fontSize":10,"fontWeight":500,"italic":false,"color":"#1d1a3a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

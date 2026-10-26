@@ -1,0 +1,29 @@
+{
+  "name": "Cocktailparty – Tropisch",
+  "category": "Einladungen",
+  "description": "Sommerliche Einladung (A6 hoch) zur Cocktailparty: Cocktail mit Schirmchen und Strohhalm zwischen Palmenblättern auf Tiefgrün, Datum und Ort darunter.",
+  "family": "cocktailparty",
+  "familyName": "Cocktailparty",
+  "variant": "Tropisch",
+  "occasion": "Feste & Events",
+  "tags": ["Cocktail","Cocktailparty","Party","Einladung","Drinks","Bar","Aperitif","Feier","Sommer","Happy Hour","Tropisch","Palmen","Schirmchen","Strohhalm","Grün"],
+  "formatKey": "a6-portrait",
+  "number": 848,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#0b5d63"},{"offset":1,"color":"#063a40"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Palme links","x":0,"y":53.593,"w":40,"h":28.815,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-palmenblatt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Palme rechts","x":65,"y":53.593,"w":40,"h":28.815,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":true,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-palmenblatt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Cocktail","x":33.023,"y":36,"w":38.954,"h":66,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-cocktail-tropisch"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Titel","x":8,"y":8,"w":89,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Cocktail","fontFamily":"Pacifico","fontSize":34,"fontWeight":400,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Party","x":8,"y":26,"w":89,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"PARTY","fontFamily":"Josefin Sans","fontSize":17,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.5,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":8,"y":108,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 14. August 2027 · 18 Uhr","fontFamily":"Josefin Sans","fontSize":11,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Ort","x":8,"y":116,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dachterrasse · Musterweg 5","fontFamily":"Josefin Sans","fontSize":10.5,"fontWeight":600,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zusage","x":8,"y":126,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 7. August","fontFamily":"Josefin Sans","fontSize":10,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Hinweis","x":8,"y":134,"w":89,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Die erste Runde geht aufs Haus.","fontFamily":"Josefin Sans","fontSize":8.5,"fontWeight":400,"italic":true,"color":"#bfe9e4","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

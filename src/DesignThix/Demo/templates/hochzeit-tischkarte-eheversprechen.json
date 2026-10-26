@@ -1,0 +1,40 @@
+{
+  "name": "Hochzeit Tischkarte – Eheversprechen erneuern",
+  "category": "Karten",
+  "description": "Tischkarte zur Erneuerung des Eheversprechens als Zeltkarte (gefaltet 90 × 50 mm): Olivenzweig, der Name des Gastes in großer Antiqua, die Tischnummer in Kapitälchen. Innen zwei goldene Herzen. Für Serien mit Gästelisten.",
+  "family": "hochzeit-tischkarte",
+  "familyName": "Hochzeit: Tischkarte",
+  "variant": "Eheversprechen",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Jubiläum","Hochzeitstag","Ehejubiläum","groß gedruckt","gut lesbar","Familienfeier","Jubelpaar","Eheversprechen","Vows","Ehegelübde erneuern","Segnung","Olivenzweig","Hochzeitstag feiern","Tischkarte","Platzkarte","Namenskarte","Zeltkarte","Gäste","Serie"],
+  "formatKey": "table-card",
+  "number": 747,
+  "document": {
+    "schema":2,"unit":"mm","width":90,"height":100,"dpi":300,"locale":"de-DE","fold":"horizontal",
+    "fields": [
+      {"key":"Name","label":"Name des Gastes","type":"text","sample":"Marie Hoffmann","decimals":null,"category":null,"required":false},
+      {"key":"Tisch","label":"Tisch","type":"text","sample":"4","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"Außen (Rückseite oben | Vorderseite unten)","background":{"color":"#fbf3ee","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Zweig","x":25,"y":27.929,"w":40,"h":16.071,"rotation":180,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-olivenzweig-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Name","x":8,"y":18,"w":74,"h":12,"rotation":180,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Cormorant Garamond","fontSize":20,"fontWeight":600,"italic":false,"color":"#4a3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Tisch","x":15,"y":9,"w":60,"h":6,"rotation":180,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"TISCH {{Tisch}}","fontFamily":"Cormorant Garamond","fontSize":8.5,"fontWeight":700,"italic":false,"color":"#6f8f75","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.25,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"image","name":"Zweig","x":25,"y":56,"w":40,"h":16.071,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-olivenzweig-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Name","x":8,"y":70,"w":74,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Cormorant Garamond","fontSize":20,"fontWeight":600,"italic":false,"color":"#4a3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Tisch","x":15,"y":85,"w":60,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"TISCH {{Tisch}}","fontFamily":"Cormorant Garamond","fontSize":8.5,"fontWeight":700,"italic":false,"color":"#6f8f75","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.25,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innen","background":{"color":"#f3e4de","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"image","name":"Herzen","x":33,"y":56,"w":24,"h":17.829,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-herzen-doppelt-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e8","type":"text","name":"Namen","x":7,"y":78,"w":76,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Great Vibes","fontSize":24,"fontWeight":400,"italic":false,"color":"#b97a7a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Datum","x":10,"y":90,"w":70,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12.06.2027","fontFamily":"Cormorant Garamond","fontSize":7.5,"fontWeight":700,"italic":false,"color":"#6f8f75","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.25,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Marie Hoffmann","Tisch":"4"},
+    {"Name":"Familie Meyer","Tisch":"1"},
+    {"Name":"Maximiliane Schneider-Hohenstein","Tisch":"12"},
+    {"Name":"Jo","Tisch":"7"}
+  ]
+}

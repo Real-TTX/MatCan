@@ -1,0 +1,41 @@
+{
+  "name": "Housewarming – Boho",
+  "category": "Einladungen",
+  "description": "Warme Einladung (A6 hoch) zur Einweihungsparty: kleines Haus mit Schlüssel in Erdtönen, Schreibschrift und drei Zeilen zu Datum, Adresse und Zusage. Der Name der Gastgeber ist ein Feld.",
+  "family": "housewarming",
+  "familyName": "Housewarming",
+  "variant": "Boho",
+  "occasion": "Feste & Events",
+  "tags": ["Housewarming","Einweihungsparty","Einweihung","Umzug","Neues Zuhause","Einladung","Party","Wohnung","Haus","Feier","Boho","Erdtöne","Schlüssel","Terrakotta"],
+  "formatKey": "a6-portrait",
+  "number": 860,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Familie Muster","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f4e6d4","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Haus","x":25.675,"y":10,"w":53.651,"h":52,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-haus-schluessel-boho"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Linie","x":40,"y":69,"w":25,"h":0.5,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#c9714f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Kopf","x":8,"y":72,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"EINLADUNG ZUR","fontFamily":"Josefin Sans","fontSize":9,"fontWeight":600,"italic":false,"color":"#c9714f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.35,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Titel","x":6,"y":79,"w":93,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Housewarming","fontFamily":"Dancing Script","fontSize":34,"fontWeight":700,"italic":false,"color":"#7a3b24","align":"center","valign":"middle","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Name","x":8,"y":96,"w":89,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"bei {{Name}}","fontFamily":"Nunito","fontSize":13,"fontWeight":700,"italic":false,"color":"#7a3b24","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Datum Chip","x":14,"y":110,"w":8,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#c9714f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"icon","name":"Datum Symbol","x":15.76,"y":111.76,"w":4.48,"h":4.48,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"calendar-days","color":"#ffffff","strokeWidth":2},
+        {"id":"e8","type":"text","name":"Datum","x":24.5,"y":109.5,"w":67.5,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 24. April 2027 · ab 15 Uhr","fontFamily":"Nunito","fontSize":10,"fontWeight":700,"italic":false,"color":"#4a2a1c","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"shape","name":"Ort Chip","x":14,"y":120,"w":8,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#c9714f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e10","type":"icon","name":"Ort Symbol","x":15.76,"y":121.76,"w":4.48,"h":4.48,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"map-pin","color":"#ffffff","strokeWidth":2},
+        {"id":"e11","type":"text","name":"Ort","x":24.5,"y":119.5,"w":67.5,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Neue Adresse: Musterweg 5, Musterstadt","fontFamily":"Nunito","fontSize":9.5,"fontWeight":600,"italic":false,"color":"#4a2a1c","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"shape","name":"Zusage Chip","x":14,"y":130,"w":8,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#a9b79a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e13","type":"icon","name":"Zusage Symbol","x":15.76,"y":131.76,"w":4.48,"h":4.48,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"icon":"phone","color":"#3a4a2a","strokeWidth":2},
+        {"id":"e14","type":"text","name":"Zusage","x":24.5,"y":129.5,"w":67.5,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 17. April: 0170 1234567","fontFamily":"Nunito","fontSize":9.5,"fontWeight":600,"italic":false,"color":"#4a2a1c","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Familie Muster"},
+    {"Name":"Anna & Jonas"},
+    {"Name":"Maximiliane Schneider-Hohenstein"}
+  ]
+}

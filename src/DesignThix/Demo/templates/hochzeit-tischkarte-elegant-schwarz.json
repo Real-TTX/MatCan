@@ -1,0 +1,44 @@
+{
+  "name": "Hochzeit Tischkarte – Elegant Schwarz",
+  "category": "Karten",
+  "description": "Tischkarte als Zeltkarte (gefaltet 90 × 50 mm) in Schwarz und Gold: doppelte Goldlinie, der Name des Gastes in elfenbeinfarbener Schreibschrift, die Tischnummer in goldenen Kapitälchen. Innen ein Goldfunkeln. Für Serien mit Gästelisten.",
+  "family": "hochzeit-tischkarte",
+  "familyName": "Hochzeit: Tischkarte",
+  "variant": "Elegant Schwarz",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Schwarz","Gold","elegant","edel","Black Tie","festlich","Abendhochzeit","Brautpaar","Tischkarte","Platzkarte","Namenskarte","Zeltkarte","Gäste","Serie"],
+  "formatKey": "table-card",
+  "number": 726,
+  "document": {
+    "schema":2,"unit":"mm","width":90,"height":100,"dpi":300,"locale":"de-DE","fold":"horizontal",
+    "fields": [
+      {"key":"Name","label":"Name des Gastes","type":"text","sample":"Marie Hoffmann","decimals":null,"category":null,"required":false},
+      {"key":"Tisch","label":"Tisch","type":"text","sample":"4","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"Außen (Rückseite oben | Vorderseite unten)","background":{"color":"#0e0e10","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen","x":3.5,"y":4,"w":83,"h":42,"rotation":180,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c9a24b","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Rahmen innen","x":5.5,"y":6,"w":79,"h":38,"rotation":180,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c9a24b","strokeWidth":0.2,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Name","x":10,"y":23,"w":70,"h":16,"rotation":180,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Great Vibes","fontSize":26,"fontWeight":400,"italic":false,"color":"#f3ead6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"image","name":"Trenner","x":31,"y":17.2,"w":28,"h":2.8,"rotation":180,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-deco-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Tisch","x":15,"y":10,"w":60,"h":5,"rotation":180,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"TISCH {{Tisch}}","fontFamily":"Cinzel","fontSize":7,"fontWeight":400,"italic":false,"color":"#c9a24b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Rahmen","x":3.5,"y":54,"w":83,"h":42,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c9a24b","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"shape","name":"Rahmen innen","x":5.5,"y":56,"w":79,"h":38,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c9a24b","strokeWidth":0.2,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Name","x":10,"y":61,"w":70,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Great Vibes","fontSize":26,"fontWeight":400,"italic":false,"color":"#f3ead6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"image","name":"Trenner","x":31,"y":80,"w":28,"h":2.8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-deco-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e10","type":"text","name":"Tisch","x":15,"y":85,"w":60,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"TISCH {{Tisch}}","fontFamily":"Cinzel","fontSize":7,"fontWeight":400,"italic":false,"color":"#c9a24b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innen","background":{"color":"#17171a","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e11","type":"image","name":"Funkeln","x":38,"y":58,"w":14,"h":13.13,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-funkeln-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e12","type":"text","name":"Namen","x":10,"y":76,"w":70,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Great Vibes","fontSize":20,"fontWeight":400,"italic":false,"color":"#f3ead6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Datum","x":10,"y":87,"w":70,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12.06.2027","fontFamily":"Cinzel","fontSize":7,"fontWeight":400,"italic":false,"color":"#c9a24b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Marie Hoffmann","Tisch":"4"},
+    {"Name":"Familie Meyer","Tisch":"1"},
+    {"Name":"Maximiliane Schneider-Hohenstein","Tisch":"12"},
+    {"Name":"Jo","Tisch":"7"}
+  ]
+}

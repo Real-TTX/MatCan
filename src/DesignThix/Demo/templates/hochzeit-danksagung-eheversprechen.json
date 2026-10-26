@@ -1,0 +1,29 @@
+{
+  "name": "Hochzeit Danksagung – Eheversprechen erneuern",
+  "category": "Karten",
+  "description": "Danksagungskarte zur Erneuerung des Eheversprechens als Postkarte A6 quer: vorne „Danke“ in Schreibschrift mit Olivenzweig und goldenen Herzen, hinten ein persönlicher Gruß in großer Schrift. Zart und gut lesbar.",
+  "family": "hochzeit-danksagung",
+  "familyName": "Hochzeit: Danksagung",
+  "variant": "Eheversprechen",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Jubiläum","Hochzeitstag","Ehejubiläum","groß gedruckt","gut lesbar","Familienfeier","Jubelpaar","Eheversprechen","Vows","Ehegelübde erneuern","Segnung","Olivenzweig","Hochzeitstag feiern","Danksagung","Danke","Dankeskarte","Postkarte"],
+  "formatKey": "postcard-a6-landscape",
+  "number": 749,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#f3e4de","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Olivenzweig","x":29,"y":4,"w":90,"h":36.159,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-olivenzweig-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Danke","x":19,"y":42,"w":110,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danke","fontFamily":"Great Vibes","fontSize":58,"fontWeight":400,"italic":false,"color":"#b97a7a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"image","name":"Herzen","x":63,"y":71,"w":22,"h":16.344,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-herzen-doppelt-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Namen","x":24,"y":92,"w":100,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Lora","fontSize":14,"fontWeight":700,"italic":false,"color":"#4a3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#fbf3ee","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e5","type":"text","name":"Titel","x":19,"y":14,"w":110,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Familie, liebe Freunde,","fontFamily":"Great Vibes","fontSize":24,"fontWeight":400,"italic":false,"color":"#b97a7a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Text","x":18,"y":32,"w":112,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"es war schön, mit euch unser Eheversprechen zu erneuern. Danke für eure Anwesenheit, eure Wünsche und die vielen herzlichen Momente.","fontFamily":"Lora","fontSize":12.5,"fontWeight":400,"italic":false,"color":"#4a3a3a","align":"center","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Gruß","x":24,"y":80,"w":100,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eure Anna & Jonas","fontFamily":"Great Vibes","fontSize":22,"fontWeight":400,"italic":false,"color":"#b97a7a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":11,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

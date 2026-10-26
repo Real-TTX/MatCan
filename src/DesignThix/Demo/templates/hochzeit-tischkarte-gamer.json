@@ -1,0 +1,45 @@
+{
+  "name": "Hochzeit Tischkarte – Gamer",
+  "category": "Karten",
+  "description": "Tischkarte als Zeltkarte (gefaltet 90 × 50 mm) im Retro-Spielstil: „Player“ mit dem Namen des Gastes in Righteous, darunter der Spawn-Punkt (Tisch). Innen Pixelmünze und Pixelstern. Für Serien mit Gästelisten.",
+  "family": "hochzeit-tischkarte",
+  "familyName": "Hochzeit: Tischkarte",
+  "variant": "Gamer",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Gamer","Nerd","Zocker","Pixel","Retro","8-Bit","Controller","Player 1","Brautpaar","Tischkarte","Platzkarte","Namenskarte","Zeltkarte","Gäste","Serie"],
+  "formatKey": "table-card",
+  "number": 707,
+  "document": {
+    "schema":2,"unit":"mm","width":90,"height":100,"dpi":300,"locale":"de-DE","fold":"horizontal",
+    "fields": [
+      {"key":"Name","label":"Name des Gastes","type":"text","sample":"Marie Hoffmann","decimals":null,"category":null,"required":false},
+      {"key":"Tisch","label":"Tisch","type":"text","sample":"4","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"Außen (Rückseite oben | Vorderseite unten)","background":{"color":"#201c52","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Balken","x":0,"y":44,"w":90,"h":6,"rotation":180,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ff5d8f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Player","x":15,"y":36,"w":60,"h":5,"rotation":180,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"PLAYER","fontFamily":"IBM Plex Mono","fontSize":7,"fontWeight":700,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Name","x":7,"y":21,"w":76,"h":14,"rotation":180,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Righteous","fontSize":21,"fontWeight":400,"italic":false,"color":"#f4f1ff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Tisch","x":7,"y":11,"w":76,"h":6,"rotation":180,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SPAWN: TISCH {{Tisch}}","fontFamily":"IBM Plex Mono","fontSize":8.5,"fontWeight":700,"italic":false,"color":"#3ad4c0","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"image","name":"Leben","x":30,"y":3.084,"w":30,"h":5.916,"rotation":180,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelherzen-leiste"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"shape","name":"Balken","x":0,"y":50,"w":90,"h":6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ff5d8f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Player","x":15,"y":59,"w":60,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"PLAYER","fontFamily":"IBM Plex Mono","fontSize":7,"fontWeight":700,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Name","x":7,"y":65,"w":76,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Righteous","fontSize":21,"fontWeight":400,"italic":false,"color":"#f4f1ff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Tisch","x":7,"y":83,"w":76,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SPAWN: TISCH {{Tisch}}","fontFamily":"IBM Plex Mono","fontSize":8.5,"fontWeight":700,"italic":false,"color":"#3ad4c0","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"image","name":"Leben","x":30,"y":91,"w":30,"h":5.916,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelherzen-leiste"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]},
+      {"id":"p2","name":"Innen","background":{"color":"#201c52","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e11","type":"image","name":"Münze","x":21,"y":60,"w":14,"h":14,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelmuenze"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e12","type":"image","name":"Stern","x":55,"y":60,"w":14,"h":14,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelstern"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e13","type":"text","name":"Namen","x":7,"y":80,"w":76,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ANNA + JONAS","fontFamily":"Righteous","fontSize":14,"fontWeight":400,"italic":false,"color":"#f4f1ff","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"text","name":"Datum","x":10,"y":89,"w":70,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GAME ON · 12.06.2027","fontFamily":"IBM Plex Mono","fontSize":7,"fontWeight":400,"italic":false,"color":"#9a96c8","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Marie Hoffmann","Tisch":"4"},
+    {"Name":"Familie Meyer","Tisch":"1"},
+    {"Name":"Maximiliane Schneider-Hohenstein","Tisch":"12"},
+    {"Name":"Jo","Tisch":"7"}
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Hochzeit Tischkarte – Standesamt schlicht",
+  "category": "Karten",
+  "description": "Schlichte Tischkarte als Zeltkarte (gefaltet 90 × 50 mm): der Name des Gastes in kursiver Antiqua, eine feine Goldlinie, die Tischnummer in Kapitälchen. Innen zwei kleine Ringe. Für Serien mit Gästelisten.",
+  "family": "hochzeit-tischkarte",
+  "familyName": "Hochzeit: Tischkarte",
+  "variant": "Standesamt schlicht",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Standesamt","standesamtlich","schlicht","zurückhaltend","klein","Trauung","Ringe","Brautpaar","Tischkarte","Platzkarte","Namenskarte","Zeltkarte","Gäste","Serie"],
+  "formatKey": "table-card",
+  "number": 722,
+  "document": {
+    "schema":2,"unit":"mm","width":90,"height":100,"dpi":300,"locale":"de-DE","fold":"horizontal",
+    "fields": [
+      {"key":"Name","label":"Name des Gastes","type":"text","sample":"Marie Hoffmann","decimals":null,"category":null,"required":false},
+      {"key":"Tisch","label":"Tisch","type":"text","sample":"4","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"Außen (Rückseite oben | Vorderseite unten)","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"text","name":"Name","x":8,"y":23,"w":74,"h":15,"rotation":180,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Lora","fontSize":20,"fontWeight":400,"italic":true,"color":"#2b2b2b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e2","type":"shape","name":"Linie","x":38,"y":19,"w":14,"h":0,"rotation":180,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a98334","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Tisch","x":15,"y":11,"w":60,"h":5,"rotation":180,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"TISCH {{Tisch}}","fontFamily":"Montserrat","fontSize":7,"fontWeight":500,"italic":false,"color":"#2b2b2b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Name","x":8,"y":62,"w":74,"h":15,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Lora","fontSize":20,"fontWeight":400,"italic":true,"color":"#2b2b2b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"shape","name":"Linie","x":38,"y":81,"w":14,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#a98334","strokeWidth":0.4,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Tisch","x":15,"y":84,"w":60,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"TISCH {{Tisch}}","fontFamily":"Montserrat","fontSize":7,"fontWeight":500,"italic":false,"color":"#2b2b2b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Innen","background":{"color":"#f1f3f0","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"image","name":"Ringe","x":36,"y":60,"w":18,"h":13.718,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-trauringe-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e8","type":"text","name":"Namen","x":10,"y":80,"w":70,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Lora","fontSize":14,"fontWeight":400,"italic":true,"color":"#2b2b2b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Datum","x":10,"y":89,"w":70,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12.06.2027","fontFamily":"Montserrat","fontSize":7,"fontWeight":500,"italic":false,"color":"#7f9186","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Marie Hoffmann","Tisch":"4"},
+    {"Name":"Familie Meyer","Tisch":"1"},
+    {"Name":"Maximiliane Schneider-Hohenstein","Tisch":"12"},
+    {"Name":"Jo","Tisch":"7"}
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Fasching – Konfetti",
+  "category": "Einladungen",
+  "description": "Story-Einladung zur Faschingsparty: leuchtender Verlauf, Maske, Narrenkappe und Konfettiregen mit großem Titel „Fasching“.",
+  "family": "fasching-karneval",
+  "familyName": "Fasching und Karneval",
+  "variant": "Konfetti",
+  "occasion": "Feste & Events",
+  "tags": ["Fasching","Karneval","Fastnacht","Kostümparty","Maskenball","Verkleidung","Einladung","Narren","Konfetti","Party","Helau","Story","Instagram","Social Media","Konfettiregen","Maske","Narrenkappe"],
+  "formatKey": "instagram-story",
+  "number": 880,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1920,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#7a2fb5"},{"offset":1,"color":"#e5283c"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Konfetti","x":0,"y":0,"w":1080,"h":1080,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-streuung-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Narrenkappe","x":155.416,"y":200,"w":769.168,"h":560,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-narrenkappe"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Maske","x":276.342,"y":1190,"w":527.315,"h":320,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-maske"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Titel","x":60,"y":850,"w":960,"h":200,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":{"color":"#3a0f5a","opacity":0.9,"blur":0,"x":6,"y":6},"text":"Fasching","fontFamily":"Abril Fatface","fontSize":100,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Sub","x":60,"y":1050,"w":960,"h":80,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Die große Kostümparty","fontFamily":"Fredoka","fontSize":40,"fontWeight":700,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":60,"y":1520,"w":960,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 26. Februar 2027 · 19:11 Uhr","fontFamily":"Fredoka","fontSize":34,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Ort","x":60,"y":1600,"w":960,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Vereinsheim · Musterweg 5 · Musterstadt","fontFamily":"Fredoka","fontSize":28,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zusage","x":60,"y":1690,"w":960,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Kostüm Pflicht · Zusage bis 12. Februar","fontFamily":"Fredoka","fontSize":26,"fontWeight":600,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

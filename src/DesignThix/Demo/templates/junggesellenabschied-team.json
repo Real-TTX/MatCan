@@ -1,0 +1,37 @@
+{
+  "name": "Junggesellenabschied – Team",
+  "category": "Einladungen",
+  "description": "Story-Einladung für alle: „Team {{Name}}“ in großer Schrift auf Rosé und Weiß, mit Herzen, Sektgläsern und den Angaben zum Treffpunkt.",
+  "family": "junggesellenabschied",
+  "familyName": "Junggesellenabschied",
+  "variant": "Team",
+  "occasion": "Feste & Events",
+  "tags": ["Junggesellenabschied","JGA","Junggesellinnenabschied","Hochzeit","Einladung","Party","Brautparty","Feier","Polterabend","Team","Story","Instagram","Social Media","Sektgläser","Herzen","Für alle"],
+  "formatKey": "instagram-story",
+  "number": 859,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1920,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Lena","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#fff0f5"},{"offset":1,"color":"#ffc4d9"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Herzen","x":170,"y":90,"w":740,"h":740,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-herzen-streuung-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Sekt","x":337.255,"y":330,"w":405.49,"h":480,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-sektglaeser-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Trenner","x":290,"y":1250,"w":500,"h":50,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-girlande-rose"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":60,"y":860,"w":960,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"JUNGGESELLENABSCHIED","fontFamily":"Josefin Sans","fontSize":26,"fontWeight":700,"italic":false,"color":"#c2185b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Team","x":60,"y":920,"w":960,"h":130,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Team","fontFamily":"Great Vibes","fontSize":70,"fontWeight":400,"italic":false,"color":"#7a1f4a","align":"center","valign":"middle","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":36,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Name","x":60,"y":1050,"w":960,"h":220,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Great Vibes","fontSize":110,"fontWeight":400,"italic":false,"color":"#c2185b","align":"center","valign":"middle","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":60,"y":1320,"w":960,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 8. Mai 2027","fontFamily":"Josefin Sans","fontSize":34,"fontWeight":700,"italic":false,"color":"#3a1428","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zeit","x":60,"y":1400,"w":960,"h":62,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Treffpunkt 14 Uhr · Hauptbahnhof","fontFamily":"Josefin Sans","fontSize":30,"fontWeight":500,"italic":false,"color":"#3a1428","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Code","x":60,"y":1480,"w":960,"h":62,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dresscode: Rosa","fontFamily":"Josefin Sans","fontSize":30,"fontWeight":500,"italic":false,"color":"#3a1428","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Zusage","x":60,"y":1590,"w":960,"h":62,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 20. April: 0170 1234567","fontFamily":"Josefin Sans","fontSize":28,"fontWeight":700,"italic":false,"color":"#c2185b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Lena"},
+    {"Name":"Maximiliane"},
+    {"Name":"Tim"}
+  ]
+}

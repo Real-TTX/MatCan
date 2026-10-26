@@ -1,0 +1,37 @@
+{
+  "name": "Firmenfeier – Gala",
+  "category": "Einladungen",
+  "description": "Festliche Einladung (DIN lang) zur Firmenfeier: Marineblau mit Gold, Sektgläser, Zierlinien und die Firma als Feld.",
+  "family": "firmenfeier",
+  "familyName": "Firmenfeier",
+  "variant": "Gala",
+  "occasion": "Business",
+  "tags": ["Firmenfeier","Betriebsfeier","Firma","Team","Mitarbeiter","Einladung","Sommerfest","Jubiläum","Business","Event","Gala","Festlich","Marineblau","Gold","Sekt","DIN lang"],
+  "formatKey": "din-lang-portrait",
+  "number": 887,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Firma","label":"Firma","type":"text","sample":"Muster GmbH","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#14233b","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rahmen","x":4,"y":8.495,"w":91,"h":193.011,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-rahmen-doppellinie-lang-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Sekt","x":30.07,"y":22,"w":38.859,"h":46,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-sektglaeser-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Trenner","x":25,"y":138,"w":49,"h":4.9,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-deco-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":10,"y":76,"w":79,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Firma}} LÄDT EIN","fontFamily":"Cinzel","fontSize":8,"fontWeight":400,"italic":false,"color":"#e3c479","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6.5,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel","x":8,"y":84,"w":83,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Firmenfeier","fontFamily":"Playfair Display","fontSize":25,"fontWeight":700,"italic":true,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Sub","x":10,"y":114,"w":79,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ein Abend für das ganze Team: Essen, Musik und Zeit zum Anstoßen.","fontFamily":"Cormorant Garamond","fontSize":11,"fontWeight":600,"italic":false,"color":"#f3e8d0","align":"center","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":8,"y":148,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 2. Juli 2027","fontFamily":"Cinzel","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zeit","x":8,"y":157,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 18 Uhr","fontFamily":"Cormorant Garamond","fontSize":14,"fontWeight":600,"italic":false,"color":"#e3c479","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Ort","x":8,"y":166,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eventlocation Musterhof · Musterweg 5","fontFamily":"Cormorant Garamond","fontSize":11.5,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Zusage","x":8,"y":180,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 18. Juni an das Büro","fontFamily":"Cormorant Garamond","fontSize":11.5,"fontWeight":600,"italic":true,"color":"#e3c479","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Firma":"Muster GmbH"},
+    {"Firma":"Schneider & Söhne Metallbau"},
+    {"Firma":"Atelier Neun"}
+  ]
+}

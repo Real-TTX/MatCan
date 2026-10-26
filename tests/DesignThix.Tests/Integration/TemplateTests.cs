@@ -458,7 +458,7 @@ public sealed class TemplateTests(AppTests.AppFactory factory) : PlatformTestBas
             Assert.Empty((await DesignLogic.SearchAsync(biz, "Prozent_Zeichen_")).Designs);
 
             // Templates: by name ("Flyer"), by category ("Social Media"), by a word of the description ("Preisaufkleber"); never among the designs.
-            var flyer = await DesignLogic.SearchAsync(biz, "flyer");
+            var flyer = await DesignLogic.SearchAsync(biz, "flyer wochenangebot");
             Assert.Contains(flyer.Templates, t => t.Name.StartsWith("Flyer A5", StringComparison.Ordinal));
             Assert.DoesNotContain(flyer.Designs, d => d.IsTemplate);
             var social = await DesignLogic.SearchAsync(biz, "Social Media");

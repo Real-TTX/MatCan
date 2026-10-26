@@ -1,0 +1,28 @@
+{
+  "name": "Grill & Chill – Kraftpapier",
+  "category": "Einladungen",
+  "description": "Instagram-Post im Kraftpapier-Look: Grill und Flamme, „Grill & Chill“ in dicker Handschrift und alle Angaben zum Grillabend.",
+  "family": "grill-und-chill",
+  "familyName": "Grill & Chill",
+  "variant": "Kraftpapier",
+  "occasion": "Feste & Events",
+  "tags": ["Grillen","Grillparty","Grill","Chillen","Barbecue","BBQ","Einladung","Sommer","Würstchen","Draußen","Kraftpapier","Instagram","Post","Social Media","Braun","Rustikal"],
+  "formatKey": "instagram-post",
+  "number": 891,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#d9b98c","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rand","x":40,"y":40,"w":1000,"h":1000,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#5a3a1a","strokeWidth":3,"dash":"solid","radius":12,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"image","name":"Grill","x":705,"y":110,"w":260,"h":270,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-grill"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Flamme","x":122.872,"y":130,"w":134.256,"h":200,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-flamme-rot"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":120,"y":80,"w":520,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"EINLADUNG ZUM","fontFamily":"Permanent Marker","fontSize":22,"fontWeight":400,"italic":false,"color":"#5a3a1a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel","x":80,"y":400,"w":920,"h":180,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Grill & Chill","fontFamily":"Permanent Marker","fontSize":84,"fontWeight":400,"italic":false,"color":"#2b1a0a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":36,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":80,"y":640,"w":920,"h":70,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 31. Juli 2027 · ab 17 Uhr","fontFamily":"Caveat","fontSize":44,"fontWeight":700,"italic":false,"color":"#2b1a0a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":22,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Ort","x":80,"y":720,"w":920,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Garten Familie Muster · Musterweg 5","fontFamily":"Caveat","fontSize":38,"fontWeight":600,"italic":false,"color":"#2b1a0a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zusage","x":80,"y":860,"w":920,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 24. Juli · Hunger mitbringen!","fontFamily":"Caveat","fontSize":36,"fontWeight":700,"italic":false,"color":"#a2380f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

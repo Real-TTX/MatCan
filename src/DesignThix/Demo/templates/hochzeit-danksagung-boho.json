@@ -1,0 +1,31 @@
+{
+  "name": "Hochzeit Danksagung – Boho",
+  "category": "Karten",
+  "description": "Danksagungskarte als Postkarte A6 quer im Boho-Stil: vorne „Danke“ in Schreibschrift neben einem Strauß Trockenblumen, hinten Platz für einen persönlichen Gruß mit Mondphasen. Warm und natürlich.",
+  "family": "hochzeit-danksagung",
+  "familyName": "Hochzeit: Danksagung",
+  "variant": "Boho",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Boho","Pampasgras","Trockenblumen","Terrakotta","natürlich","Bogen","Sonne","Brautpaar","Danksagung","Danke","Dankeskarte","Postkarte"],
+  "formatKey": "postcard-a6-landscape",
+  "number": 689,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#f1d9c8","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Trockenblumen","x":10,"y":8,"w":63,"h":102.907,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-trockenblumen"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Danke","x":75,"y":22,"w":66,"h":32,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danke","fontFamily":"Allura","fontSize":58,"fontWeight":400,"italic":false,"color":"#c9714f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"shape","name":"Strich","x":90,"y":62,"w":36,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#5a4033","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Namen","x":75,"y":66,"w":66,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Cormorant Garamond","fontSize":18,"fontWeight":500,"italic":false,"color":"#5a4033","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Datum","x":75,"y":78,"w":66,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12.06.2027","fontFamily":"Josefin Sans","fontSize":7,"fontWeight":600,"italic":false,"color":"#8c9a7c","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#f6ede0","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e6","type":"image","name":"Mondphasen","x":39,"y":8,"w":70,"h":11.226,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-mondphasen-schwarz"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e7","type":"text","name":"Titel","x":14,"y":22,"w":120,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Von Herzen danke","fontFamily":"Allura","fontSize":28,"fontWeight":400,"italic":false,"color":"#c9714f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Text","x":18,"y":40,"w":112,"h":34,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ihr habt unseren Tag zu etwas ganz Besonderem gemacht. Danke für eure Zeit, eure Wünsche und die vielen schönen Momente.","fontFamily":"Cormorant Garamond","fontSize":12.5,"fontWeight":500,"italic":false,"color":"#5a4033","align":"center","valign":"top","lineHeight":1.45,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Gruß","x":24,"y":82,"w":100,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eure Anna & Jonas","fontFamily":"Cormorant Garamond","fontSize":15,"fontWeight":500,"italic":true,"color":"#5a4033","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

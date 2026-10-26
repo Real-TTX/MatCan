@@ -1,0 +1,27 @@
+{
+  "name": "Gartenparty – Dämmerung",
+  "category": "Einladungen",
+  "description": "Einladung (A6 hoch) für einen lauen Abend im Garten: Lichterkette über dunklem Grün, Blumenwiese am Fuß der Karte und Schrift in Gelb und Weiß.",
+  "family": "gartenparty",
+  "familyName": "Gartenparty",
+  "variant": "Dämmerung",
+  "occasion": "Feste & Events",
+  "tags": ["Gartenparty","Garten","Sommerfest","Party","Einladung","Grillen","Terrasse","Draußen","Sommer","Feier","Lichterkette","Dämmerung","Abend","Blumenwiese","Dunkelgrün"],
+  "formatKey": "a6-portrait",
+  "number": 881,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#1f3a2c"},{"offset":1,"color":"#2f4a37"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Lichterkette","x":0,"y":4,"w":105,"h":22.22,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-lichterkette-warm"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Wiese","x":0,"y":110.929,"w":105,"h":37.071,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-wiese"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Kopf","x":8,"y":34,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"EIN LAUER ABEND IM GARTEN","fontFamily":"Josefin Sans","fontSize":8.5,"fontWeight":700,"italic":false,"color":"#ffd36b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Titel","x":6,"y":42,"w":93,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gartenparty","fontFamily":"Pacifico","fontSize":32,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Datum","x":8,"y":70,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 10. Juli 2027 · 18 Uhr","fontFamily":"Nunito","fontSize":10.5,"fontWeight":800,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Ort","x":8,"y":78,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Garten Familie Muster · Musterweg 5","fontFamily":"Nunito","fontSize":9.5,"fontWeight":600,"italic":false,"color":"#ffd36b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Zusage","x":8,"y":86,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 3. Juli · Salat oder Dessert mitbringen","fontFamily":"Nunito","fontSize":8.5,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

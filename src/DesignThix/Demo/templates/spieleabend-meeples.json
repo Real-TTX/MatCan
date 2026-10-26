@@ -1,0 +1,27 @@
+{
+  "name": "Spieleabend – Meeples",
+  "category": "Einladungen",
+  "description": "Instagram-Post auf Spielfilz-Grün: drei bunte Spielfiguren, große Schrift und Hinweise, was mitgebracht werden soll.",
+  "family": "spieleabend",
+  "familyName": "Spieleabend",
+  "variant": "Meeples",
+  "occasion": "Feste & Events",
+  "tags": ["Spieleabend","Spiele","Brettspiele","Kartenspiele","Einladung","Gesellschaftsspiele","Würfel","Freunde","Feier","Spaß","Instagram","Post","Social Media","Meeple","Spielfiguren","Grün"],
+  "formatKey": "instagram-post",
+  "number": 855,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#1f7a5e"},{"offset":1,"color":"#13503d"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Meeples","x":212.887,"y":60,"w":654.225,"h":400,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-meeples"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Band","x":0,"y":500,"w":1080,"h":14,"rotation":0,"opacity":0.25,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#f3e8d0","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Titel","x":60,"y":520,"w":960,"h":150,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Spieleabend","fontFamily":"Baloo 2","fontSize":84,"fontWeight":800,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Sub","x":60,"y":665,"w":960,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Bring dein Lieblingsspiel mit!","fontFamily":"Baloo 2","fontSize":32,"fontWeight":600,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Datum","x":60,"y":770,"w":960,"h":66,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 15. Januar 2027 · 19 Uhr","fontFamily":"Baloo 2","fontSize":36,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Ort","x":60,"y":842,"w":960,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Baloo 2","fontSize":30,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Zusage","x":60,"y":930,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 8. Januar · Snacks willkommen","fontFamily":"Baloo 2","fontSize":26,"fontWeight":600,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

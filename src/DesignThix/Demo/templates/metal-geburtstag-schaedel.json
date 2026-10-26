@@ -1,0 +1,37 @@
+{
+  "name": "Metal-Geburtstag – Schädel",
+  "category": "Einladungen",
+  "description": "Schwarze Einladungskarte (A6 hoch) für einen Rock- und Metal-Geburtstag: Totenkopf mit Rosen, Stacheldraht, Name und Alter als Felder.",
+  "family": "metal-geburtstag",
+  "familyName": "Metal-Geburtstag",
+  "variant": "Schädel",
+  "occasion": "Geburtstag",
+  "tags": ["Metal","Rock","Geburtstag","Einladung","Heavy Metal","Totenkopf","Gitarre","Schwarz","Party","Konzert","Totenkopf mit Rosen","Düster"],
+  "formatKey": "a6-portrait",
+  "number": 830,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Dirk","decimals":null,"category":null,"required":false},
+      {"key":"Alter","label":"Alter","type":"text","sample":"50","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#0b0b0d","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Textur","x":0,"y":0,"w":105,"h":148,"rotation":0,"opacity":0.1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-verschleiss-weiss"},"fit":"cover","radius":0,"crop":{"x":0.145,"y":0,"w":0.709,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Totenkopf","x":15.886,"y":6,"w":73.229,"h":62,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-totenkopf-rosen"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Stacheldraht","x":8,"y":70,"w":89,"h":7.013,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-stacheldraht-weiss"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":8,"y":80,"w":89,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"HEAVY BIRTHDAY NIGHT","fontFamily":"Oswald","fontSize":9,"fontWeight":500,"italic":false,"color":"#d4202f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.25,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Name","x":6,"y":86,"w":93,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Anton","fontSize":36,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Alter","x":8,"y":104,"w":89,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WIRD {{Alter}}","fontFamily":"Anton","fontSize":28,"fontWeight":400,"italic":false,"color":"#d4202f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":8,"y":121,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 12. Juni 2027 · 20 Uhr","fontFamily":"Oswald","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.05,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Ort","x":8,"y":129,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Proberaum Hinterhof · Musterweg 5","fontFamily":"Oswald","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#bdbdc4","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.05,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zusage","x":8,"y":137,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Cuts & Bier mitbringen · Zusage bis 5. Juni","fontFamily":"Oswald","fontSize":8.5,"fontWeight":400,"italic":false,"color":"#d4202f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.05,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Dirk","Alter":"50"},
+    {"Name":"Maximiliane","Alter":"40"},
+    {"Name":"Uwe","Alter":"60"}
+  ]
+}

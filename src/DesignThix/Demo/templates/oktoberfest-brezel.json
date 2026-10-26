@@ -1,0 +1,31 @@
+{
+  "name": "Oktoberfest – Brezel",
+  "category": "Einladungen",
+  "description": "Hohe Einladung (DIN lang) mit Brezel und Bierkrug zwischen zwei weiß-blauen Rautenbändern; „Prosit!“ in großer Schrift und Hinweis auf Tracht.",
+  "family": "oktoberfest",
+  "familyName": "Oktoberfest",
+  "variant": "Brezel",
+  "occasion": "Feste & Events",
+  "tags": ["Oktoberfest","Wiesn","Bayerisch","Tracht","Dirndl","Lederhose","Bier","Brezel","Einladung","Party","Prosit","Bierkrug","DIN lang","Rautenband"],
+  "formatKey": "din-lang-portrait",
+  "number": 876,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fdf8ec","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rauten oben","x":0,"y":0,"w":99,"h":12.922,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-rautenband"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Rauten unten","x":0,"y":199,"w":99,"h":12.922,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-rautenband"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Brezel","x":17.117,"y":20,"w":64.767,"h":60,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-brezel-salz"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"image","name":"Bierkrug","x":56.514,"y":74,"w":34.972,"h":40,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-bierkrug-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Prosit","x":6,"y":82,"w":55,"h":26,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Prosit!","fontFamily":"Abril Fatface","fontSize":36,"fontWeight":400,"italic":false,"color":"#1f5fa8","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Titel","x":8,"y":116,"w":83,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Oktoberfest","fontFamily":"Abril Fatface","fontSize":28,"fontWeight":400,"italic":false,"color":"#5a2a22","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Sub","x":8,"y":131,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Tracht, Bier und gute Laune","fontFamily":"Nunito","fontSize":11,"fontWeight":700,"italic":false,"color":"#5a2a22","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Datum","x":8,"y":148,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 25. September 2027","fontFamily":"Nunito","fontSize":11.5,"fontWeight":800,"italic":false,"color":"#1f5fa8","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zeit","x":8,"y":157,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 17 Uhr · Festzelt Musterwiese","fontFamily":"Nunito","fontSize":10.5,"fontWeight":600,"italic":false,"color":"#3a3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Ort","x":8,"y":166,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Nunito","fontSize":10.5,"fontWeight":600,"italic":false,"color":"#3a3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Zusage","x":8,"y":180,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 18. September","fontFamily":"Nunito","fontSize":10.5,"fontWeight":800,"italic":false,"color":"#5a2a22","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Hochzeit Einladung – Gamer",
+  "category": "Karten",
+  "description": "Flache Einladungskarte A5 hoch im Retro-Spielstil: Pixelrahmen, Controller, „Player 1 + Player 2“ und die Eckdaten als Quest-Liste. Dazu Lebensleiste aus Pixelherzen. Für Zocker, Nerds und alle, die gern spielen. Ohne Marken und Spielfiguren.",
+  "family": "hochzeit-einladung-flach",
+  "familyName": "Hochzeit: Einladung (flache Karte)",
+  "variant": "Gamer",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Gamer","Nerd","Zocker","Pixel","Retro","8-Bit","Controller","Player 1","Brautpaar","Einladung","Einladungskarte","A5","Quest","Pixelrahmen"],
+  "formatKey": "a5-portrait",
+  "number": 706,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Einladung","background":{"color":"#16143a","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Pixelrahmen","x":4,"y":6.02,"w":140,"h":197.96,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelrahmen-hoch-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Controller","x":44,"y":20,"w":60,"h":43.121,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-controller-weiss"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Kopf","x":24,"y":64,"w":100,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"EINLADUNG ZUM MULTIPLAYER","fontFamily":"IBM Plex Mono","fontSize":8,"fontWeight":400,"italic":false,"color":"#9a96c8","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.25,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Name 1","x":19,"y":71,"w":110,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ANNA","fontFamily":"Righteous","fontSize":50,"fontWeight":400,"italic":false,"color":"#ff5d8f","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Plus","x":64,"y":91,"w":20,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"+","fontFamily":"IBM Plex Mono","fontSize":20,"fontWeight":700,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Name 2","x":19,"y":99,"w":110,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"JONAS","fontFamily":"Righteous","fontSize":50,"fontWeight":400,"italic":false,"color":"#3ad4c0","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Quest","x":24,"y":126,"w":100,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"QUEST: HOCHZEIT","fontFamily":"IBM Plex Mono","fontSize":12,"fontWeight":700,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zeilen","x":18,"y":137,"w":118,"h":40,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"> WANN: Sa, 12.06.2027, 14:00 Uhr\n> WO: Gut Birkenhof, Musterstadt\n> LOOT: Torte, Musik und gute Laune\n> DRESSCODE: Casual Hero","fontFamily":"IBM Plex Mono","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#f4f1ff","align":"left","valign":"top","lineHeight":1.7,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Antwort","x":24,"y":175,"w":100,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"RSVP BIS 01.05.2027","fontFamily":"IBM Plex Mono","fontSize":10,"fontWeight":700,"italic":false,"color":"#ff5d8f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.15,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"image","name":"Leben","x":52,"y":183,"w":44,"h":8.677,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelherzen-leiste"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]}
+    ]
+  }
+}

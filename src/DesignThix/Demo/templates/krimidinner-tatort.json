@@ -1,0 +1,38 @@
+{
+  "name": "Krimidinner – Tatort",
+  "category": "Einladungen",
+  "description": "Hohe Einladung (DIN lang) mit Absperrband in Gelb und Schwarz, Lupe und Fingerabdruck. Schreibmaschinenschrift wie in der Spurensicherung; der Titel des Falls ist ein Feld.",
+  "family": "krimidinner",
+  "familyName": "Krimidinner",
+  "variant": "Tatort",
+  "occasion": "Feste & Events",
+  "tags": ["Krimidinner","Krimi","Mord","Detektiv","Dinner","Einladung","Mottoparty","Rätsel","Spiel","Verbrechen","Tatort","Absperrband","Lupe","Fingerabdruck","DIN lang","Spurensicherung"],
+  "formatKey": "din-lang-portrait",
+  "number": 846,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Titel","label":"Titel des Falls","type":"text","sample":"Mord im Herrenhaus","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f4efe2","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Band oben","x":0,"y":8,"w":99,"h":11,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-muster-warnstreifen"},"fit":"cover","radius":0,"crop":{"x":0,"y":0.444,"w":1,"h":0.111},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Band unten","x":0,"y":191,"w":99,"h":11,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-muster-warnstreifen"},"fit":"cover","radius":0,"crop":{"x":0,"y":0.444,"w":1,"h":0.111},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Lupe","x":22,"y":30.5,"w":55,"h":55,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-lupe-fingerabdruck"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":8,"y":90,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ACHTUNG: TATORT","fontFamily":"IBM Plex Mono","fontSize":10,"fontWeight":700,"italic":false,"color":"#b3202c","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel","x":8,"y":98,"w":83,"h":38,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Titel}}","fontFamily":"Abril Fatface","fontSize":24,"fontWeight":400,"italic":false,"color":"#14141b","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Linie","x":14,"y":140,"w":71,"h":0.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#14141b","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Hinweis","x":8,"y":144,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Das Krimidinner mit Vier-Gänge-Menü","fontFamily":"IBM Plex Mono","fontSize":8,"fontWeight":400,"italic":false,"color":"#14141b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Datum","x":8,"y":153,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 6. November 2027","fontFamily":"IBM Plex Mono","fontSize":9.5,"fontWeight":700,"italic":false,"color":"#14141b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zeit","x":8,"y":161,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Beginn 19 Uhr","fontFamily":"IBM Plex Mono","fontSize":9,"fontWeight":400,"italic":false,"color":"#14141b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Ort","x":8,"y":169,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"IBM Plex Mono","fontSize":9,"fontWeight":400,"italic":false,"color":"#14141b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Zusage","x":8,"y":177,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 25. Oktober","fontFamily":"IBM Plex Mono","fontSize":9,"fontWeight":600,"italic":false,"color":"#b3202c","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Titel":"Mord im Herrenhaus"},
+    {"Titel":"Tod beim Dinner"},
+    {"Titel":"Die verschwundene Perlenkette"}
+  ]
+}

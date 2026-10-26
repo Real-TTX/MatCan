@@ -1,0 +1,34 @@
+{
+  "name": "Entschuldigungskarte – Humorvoll",
+  "category": "Karten",
+  "description": "Versöhnliche quadratische Klappkarte: eine Friedensfahne mit Herz und „Sorry! Ich bring auch Kuchen mit.“ in Handschrift. Innen ein Friedensangebot mit Augenzwinkern.",
+  "family": "entschuldigung-karte",
+  "familyName": "Entschuldigungskarte",
+  "variant": "Humorvoll",
+  "occasion": "Feste & Events",
+  "tags": ["Entschuldigung","Tut mir leid","Sorry","Verzeihung","Versöhnung","Frieden","Karte","lustig","witzig","Fahne","Kuchen","quadratisch","Klappkarte"],
+  "formatKey": "card-square-145",
+  "number": 779,
+  "document": {
+    "schema":2,"unit":"mm","width":290,"height":145,"dpi":300,"locale":"de-DE","fold":"vertical",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Außen (Rückseite | Vorderseite)","background":{"color":"#fff0ee","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Muster","x":145,"y":0,"w":145,"h":145,"rotation":0,"opacity":0.4,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-muster-konfettipunkte-pastell"},"fit":"cover","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Textfläche","x":155,"y":71,"w":125,"h":66,"rotation":0,"opacity":0.8,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":5,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"image","name":"Motiv","x":197.465,"y":6,"w":40.069,"h":58,"rotation":-3,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-fahne-herz-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Anlass","x":153,"y":72,"w":129,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"FRIEDENSANGEBOT","fontFamily":"Nunito","fontSize":8,"fontWeight":800,"italic":false,"color":"#e0647a","align":"center","valign":"middle","lineHeight":1.2,"letterSpacing":0.15,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel 1","x":153,"y":80,"w":129,"h":19.1,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Sorry!","fontFamily":"Caveat","fontSize":48.4,"fontWeight":700,"italic":false,"color":"#e0647a","align":"center","valign":"middle","lineHeight":1.05,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":27,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Titel 2","x":153,"y":98.5,"w":129,"h":11.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ich bring auch Kuchen mit.","fontFamily":"Caveat","fontSize":26.4,"fontWeight":700,"italic":false,"color":"#e0647a","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Zeile","x":153,"y":128,"w":129,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Weiße Fahne, rotes Herz","fontFamily":"Nunito","fontSize":8,"fontWeight":800,"italic":false,"color":"#e0647a","align":"center","valign":"middle","lineHeight":1.2,"letterSpacing":0.15,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"image","name":"Motiv klein","x":61.537,"y":61.5,"w":21.925,"h":22,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-geschenk-pastell"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]},
+      {"id":"p2","name":"Innen","background":{"color":"#fff0ee","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e9","type":"image","name":"Motiv groß","x":14.198,"y":14,"w":116.603,"h":117,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-geschenk-pastell"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e10","type":"text","name":"Anrede","x":152,"y":20,"w":130,"h":11.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Anja,","fontFamily":"Caveat","fontSize":24,"fontWeight":700,"italic":false,"color":"#e0647a","align":"left","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":13,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Text","x":152,"y":36,"w":130,"h":66,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ich weiß, ich war ein Sturkopf. Es tut mir leid! Als Wiedergutmachung gibt es Kuchen, Kaffee und ein offenes Ohr. Frieden?","fontFamily":"Nunito","fontSize":11.5,"fontWeight":500,"italic":false,"color":"#4a343a","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Gruß","x":152,"y":108,"w":130,"h":11.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Dein Paul","fontFamily":"Caveat","fontSize":24,"fontWeight":700,"italic":false,"color":"#e0647a","align":"right","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":13,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

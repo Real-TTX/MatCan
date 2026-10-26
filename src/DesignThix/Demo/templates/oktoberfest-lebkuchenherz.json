@@ -1,0 +1,29 @@
+{
+  "name": "Oktoberfest – Lebkuchenherz",
+  "category": "Einladungen",
+  "description": "Einladung (A6 hoch) zum Oktoberfest: weiß-blaues Rautenband, Lebkuchenherz mit „O’zapft is!“ und Datum, Ort und Hinweis auf Tracht.",
+  "family": "oktoberfest",
+  "familyName": "Oktoberfest",
+  "variant": "Lebkuchenherz",
+  "occasion": "Feste & Events",
+  "tags": ["Oktoberfest","Wiesn","Bayerisch","Tracht","Dirndl","Lederhose","Bier","Brezel","Einladung","Party","Prosit","Lebkuchenherz","Rauten","Weiß-Blau","O’zapft is"],
+  "formatKey": "a6-portrait",
+  "number": 875,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#ffffff","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rauten oben","x":0,"y":0,"w":105,"h":13.705,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-rautenband"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Rauten unten","x":0,"y":137,"w":105,"h":13.705,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-rautenband"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Herz","x":20.048,"y":14,"w":64.904,"h":68,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-lebkuchenherz-guss"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Herz","x":29,"y":42,"w":47,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"O’zapft is!","fontFamily":"Abril Fatface","fontSize":17,"fontWeight":400,"italic":false,"color":"#fffdf6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel","x":6,"y":84,"w":93,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Oktoberfest","fontFamily":"Abril Fatface","fontSize":31,"fontWeight":400,"italic":false,"color":"#1f5fa8","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Sub","x":8,"y":102,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Bier, Brezn und Blasmusik","fontFamily":"Nunito","fontSize":10.5,"fontWeight":700,"italic":false,"color":"#5a2a22","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":8,"y":112,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 25. September 2027 · 17 Uhr","fontFamily":"Nunito","fontSize":10.5,"fontWeight":800,"italic":false,"color":"#1f5fa8","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Ort","x":8,"y":120,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Festzelt Musterwiese · Musterweg 5","fontFamily":"Nunito","fontSize":9.5,"fontWeight":600,"italic":false,"color":"#3a3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zusage","x":8,"y":128,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Tracht erwünscht · Zusage bis 18. September","fontFamily":"Nunito","fontSize":8.5,"fontWeight":700,"italic":false,"color":"#5a2a22","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

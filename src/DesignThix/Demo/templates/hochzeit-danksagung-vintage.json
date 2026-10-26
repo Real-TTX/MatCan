@@ -1,0 +1,31 @@
+{
+  "name": "Hochzeit Danksagung – Vintage",
+  "category": "Karten",
+  "description": "Danksagungskarte als Postkarte A6 quer im Vintage-Stil: ein goldener Schmetterling, „Herzlichen Dank“ in Schreibschrift und Goldschnörkel auf altem Papier. Hinten ein Gruß im Briefstil.",
+  "family": "hochzeit-danksagung",
+  "familyName": "Hochzeit: Danksagung",
+  "variant": "Vintage",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Vintage","Retro","Nostalgie","antik","Sepia","Schnörkel","romantisch","Brautpaar","Danksagung","Danke","Dankeskarte","Postkarte","Schmetterling"],
+  "formatKey": "postcard-a6-landscape",
+  "number": 699,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#efe3cc","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rahmen","x":5.421,"y":4,"w":137.158,"h":97,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-rahmen-schnoerkel-quer-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Schmetterling","x":62,"y":12,"w":24,"h":17.31,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-schmetterling-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Danke","x":19,"y":34,"w":110,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Herzlichen Dank","fontFamily":"Parisienne","fontSize":44,"fontWeight":400,"italic":false,"color":"#8f3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":22,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"image","name":"Trenner","x":48,"y":62,"w":52,"h":5.2,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-schnoerkel-schwarz"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Namen","x":24,"y":70,"w":100,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Playfair Display","fontSize":18,"fontWeight":400,"italic":true,"color":"#4a3a2a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":34,"y":82,"w":80,"h":5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12.06.2027","fontFamily":"Libre Baskerville","fontSize":7,"fontWeight":400,"italic":false,"color":"#4a3a2a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.22,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#e6d5b4","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"text","name":"Anrede","x":19,"y":14,"w":110,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Freunde und Familie,","fontFamily":"Parisienne","fontSize":22,"fontWeight":400,"italic":false,"color":"#8f3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Text","x":18,"y":30,"w":112,"h":38,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ihr habt unseren Hochzeitstag zu einem Fest gemacht, an das wir uns ein Leben lang erinnern werden. Für alle Wünsche, Geschenke und die schönen Stunden danken wir euch von Herzen.","fontFamily":"Playfair Display","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#4a3a2a","align":"center","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Gruß","x":24,"y":78,"w":100,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"In Liebe, Anna & Jonas","fontFamily":"Parisienne","fontSize":20,"fontWeight":400,"italic":false,"color":"#4a3a2a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

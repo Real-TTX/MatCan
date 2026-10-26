@@ -1,0 +1,32 @@
+{
+  "name": "Weinprobe – Weinkeller",
+  "category": "Einladungen",
+  "description": "Hohe Einladung (DIN lang) im hellen Etiketten-Stil: Weinflasche, Trauben, Serifenschrift und zwei Linien wie auf einem Weinetikett.",
+  "family": "weinprobe",
+  "familyName": "Weinprobe",
+  "variant": "Weinkeller",
+  "occasion": "Feste & Events",
+  "tags": ["Wein","Weinprobe","Weinabend","Verkostung","Einladung","Winzer","Rotwein","Weißwein","Genuss","Feier","Weinkeller","Etikett","DIN lang","Flasche","Trauben","Creme"],
+  "formatKey": "din-lang-portrait",
+  "number": 852,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f3ead3","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Flasche","x":35.119,"y":10,"w":28.763,"h":90,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-weinflasche"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Trauben","x":66,"y":62.752,"w":26,"h":36.495,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-trauben"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"shape","name":"Linie 1","x":12,"y":108,"w":75,"h":0.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#5a1428","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"shape","name":"Linie 2","x":12,"y":112,"w":75,"h":0.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#5a1428","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Kopf","x":8,"y":117,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ES LADEN EIN","fontFamily":"Cinzel","fontSize":8.5,"fontWeight":400,"italic":false,"color":"#8a6a2a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Titel","x":6,"y":125,"w":87,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Weinprobe","fontFamily":"Playfair Display","fontSize":31,"fontWeight":700,"italic":true,"color":"#5a1428","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Sub","x":8,"y":146,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"im Gewölbekeller","fontFamily":"Cormorant Garamond","fontSize":14,"fontWeight":600,"italic":false,"color":"#5a1428","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"shape","name":"Linie 3","x":30,"y":158,"w":39,"h":0.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#8a6a2a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"text","name":"Datum","x":8,"y":163,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 9. Oktober 2027","fontFamily":"Cinzel","fontSize":10,"fontWeight":400,"italic":false,"color":"#2a0d17","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Zeit","x":8,"y":172,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 18 Uhr · Musterweg 5","fontFamily":"Cormorant Garamond","fontSize":12,"fontWeight":600,"italic":false,"color":"#2a0d17","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Beitrag","x":8,"y":180,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Beitrag: 25 € inkl. Brot und Käse","fontFamily":"Cormorant Garamond","fontSize":11,"fontWeight":600,"italic":false,"color":"#2a0d17","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Zusage","x":8,"y":190,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 25. September","fontFamily":"Cormorant Garamond","fontSize":11,"fontWeight":700,"italic":true,"color":"#5a1428","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

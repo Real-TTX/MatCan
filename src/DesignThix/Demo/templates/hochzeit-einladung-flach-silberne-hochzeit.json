@@ -1,0 +1,31 @@
+{
+  "name": "Hochzeit Einladung – Silberne Hochzeit",
+  "category": "Karten",
+  "description": "Einladung zur Silbernen Hochzeit als flache Karte A5 hoch: große silberne 25 neben zwei Ringen, Namen in Antiqua und die Eckdaten linksbündig in großer, gut lesbarer Schrift auf kühlem Hellgrau. Klar und ruhig.",
+  "family": "hochzeit-einladung-flach",
+  "familyName": "Hochzeit: Einladung (flache Karte)",
+  "variant": "Silberne Hochzeit",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Jubiläum","Hochzeitstag","Ehejubiläum","groß gedruckt","gut lesbar","Familienfeier","Jubelpaar","Silberne Hochzeit","25 Jahre","Silber","Silberhochzeit","silbern","Einladung","Einladungskarte","A5","Ringe"],
+  "formatKey": "a5-portrait",
+  "number": 742,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Einladung","background":{"color":"#f3f5f7","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Band oben","x":0,"y":0,"w":148,"h":12,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#cfd5db","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"text","name":"Zahl","x":14,"y":22,"w":80,"h":46,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"25","fontFamily":"Playfair Display","fontSize":130,"fontWeight":400,"italic":false,"color":"#7d8791","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":60,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"image","name":"Ringe","x":90,"y":34,"w":46,"h":35.057,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-trauringe-silber"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Titel","x":14,"y":76,"w":120,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SILBERHOCHZEIT","fontFamily":"Josefin Sans","fontSize":15,"fontWeight":600,"italic":false,"color":"#7d8791","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Namen","x":14,"y":87,"w":124,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Playfair Display","fontSize":32,"fontWeight":400,"italic":true,"color":"#2f3a45","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"shape","name":"Strich","x":14,"y":108,"w":40,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#7d8791","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Text","x":14,"y":114,"w":120,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir feiern 25 gemeinsame Jahre und laden euch herzlich dazu ein.","fontFamily":"Lora","fontSize":14,"fontWeight":400,"italic":false,"color":"#2f3a45","align":"left","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Datum","x":14,"y":138,"w":124,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 12. Juni 2027, 14:00 Uhr","fontFamily":"Lora","fontSize":14,"fontWeight":700,"italic":false,"color":"#2f3a45","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Ort","x":14,"y":150,"w":124,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gut Birkenhof\nBirkenallee 4, 12345 Musterstadt","fontFamily":"Lora","fontSize":13,"fontWeight":400,"italic":false,"color":"#2f3a45","align":"left","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Antwort","x":14,"y":176,"w":124,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir bitten um Antwort bis zum 1. Mai 2027.","fontFamily":"Lora","fontSize":11.5,"fontWeight":400,"italic":true,"color":"#7d8791","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"shape","name":"Band unten","x":0,"y":198,"w":148,"h":12,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#cfd5db","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"}
+      ]}
+    ]
+  }
+}

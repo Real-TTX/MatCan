@@ -1,0 +1,38 @@
+{
+  "name": "Gamer-Party – Level freigeschaltet",
+  "category": "Einladungen",
+  "description": "Einladung im Retro-Spiele-Look (A6 hoch): Pixelrahmen, Controller und „Level freigeschaltet“. Name und Alter sind Felder.",
+  "family": "gamer-party",
+  "familyName": "Gamer-Party",
+  "variant": "Level",
+  "occasion": "Geburtstag",
+  "tags": ["Gamer","Gaming","Party","Geburtstag","Einladung","Level","Controller","Pixel","Zocken","LAN-Party","Pixelrahmen","Retro","Level freigeschaltet"],
+  "formatKey": "a6-portrait",
+  "number": 833,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Jonas","decimals":null,"category":null,"required":false},
+      {"key":"Alter","label":"Alter","type":"text","sample":"30","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#14122e","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rahmen","x":2,"y":2.593,"w":101,"h":142.814,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pixelrahmen-hoch-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Controller","x":23.088,"y":16,"w":58.824,"h":40,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-gamepad"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Kopf","x":14,"y":60,"w":77,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ACHIEVEMENT UNLOCKED","fontFamily":"IBM Plex Mono","fontSize":8,"fontWeight":600,"italic":false,"color":"#2ff3ff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.08,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Level","x":14,"y":67,"w":77,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"LEVEL {{Alter}}","fontFamily":"Righteous","fontSize":34,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Frei","x":14,"y":85,"w":77,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"freigeschaltet","fontFamily":"Righteous","fontSize":17,"fontWeight":400,"italic":false,"color":"#ff4fa3","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Spieler","x":14,"y":97,"w":77,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Spieler 1: {{Name}}","fontFamily":"IBM Plex Mono","fontSize":10,"fontWeight":600,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":14,"y":109,"w":77,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 19. Juni 2027","fontFamily":"IBM Plex Mono","fontSize":8.5,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zeit","x":14,"y":116,"w":77,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Start 18 Uhr · Pizza inklusive","fontFamily":"IBM Plex Mono","fontSize":8.5,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Ort","x":14,"y":123,"w":77,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"IBM Plex Mono","fontSize":8.5,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Zusage","x":14,"y":130,"w":77,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 5. Juni","fontFamily":"IBM Plex Mono","fontSize":8.5,"fontWeight":500,"italic":false,"color":"#2ff3ff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Jonas","Alter":"30"},
+    {"Name":"Maximilian","Alter":"40"},
+    {"Name":"Eva","Alter":"18"}
+  ]
+}

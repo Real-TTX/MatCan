@@ -1,0 +1,32 @@
+{
+  "name": "Hochzeit Danksagung – Silberne Hochzeit",
+  "category": "Karten",
+  "description": "Danksagungskarte zur Silbernen Hochzeit als Postkarte A6 quer: vorne die silberne 25 neben dem Lorbeerkranz und „Herzlichen Dank“, hinten ein persönlicher Gruß in großer Schrift. Kühl, klar und gut lesbar.",
+  "family": "hochzeit-danksagung",
+  "familyName": "Hochzeit: Danksagung",
+  "variant": "Silberne Hochzeit",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Jubiläum","Hochzeitstag","Ehejubiläum","groß gedruckt","gut lesbar","Familienfeier","Jubelpaar","Silberne Hochzeit","25 Jahre","Silber","Silberhochzeit","silbern","Danksagung","Danke","Dankeskarte","Postkarte"],
+  "formatKey": "postcard-a6-landscape",
+  "number": 745,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#f3f5f7","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Kranz","x":66,"y":8,"w":78,"h":78.18,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-lorbeerkranz-silber"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Zahl","x":83,"y":32,"w":44,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"25","fontFamily":"Playfair Display","fontSize":66,"fontWeight":400,"italic":false,"color":"#7d8791","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":34,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Danke","x":12,"y":26,"w":66,"h":36,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Herzlichen\nDank","fontFamily":"Playfair Display","fontSize":26,"fontWeight":400,"italic":true,"color":"#2f3a45","align":"left","valign":"top","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Strich","x":12,"y":66,"w":24,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#7d8791","strokeWidth":0.5,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Namen","x":12,"y":70,"w":60,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Lora","fontSize":13,"fontWeight":700,"italic":false,"color":"#2f3a45","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":12,"y":80,"w":60,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12.06.2027","fontFamily":"Josefin Sans","fontSize":8,"fontWeight":600,"italic":false,"color":"#7d8791","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#e4e8ec","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"shape","name":"Band","x":0,"y":0,"w":148,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#cfd5db","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Titel","x":19,"y":18,"w":110,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Familie, liebe Freunde,","fontFamily":"Playfair Display","fontSize":18,"fontWeight":400,"italic":true,"color":"#2f3a45","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Text","x":18,"y":34,"w":112,"h":38,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"25 Jahre sind wir ein Paar, und mit euch haben wir diesen Tag gefeiert. Danke für eure Wünsche, eure Geschenke und die schönen Stunden.","fontFamily":"Lora","fontSize":12.5,"fontWeight":400,"italic":false,"color":"#2f3a45","align":"center","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Gruß","x":24,"y":80,"w":100,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eure Anna & Jonas","fontFamily":"Playfair Display","fontSize":17,"fontWeight":400,"italic":true,"color":"#7d8791","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

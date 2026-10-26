@@ -1,0 +1,43 @@
+{
+  "name": "Klassentreffen – Wer ist wer?",
+  "category": "Einladungen",
+  "description": "Instagram-Post mit sechs Bildrahmen für alte Klassenfotos („Wer ist wer?“), dazu Jahrgang, Datum und Ort. Die Bildrahmen füllst du mit eigenen Fotos.",
+  "family": "klassentreffen",
+  "familyName": "Klassentreffen",
+  "variant": "Wer ist wer?",
+  "occasion": "Feste & Events",
+  "tags": ["Klassentreffen","Schule","Jahrgang","Abitur","Wiedersehen","Einladung","Ehemalige","Treffen","Schultreffen","Jubiläum","Fotos","Instagram","Post","Social Media","Bildrahmen","Wer ist wer"],
+  "formatKey": "instagram-post",
+  "number": 868,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Jahrgang","label":"Jahrgang","type":"text","sample":"Abitur 2007","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fbf3df","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Foto Grund 11","x":74,"y":250,"w":290,"h":300,"rotation":-2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d9c9a3","stroke":null,"strokeWidth":1,"dash":"solid","radius":4,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Foto Grund 12","x":74,"y":580,"w":290,"h":300,"rotation":2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d9c9a3","stroke":null,"strokeWidth":1,"dash":"solid","radius":4,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Foto Grund 21","x":392,"y":250,"w":290,"h":300,"rotation":2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d9c9a3","stroke":null,"strokeWidth":1,"dash":"solid","radius":4,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"shape","name":"Foto Grund 22","x":392,"y":580,"w":290,"h":300,"rotation":-2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d9c9a3","stroke":null,"strokeWidth":1,"dash":"solid","radius":4,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"shape","name":"Foto Grund 31","x":710,"y":250,"w":290,"h":300,"rotation":-2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d9c9a3","stroke":null,"strokeWidth":1,"dash":"solid","radius":4,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"shape","name":"Foto Grund 32","x":710,"y":580,"w":290,"h":300,"rotation":2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d9c9a3","stroke":null,"strokeWidth":1,"dash":"solid","radius":4,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"image","name":"Foto 11","x":82,"y":258,"w":274,"h":250,"rotation":-2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":3,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e8","type":"image","name":"Foto 12","x":82,"y":588,"w":274,"h":250,"rotation":2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":3,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e9","type":"image","name":"Foto 21","x":400,"y":258,"w":274,"h":250,"rotation":2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":3,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e10","type":"image","name":"Foto 22","x":400,"y":588,"w":274,"h":250,"rotation":-2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":3,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e11","type":"image","name":"Foto 31","x":718,"y":258,"w":274,"h":250,"rotation":-2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":3,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e12","type":"image","name":"Foto 32","x":718,"y":588,"w":274,"h":250,"rotation":2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":null,"fit":"cover","radius":3,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e13","type":"text","name":"Kopf","x":60,"y":48,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"KLASSENTREFFEN","fontFamily":"Amatic SC","fontSize":38,"fontWeight":700,"italic":false,"color":"#7a3b24","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.15,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"text","name":"Titel","x":60,"y":100,"w":960,"h":110,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wer ist wer?","fontFamily":"Caveat","fontSize":64,"fontWeight":700,"italic":false,"color":"#2b4a3f","align":"center","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e15","type":"text","name":"Jahrgang","x":60,"y":906,"w":960,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Jahrgang}} · Samstag, 2. Oktober 2027","fontFamily":"Caveat","fontSize":34,"fontWeight":700,"italic":false,"color":"#2b4a3f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e16","type":"text","name":"Ort","x":60,"y":970,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gasthof zur Linde · ab 18 Uhr · Zusage bis 18. September","fontFamily":"Caveat","fontSize":28,"fontWeight":600,"italic":false,"color":"#7a3b24","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Jahrgang":"Abitur 2007"},
+    {"Jahrgang":"Klasse 10b"},
+    {"Jahrgang":"Realschulabschluss 1997"}
+  ]
+}

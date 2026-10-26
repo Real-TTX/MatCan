@@ -1,0 +1,37 @@
+{
+  "name": "Ruhestandsfeier – Sonnenschirm",
+  "category": "Einladungen",
+  "description": "Instagram-Post für die Ruhestandsfeier: Sonnenschirm am Strand auf himmelblauem Verlauf, „Endlich Ruhestand“ und die Angaben zur Feier. Der Name ist ein Feld.",
+  "family": "ruhestandsfeier",
+  "familyName": "Ruhestandsfeier",
+  "variant": "Sonnenschirm",
+  "occasion": "Feste & Events",
+  "tags": ["Ruhestand","Rente","Ruhestandsfeier","Verabschiedung","Pension","Einladung","Feier","Abschied","Kollege","Feierabend","Sonnenschirm","Strand","Instagram","Post","Social Media","Urlaub"],
+  "formatKey": "instagram-post",
+  "number": 865,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Heinz","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#8fd3f5"},{"offset":1,"color":"#e8f6fb"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Sonne","x":790,"y":70,"w":190,"h":190,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#ffd23f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Sand","x":0,"y":840,"w":1080,"h":240,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#f1d79a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"image","name":"Sonnenschirm","x":640,"y":361.111,"w":360,"h":437.778,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-sonnenschirm"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":60,"y":60,"w":640,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"RUHESTANDSFEIER","fontFamily":"Josefin Sans","fontSize":22,"fontWeight":700,"italic":false,"color":"#1f6f8b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.35,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Name","x":60,"y":130,"w":560,"h":170,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Dancing Script","fontSize":80,"fontWeight":700,"italic":false,"color":"#1f6f8b","align":"left","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":36,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Titel","x":60,"y":310,"w":560,"h":190,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"macht jetzt Urlaub – für immer!","fontFamily":"Fredoka","fontSize":44,"fontWeight":600,"italic":false,"color":"#14233b","align":"left","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":60,"y":560,"w":560,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 25. Juni 2027","fontFamily":"Nunito","fontSize":28,"fontWeight":800,"italic":false,"color":"#14233b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zeit","x":60,"y":622,"w":560,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 16 Uhr","fontFamily":"Nunito","fontSize":26,"fontWeight":600,"italic":false,"color":"#14233b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Ort","x":60,"y":676,"w":560,"h":90,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gartenlokal Sonnenschein, Musterstadt","fontFamily":"Nunito","fontSize":26,"fontWeight":600,"italic":false,"color":"#14233b","align":"left","valign":"top","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Zusage","x":60,"y":900,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 11. Juni: 0170 1234567","fontFamily":"Nunito","fontSize":26,"fontWeight":700,"italic":false,"color":"#7a4a1a","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Heinz"},
+    {"Name":"Ingrid"},
+    {"Name":"Dr. Maximiliane Schneider"}
+  ]
+}

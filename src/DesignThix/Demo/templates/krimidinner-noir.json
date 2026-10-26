@@ -1,0 +1,35 @@
+{
+  "name": "Krimidinner – Noir",
+  "category": "Einladungen",
+  "description": "Einladung (A6 hoch) im Film-noir-Stil: Detektiv-Silhouette im Lichtkegel, gelber Titel und Angaben wie in einer Ermittlungsakte. Der Titel des Falls ist ein Feld.",
+  "family": "krimidinner",
+  "familyName": "Krimidinner",
+  "variant": "Noir",
+  "occasion": "Feste & Events",
+  "tags": ["Krimidinner","Krimi","Mord","Detektiv","Dinner","Einladung","Mottoparty","Rätsel","Spiel","Verbrechen","Film noir","Silhouette","Schwarz-Gelb","Akte"],
+  "formatKey": "a6-portrait",
+  "number": 845,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Titel","label":"Titel des Falls","type":"text","sample":"Mord im Herrenhaus","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#14141b","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Lichtkegel","x":22,"y":8,"w":61,"h":78,"rotation":0,"opacity":0.17,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"triangle","points":5,"innerRadius":0.5,"fill":"#ffffff","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"image","name":"Detektiv","x":34.686,"y":12,"w":35.628,"h":76,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-detektiv-silhouette"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"shape","name":"Band","x":0,"y":90,"w":105,"h":3,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffd23f","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Kopf","x":8,"y":96,"w":89,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"EINLADUNG ZUM KRIMIDINNER","fontFamily":"IBM Plex Mono","fontSize":8,"fontWeight":600,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.05,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel","x":8,"y":102,"w":89,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Titel}}","fontFamily":"Playfair Display","fontSize":20,"fontWeight":800,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":8,"y":123,"w":89,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 6. November 2027 · 19 Uhr","fontFamily":"IBM Plex Mono","fontSize":8.5,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Ort","x":8,"y":130,"w":89,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"IBM Plex Mono","fontSize":8.5,"fontWeight":500,"italic":false,"color":"#bdbdc4","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zusage","x":8,"y":137,"w":89,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 25. Oktober · Rolle folgt per Post","fontFamily":"IBM Plex Mono","fontSize":7.5,"fontWeight":500,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Titel":"Mord im Herrenhaus"},
+    {"Titel":"Tod beim Dinner"},
+    {"Titel":"Die verschwundene Perlenkette"}
+  ]
+}

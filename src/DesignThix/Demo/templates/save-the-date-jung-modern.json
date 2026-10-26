@@ -1,0 +1,34 @@
+{
+  "name": "Save the Date – Jung & Modern",
+  "category": "Karten",
+  "description": "Quadratische Save-the-Date-Karte (100 mm) in Knallgelb und Türkis: Namen in fetten Kleinbuchstaben, Datum in einer schwarzen Pille, Herz und Funkeln mit Outline. Die Rückseite kündigt die Feier an. Für Paare, die laut und bunt heiraten.",
+  "family": "hochzeit-save-the-date",
+  "familyName": "Hochzeit: Save the Date",
+  "variant": "Jung & Modern",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Pop","bunt","modern","jung","Pop-Art","frech","knallig","Brautpaar","Save the Date","Termin","quadratisch"],
+  "formatKey": "square-100",
+  "number": 680,
+  "document": {
+    "schema":2,"unit":"mm","width":100,"height":100,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#ffd23f","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Funkeln","x":58,"y":3,"w":38,"h":35.228,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pop-funkeln"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Save the Date","x":8,"y":9,"w":46,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SAVE THE DATE","fontFamily":"Poppins","fontSize":8,"fontWeight":700,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.12,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Name 1","x":8,"y":22,"w":84,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"anna","fontFamily":"Poppins","fontSize":58,"fontWeight":700,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Name 2","x":8,"y":44,"w":84,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"& jonas","fontFamily":"Poppins","fontSize":58,"fontWeight":700,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"image","name":"Schnörkel","x":8,"y":71,"w":38,"h":5.298,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pop-schnoerkel-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"shape","name":"Datum","x":8,"y":80,"w":52,"h":11,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#1d1d1b","stroke":null,"strokeWidth":1,"dash":"solid","radius":5.5,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Datum Text","x":10,"y":80,"w":48,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SA · 12.06.2027","fontFamily":"Poppins","fontSize":10,"fontWeight":700,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"image","name":"Herz","x":66,"y":66,"w":28,"h":25.755,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pop-herz"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#3ad4c0","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e9","type":"text","name":"Titel","x":8,"y":10,"w":84,"h":38,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WIR\nHEIRATEN!","fontFamily":"Poppins","fontSize":32,"fontWeight":700,"italic":false,"color":"#1d1d1b","align":"left","valign":"top","lineHeight":1.02,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Text","x":8,"y":52,"w":58,"h":28,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Haltet euch den Tag frei: Es gibt Konfetti, Torte und Tanzen bis zum Morgengrauen. Die Einladung folgt.","fontFamily":"Poppins","fontSize":9,"fontWeight":500,"italic":false,"color":"#1d1d1b","align":"left","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Ort","x":8,"y":86,"w":60,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GUT BIRKENHOF · MUSTERSTADT","fontFamily":"Poppins","fontSize":7,"fontWeight":700,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"image","name":"Funkeln","x":68,"y":62,"w":26,"h":24.103,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pop-funkeln"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]}
+    ]
+  }
+}

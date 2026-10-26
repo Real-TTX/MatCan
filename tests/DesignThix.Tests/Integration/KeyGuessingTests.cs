@@ -340,7 +340,7 @@ public sealed class KeyGuessingTests(AppTests.AppFactory factory) : PlatformTest
         Assert.Contains("?v=", resolved.GetProperty(key).GetProperty("url").GetString());
 
         // the browser's list only shows what the person may see
-        var items = await stranger.GetFromJsonAsync<JsonElement>("/api/items?recursive=true&q=Mit%20Bild");
+        var items = await stranger.GetFromJsonAsync<JsonElement>("/api/items?recursive=true&templates=false&kinds=design&q=Mit%20Bild");
         Assert.Equal(0, items.GetProperty("total").GetInt32());
         var seen = await viewer.GetFromJsonAsync<JsonElement>("/api/items?scope=shared");
         Assert.Contains(seen.GetProperty("items").EnumerateArray(), i => i.GetProperty("id").GetInt64() == design);

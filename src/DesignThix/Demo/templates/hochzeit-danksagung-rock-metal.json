@@ -1,0 +1,33 @@
+{
+  "name": "Hochzeit Danksagung – Rock & Metal",
+  "category": "Karten",
+  "description": "Danksagungskarte als Postkarte A6 quer in Schwarz: vorne Totenkopf mit Rosen und „Thanks for rocking“, hinten ein Gruß mit E-Gitarre und Rosenranke. Für Paare mit Hang zu Rock und Metal. Ohne Bandnamen oder Logos.",
+  "family": "hochzeit-danksagung",
+  "familyName": "Hochzeit: Danksagung",
+  "variant": "Rock & Metal",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Rock","Metal","Rocker","Totenkopf","Gitarre","schwarz","düster","Gothic","Brautpaar","Danksagung","Danke","Dankeskarte","Postkarte"],
+  "formatKey": "postcard-a6-landscape",
+  "number": 704,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#1c1c1c","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Totenkopf","x":8,"y":22,"w":62,"h":52.493,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-totenkopf-rosen"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Thanks","x":76,"y":20,"w":66,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"THANKS","fontFamily":"Anton","fontSize":46,"fontWeight":400,"italic":false,"color":"#f2efe8","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"For rocking","x":76,"y":44,"w":66,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"for rocking","fontFamily":"Permanent Marker","fontSize":22,"fontWeight":400,"italic":false,"color":"#d12f45","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"With us","x":76,"y":58,"w":66,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WITH US","fontFamily":"Anton","fontSize":30,"fontWeight":400,"italic":false,"color":"#f2efe8","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Namen","x":76,"y":78,"w":64,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ANNA & JONAS","fontFamily":"Oswald","fontSize":11,"fontWeight":700,"italic":false,"color":"#d12f45","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0.25,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"image","name":"Verschleiß","x":70,"y":18,"w":78,"h":60,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-verschleiss-schwarz"},"fit":"cover","radius":0,"crop":{"x":0,"y":0.092,"w":1,"h":0.769},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#1c1c1c","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e7","type":"image","name":"Stacheldraht","x":10,"y":8,"w":128,"h":10.086,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-stacheldraht-weiss"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e8","type":"text","name":"Titel","x":12,"y":24,"w":100,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"DANKE FÜR DEN LÄRM!","fontFamily":"Anton","fontSize":22,"fontWeight":400,"italic":false,"color":"#f2efe8","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Text","x":12,"y":40,"w":80,"h":38,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ihr habt mit uns gefeiert, geschwitzt und mitgegrölt. Danke für eure Geschenke, eure Wünsche und eine Nacht, die wir nie vergessen.","fontFamily":"Oswald","fontSize":10.5,"fontWeight":300,"italic":false,"color":"#f2efe8","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Gruß","x":12,"y":82,"w":76,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Permanent Marker","fontSize":18,"fontWeight":400,"italic":false,"color":"#d12f45","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"image","name":"Gitarre","x":104,"y":26,"w":36,"h":45.474,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-e-gitarre"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]}
+    ]
+  }
+}

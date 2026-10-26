@@ -1,0 +1,32 @@
+{
+  "name": "80er-Party – Mixtape",
+  "category": "Einladungen",
+  "description": "Hohe Einladung (DIN lang) mit einer Kassette als Titelbild: „Side A“ und „Side B“ erzählen, was gespielt und gefeiert wird.",
+  "family": "party-80er",
+  "familyName": "80er-Party",
+  "variant": "Mixtape",
+  "occasion": "Feste & Events",
+  "tags": ["80er","Party","Einladung","Achtziger","Retro","Neon","Motto","Mottoparty","Feier","Disco","Kassette","Mixtape","Tape","DIN lang","Streifen"],
+  "formatKey": "din-lang-portrait",
+  "number": 837,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#16162b","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Kassette","x":8,"y":10.261,"w":83,"h":57.479,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-kassette"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Streifen rosa","x":0,"y":126,"w":99,"h":4,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ff4fa3","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Streifen gelb","x":0,"y":131,"w":99,"h":4,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffc93c","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"shape","name":"Streifen cyan","x":0,"y":136,"w":99,"h":4,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#2fd0e6","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"text","name":"Titel","x":6,"y":74,"w":87,"h":24,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"MIXTAPE","fontFamily":"Righteous","fontSize":44,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":22,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Sub","x":8,"y":99,"w":83,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Die 80er-Party","fontFamily":"Righteous","fontSize":17,"fontWeight":400,"italic":false,"color":"#ff4fd8","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Seite A","x":10,"y":111,"w":79,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SIDE A: Synthesizer, Dauerwelle & große Hits","fontFamily":"Poppins","fontSize":8.5,"fontWeight":600,"italic":false,"color":"#2ff3ff","align":"center","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Datum","x":8,"y":148,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 10. Juli 2027","fontFamily":"Poppins","fontSize":11,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zeit","x":8,"y":157,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 20 Uhr · Einlass 19:30 Uhr","fontFamily":"Poppins","fontSize":9.5,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Ort","x":8,"y":165,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Poppins","fontSize":9.5,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Seite B","x":10,"y":176,"w":79,"h":11,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SIDE B: Cocktails, Neon & Moonwalk","fontFamily":"Poppins","fontSize":8.5,"fontWeight":600,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Zusage","x":8,"y":190,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 26. Juni: 0170 1234567","fontFamily":"Poppins","fontSize":9,"fontWeight":600,"italic":false,"color":"#ff4fd8","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

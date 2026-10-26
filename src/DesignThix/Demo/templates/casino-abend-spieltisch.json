@@ -1,0 +1,29 @@
+{
+  "name": "Casino-Abend – Spieltisch",
+  "category": "Einladungen",
+  "description": "Hohe Einladung (DIN lang) auf grünem Spielfilz: Spielkarten, Chips, „All in“ und goldene Linien.",
+  "family": "casino-abend",
+  "familyName": "Casino-Abend",
+  "variant": "Spieltisch",
+  "occasion": "Feste & Events",
+  "tags": ["Casino","Casinoabend","Poker","Roulette","Einladung","Mottoparty","Spielbank","Abendgarderobe","Feier","Spielfilz","Grün","Karten","Chips","DIN lang","All in"],
+  "formatKey": "din-lang-portrait",
+  "number": 843,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#0f5a37"},{"offset":1,"color":"#08301e"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Karten","x":6,"y":18.62,"w":87,"h":42.759,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-spielkarten"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"shape","name":"Linie oben","x":10,"y":80,"w":79,"h":0.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d4af6a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Linie unten","x":10,"y":134,"w":79,"h":0.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d4af6a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"image","name":"Chips","x":22.681,"y":154,"w":53.638,"h":44,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pokerchips"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"text","name":"Titel","x":6,"y":84,"w":87,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ALL IN","fontFamily":"Anton","fontSize":60,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0.04,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Sub","x":8,"y":114,"w":83,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Casino-Abend für Mutige","fontFamily":"Playfair Display","fontSize":13,"fontWeight":400,"italic":true,"color":"#d4af6a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":8,"y":124,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 23. Oktober 2027","fontFamily":"Cinzel","fontSize":10,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zeit","x":8,"y":134,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 19 Uhr · Musterweg 5","fontFamily":"Cormorant Garamond","fontSize":12,"fontWeight":600,"italic":false,"color":"#f3e8d0","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zusage","x":8,"y":142,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"U. A. w. g. bis 9. Oktober","fontFamily":"Cormorant Garamond","fontSize":11,"fontWeight":600,"italic":true,"color":"#d4af6a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

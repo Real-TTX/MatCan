@@ -1,0 +1,41 @@
+{
+  "name": "Filmabend – Eintrittskarte",
+  "category": "Einladungen",
+  "description": "Hohe Einladung (DIN lang) als Eintrittskarte: Filmrolle, Perforationslinie und Abriss-Abschnitt; Filmtitel als Feld, Platz und Einlass darunter.",
+  "family": "filmabend",
+  "familyName": "Filmabend",
+  "variant": "Eintrittskarte",
+  "occasion": "Feste & Events",
+  "tags": ["Filmabend","Kino","Heimkino","Film","Popcorn","Einladung","Kinoabend","Movie Night","Freunde","Abend","Eintrittskarte","Ticket","DIN lang","Filmrolle","Perforation"],
+  "formatKey": "din-lang-portrait",
+  "number": 894,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Film","label":"Film","type":"text","sample":"Eine Nacht im Kino","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f6efdc","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Rahmen","x":6,"y":6,"w":87,"h":198,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#7a1020","strokeWidth":1.2,"dash":"solid","radius":4,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Kopfband","x":6,"y":6,"w":87,"h":16,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#7a1020","stroke":null,"strokeWidth":1,"dash":"solid","radius":4,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Kopfband 2","x":6,"y":14,"w":87,"h":8,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#7a1020","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"image","name":"Filmrolle","x":26.234,"y":32,"w":46.532,"h":44,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-filmrolle"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"shape","name":"Perforation","x":10,"y":150,"w":79,"h":0.6,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#7a1020","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"text","name":"Kopf","x":10,"y":8,"w":79,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"EINTRITTSKARTE","fontFamily":"Oswald","fontSize":17,"fontWeight":500,"italic":false,"color":"#f6efdc","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Kopf 2","x":10,"y":80,"w":79,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"HEUTE AUF DER LEINWAND","fontFamily":"Oswald","fontSize":8.5,"fontWeight":500,"italic":false,"color":"#7a1020","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.25,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Film","x":10,"y":88,"w":79,"h":30,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Film}}","fontFamily":"Abril Fatface","fontSize":21,"fontWeight":400,"italic":false,"color":"#2b0a10","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Datum","x":10,"y":120,"w":79,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 22. Januar 2027","fontFamily":"Oswald","fontSize":11,"fontWeight":500,"italic":false,"color":"#2b0a10","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Zeit","x":10,"y":129,"w":79,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Einlass 19:30 Uhr · Beginn 20 Uhr","fontFamily":"Oswald","fontSize":10,"fontWeight":400,"italic":false,"color":"#2b0a10","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Ort","x":10,"y":138,"w":79,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · freie Platzwahl","fontFamily":"Oswald","fontSize":10,"fontWeight":400,"italic":false,"color":"#2b0a10","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Abriss","x":10,"y":156,"w":79,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ABRISS: Bitte zusagen bis 15. Januar","fontFamily":"Oswald","fontSize":10,"fontWeight":500,"italic":false,"color":"#7a1020","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Tel","x":10,"y":166,"w":79,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"0170 1234567","fontFamily":"Oswald","fontSize":13,"fontWeight":500,"italic":false,"color":"#2b0a10","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e14","type":"text","name":"Snack","x":10,"y":180,"w":79,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Popcorn und Getränke sind im Preis enthalten.","fontFamily":"Oswald","fontSize":9,"fontWeight":400,"italic":false,"color":"#7a1020","align":"center","valign":"top","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Film":"Eine Nacht im Kino"},
+    {"Film":"Der große Filmmarathon"},
+    {"Film":"Gruselabend: Drei Filme, kein Schlaf"}
+  ]
+}

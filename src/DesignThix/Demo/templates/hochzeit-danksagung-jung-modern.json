@@ -1,0 +1,32 @@
+{
+  "name": "Hochzeit Danksagung – Jung & Modern",
+  "category": "Karten",
+  "description": "Danksagungskarte als Postkarte A6 quer: vorne ein riesiges „danke“ auf Pink mit Herz und Funkeln, hinten Platz für einen persönlichen Gruß. Laut, froh und im Stil der Einladung.",
+  "family": "hochzeit-danksagung",
+  "familyName": "Hochzeit: Danksagung",
+  "variant": "Jung & Modern",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Pop","bunt","modern","jung","Pop-Art","frech","knallig","Brautpaar","Danksagung","Danke","Dankeskarte","Postkarte"],
+  "formatKey": "postcard-a6-landscape",
+  "number": 684,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#ff5d8f","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Funkeln","x":112,"y":4,"w":30,"h":27.812,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pop-funkeln"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Danke","x":10,"y":30,"w":130,"h":44,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"danke!","fontFamily":"Poppins","fontSize":92,"fontWeight":700,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"shape","name":"Namen","x":10,"y":76,"w":66,"h":12,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#1d1d1b","stroke":null,"strokeWidth":1,"dash":"solid","radius":6,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"text","name":"Namen Text","x":12,"y":76,"w":62,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"anna & jonas","fontFamily":"Poppins","fontSize":12,"fontWeight":700,"italic":false,"color":"#ffd23f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"image","name":"Herz","x":108,"y":56,"w":32,"h":29.434,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pop-herz"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#fff6e5","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e6","type":"shape","name":"Streifen","x":0,"y":0,"w":8,"h":105,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#3ad4c0","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"text","name":"Titel","x":18,"y":12,"w":120,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Ihr wart großartig!","fontFamily":"Poppins","fontSize":18,"fontWeight":700,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":10,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Text","x":18,"y":30,"w":118,"h":44,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Danke, dass ihr mit uns gefeiert, getanzt und gelacht habt. Euer Kommen, eure Geschenke und eure Wünsche haben diesen Tag unvergesslich gemacht.","fontFamily":"Poppins","fontSize":10,"fontWeight":500,"italic":false,"color":"#1d1d1b","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Gruß","x":18,"y":82,"w":100,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eure Anna & Jonas","fontFamily":"Poppins","fontSize":13,"fontWeight":700,"italic":false,"color":"#1d1d1b","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"image","name":"Schnörkel","x":18,"y":92,"w":40,"h":5.577,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-pop-schnoerkel-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}}
+      ]}
+    ]
+  }
+}

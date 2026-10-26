@@ -1,0 +1,38 @@
+{
+  "name": "Runder Geburtstag – Sterne",
+  "category": "Einladungen",
+  "description": "Hohe Einladung (DIN lang) auf Nachtblau: riesige Zahl im Sternenhimmel, „feiert“ in Schreibschrift und alle Angaben zur Geburtstagsparty. Alter und Name sind Felder.",
+  "family": "runder-geburtstag-party",
+  "familyName": "Runder Geburtstag – Party",
+  "variant": "Sterne",
+  "occasion": "Geburtstag",
+  "tags": ["Runder Geburtstag","Geburtstag","Party","Einladung","30","40","50","Zahl","Feier","Jubiläum","Geburtstagsparty","Sterne","Nachtblau","DIN lang","Himmel","Gold"],
+  "formatKey": "din-lang-portrait",
+  "number": 886,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Alter","label":"Alter","type":"text","sample":"40","decimals":null,"category":null,"required":false},
+      {"key":"Name","label":"Name","type":"text","sample":"Katrin","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#14233b"},{"offset":1,"color":"#27345a"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Sterne","x":14.5,"y":6,"w":70,"h":70,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-himmel-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Trenner","x":25,"y":128,"w":49,"h":4.9,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-sterne-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Zahl","x":6,"y":36,"w":87,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Alter}}","fontFamily":"Playfair Display","fontSize":120,"fontWeight":700,"italic":false,"color":"#e3c479","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Name","x":8,"y":98,"w":83,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Great Vibes","fontSize":28,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Sub","x":8,"y":110,"w":83,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"feiert Geburtstag!","fontFamily":"Great Vibes","fontSize":24,"fontWeight":400,"italic":false,"color":"#e3c479","align":"center","valign":"middle","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":8,"y":140,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 13. November 2027","fontFamily":"Cinzel","fontSize":10.5,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Zeit","x":8,"y":149,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 19 Uhr","fontFamily":"Cormorant Garamond","fontSize":14,"fontWeight":600,"italic":false,"color":"#e3c479","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Ort","x":8,"y":158,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Cormorant Garamond","fontSize":12,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zusage","x":8,"y":172,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 30. Oktober","fontFamily":"Cormorant Garamond","fontSize":12,"fontWeight":600,"italic":true,"color":"#e3c479","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Tel","x":8,"y":180,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"0170 1234567","fontFamily":"Cormorant Garamond","fontSize":12,"fontWeight":600,"italic":true,"color":"#e3c479","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Alter":"40","Name":"Katrin"},
+    {"Alter":"30","Name":"Maximilian"},
+    {"Alter":"50","Name":"Dr. Maximiliane Schneider"}
+  ]
+}

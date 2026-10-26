@@ -1,0 +1,35 @@
+{
+  "name": "Filmabend – Movie Night",
+  "category": "Einladungen",
+  "description": "Story-Einladung zum Filmabend: Filmrolle, Popcorn und Klappe auf Dunkelblau, „Movie Night“ in Gold und der Filmtitel als Feld.",
+  "family": "filmabend",
+  "familyName": "Filmabend",
+  "variant": "Movie Night",
+  "occasion": "Feste & Events",
+  "tags": ["Filmabend","Kino","Heimkino","Film","Popcorn","Einladung","Kinoabend","Movie Night","Freunde","Abend","Story","Instagram","Social Media","Gold","Dunkelblau"],
+  "formatKey": "instagram-story",
+  "number": 895,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1920,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Film","label":"Film","type":"text","sample":"Eine Nacht im Kino","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#0e1830"},{"offset":1,"color":"#050a18"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Filmrolle","x":201.583,"y":160,"w":676.835,"h":640,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-filmrolle"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Popcorn","x":723.144,"y":1200,"w":243.713,"h":340,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-popcorn"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Klappe","x":102.744,"y":1250,"w":354.512,"h":340,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-filmklappe"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":60,"y":840,"w":960,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"HEUTE ABEND","fontFamily":"Oswald","fontSize":28,"fontWeight":500,"italic":false,"color":"#e3c479","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel","x":60,"y":900,"w":960,"h":140,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"MOVIE NIGHT","fontFamily":"Anton","fontSize":80,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.04,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":36,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Film","x":60,"y":1040,"w":960,"h":160,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Film}}","fontFamily":"Abril Fatface","fontSize":40,"fontWeight":400,"italic":false,"color":"#e3c479","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":60,"y":1610,"w":960,"h":66,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Freitag, 22. Januar 2027 · 20 Uhr","fontFamily":"Oswald","fontSize":32,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Ort","x":60,"y":1690,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · Zusage bis 15. Januar","fontFamily":"Oswald","fontSize":26,"fontWeight":400,"italic":false,"color":"#e3c479","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Film":"Eine Nacht im Kino"},
+    {"Film":"Der große Filmmarathon"},
+    {"Film":"Gruselabend: Drei Filme, kein Schlaf"}
+  ]
+}

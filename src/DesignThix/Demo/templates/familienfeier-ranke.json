@@ -1,0 +1,35 @@
+{
+  "name": "Familienfeier – Ranke",
+  "category": "Einladungen",
+  "description": "Natürliche Einladung (A6 hoch) für Familienfeiern jeder Art: Rankenrahmen in Salbeigrün, Schreibschrift und klare Angaben. Der Anlass ist ein Feld.",
+  "family": "familienfeier",
+  "familyName": "Familienfeier",
+  "variant": "Ranke",
+  "occasion": "Feste & Events",
+  "tags": ["Familienfeier","Familie","Einladung","Feier","Verwandtschaft","Familientreffen","Geburtstag","Jubiläum","Kaffeetafel","Fest","Ranke","Salbei","Natürlich","Rahmen","Grün"],
+  "formatKey": "a6-portrait",
+  "number": 872,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Anlass","label":"Anlass","type":"text","sample":"Familienfeier","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#f6f4ea","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rahmen","x":3,"y":4.007,"w":99,"h":139.986,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-rahmen-ranke-hoch-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Trenner","x":28,"y":76,"w":49,"h":4.9,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-trenner-blattreihe-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Kopf","x":14,"y":26,"w":77,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WIR LADEN EUCH EIN ZUR","fontFamily":"Josefin Sans","fontSize":8.5,"fontWeight":700,"italic":false,"color":"#5f7f66","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Anlass","x":14,"y":34,"w":77,"h":38,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Anlass}}","fontFamily":"Dancing Script","fontSize":32,"fontWeight":700,"italic":false,"color":"#2f4a37","align":"center","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Text","x":14,"y":84,"w":77,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Kaffee, Kuchen und ganz viel Familie","fontFamily":"Nunito","fontSize":9.5,"fontWeight":600,"italic":false,"color":"#3a3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":14,"y":96,"w":77,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 5. Juni 2027 · 14 Uhr","fontFamily":"Josefin Sans","fontSize":10,"fontWeight":700,"italic":false,"color":"#2f4a37","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Ort","x":14,"y":104,"w":77,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Josefin Sans","fontSize":9.5,"fontWeight":500,"italic":false,"color":"#2f4a37","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zusage","x":14,"y":112,"w":77,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 29. Mai: 0170 1234567","fontFamily":"Josefin Sans","fontSize":9,"fontWeight":700,"italic":false,"color":"#5f7f66","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Anlass":"Familienfeier"},
+    {"Anlass":"Omas 80. Geburtstag"},
+    {"Anlass":"Silberhochzeit Anna & Peter"}
+  ]
+}

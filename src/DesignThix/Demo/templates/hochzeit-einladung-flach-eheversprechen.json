@@ -1,0 +1,29 @@
+{
+  "name": "Hochzeit Einladung – Eheversprechen erneuern",
+  "category": "Karten",
+  "description": "Einladung zur Erneuerung des Eheversprechens als flache Karte A5 hoch: Olivenzweig und goldene Herzen, „Wir sagen noch einmal Ja“ in Schreibschrift, Eckdaten in großer, gut lesbarer Schrift auf zartem Rosé. Warm und ruhig.",
+  "family": "hochzeit-einladung-flach",
+  "familyName": "Hochzeit: Einladung (flache Karte)",
+  "variant": "Eheversprechen",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Jubiläum","Hochzeitstag","Ehejubiläum","groß gedruckt","gut lesbar","Familienfeier","Jubelpaar","Eheversprechen","Vows","Ehegelübde erneuern","Segnung","Olivenzweig","Hochzeitstag feiern","Einladung","Einladungskarte","A5","Herzen"],
+  "formatKey": "a5-portrait",
+  "number": 746,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Einladung","background":{"color":"#fbf3ee","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Olivenzweig","x":24,"y":12,"w":100,"h":40.177,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-blumen-olivenzweig-salbei"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Titel","x":11,"y":56,"w":126,"h":36,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir sagen noch\neinmal Ja","fontFamily":"Great Vibes","fontSize":40,"fontWeight":400,"italic":false,"color":"#b97a7a","align":"center","valign":"top","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":22,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Untertitel","x":12,"y":96,"w":124,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WIR ERNEUERN UNSER EHEVERSPRECHEN","fontFamily":"Cormorant Garamond","fontSize":9.5,"fontWeight":700,"italic":false,"color":"#6f8f75","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.25,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Namen","x":14,"y":107,"w":120,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Great Vibes","fontSize":32,"fontWeight":400,"italic":false,"color":"#4a3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"image","name":"Herzen","x":62,"y":124,"w":24,"h":17.829,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-herzen-doppelt-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"text","name":"Text","x":18,"y":150,"w":112,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Feiert mit uns 30 Jahre Ehe.","fontFamily":"Lora","fontSize":14,"fontWeight":400,"italic":true,"color":"#4a3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":14,"y":162,"w":120,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 12. Juni 2027, 14:00 Uhr","fontFamily":"Lora","fontSize":14,"fontWeight":700,"italic":false,"color":"#4a3a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Ort","x":14,"y":172,"w":120,"h":14,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gut Birkenhof\nBirkenallee 4, 12345 Musterstadt","fontFamily":"Lora","fontSize":13,"fontWeight":400,"italic":false,"color":"#4a3a3a","align":"center","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Antwort","x":14,"y":192,"w":120,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir bitten um Antwort bis zum 1. Mai 2027.","fontFamily":"Lora","fontSize":11,"fontWeight":400,"italic":true,"color":"#6f8f75","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

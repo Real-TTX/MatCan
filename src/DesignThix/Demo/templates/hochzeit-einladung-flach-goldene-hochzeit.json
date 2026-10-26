@@ -1,0 +1,29 @@
+{
+  "name": "Hochzeit Einladung – Goldene Hochzeit",
+  "category": "Karten",
+  "description": "Einladung zur Goldenen Hochzeit als flache Karte A5 hoch: goldener Lorbeerkranz mit der 50, Namen in Antiqua, Einladungstext und Eckdaten in großer, gut lesbarer Schrift. Ruhig, festlich und für alle Generationen gut zu lesen.",
+  "family": "hochzeit-einladung-flach",
+  "familyName": "Hochzeit: Einladung (flache Karte)",
+  "variant": "Goldene Hochzeit",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Jubiläum","Hochzeitstag","Ehejubiläum","groß gedruckt","gut lesbar","Familienfeier","Jubelpaar","Goldene Hochzeit","50 Jahre","Gold","Goldhochzeit","Lorbeerkranz","Einladung","Einladungskarte","A5"],
+  "formatKey": "a5-portrait",
+  "number": 738,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Einladung","background":{"color":"#fbf6e6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rahmen","x":4,"y":6.02,"w":140,"h":197.96,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-rahmen-doppellinie-hoch-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Kranz","x":34,"y":14,"w":80,"h":80.372,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-goldene-50-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"text","name":"Zahl","x":49,"y":38,"w":50,"h":34,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"50","fontFamily":"Playfair Display","fontSize":82,"fontWeight":400,"italic":false,"color":"#a98334","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Titel","x":14,"y":98,"w":120,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GOLDENE HOCHZEIT","fontFamily":"Cinzel","fontSize":15,"fontWeight":400,"italic":false,"color":"#a98334","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Namen","x":11,"y":109,"w":126,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Anna & Jonas","fontFamily":"Playfair Display","fontSize":32,"fontWeight":400,"italic":true,"color":"#3a3226","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Text","x":18,"y":129,"w":112,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"laden herzlich ein zur Feier\nihrer Goldenen Hochzeit","fontFamily":"Lora","fontSize":14,"fontWeight":400,"italic":false,"color":"#3a3226","align":"center","valign":"top","lineHeight":1.4,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":14,"y":154,"w":120,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 12. Juni 2027, 14:00 Uhr","fontFamily":"Lora","fontSize":14,"fontWeight":700,"italic":false,"color":"#3a3226","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Ort","x":14,"y":165,"w":120,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gut Birkenhof\nBirkenallee 4, 12345 Musterstadt","fontFamily":"Lora","fontSize":13,"fontWeight":400,"italic":false,"color":"#3a3226","align":"center","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Antwort","x":14,"y":187,"w":120,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir bitten um Antwort bis zum 1. Mai 2027.","fontFamily":"Lora","fontSize":11.5,"fontWeight":400,"italic":true,"color":"#a98334","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

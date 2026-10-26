@@ -1,0 +1,28 @@
+{
+  "name": "Brunch – Pastell",
+  "category": "Einladungen",
+  "description": "Zarte Einladung (A6 hoch) zum Brunch: Croissant und Kaffeetasse auf Pastellrosa, Schreibschrift und drei Zeilen zu Datum, Ort und Zusage.",
+  "family": "brunch",
+  "familyName": "Brunch",
+  "variant": "Pastell",
+  "occasion": "Feste & Events",
+  "tags": ["Brunch","Frühstück","Sonntagsbrunch","Einladung","Buffet","Croissant","Kaffee","Feier","Genuss","Morgen","Pastell","Rosa","Kaffeetasse","Zart"],
+  "formatKey": "a6-portrait",
+  "number": 869,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fde7e0","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Kreis","x":14,"y":6,"w":77,"h":77,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#f9cfc4","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"image","name":"Croissant","x":14,"y":37.575,"w":54,"h":32.85,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-croissant"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Tasse","x":54,"y":23.48,"w":38,"h":37.041,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-kaffeetasse-pastell"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Kopf","x":8,"y":86,"w":89,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"KOMM ZUM","fontFamily":"Josefin Sans","fontSize":9,"fontWeight":700,"italic":false,"color":"#b04a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.45,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Titel","x":6,"y":92,"w":93,"h":20,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Brunch","fontFamily":"Pacifico","fontSize":36,"fontWeight":400,"italic":false,"color":"#b04a3a","align":"center","valign":"middle","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":8,"y":114,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Sonntag, 18. April 2027 · 11 Uhr","fontFamily":"Josefin Sans","fontSize":10.5,"fontWeight":700,"italic":false,"color":"#5a2a22","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Ort","x":8,"y":122,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Josefin Sans","fontSize":10,"fontWeight":500,"italic":false,"color":"#5a2a22","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zusage","x":8,"y":130,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 11. April · Hunger mitbringen","fontFamily":"Josefin Sans","fontSize":9,"fontWeight":600,"italic":false,"color":"#b04a3a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

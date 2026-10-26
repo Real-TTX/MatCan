@@ -1,0 +1,32 @@
+{
+  "name": "Instagram-Post – Karaoke Instagram Karte",
+  "category": "Social Media",
+  "description": "Instagram-Post (1080 x 1080 px) als Karte auf Farbgrund: Motiv, Titel, Datum im Feld, Ort, Preis und QR-Code. Thema: Karaoke; Texte, Datum (2027) und QR-Code ersetzen.",
+  "family": "flyer-karaoke",
+  "familyName": "Flyer Karaoke",
+  "variant": "Instagram Karte",
+  "occasion": "Feste & Events",
+  "tags": ["Flyer","Veranstaltung","Einladung","Karaoke","Singen","Mikrofon","Bar","Musik","Party","Abend","Singabend","Instagram","Social Media"],
+  "formatKey": "instagram-post",
+  "number": 960,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#2ec4b6","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Karte","x":54,"y":54,"w":972,"h":972,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#1a1d29","stroke":null,"strokeWidth":1,"dash":"solid","radius":40,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Karte Linie","x":82,"y":82,"w":916,"h":916,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#2ec4b6","strokeWidth":3,"dash":"solid","radius":24,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"text","name":"Anlass","x":120,"y":108,"w":840,"h":36,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Bar Libelle","fontFamily":"Inter","fontSize":17,"fontWeight":800,"italic":false,"color":"#2ec4b6","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.18,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"shape","name":"Kreis hinter Motiv","x":400,"y":156,"w":280,"h":280,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#2ec4b6","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"image","name":"Motiv","x":416,"y":179.71,"w":248,"h":232.58,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-sterne-funkeln-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"text","name":"Titel","x":120,"y":448,"w":840,"h":190,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Karaoke-Abend","fontFamily":"Bebas Neue","fontSize":97,"fontWeight":400,"italic":false,"color":"#f7f3ea","align":"center","valign":"middle","lineHeight":1.06,"letterSpacing":0,"uppercase":true,"wrap":true,"fit":"shrink","minFontSize":58,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"shape","name":"Datum Feld","x":190,"y":660,"w":700,"h":84,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#2ec4b6","stroke":null,"strokeWidth":1,"dash":"solid","radius":42,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"text","name":"Datum","x":210,"y":660,"w":660,"h":84,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Fr, 5. März 2027","fontFamily":"Bebas Neue","fontSize":30,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Zeit und Ort","x":120,"y":768,"w":600,"h":120,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"20:00 Uhr\nBar Libelle, Lindenallee 15, 12345 Musterstadt","fontFamily":"Inter","fontSize":22,"fontWeight":700,"italic":false,"color":"#f7f3ea","align":"left","valign":"top","lineHeight":1.35,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Preis","x":120,"y":890,"w":600,"h":44,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eintritt frei · Cocktails zwei für eins bis 21 Uhr","fontFamily":"Inter","fontSize":20,"fontWeight":800,"italic":false,"color":"#2ec4b6","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Web","x":120,"y":936,"w":600,"h":44,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"www.beispiel.de/karaoke","fontFamily":"Inter","fontSize":19,"fontWeight":400,"italic":false,"color":"#a3a2a1","align":"left","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"qr","name":"QR-Code","x":784,"y":780,"w":190,"h":190,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"value":"https://www.beispiel.de/karaoke","color":"#111111","background":"#ffffff","ecc":"M","quiet":true}
+      ]}
+    ]
+  }
+}

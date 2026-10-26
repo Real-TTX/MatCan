@@ -1,0 +1,41 @@
+{
+  "name": "Metal-Geburtstag – Gitarre",
+  "category": "Einladungen",
+  "description": "Hohe Einladungskarte (DIN lang) mit riesiger Zahl in Rot, E-Gitarre und Blitzen auf Schwarz; Name und Alter sind Felder.",
+  "family": "metal-geburtstag",
+  "familyName": "Metal-Geburtstag",
+  "variant": "Gitarre",
+  "occasion": "Geburtstag",
+  "tags": ["Metal","Rock","Geburtstag","Einladung","Heavy Metal","Totenkopf","Gitarre","Schwarz","Party","Konzert","Blitz","Riesenzahl","DIN lang"],
+  "formatKey": "din-lang-portrait",
+  "number": 831,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Dirk","decimals":null,"category":null,"required":false},
+      {"key":"Alter","label":"Alter","type":"text","sample":"50","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#0b0b0d"},{"offset":1,"color":"#2a0a10"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Textur","x":0,"y":0,"w":99,"h":210,"rotation":0,"opacity":0.08,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-verschleiss-weiss"},"fit":"cover","radius":0,"crop":{"x":0.264,"y":0,"w":0.471,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Stacheldraht oben","x":6,"y":7,"w":87,"h":6.855,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-stacheldraht-weiss"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Stacheldraht unten","x":6,"y":196,"w":87,"h":6.855,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-stacheldraht-weiss"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"image","name":"Blitz links","x":8,"y":112,"w":24.414,"h":50,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-blitz-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"image","name":"Blitz rechts","x":66,"y":112,"w":24.414,"h":50,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":true,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-blitz-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"image","name":"Gitarre","x":30,"y":106,"w":47.5,"h":60,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-e-gitarre"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e7","type":"text","name":"Kopf","x":8,"y":20,"w":83,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"HEAVY BIRTHDAY","fontFamily":"Bebas Neue","fontSize":22,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zahl","x":8,"y":32,"w":83,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Alter}}","fontFamily":"Anton","fontSize":110,"fontWeight":400,"italic":false,"color":"#d4202f","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Jahre","x":8,"y":85,"w":83,"h":13,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"JAHRE LAUT","fontFamily":"Bebas Neue","fontSize":28,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":14,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Name","x":8,"y":97,"w":83,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Oswald","fontSize":15,"fontWeight":400,"italic":false,"color":"#bdbdc4","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Datum","x":8,"y":170,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 12. Juni 2027","fontFamily":"Oswald","fontSize":11,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.04,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Zeit","x":8,"y":178,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 20 Uhr · Musterweg 5","fontFamily":"Oswald","fontSize":11,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.04,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e13","type":"text","name":"Zusage","x":8,"y":186,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 5. Juni: 0170 1234567","fontFamily":"Oswald","fontSize":9,"fontWeight":400,"italic":false,"color":"#d4202f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.04,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Dirk","Alter":"50"},
+    {"Name":"Maximiliane","Alter":"40"},
+    {"Name":"Uwe","Alter":"60"}
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "Save the Date – Rustikal",
+  "category": "Karten",
+  "description": "Save-the-Date-Postkarte A6 quer auf Kraftpapier: warme Lichterkette oben, ein cremefarbenes Etikett mit gesteppter Naht, Namen in Amatic. Die Rückseite mit Holzherz kündigt die Scheunenhochzeit an.",
+  "family": "hochzeit-save-the-date",
+  "familyName": "Hochzeit: Save the Date",
+  "variant": "Rustikal",
+  "occasion": "Hochzeit",
+  "tags": ["Hochzeit","Rustikal","Scheune","Landhaus","Kraftpapier","Holz","Lichterkette","Vintage","Brautpaar","Save the Date","Termin","Postkarte"],
+  "formatKey": "postcard-a6-landscape",
+  "number": 690,
+  "document": {
+    "schema":2,"unit":"mm","width":148,"height":105,"dpi":300,"locale":"de-DE",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Vorderseite","background":{"color":"#d8bd93","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Etikett","x":16,"y":36,"w":116,"h":62,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#fbf4e4","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Etikett Naht","x":18.5,"y":38.5,"w":111,"h":57,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c7a678","strokeWidth":0.6,"dash":"dashed","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"image","name":"Lichterkette","x":0,"y":0,"w":148,"h":24.89,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-lichterkette"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Save the Date","x":24,"y":41,"w":100,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"SAVE THE DATE","fontFamily":"Lora","fontSize":7.5,"fontWeight":700,"italic":false,"color":"#9c3f2a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.3,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Namen","x":20,"y":48,"w":108,"h":22,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ANNA & JONAS","fontFamily":"Amatic SC","fontSize":52,"fontWeight":700,"italic":false,"color":"#3b2a1a","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Datum","x":24,"y":71,"w":100,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"12. Juni 2027","fontFamily":"Lora","fontSize":14,"fontWeight":700,"italic":false,"color":"#3b2a1a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":9,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Ort","x":24,"y":82,"w":100,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Gut Birkenhof · Musterstadt","fontFamily":"Lora","fontSize":9,"fontWeight":400,"italic":true,"color":"#3b2a1a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]},
+      {"id":"p2","name":"Rückseite","background":{"color":"#fbf4e4","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e8","type":"shape","name":"Rahmen","x":5,"y":5,"w":138,"h":95,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":null,"stroke":"#c7a678","strokeWidth":0.6,"dash":"dashed","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"image","name":"Holzherz","x":14,"y":16,"w":42,"h":55.972,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-holzherz"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e10","type":"text","name":"Titel","x":60,"y":18,"w":80,"h":18,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir heiraten!","fontFamily":"Caveat","fontSize":30,"fontWeight":700,"italic":false,"color":"#9c3f2a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Text","x":62,"y":40,"w":76,"h":34,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Haltet euch den Tag frei: Wir feiern in der Scheune mit Lichterkette, Heu und Livemusik. Die Einladung folgt.","fontFamily":"Lora","fontSize":9.5,"fontWeight":400,"italic":false,"color":"#3b2a1a","align":"center","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e12","type":"text","name":"Ort","x":60,"y":80,"w":80,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GUT BIRKENHOF","fontFamily":"Lora","fontSize":7.5,"fontWeight":700,"italic":false,"color":"#5f7a4f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.2,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

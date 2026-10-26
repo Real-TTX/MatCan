@@ -1,0 +1,33 @@
+{
+  "name": "Geburtstagskarte zum 18. – Gold",
+  "category": "Karten",
+  "description": "Klappkarte A6 zum 18. Geburtstag: Goldrahmen, eine große „18“ in fetter Antiqua und „Volljährig!“ in Schreibschrift. Innen Platz für einen persönlichen Gruß.",
+  "family": "geburtstag-18-karte",
+  "familyName": "Geburtstagskarte zum 18.",
+  "variant": "Gold",
+  "occasion": "Geburtstag",
+  "tags": ["18. Geburtstag","Volljährig","Achtzehn","Geburtstag","Glückwunsch","Jugend","Karte","Gold","elegant","Klappkarte","Sektgläser","Volljährigkeit"],
+  "formatKey": "card-a6-portrait",
+  "number": 798,
+  "document": {
+    "schema":2,"unit":"mm","width":210,"height":148,"dpi":300,"locale":"de-DE","fold":"vertical",
+    "fields": [],
+    "pages": [
+      {"id":"p1","name":"Außen (Rückseite | Vorderseite)","background":{"color":"#faf6ec","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Rahmen","x":107,"y":2.593,"w":101,"h":142.814,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-rahmen-doppellinie-hoch-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Zahl","x":126.5,"y":17,"w":62,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"18","fontFamily":"Abril Fatface","fontSize":128,"fontWeight":400,"italic":false,"color":"#b8923a","align":"center","valign":"middle","lineHeight":1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":20,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Anlass","x":119.5,"y":69,"w":76,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"GEBURTSTAG","fontFamily":"Raleway","fontSize":8,"fontWeight":600,"italic":false,"color":"#b8923a","align":"center","valign":"middle","lineHeight":1.2,"letterSpacing":0.25,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Titel 1","x":118.5,"y":76,"w":78,"h":15.3,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Volljährig!","fontFamily":"Great Vibes","fontSize":32,"fontWeight":400,"italic":false,"color":"#b8923a","align":"center","valign":"middle","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Zeile","x":119.5,"y":124,"w":76,"h":4.6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Alles Gute zum Achtzehnten","fontFamily":"Raleway","fontSize":8,"fontWeight":600,"italic":false,"color":"#b8923a","align":"center","valign":"middle","lineHeight":1.2,"letterSpacing":0.25,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":6,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"image","name":"Motiv klein","x":44.897,"y":100,"w":15.206,"h":18,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-sektglaeser-pastell"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e7","type":"shape","name":"Linie","x":38.5,"y":96,"w":28,"h":0,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"line","points":5,"innerRadius":0.5,"fill":null,"stroke":"#b8923a","strokeWidth":0.3,"dash":"solid","radius":0,"startCap":"none","endCap":"none"}
+      ]},
+      {"id":"p2","name":"Innen","background":{"color":"#faf6ec","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e8","type":"image","name":"Motiv groß","x":12,"y":25.466,"w":82,"h":97.068,"rotation":0,"opacity":0.2,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-sektglaeser-pastell"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e9","type":"text","name":"Anrede","x":113,"y":24,"w":88,"h":11.4,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Liebe Emma,","fontFamily":"Great Vibes","fontSize":24,"fontWeight":400,"italic":false,"color":"#b8923a","align":"left","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":13,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Text","x":113,"y":40,"w":88,"h":60,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"herzlichen Glückwunsch zum 18. Geburtstag! Ab heute darfst du fast alles, und wir wissen, dass du klug damit umgehst. Wir sind stolz auf dich und wünschen dir Mut, Neugier und die schönsten Abenteuer. Die Welt gehört dir!","fontFamily":"Cormorant Garamond","fontSize":13.5,"fontWeight":500,"italic":false,"color":"#3f3a30","align":"left","valign":"top","lineHeight":1.5,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Gruß","x":113,"y":110,"w":88,"h":10.5,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Deine Familie","fontFamily":"Great Vibes","fontSize":22,"fontWeight":400,"italic":false,"color":"#b8923a","align":"right","valign":"middle","lineHeight":1.2,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  }
+}

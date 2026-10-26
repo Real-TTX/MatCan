@@ -1,0 +1,37 @@
+{
+  "name": "Housewarming – Umzugskartons",
+  "category": "Einladungen",
+  "description": "Hohe Einladung (DIN lang) mit Umzugskartons in Pastell: „Neues Zuhause“ in Fredoka, Hinweis „Kartons sind noch da – Sekt auch!“. Der Name der Gastgeber ist ein Feld.",
+  "family": "housewarming",
+  "familyName": "Housewarming",
+  "variant": "Umzugskartons",
+  "occasion": "Feste & Events",
+  "tags": ["Housewarming","Einweihungsparty","Einweihung","Umzug","Neues Zuhause","Einladung","Party","Wohnung","Haus","Feier","Umzugskartons","Kartons","Pastell","DIN lang","Sekt"],
+  "formatKey": "din-lang-portrait",
+  "number": 861,
+  "document": {
+    "schema":2,"unit":"mm","width":99,"height":210,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Familie Muster","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#fffaf0","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Boden","x":0,"y":128,"w":99,"h":82,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#ffe9d6","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"image","name":"Kartons","x":8,"y":22.405,"w":83,"h":65.191,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-umzugskarton-pastell"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Girlande","x":4,"y":4,"w":91,"h":24.4,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-konfetti-wimpelkette-pastell"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"text","name":"Titel","x":6,"y":94,"w":87,"h":16,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Neues Zuhause!","fontFamily":"Fredoka","fontSize":25,"fontWeight":700,"italic":false,"color":"#d8386b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Name","x":8,"y":110,"w":83,"h":9,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Wir laden ein: {{Name}}","fontFamily":"Fredoka","fontSize":12.5,"fontWeight":500,"italic":false,"color":"#3a2a28","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Hinweis","x":10,"y":134,"w":79,"h":12,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Kartons sind noch da – Sekt auch!","fontFamily":"Fredoka","fontSize":14,"fontWeight":500,"italic":false,"color":"#3a2a28","align":"center","valign":"middle","lineHeight":1.25,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Datum","x":8,"y":152,"w":83,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 24. April 2027","fontFamily":"Fredoka","fontSize":12.5,"fontWeight":600,"italic":false,"color":"#d8386b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Zeit","x":8,"y":161,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ab 15 Uhr · Kaffee und Kuchen","fontFamily":"Fredoka","fontSize":11,"fontWeight":400,"italic":false,"color":"#3a2a28","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Ort","x":8,"y":169,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Fredoka","fontSize":11,"fontWeight":400,"italic":false,"color":"#3a2a28","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Zusage","x":8,"y":182,"w":83,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 17. April: 0170 1234567","fontFamily":"Fredoka","fontSize":10.5,"fontWeight":500,"italic":false,"color":"#3a2a28","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Familie Muster"},
+    {"Name":"Anna & Jonas"},
+    {"Name":"Maximiliane Schneider-Hohenstein"}
+  ]
+}

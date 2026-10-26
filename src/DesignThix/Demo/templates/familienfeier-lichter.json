@@ -1,0 +1,33 @@
+{
+  "name": "Familienfeier – Lichter",
+  "category": "Einladungen",
+  "description": "Instagram-Post auf warmem Abendblau mit Lichterkette: „Zusammen feiern“ und die Angaben zur Familienfeier. Der Anlass ist ein Feld.",
+  "family": "familienfeier",
+  "familyName": "Familienfeier",
+  "variant": "Lichter",
+  "occasion": "Feste & Events",
+  "tags": ["Familienfeier","Familie","Einladung","Feier","Verwandtschaft","Familientreffen","Geburtstag","Jubiläum","Kaffeetafel","Fest","Lichterkette","Instagram","Post","Social Media","Abend","Warm"],
+  "formatKey": "instagram-post",
+  "number": 874,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Anlass","label":"Anlass","type":"text","sample":"Familienfeier","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":180,"stops":[{"offset":0,"color":"#27345a"},{"offset":1,"color":"#3d2a4a"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Lichterkette","x":20,"y":40,"w":1040,"h":220.086,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-lichterkette-warm"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"text","name":"Kopf","x":60,"y":330,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ZUSAMMEN FEIERN","fontFamily":"Josefin Sans","fontSize":26,"fontWeight":700,"italic":false,"color":"#ffd36b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e3","type":"text","name":"Anlass","x":60,"y":395,"w":960,"h":270,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Anlass}}","fontFamily":"Dancing Script","fontSize":84,"fontWeight":700,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":true,"fit":"none","minFontSize":24,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e4","type":"text","name":"Datum","x":60,"y":680,"w":960,"h":64,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 5. Juni 2027 · 14 Uhr","fontFamily":"Nunito","fontSize":34,"fontWeight":800,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":18,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e5","type":"text","name":"Ort","x":60,"y":752,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt","fontFamily":"Nunito","fontSize":28,"fontWeight":600,"italic":false,"color":"#ffd36b","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e6","type":"text","name":"Zusage","x":60,"y":840,"w":960,"h":56,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 29. Mai: 0170 1234567","fontFamily":"Nunito","fontSize":26,"fontWeight":600,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Anlass":"Familienfeier"},
+    {"Anlass":"Omas 80. Geburtstag"},
+    {"Anlass":"Silberhochzeit Anna & Peter"}
+  ]
+}

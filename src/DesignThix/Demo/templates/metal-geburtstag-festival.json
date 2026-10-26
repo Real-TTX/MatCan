@@ -1,0 +1,39 @@
+{
+  "name": "Metal-Geburtstag – Festival",
+  "category": "Einladungen",
+  "description": "Digitale Einladung als Instagram-Post im Stil eines Festivalplakats: Totenkopf, Blitze, großer Name, Alter in Rot. Name und Alter sind Felder.",
+  "family": "metal-geburtstag",
+  "familyName": "Metal-Geburtstag",
+  "variant": "Festival",
+  "occasion": "Geburtstag",
+  "tags": ["Metal","Rock","Geburtstag","Einladung","Heavy Metal","Totenkopf","Gitarre","Schwarz","Party","Konzert","Festival","Plakat","Instagram","Social Media","Open Air"],
+  "formatKey": "instagram-post",
+  "number": 832,
+  "document": {
+    "schema":2,"unit":"px","width":1080,"height":1080,"dpi":96,"locale":"de-DE",
+    "fields": [
+      {"key":"Name","label":"Name","type":"text","sample":"Dirk","decimals":null,"category":null,"required":false},
+      {"key":"Alter","label":"Alter","type":"text","sample":"50","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":null,"gradient":{"type":"linear","angle":160,"stops":[{"offset":0,"color":"#2a0508"},{"offset":1,"color":"#050506"}]},"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"image","name":"Textur","x":0,"y":0,"w":1080,"h":1080,"rotation":0,"opacity":0.1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-verschleiss-weiss"},"fit":"cover","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e2","type":"image","name":"Blitz links","x":110,"y":130,"w":161.13,"h":330,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-blitz-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e3","type":"image","name":"Blitz rechts","x":809,"y":130,"w":161.13,"h":330,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":true,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-blitz-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e4","type":"image","name":"Totenkopf","x":327.4,"y":110,"w":425.201,"h":360,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-totenkopf-rosen"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e5","type":"image","name":"Stacheldraht","x":90,"y":495,"w":900,"h":70.918,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-stacheldraht-gold"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e6","type":"text","name":"Kopf","x":60,"y":52,"w":960,"h":50,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ROCK & METAL NIGHT","fontFamily":"Oswald","fontSize":24,"fontWeight":500,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.35,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":16,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e7","type":"text","name":"Name","x":60,"y":560,"w":960,"h":130,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Name}}","fontFamily":"Anton","fontSize":90,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e8","type":"text","name":"Alter","x":60,"y":690,"w":960,"h":110,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"WIRD {{Alter}}","fontFamily":"Anton","fontSize":66,"fontWeight":400,"italic":false,"color":"#d4202f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":30,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e9","type":"text","name":"Datum","x":60,"y":825,"w":960,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 12. Juni 2027 · 20 Uhr","fontFamily":"Oswald","fontSize":28,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.08,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e10","type":"text","name":"Ort","x":60,"y":885,"w":960,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Proberaum Hinterhof · Musterweg 5","fontFamily":"Oswald","fontSize":28,"fontWeight":400,"italic":false,"color":"#bdbdc4","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.08,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e11","type":"text","name":"Zusage","x":60,"y":945,"w":960,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Zusage bis 5. Juni · 0170 1234567","fontFamily":"Oswald","fontSize":22,"fontWeight":400,"italic":false,"color":"#d4202f","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.08,"uppercase":true,"wrap":false,"fit":"shrink","minFontSize":15,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Name":"Dirk","Alter":"50"},
+    {"Name":"Maximiliane","Alter":"40"},
+    {"Name":"Uwe","Alter":"60"}
+  ]
+}

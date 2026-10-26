@@ -1,0 +1,48 @@
+{
+  "name": "Runder Geburtstag – Gold",
+  "category": "Einladungen",
+  "description": "Festliche Einladung (A6 hoch) zum runden Geburtstag: riesige goldene Zahl auf Schwarz, Sektgläser und Goldkonfetti. Alter und Name sind Felder.",
+  "family": "runder-geburtstag-party",
+  "familyName": "Runder Geburtstag – Party",
+  "variant": "Gold",
+  "occasion": "Geburtstag",
+  "tags": ["Runder Geburtstag","Geburtstag","Party","Einladung","30","40","50","Zahl","Feier","Jubiläum","Geburtstagsparty","Gold","Schwarz","Sekt","Elegant","Konfetti"],
+  "formatKey": "a6-portrait",
+  "number": 884,
+  "document": {
+    "schema":2,"unit":"mm","width":105,"height":148,"dpi":300,"locale":"de-DE",
+    "fields": [
+      {"key":"Alter","label":"Alter","type":"text","sample":"40","decimals":null,"category":null,"required":false},
+      {"key":"Name","label":"Name","type":"text","sample":"Katrin","decimals":null,"category":null,"required":false}
+    ],
+    "pages": [
+      {"id":"p1","name":"","background":{"color":"#0e0e12","gradient":null,"asset":null,"fit":"cover"},"elements":[
+        {"id":"e1","type":"shape","name":"Konfetti 1","x":81.916,"y":141.119,"w":2.176,"h":2.176,"rotation":102,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"star","points":5,"innerRadius":0.28,"fill":"#f3e8d0","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e2","type":"shape","name":"Konfetti 2","x":49.614,"y":141.505,"w":3.202,"h":3.202,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#e3c479","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e3","type":"shape","name":"Konfetti 3","x":65.666,"y":141.17,"w":2.047,"h":2.047,"rotation":152,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"star","points":5,"innerRadius":0.45,"fill":"#d4af6a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e4","type":"shape","name":"Konfetti 4","x":7.609,"y":141.904,"w":3.081,"h":0.781,"rotation":164,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#e3c479","stroke":null,"strokeWidth":1,"dash":"solid","radius":0.3081303196703084,"startCap":"none","endCap":"none"},
+        {"id":"e5","type":"shape","name":"Konfetti 5","x":11.87,"y":142.867,"w":1.806,"h":1.806,"rotation":293,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"star","points":5,"innerRadius":0.45,"fill":"#f3e8d0","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e6","type":"shape","name":"Konfetti 6","x":92.412,"y":141.939,"w":2.672,"h":2.672,"rotation":162,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"star","points":5,"innerRadius":0.28,"fill":"#e3c479","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e7","type":"shape","name":"Konfetti 7","x":3.142,"y":78.227,"w":1.907,"h":1.907,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#d4af6a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e8","type":"shape","name":"Konfetti 8","x":73.794,"y":141.464,"w":2.681,"h":2.681,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"ellipse","points":5,"innerRadius":0.5,"fill":"#e3c479","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e9","type":"shape","name":"Konfetti 9","x":32.397,"y":143.372,"w":3.2,"h":0.811,"rotation":46,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#e3c479","stroke":null,"strokeWidth":1,"dash":"solid","radius":0.3199525419948623,"startCap":"none","endCap":"none"},
+        {"id":"e10","type":"shape","name":"Konfetti 10","x":21.994,"y":141.625,"w":3.313,"h":3.313,"rotation":84,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"star","points":5,"innerRadius":0.45,"fill":"#e3c479","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e11","type":"shape","name":"Konfetti 11","x":87.091,"y":141.65,"w":2.744,"h":0.695,"rotation":2,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#d4af6a","stroke":null,"strokeWidth":1,"dash":"solid","radius":0.27437203453620895,"startCap":"none","endCap":"none"},
+        {"id":"e12","type":"shape","name":"Konfetti 12","x":98.403,"y":3.919,"w":2.813,"h":0.713,"rotation":88,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"rect","points":5,"innerRadius":0.5,"fill":"#f3e8d0","stroke":null,"strokeWidth":1,"dash":"solid","radius":0.2812828147946857,"startCap":"none","endCap":"none"},
+        {"id":"e13","type":"shape","name":"Konfetti 13","x":39.956,"y":141.861,"w":1.867,"h":1.867,"rotation":197,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"shape":"star","points":5,"innerRadius":0.45,"fill":"#f3e8d0","stroke":null,"strokeWidth":1,"dash":"solid","radius":0,"startCap":"none","endCap":"none"},
+        {"id":"e14","type":"image","name":"Sekt","x":38.139,"y":100,"w":28.722,"h":34,"rotation":0,"opacity":1,"locked":true,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"source":{"asset":"deko-motive-sektglaeser-bunt"},"fit":"contain","radius":0,"crop":{"x":0,"y":0,"w":1,"h":1},"mask":"none","border":null,"filters":{"brightness":0,"contrast":0,"saturation":0,"blur":0,"grayscale":false,"sepia":false}},
+        {"id":"e15","type":"text","name":"Kopf","x":8,"y":12,"w":89,"h":7,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"ICH WERDE","fontFamily":"Cinzel","fontSize":10,"fontWeight":400,"italic":false,"color":"#d4af6a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.4,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e16","type":"text","name":"Zahl","x":6,"y":20,"w":93,"h":52,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"{{Alter}}","fontFamily":"Playfair Display","fontSize":96,"fontWeight":700,"italic":false,"color":"#d4af6a","align":"center","valign":"middle","lineHeight":1.1,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":40,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e17","type":"text","name":"Sub","x":8,"y":74,"w":89,"h":10,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"und das feiern wir!","fontFamily":"Great Vibes","fontSize":22,"fontWeight":400,"italic":false,"color":"#f3e8d0","align":"center","valign":"middle","lineHeight":1.3,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":12,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e18","type":"text","name":"Name","x":8,"y":86,"w":89,"h":8,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Eure {{Name}}","fontFamily":"Cinzel","fontSize":12,"fontWeight":400,"italic":false,"color":"#ffffff","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0.1,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":7,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e19","type":"text","name":"Datum","x":8,"y":96,"w":89,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Samstag, 13. November 2027 · 19 Uhr","fontFamily":"Cormorant Garamond","fontSize":12,"fontWeight":600,"italic":false,"color":"#f3e8d0","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0},
+        {"id":"e20","type":"text","name":"Ort","x":8,"y":136,"w":89,"h":6,"rotation":0,"opacity":1,"locked":false,"hidden":false,"showIf":null,"flipX":false,"flipY":false,"shadow":null,"text":"Musterweg 5 · 12345 Musterstadt · Zusage bis 30. Oktober","fontFamily":"Cormorant Garamond","fontSize":10,"fontWeight":600,"italic":true,"color":"#d4af6a","align":"center","valign":"middle","lineHeight":1.15,"letterSpacing":0,"uppercase":false,"wrap":false,"fit":"shrink","minFontSize":8,"underline":false,"strike":false,"list":"none","outline":null,"background":null,"curve":0}
+      ]}
+    ]
+  },
+  "sampleRows": [
+    {"Alter":"40","Name":"Katrin"},
+    {"Alter":"30","Name":"Maximilian"},
+    {"Alter":"50","Name":"Dr. Maximiliane Schneider"}
+  ]
+}
