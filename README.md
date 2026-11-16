@@ -1,22 +1,22 @@
 <div align="center">
 
-<img src="src/DesignThix/wwwroot/logo.svg" width="96" alt="DesignThix" />
+<img src="src/MatCan/wwwroot/logo.svg" width="96" alt="MatCan" />
 
-# DesignThix
+# MatCan
 
 **Der Offline-Canva für Etiketten, Karten, Flyer, Poster und Beiträge für soziale Medien.**
 
 Du wählst ein Format oder eine fertige Vorlage, gestaltest im Designer wie in Canva und lädst das Ergebnis als PNG, JPG, SVG oder PDF herunter oder druckst es.
-Und wenn du viele ähnliche Etiketten brauchst, füllt DesignThix ein Design aus einer Datenliste: ein Design, viele Etiketten (Zusatz *Serien*).
+Und wenn du viele ähnliche Etiketten brauchst, füllt MatCan ein Design aus einer Datenliste: ein Design, viele Etiketten (Zusatz *Serien*).
 
 </div>
 
 ![Der Designer: die Vorlage Instagram-Beitrag mit dem Reiter Elemente und der Werkzeugleiste für den ausgewählten Text](docs/images/editor.png)
 
-DesignThix ist ein Docker-Container mit einer PostgreSQL-Datenbank. Es läuft auf deinem eigenen Server oder Rechner, lädt nichts aus dem Internet nach
+MatCan ist ein Docker-Container mit einer PostgreSQL-Datenbank. Es läuft auf deinem eigenen Server oder Rechner, lädt nichts aus dem Internet nach
 (Schriften, Bilder und Symbole liegen in der App) und lässt sich auf Handy und Desktop als App installieren.
 
-## Was DesignThix kann
+## Was MatCan kann
 
 - **Start mit einem Klick:** Die Startseite fragt „Was möchtest du heute gestalten?“. Ein Klick auf ein Format (Preisschild, Etikett, Regaletikett, Visitenkarte, Flyer A5, Poster A3, Karte A6, Instagram-Beitrag
   und -Story, Präsentation oder eine eigene Größe in mm oder px; unter **„Mehr Formate“** weitere wie Klappkarten mit Falzlinie, Postkarte, DIN lang, Tischkarte, Urkunde, Gutschein, Lesezeichen) legt das leere Design an und öffnet den Designer. Darunter stehen die Vorlagen und die zuletzt bearbeiteten Designs; die Suche findet Designs und Vorlagen.
@@ -108,14 +108,14 @@ Beim ersten Start sind die Vorlagen da, dazu ein Beispiel für die Serien mit Da
 
 ## Starten
 
-DesignThix besteht aus einem Container (die App) und einer PostgreSQL-Datenbank. Die Datenbank legt sich beim Start selbst an und migriert sich; Umgebungsvariablen
+MatCan besteht aus einem Container (die App) und einer PostgreSQL-Datenbank. Die Datenbank legt sich beim Start selbst an und migriert sich; Umgebungsvariablen
 brauchst du nicht.
 
 | Stack | Datei | Image | App | pgAdmin | Postgres |
 |---|---|---|---|---|---|
-| **Release** (Branch `main`) | `docker-compose.yml` | `ghcr.io/real-ttx/designthix:latest` | http://localhost:3043 | – | – |
-| **Entwicklung** (Branch `dev`) | `docker-compose.dev.yml` | `ghcr.io/real-ttx/designthix:nightly` | http://localhost:3043 | http://localhost:3044 | – |
-| **Lokal** (baut aus dem Ordner) | `docker-compose.local.yml` | `designthix:local` | http://localhost:3043 | http://localhost:3044 | `localhost:3045` |
+| **Release** (Branch `main`) | `docker-compose.yml` | `ghcr.io/real-ttx/matcan:latest` | http://localhost:3043 | – | – |
+| **Entwicklung** (Branch `dev`) | `docker-compose.dev.yml` | `ghcr.io/real-ttx/matcan:nightly` | http://localhost:3043 | http://localhost:3044 | – |
+| **Lokal** (baut aus dem Ordner) | `docker-compose.local.yml` | `matcan:local` | http://localhost:3043 | http://localhost:3044 | `localhost:3045` |
 
 ```bash
 # Release
@@ -136,15 +136,15 @@ Updates: `docker compose pull && docker compose up -d`. Im Volume `web-data` lie
 ### Versionen
 
 Es gibt zwei Branches: **`main`** ist das Release, **`dev`** der Entwicklungsstand. Die GitHub-Action baut und testet (gegen PostgreSQL) und veröffentlicht ein Multi-Arch-Image
-(amd64, arm64) nach `ghcr.io/real-ttx/designthix`:
+(amd64, arm64) nach `ghcr.io/real-ttx/matcan`:
 
 | Branch | Version | Tags des Images |
 |---|---|---|
 | `main` | `<major>.<minor>.<build>-<datum>`, zum Beispiel `0.1.42-20261024` | `<version>`, `latest`, `release` |
 | `dev` | `nightly-<build>-<datum>` | `<version>`, `nightly` |
-| lokal gebaut | `local-<datum>` | `designthix:local` |
+| lokal gebaut | `local-<datum>` | `matcan:local` |
 
-Major und Minor stehen in `Directory.Build.props`, die Build-Nummer ist die Nummer des Laufs der Action. Die Version steht links unten im Menü; ein Klick öffnet *Über DesignThix*.
+Major und Minor stehen in `Directory.Build.props`, die Build-Nummer ist die Nummer des Laufs der Action. Die Version steht links unten im Menü; ein Klick öffnet *Über MatCan*.
 
 ## Vorlagen
 
@@ -159,7 +159,7 @@ Alles funktioniert **ohne Internet und ohne Fotos**: Schmuck kommt aus dem einge
 - **Gefaltete Karten:** Das Dokument hat eine **Falz** (senkrecht oder waagerecht). Die Seite ist das offene Blatt (zum Beispiel 210 × 148 mm für eine Klappkarte A6), die Seiten heißen „Außen (Rückseite | Vorderseite)“ und „Innen“. Der Designer zeichnet die Falzlinie und den Sicherheitsrand als Hilfslinien (an- und abschaltbar); Druck, Download und Vorschau kennen sie nicht.
 - **Flyer, Plakate, Business:** Veranstaltung, Vereinsfest, Flohmarkt, Konzert, Kurse, Mittagstisch, Lieferdienst, Handwerker, Reinigung, Nachhilfe, Aushänge mit Abreißzetteln, Eröffnung, Sale, Spendenaufruf, Tag der offenen Tür, Plakate; Visitenkarten, Briefpapier, Gutschein (`{{Code}}`, `{{Betrag}}`), Urkunde, Speisekarte, Etiketten für Marmelade, Gewürz, Seife, Kerze und Honig, Namensschilder, Lesezeichen, Instagram (Beitrag und Story), Facebook-Titelbild, Präsentation.
 - **Formulare und Planer** (zum Ausdrucken und Ausfüllen von Hand, sparsam mit Toner, Ränder ab 10 mm, Schrift ab 8 pt): Anmeldung, Bestellschein, Stundenzettel, Urlaubsantrag, Übergabeprotokoll, Feedbackbogen, Teilnehmerliste, Quittung, Inventarliste, Checkliste, To-do-Liste, Wochen- und Monatsplaner, Stundenplan, Essensplan, Einkaufs- und Packliste, Haushaltsbuch, Lesetagebuch, Gewohnheits-Tracker. Wo eine Serie Sinn hat, sind die Angaben **Felder** mit Beispielzeilen, damit ein Tischkartenstapel oder ein Satz Urkunden aus einer Datenliste entsteht.
-- **Deko-Paket:** 335 eigene Zeichnungen (150 Motive in Farbvarianten: Rahmen, Ornamente, Trenner, Ecken, Blumen und Blätter, Herzen, Sterne, Konfetti und Ballons, Bänder und Siegel, Muster, Formen) im Reiter *Deko* der Medienauswahl; sie gehören zu DesignThix und haben keine fremde Lizenz.
+- **Deko-Paket:** 335 eigene Zeichnungen (150 Motive in Farbvarianten: Rahmen, Ornamente, Trenner, Ecken, Blumen und Blätter, Herzen, Sterne, Konfetti und Ballons, Bänder und Siegel, Muster, Formen) im Reiter *Deko* der Medienauswahl; sie gehören zu MatCan und haben keine fremde Lizenz.
 - **Schriften:** 33 Familien (Schreibschriften für Hochzeit und Geburtstag, Antiqua, Serifenlose, Kinderschriften, Plakatschriften), alle unter freien Lizenzen und mit ä ö ü ß € „ “ –; sie liegen in der App.
 
 | | |
@@ -177,7 +177,7 @@ geöffneten Ordner ziehen. *Mit Stern* merkt dir Lieblinge, *Zuletzt verwendet* 
 Für Bilder und Schriften gibt es Speicherplatz (2 GB je Person, 10 GB je Team, einstellbar); die Anzeige steht am Bereich.
 
 **Teams.** Wer ein Team anlegt, ist sein *Inhaber*. Die Rollen: **Inhaber** (alles, auch das Team löschen oder übergeben), **Admin** (Mitglieder, Einladungen, Marke, Vorlagen, Einstellungen), **Bearbeiter** (legt an und ändert alles im Bereich des Teams, teilt, verschiebt, löscht)
-und **Betrachter** (sieht den Bereich nur an). Ein Team hat Reiter für Projekte, Mitglieder, Marke, Vorlagen und Einstellungen. Eingeladen wird per E-Mail-Adresse (ist ein Mailserver eingerichtet, geht die Mail raus, sonst zeigt DesignThix den Link zum Kopieren)
+und **Betrachter** (sieht den Bereich nur an). Ein Team hat Reiter für Projekte, Mitglieder, Marke, Vorlagen und Einstellungen. Eingeladen wird per E-Mail-Adresse (ist ein Mailserver eingerichtet, geht die Mail raus, sonst zeigt MatCan den Link zum Kopieren)
 oder mit einem Einladungslink (Rolle, 1/7/30 Tage, Höchstzahl der Nutzungen). Ein Link, den ein Mailprogramm nur abruft, nimmt niemanden auf: Beitreten ist ein Knopf.
 
 **Teilen.** Der Knopf *Teilen* (Editor, Kontextmenü, Ordnerkopf) öffnet den Dialog: Personen oder Teams suchen (ab zwei Zeichen, nach Name oder Adresse), *Kann ansehen* oder *Kann bearbeiten*, auf Wunsch mit Nachricht; darunter, wer schon Zugriff hat – auch über einen Ordner
@@ -277,11 +277,11 @@ die öffentliche Ansicht und die Serienausgaben fragen nie bei einem Anbieter na
 | **Google Fonts** | freie Schriften (SIL OFL, Apache, Ubuntu-Lizenz), über Fontsource | nein |
 
 **Einschalten (Administrator):** *Verwaltung > Kataloge*, den Katalog öffnen, einschalten, bei Pexels, Pixabay und Unsplash den Schlüssel eintragen (er wird verschlüsselt im Datenvolume gespeichert und nie wieder angezeigt), mit *Testen* prüfen. Jede Seite nennt die Regeln des Anbieters und wie sein Schlüssel zu bekommen ist. Die Adresse eines Anbieters
-stellt nur der Betreiber ein (`DESIGNTHIX__Catalogs__<id>__BaseUrl`, zum Beispiel für einen eigenen Iconify-Server), nie eine Seite. Ohne Schlüssel erscheint ein Katalog, der einen braucht, nirgends.
+stellt nur der Betreiber ein (`MATCAN__Catalogs__<id>__BaseUrl`, zum Beispiel für einen eigenen Iconify-Server), nie eine Seite. Ohne Schlüssel erscheint ein Katalog, der einen braucht, nirgends.
 
-**Unsplash (Datenschutz und Regeln):** Unsplash verlangt, dass seine Fotos von seinen eigenen Adressen angezeigt werden. **Wenn Unsplash eingeschaltet ist, lädt dein Browser die Vorschaubilder direkt von Unsplash (`images.unsplash.com`). Unsplash sieht dabei deine IP-Adresse** und welche Fotos du dir ansiehst; nenne das in deiner Datenschutzerklärung. DesignThix erlaubt diese eine Adresse nur, solange der Katalog eingeschaltet ist und einen Schlüssel hat,
+**Unsplash (Datenschutz und Regeln):** Unsplash verlangt, dass seine Fotos von seinen eigenen Adressen angezeigt werden. **Wenn Unsplash eingeschaltet ist, lädt dein Browser die Vorschaubilder direkt von Unsplash (`images.unsplash.com`). Unsplash sieht dabei deine IP-Adresse** und welche Fotos du dir ansiehst; nenne das in deiner Datenschutzerklärung. MatCan erlaubt diese eine Adresse nur, solange der Katalog eingeschaltet ist und einen Schlüssel hat,
 und nur auf den Seiten für angemeldete Personen, die die Bildauswahl oder den Designer zeigen (Content-Security-Policy); die öffentliche Ansicht, der Druck und alle anderen Seiten laden nie etwas von Unsplash, und ist Unsplash aus, ist die Richtlinie so streng wie bei allen anderen. Wählt jemand ein Foto, **meldet der Server den Download bei Unsplash** (mit dem Schlüssel, der nie in den Browser kommt) und kopiert das Foto in die Bibliothek.
-Unter jedem Treffer steht „Foto: Name / Unsplash“ mit Links auf die Fotografin oder den Fotografen und auf Unsplash (`utm_source=DesignThix&utm_medium=referral`), und die Bildnachweise nennen beide. Lege die Anwendung bei Unsplash unter dem Namen „DesignThix“ an (der Name darf nicht „Unsplash“ enthalten); die Seite des Katalogs unter *Verwaltung > Kataloge* nennt alle Regeln, auch dass die Schnittstelle nicht für Datensammeln oder KI-Training gedacht ist.
+Unter jedem Treffer steht „Foto: Name / Unsplash“ mit Links auf die Fotografin oder den Fotografen und auf Unsplash (`utm_source=MatCan&utm_medium=referral`), und die Bildnachweise nennen beide. Lege die Anwendung bei Unsplash unter dem Namen „MatCan“ an (der Name darf nicht „Unsplash“ enthalten); die Seite des Katalogs unter *Verwaltung > Kataloge* nennt alle Regeln, auch dass die Schnittstelle nicht für Datensammeln oder KI-Training gedacht ist.
 Für mehr als 50 Anfragen pro Stunde muss Unsplash die Anwendung freigeben (Antrag mit Bildschirmfotos); trage das Limit dann bei „Anfragen pro Stunde“ ein.
 
 **Benutzen:**
@@ -294,7 +294,7 @@ Für mehr als 50 Anfragen pro Stunde muss Unsplash die Anwendung freigeben (Antr
 - **Bildnachweise:** *Datei > Bildnachweise …* listet jede Quelle des Designs mit Urheber, Lizenz und Link und kopiert den Text; die öffentliche Ansicht hat dasselbe als Link im Fuß. Bei Icons erscheint nur ein Satz, dessen Lizenz die Nennung verlangt (CC BY, zum Beispiel Font Awesome Free), **einmal je Satz**.
 - **KI-Design:** Der Assistent kann in den eingeschalteten Katalogen suchen und **ein** gewähltes Foto, Icon oder eine Schrift übernehmen (höchstens zwölf Suchen und acht Übernahmen je Auftrag), danach damit gestalten; die Nachweise stehen wie immer unter *Datei*. Unsplash nutzt der Assistent nie (Unsplash verlangt, dass ein Mensch die Fotos auswählt); ein Unsplash-Foto, das du selbst gewählt hast, liegt in der Bibliothek und darf er von dort verwenden.
 
-**Lizenzen:** Designs dürfen gedruckt, verändert und kommerziell genutzt werden, deshalb bietet DesignThix **nie** Bilder, Icons oder Schriften mit **NC** (nicht kommerziell) oder **ND** (keine Bearbeitung) an, und nichts ohne erkennbare Lizenz. Bei Icons nur einfarbige Sätze unter MIT, Apache 2.0, ISC, CC0, CC BY 4.0 und OFL;
+**Lizenzen:** Designs dürfen gedruckt, verändert und kommerziell genutzt werden, deshalb bietet MatCan **nie** Bilder, Icons oder Schriften mit **NC** (nicht kommerziell) oder **ND** (keine Bearbeitung) an, und nichts ohne erkennbare Lizenz. Bei Icons nur einfarbige Sätze unter MIT, Apache 2.0, ISC, CC0, CC BY 4.0 und OFL;
 Sätze unter CC BY-SA, GPL oder MPL erscheinen nur, wenn der Administrator sie ausdrücklich erlaubt. Der Administrator kann die Lizenzen und die Sätze enger fassen. Die Lizenz eines Anbieters ist dessen Aussage: wer Gewissheit braucht, betreibt einen eigenen Iconify-Server mit geprüften Sätzen.
 
 **Grenzen:** Jede Person darf je Minute nur eine begrenzte Zahl von Suchen machen (einstellbar), der Schlüssel eines Anbieters hat ein Stundenbudget, Antworten werden einen Tag zwischengespeichert (Pixabay verlangt das; bei Unsplash eine Stunde), und sagt ein Anbieter „zu viele Anfragen“, wird er in Ruhe gelassen, bis seine Wartezeit um ist; du liest dann in Worten, wie lange.
@@ -322,10 +322,10 @@ wechselnder Hash gezählt.
 
 ## Offline und als App
 
-DesignThix ist eine **installierbare App** (PWA): im Browser *Installieren* bzw. auf dem iPhone *Zum Home-Bildschirm*. Die Statusleiste hat die Farbe der App (hell und dunkel), Notch und
+MatCan ist eine **installierbare App** (PWA): im Browser *Installieren* bzw. auf dem iPhone *Zum Home-Bildschirm*. Die Statusleiste hat die Farbe der App (hell und dunkel), Notch und
 Home-Anzeige werden berücksichtigt, Eingabefelder sind auf dem Handy so groß, dass iOS nicht hineinzoomt; Zoomen mit zwei Fingern bleibt erlaubt.
 
-Ohne Verbindung zeigt DesignThix die Seiten, die du schon geöffnet hattest, als **Kopie** mit Hinweis („Du siehst den Stand vom …“). Schriften, Medien und Vorschaubilder bleiben im Zwischenspeicher, damit
+Ohne Verbindung zeigt MatCan die Seiten, die du schon geöffnet hattest, als **Kopie** mit Hinweis („Du siehst den Stand vom …“). Schriften, Medien und Vorschaubilder bleiben im Zwischenspeicher, damit
 Designs auch offline gezeichnet werden und eine schon einmal ausgeführte Serienausgabe wieder gedruckt werden kann. Geändert wird nur mit Verbindung; der **Designer** behält deine ungespeicherten
 Änderungen als Entwurf im Browser und speichert, sobald die Verbindung zurück ist (hat in der Zwischenzeit jemand anderes gespeichert, fragt er, ob du deine Fassung als Kopie sichern willst). Kommt die
 Verbindung zurück, lädt die Seite sich selbst neu, damit nichts Altes stehen bleibt. Beim Abmelden werden die gemerkten Seiten gelöscht.
@@ -334,29 +334,29 @@ Verbindung zurück, lädt die Seite sich selbst neu, damit nichts Altes stehen b
 
 - **Schriften** (33 Familien, nichts wird aus dem Internet geladen): Montserrat, Bebas Neue, Oswald, Kaushan Script, Caveat, Playfair Display, Lora, Open Sans, Pacifico, Source Sans 3, Great Vibes, Parisienne, Allura, Dancing Script,
   Cormorant Garamond, Libre Baskerville, Cinzel, Fredoka, Baloo 2, Patrick Hand, Gochi Hand, Abril Fatface, Anton, Righteous, Amatic SC, Inter, Nunito, Josefin Sans, Raleway, Poppins und IBM Plex Mono unter der
-  **SIL Open Font License 1.1**; Roboto Slab und Permanent Marker unter der **Apache License 2.0**. Die Lizenztexte liegen in `src/DesignThix/wwwroot/fonts/LICENSES`.
+  **SIL Open Font License 1.1**; Roboto Slab und Permanent Marker unter der **Apache License 2.0**. Die Lizenztexte liegen in `src/MatCan/wwwroot/fonts/LICENSES`.
 - **Symbole der Oberfläche:** [Lucide](https://lucide.dev) (ISC-Lizenz), über MatUi. Dieselben Lucide-Symbole (rund 1 900) gibt es im Designer; weitere Sätze kommen nur über den Katalog *Icons (Iconify)* und behalten ihre Lizenz (siehe *Kataloge*).
 - **Flaggen und Siegel** sind eigene Zeichnungen (keine geschützten Zeichen; die echten Bio- oder g.t.S.-Siegel lädst du selbst unter *Medien* hoch).
-- Das Aussehen kommt von **MatUi** aus MatDesign. DesignThix selbst: Matthias Schmoldt.
+- Das Aussehen kommt von **MatUi** aus MatDesign. MatCan selbst: Matthias Schmoldt.
 
 ## Entwickeln
 
 Voraussetzungen: .NET 10 SDK, Docker, Node.js (für die Browser-Prüfungen).
 
 ```bash
-dotnet build DesignThix.slnx                  # 0 Fehler, 0 Warnungen
-dotnet test DesignThix.slnx                   # Unit-Tests; die Integrationstests brauchen PostgreSQL:
-DESIGNTHIX_TEST_DB="Host=localhost;Port=3045;Username=designthix;Password=designthix" dotnet test DesignThix.slnx
+dotnet build MatCan.slnx                  # 0 Fehler, 0 Warnungen
+dotnet test MatCan.slnx                   # Unit-Tests; die Integrationstests brauchen PostgreSQL:
+MATCAN_TEST_DB="Host=localhost;Port=3045;Username=matcan;Password=matcan" dotnet test MatCan.slnx
 dotnet tool restore                           # einmal (dotnet-ef)
-dotnet ef migrations add <Name> -p src/DesignThix -s src/DesignThix -o Data/Migrations
+dotnet ef migrations add <Name> -p src/MatCan -s src/MatCan -o Data/Migrations
 ./scripts/redeploy.ps1                        # Image bauen und den lokalen Stack starten (-Clean: leere Datenbank)
 ```
 
 - **Browser-Prüfungen** (`tests/e2e`, Playwright mit dem installierten Edge): `cd tests/e2e && npm install && node run-all.js http://localhost:3043` startet Engine, PWA, Demo, Start, Projekte, Vorlagen, Designer, Canva-Editor, Editor-Inhalte,
   Serienausgabe, Teilen, Kommentare, Teams und KI nacheinander (rund zehn Minuten). Jede einzeln und was sie prüft: [tests/e2e/README.md](tests/e2e/README.md). Sie legen ihre Konten selbst an, wenn die Datenbank leer ist.
-- **Vorlagen** sind Quelltext: `tools/templates/<NNN>-<slug>.js` (Hilfen in `tools/templates/dsl.js`), `node tools/templates-build.js` schreibt daraus die Dateien in `src/DesignThix/Demo/templates`, `node tools/templates-sheet.js` zeichnet Übersichtsbögen zum Ansehen und `node tools/templates-lint.js` misst jede Seite in Originalgröße (Schrift ab 7 pt, Sicherheitsrand, Überlappungen). Die Anleitung steht in [docs/PLAN-TEMPLATES.md](docs/PLAN-TEMPLATES.md) und [CLAUDE.md](CLAUDE.md).
+- **Vorlagen** sind Quelltext: `tools/templates/<NNN>-<slug>.js` (Hilfen in `tools/templates/dsl.js`), `node tools/templates-build.js` schreibt daraus die Dateien in `src/MatCan/Demo/templates`, `node tools/templates-sheet.js` zeichnet Übersichtsbögen zum Ansehen und `node tools/templates-lint.js` misst jede Seite in Originalgröße (Schrift ab 7 pt, Sicherheitsrand, Überlappungen). Die Anleitung steht in [docs/PLAN-TEMPLATES.md](docs/PLAN-TEMPLATES.md) und [CLAUDE.md](CLAUDE.md).
 - **Screenshots** dieser Seite: `node tests/e2e/screens.js` gegen eine frische, leere Datenbank (`./scripts/redeploy.ps1 -Clean`, oder die App mit `dotnet run` gegen eine neue Datenbank, siehe [CLAUDE.md](CLAUDE.md)), Ergebnis in `docs/images`; die KI-Bilder entstehen mit einem Schein-Anbieter (`fake-ai.js`), nie mit einem echten, und `--ai-only` macht nur diese drei.
-- **MatUi** (Oberflächen-Bibliothek) wird nie in `src/DesignThix/wwwroot/ui` geändert, sondern aus MatDesign geholt: `./scripts/sync-matui.ps1`, geprüft mit `./scripts/check-matui.ps1`.
+- **MatUi** (Oberflächen-Bibliothek) wird nie in `src/MatCan/wwwroot/ui` geändert, sondern aus MatDesign geholt: `./scripts/sync-matui.ps1`, geprüft mit `./scripts/check-matui.ps1`.
 - Aufbau, Regeln und Stolpersteine für die Arbeit am Code: [CLAUDE.md](CLAUDE.md). Die Baupläne: [docs/PLAN-PLATFORM.md](docs/PLAN-PLATFORM.md) (Plan 3: Plattform, Teams, Teilen), [docs/PLAN-CANVA.md](docs/PLAN-CANVA.md) (Plan 2: Canva-Stil, Dokumentformat 2), [docs/PLAN.md](docs/PLAN.md) (Plan 1: Produkt, Architektur); der Editor: [docs/EDITOR.md](docs/EDITOR.md).
 
 **Technik:** ASP.NET Core 10 (Razor Pages), Entity Framework Core 10, PostgreSQL 17, MatUi aus MatDesign, GitHub Actions (Build, Tests gegen PostgreSQL, Multi-Arch-Image nach GHCR).

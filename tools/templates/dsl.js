@@ -25,10 +25,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const iconNames = new Set(Object.keys(JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'DesignThix', 'wwwroot', 'lib', 'icons.json'), 'utf8')).icons));
-const builtinKeys = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'DesignThix', 'wwwroot', 'builtin', 'builtin.json'), 'utf8')).map(a => a.key));
-const builtinFiles = new Map(JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'DesignThix', 'wwwroot', 'builtin', 'builtin.json'), 'utf8')).map(a => [a.key, a.file]));
-const fontFamilies = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'DesignThix', 'wwwroot', 'fonts', 'fonts.json'), 'utf8')).map(f => f.family));
+const iconNames = new Set(Object.keys(JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'MatCan', 'wwwroot', 'lib', 'icons.json'), 'utf8')).icons));
+const builtinKeys = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'MatCan', 'wwwroot', 'builtin', 'builtin.json'), 'utf8')).map(a => a.key));
+const builtinFiles = new Map(JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'MatCan', 'wwwroot', 'builtin', 'builtin.json'), 'utf8')).map(a => [a.key, a.file]));
+const fontFamilies = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'MatCan', 'wwwroot', 'fonts', 'fonts.json'), 'utf8')).map(f => f.family));
 
 const round = n => Math.round(n * 1000) / 1000;
 /** Nested arrays (the helpers that make several elements) become one flat list; null and false are dropped (`cond && rect(...)`). */
@@ -167,7 +167,7 @@ function ean13(twelve) {
 
 // ------------------------------------------------------------------------------------------------------------------------ Deko pack
 
-const wwwroot = path.join(__dirname, '..', '..', 'src', 'DesignThix', 'wwwroot');
+const wwwroot = path.join(__dirname, '..', '..', 'src', 'MatCan', 'wwwroot');
 const aspectCache = new Map();
 
 /** Width / height of a Deko drawing, read from the viewBox of its SVG file. Throws for a key that is no piece of the Deko pack (node tools/deko/list.js lists them). */

@@ -1,0 +1,55 @@
+@page "{id:long}"
+@model MatCan.Pages.Fonts.EditModel
+@{
+    var f = Model.Font;
+    var ro = !Model.CanEdit;
+}
+
+@if (ro)
+{
+    <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst Schriften nur ansehen.</div></div>
+}
+
+<dt-card title="Beispiel" icon="type" sub="@Fonts.IndexModel.FontLabel(f)">
+    <div class="dt-specimens">
+        <div class="dt-specimen dt-specimen--xl" data-dt-specimen data-family="@f.Family" data-weight="@f.Weight" data-style="@f.Style">Käse für Genießer</div>
+        <div class="dt-specimen dt-specimen--md" data-dt-specimen data-family="@f.Family" data-weight="@f.Weight" data-style="@f.Style">ABCDEFGHIJKLMNOPQRSTUVWXYZ ÄÖÜ abcdefghijklmnopqrstuvwxyz äöüß</div>
+        <div class="dt-specimen dt-specimen--md" data-dt-specimen data-family="@f.Family" data-weight="@f.Weight" data-style="@f.Style">0123456789 € , . : ; ! ? &amp; % / ( ) – „“</div>
+    </div>
+</dt-card>
+
+<form class="mat-form" method="post" novalidate>
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <dt-summary />
+    <dt-card title="Eigenschaften" icon="settings">
+        <div class="mat-form__grid">
+            <dt-input for="Input.Family" label="Familie" required="true" readonly="@ro" autocomplete="off" hint="Unter diesem Namen wählst du die Schrift im Designer. Dateien mit demselben Namen bilden eine Familie." />
+            <dt-input for="Input.Weight" label="Gewicht" required="true" readonly="@ro" autocomplete="off" hint="Eine Zahl wie 400 (normal) oder 700 (fett); eine variable Schrift ein Bereich wie „100 900“." />
+            <dt-select for="Input.Style" label="Stil" items="Model.Styles" disabled="@ro" />
+            <dt-input for="Input.License" label="Lizenz" readonly="@ro" autocomplete="off" hint="Zum Beispiel OFL-1.1 oder Apache-2.0." />
+        </div>
+    </dt-card>
+    <dt-card title="Datei" icon="file">
+        <dl class="mat-kv">
+            <dt>Format</dt><dd>@f.Format.ToUpperInvariant()</dd>
+            <dt>Dateigröße</dt><dd>@Fmt.FileSize(f.SizeBytes)</dd>
+            <dt>Prüfsumme (SHA-256)</dt><dd class="mat-mono dt-break">@f.ContentHash</dd>
+            <dt>Herkunft</dt><dd>@(f.IsBuiltIn ? "mitgeliefert" : "von dir hochgeladen")</dd>
+            @if (!string.IsNullOrWhiteSpace(f.Source))
+            {
+                <dt>Quelle</dt><dd class="dt-break">@f.Source</dd>
+            }
+        </dl>
+    </dt-card>
+
+    @if (!ro)
+    {
+        <dt-buttons back-href="/Fonts" delete-url="@Url.Page("/Fonts/Edit", "Delete", new { id = Model.Id })" delete-confirm="Diese Schrift löschen? Designs, die sie benutzen, zeigen danach eine Ersatzschrift." />
+    }
+    else
+    {
+        <dt-buttons no-save="true" back-href="/Fonts" />
+    }
+</form>
+
+<script src="~/js/library.js" asp-append-version="true"></script>

@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MatCan.Core/MatCan.Core.csproj" />
+    <Project Path="src/MatCan/MatCan.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MatCan.Tests/MatCan.Tests.csproj" />
+  </Folder>
+</Solution>

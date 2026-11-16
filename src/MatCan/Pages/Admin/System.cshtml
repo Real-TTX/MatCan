@@ -1,0 +1,19 @@
+@page
+@model MatCan.Pages.Admin.SystemModel
+@{
+    var f = Model.Facts;
+}
+
+<div class="mat-grid dt-stats">
+    @Ui.Kpi("Benutzer", Fmt.Integer(f.Users), null, "users", href: "/Admin/Users")
+    @Ui.Kpi("KI-Läufe", Fmt.Integer(f.AiRuns), null, "sparkles", href: "/Admin/Ai/Runs")
+</div>
+
+<dt-card title="Installation" icon="server">
+    <dl class="mat-kv">
+        <dt>Version</dt><dd class="mat-mono"><a href="/About">@Model.Version</a></dd>
+        <dt>Datenbank</dt><dd>@f.Database</dd>
+        <dt>Datenvolume</dt><dd class="mat-mono">@Model.DataDir</dd>
+    </dl>
+    <p class="mat-hint">Im Datenvolume liegen die Schlüssel der App (Sitzungen, Verschlüsselung) und die KI-Schlüssel und -Anmeldungen. Sie gehören nicht in ein Backup der Datenbank; ohne die Schlüssel sind gespeicherte Geheimnisse nicht lesbar.</p>
+</dt-card>

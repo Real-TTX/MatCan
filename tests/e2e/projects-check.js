@@ -16,7 +16,7 @@ const lib = require('./lib.js');
 const args = process.argv.slice(2);
 const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignoreUrl: /\/(api\/(items|folders|designs|spaces)|(Projekte|Freigegeben)\/Ordner\/)/ });
 const outIndex = args.indexOf('--out');
-const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'designthix-projects-check'));
+const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'matcan-projects-check'));
 fs.mkdirSync(outDir, { recursive: true });
 
 const results = [];

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /*
- * tools/icons.js — renders the PNG icons of DesignThix from the SVG sources.
+ * tools/icons.js — renders the PNG icons of MatCan from the SVG sources.
  *
  * Sources (hand-maintained SVG, the single source of truth):
- *   src/DesignThix/wwwroot/favicon.svg             favicon, simplified silhouette (legible at 16 px)
- *   src/DesignThix/wwwroot/logo.svg                full logo: mark + word mark (og-image)
- *   src/DesignThix/wwwroot/img/icon-maskable.svg   full-bleed PWA icon (tag inside the 80 % safe zone)
+ *   src/MatCan/wwwroot/favicon.svg             favicon, simplified silhouette (legible at 16 px)
+ *   src/MatCan/wwwroot/logo.svg                full logo: mark + word mark (og-image)
+ *   src/MatCan/wwwroot/img/icon-maskable.svg   full-bleed PWA icon (tag inside the 80 % safe zone)
  *
- * Output (src/DesignThix/wwwroot/img/):
+ * Output (src/MatCan/wwwroot/img/):
  *   favicon-32.png, apple-touch-icon.png (180, opaque), icon-192.png, icon-512.png (rounded tile, transparent corners),
  *   icon-maskable-192.png, icon-maskable-512.png (full bleed), og-image.png (1200x630)
  *
@@ -27,7 +27,7 @@ const path = require('path');
 const { chromium } = require('playwright');
 
 const root = path.resolve(__dirname, '..');
-const web = path.join(root, 'src', 'DesignThix', 'wwwroot');
+const web = path.join(root, 'src', 'MatCan', 'wwwroot');
 const img = path.join(web, 'img');
 
 const read = (file) => fs.readFileSync(path.join(web, file), 'utf8');
@@ -53,7 +53,7 @@ const ogPage = () => `<!doctype html><html lang="de"><head><style>
   p{margin:0;font-size:40px;font-weight:500;color:#3d4b5f;letter-spacing:.005em;}
   .bar{position:absolute;left:0;right:0;bottom:0;height:12px;background:linear-gradient(90deg,#18d4c0,#22b8e0,#2f86f6);}
 </style></head><body>
-  <img src="${dataUrl(read('logo.svg'))}" alt="DesignThix">
+  <img src="${dataUrl(read('logo.svg'))}" alt="MatCan">
   <p>Etiketten &amp; Designs – offline, mit Platzhaltern</p>
   <div class="bar"></div>
 </body></html>`;

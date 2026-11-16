@@ -1,0 +1,12 @@
+@page "/Outputs/{id:long}/Run"
+@model MatCan.Pages.Outputs.RunModel
+@{
+    Layout = "_Print";
+}
+
+<partial name="_RunBody" model="Model.View" />
+
+@section Scripts {
+    <script src="~/js/dt-engine.js" asp-append-version="true"></script>
+    <script src="~/js/output.js" asp-append-version="true"></script>
+}

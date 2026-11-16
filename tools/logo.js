@@ -1,5 +1,5 @@
 'use strict';
-// Generates the DesignThix logo SVGs (concept E: a "D" shaped like a label, with a punched hole and two text lines).
+// Generates the MatCan logo SVGs (concept E: a "D" shaped like a label, with a punched hole and two text lines).
 // Word mark outlines: Poppins SemiBold (SIL OFL 1.1), from the npm package @fontsource/poppins.
 // Once:  cd tests/e2e && npm install --no-save opentype.js@1 @fontsource/poppins && cd ../..
 // Then:  NODE_PATH=tests/e2e/node_modules node tools/logo.js && NODE_PATH=tests/e2e/node_modules node tools/icons.js
@@ -7,7 +7,7 @@ const opentype = require('opentype.js');
 const fs = require('fs');
 const path = require('path');
 
-const out = process.argv[2] || path.join(__dirname, '..', 'src', 'DesignThix', 'wwwroot');
+const out = process.argv[2] || path.join(__dirname, '..', 'src', 'MatCan', 'wwwroot');
 const T = '#18d4c0', M = '#22b8e0', B = '#2f86f6', NAVY = '#0f1b2d', LIGHT = '#f2f7fb', BLUE_DARK = '#4fb4ff';
 
 const buf = fs.readFileSync(require.resolve('@fontsource/poppins/files/poppins-latin-600-normal.woff'));
@@ -25,17 +25,17 @@ const markPath = (d) => D_OUT + d.hole + d.bars;
 
 const grad = (id, x1, y1, x2, y2) =>
   `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"><stop offset="0" stop-color="${T}"/><stop offset="0.5" stop-color="${M}"/><stop offset="1" stop-color="${B}"/></linearGradient>`;
-const head = (w, h) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img">\n  <title>DesignThix</title>\n`;
+const head = (w, h) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img">\n  <title>MatCan</title>\n`;
 const write = (f, s) => { fs.writeFileSync(path.join(out, f), s); console.log('wrote', f); };
 
 // ---- word mark ------------------------------------------------------------------------------------
 const SIZE = 72, TRACK = -0.012 * SIZE;
 function words() {
   let x = 0; const a = [], b = [];
-  const glyphs = font.stringToGlyphs('DesignThix');
+  const glyphs = font.stringToGlyphs('MatCan');
   glyphs.forEach((g, i) => {
     if (i > 0) x += font.getKerningValue(glyphs[i - 1], g) * SIZE / font.unitsPerEm;
-    (i < 6 ? a : b).push(g.getPath(x, 0, SIZE));
+    (i < 3 ? a : b).push(g.getPath(x, 0, SIZE));
     x += g.advanceWidth * SIZE / font.unitsPerEm + TRACK;
   });
   const all = a.concat(b).map((p) => p.getBoundingBox());

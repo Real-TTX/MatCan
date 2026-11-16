@@ -13,7 +13,7 @@
 //  qualitaet  the quality pass (docs/PLAN-AI-DESIGN.md): the review before a run ends (a model that is done without looking is sent back once and then looks), templates first (the editor draws the
 //             numbered sheet of the templates, the model takes one whole and replaces its sample texts)
 //  foto       plan 5 / C3: the assistant searches the catalogues (a photo of Pexels, an icon of Iconify), imports ONE of each, places them; the credit, the undo step, a catalogue that is off
-//             (needs DESIGNTHIX__Catalogs__<pexels|iconify>__BaseUrl = the fake catalogues, --catalog-port 3073; skipped without)
+//             (needs MATCAN__Catalogs__<pexels|iconify>__BaseUrl = the fake catalogues, --catalog-port 3073; skipped without)
 //
 //   node ai-design-check.js [base url, default http://localhost:3043] [--fake-host <host the APP reaches this machine by>] [--fake-port 3070] [--catalog-port 3073] [--out <folder for the screenshots>]
 //
@@ -28,7 +28,7 @@ const E = require('./editor-lib.js');
 const args = process.argv.slice(2);
 const argValue = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
 const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, purgeImage } = lib(args, { ignoreUrl: /\/api\/ai\//, ignore: /status of (400|401|403|404|409|422|429)/ });
-const outDir = path.resolve(argValue('--out', path.join(os.tmpdir(), 'designthix-ai-design-check')));
+const outDir = path.resolve(argValue('--out', path.join(os.tmpdir(), 'matcan-ai-design-check')));
 const fakePort = Number(argValue('--fake-port', '3070'));
 const fakeHost = argValue('--fake-host', /localhost:3043|127\.0\.0\.1:3043/.test(base) ? 'host.docker.internal' : '127.0.0.1');
 const { fake, startFake } = require('./fake-ai.js');
@@ -776,7 +776,7 @@ let restored = false;
       if (!/in der Konfiguration festgelegt/.test(await admin.textContent('body'))) { known = false; }
     }
     if (!known) {
-      console.log(`(the app does not know the fake catalogues: start it with DESIGNTHIX__Catalogs__<pexels|iconify>__BaseUrl=http://127.0.0.1:${argValue('--catalog-port', '3073')}; the check "foto" is skipped)`);
+      console.log(`(the app does not know the fake catalogues: start it with MATCAN__Catalogs__<pexels|iconify>__BaseUrl=http://127.0.0.1:${argValue('--catalog-port', '3073')}; the check "foto" is skipped)`);
     } else {
       const { startFakeCatalogs, providers } = require('./fake-catalogs.js');
       const catalogFake = await startFakeCatalogs(Number(argValue('--catalog-port', '3073')));

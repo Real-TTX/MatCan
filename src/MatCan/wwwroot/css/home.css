@@ -1,0 +1,176 @@
+/* MatCan: the start page, the gallery of templates and the "Design erstellen" dialog (format tiles, template tiles, recent designs). Tokens only; flat (borders instead of
+   shadows); no inline styles anywhere: the proportions of a format tile come from the attribute selectors below, which know the keys of the tiles. */
+
+/* ---- The head of the start page: a question and a search field ---- */
+.dt-start__hero { display: grid; gap: var(--mat-space-4); padding-block: var(--mat-space-4) var(--mat-space-2); }
+.dt-start__hello { margin: 0; color: var(--mat-text-muted); font-size: var(--mat-fs-sm); }
+.dt-start__title { margin: 0; font-size: var(--mat-fs-3xl); line-height: 1.15; font-weight: 700; letter-spacing: -.01em; }
+.dt-start__search { display: flex; gap: var(--mat-space-2); max-width: 44rem; }
+.dt-start__search .mat-input-icon { flex: 1; min-width: 0; }
+.dt-start__search .mat-input { height: 3rem; font-size: var(--mat-fs-lg); }
+.dt-start__search .mat-btn { height: 3rem; }
+@media (max-width: 719px) { .dt-start__title { font-size: var(--mat-fs-2xl); } .dt-start__search .mat-btn span { display: none; } }
+
+/* ---- A section of the start page: a heading with a link on the right ---- */
+.dt-section { display: grid; gap: var(--mat-space-3); margin-top: var(--mat-space-8); min-width: 0; }
+.dt-section__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--mat-space-3); }
+.dt-section__title { margin: 0; font-size: var(--mat-fs-xl); font-weight: 650; }
+.dt-section__more { font-size: var(--mat-fs-sm); }
+
+/* ---- Format tiles: a silhouette of the page in the right proportions, the name and the size ---- */
+.dt-formats { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.25rem, 1fr)); gap: var(--mat-space-3); list-style: none; margin: 0; padding: 0; }
+.dt-formattile {
+  display: flex; flex-direction: column; align-items: center; gap: var(--mat-space-2); padding: var(--mat-space-3) var(--mat-space-2) var(--mat-space-3);
+  background: var(--mat-surface); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-lg); color: var(--mat-text); text-decoration: none; text-align: center;
+  cursor: pointer; font: inherit; width: 100%;
+  transition: border-color var(--mat-dur) var(--mat-ease), background var(--mat-dur) var(--mat-ease);
+}
+.dt-formattile:hover { border-color: var(--mat-accent); background: var(--mat-accent-soft); text-decoration: none; }
+.dt-formattile:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); border-color: var(--mat-accent); }
+.dt-formattile[aria-busy="true"] { opacity: .6; pointer-events: none; }
+.dt-formattile__stage { display: grid; place-items: center; width: 100%; height: 4.4rem; }
+.dt-formattile__shape { display: grid; place-items: center; width: 3.4rem; height: 3rem; background: var(--mat-surface-3); border: 1px solid var(--mat-border-strong); border-radius: var(--mat-radius-xs); color: var(--mat-text-muted); }
+.dt-formattile:hover .dt-formattile__shape { background: var(--mat-surface); border-color: var(--mat-accent-text); color: var(--mat-accent-text); }
+.dt-formattile__shape .mat-icon { width: 1.1rem; height: 1.1rem; }
+.dt-formattile__title { font-weight: 650; font-size: var(--mat-fs-sm); line-height: 1.25; overflow-wrap: anywhere; }
+.dt-formattile__size { color: var(--mat-text-muted); font-size: var(--mat-fs-xs); }
+.dt-formattile--custom .dt-formattile__shape { border-style: dashed; }
+[data-format="price-tag"] .dt-formattile__shape { width: 4.5rem; height: 3rem; }
+[data-format="label-100x70"] .dt-formattile__shape { width: 4.3rem; height: 3rem; }
+[data-format="shelf-strip"] .dt-formattile__shape { width: 5.2rem; height: 1.6rem; }
+[data-format="business-card"] .dt-formattile__shape { width: 4.5rem; height: 2.9rem; }
+[data-format="a5-portrait"] .dt-formattile__shape { width: 2.7rem; height: 3.8rem; }
+[data-format="poster-a3-portrait"] .dt-formattile__shape { width: 2.9rem; height: 4.1rem; }
+[data-format="a6-landscape"] .dt-formattile__shape { width: 4.4rem; height: 3.1rem; }
+[data-format="instagram-post"] .dt-formattile__shape { width: 3.4rem; height: 3.4rem; }
+[data-format="instagram-story"] .dt-formattile__shape { width: 2.2rem; height: 3.9rem; }
+[data-format="presentation"] .dt-formattile__shape { width: 5.2rem; height: 2.9rem; }
+
+/* ---- Tiles of templates and of recent designs: the thumbnail, the name, the size; the actions appear on hover and focus ---- */
+.dt-tilerow { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(13rem, 15rem); gap: var(--mat-gap); overflow-x: auto; padding-bottom: var(--mat-space-2); scroll-snap-type: x proximity; }
+.dt-tilerow > * { scroll-snap-align: start; }
+.dt-tplgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); gap: var(--mat-gap); }
+.dt-tpl, .dt-recent { position: relative; }
+.dt-tpl .dt-tpl__media, .dt-recent .dt-recent__media { display: grid; place-items: center; aspect-ratio: 4 / 3; padding: var(--mat-space-3); background: var(--mat-surface-3); color: inherit; text-decoration: none; overflow: hidden; }
+.dt-tpl .dt-designthumb, .dt-recent .dt-designthumb { width: 100%; height: 100%; aspect-ratio: auto; max-height: none; background: transparent; }
+.dt-tpl__actions { display: flex; flex-wrap: wrap; gap: var(--mat-space-2); padding: 0 var(--mat-space-4) var(--mat-space-4); }
+.dt-tpl__actions .mat-btn { flex: 1 1 auto; }
+.dt-tpl .mat-tile__body, .dt-recent .mat-tile__body { flex: 1; }
+.dt-tile__title { font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--mat-text); text-decoration: none; }
+a.dt-tile__title:hover { color: var(--mat-accent-text); text-decoration: none; }
+.dt-recent__actions {
+  position: absolute; top: var(--mat-space-2); right: var(--mat-space-2); display: flex; gap: var(--mat-space-1); padding: 2px;
+  background: var(--mat-surface); border: 1px solid var(--mat-border); border-radius: var(--mat-radius);
+  opacity: 0; transition: opacity var(--mat-dur) var(--mat-ease);
+}
+.dt-recent:hover .dt-recent__actions, .dt-recent:focus-within .dt-recent__actions { opacity: 1; }
+@media (hover: none) { .dt-recent__actions { opacity: 1; } }
+.dt-recent.is-busy { opacity: .55; pointer-events: none; }
+
+/* ---- Key figures at the bottom: small, a line of links ---- */
+.dt-facts { display: flex; flex-wrap: wrap; gap: var(--mat-space-2) var(--mat-space-6); list-style: none; margin: var(--mat-space-10) 0 0; padding: var(--mat-space-4) 0 0; border-top: 1px solid var(--mat-border); }
+.dt-fact { color: var(--mat-text-muted); font-size: var(--mat-fs-sm); text-decoration: none; }
+.dt-fact strong { color: var(--mat-text); font-variant-numeric: tabular-nums; }
+a.dt-fact:hover { color: var(--mat-accent-text); text-decoration: none; }
+.dt-series { margin-top: var(--mat-space-6); }
+.dt-series__title { margin: 0 0 var(--mat-space-2); font-size: var(--mat-fs-sm); font-weight: 650; color: var(--mat-text-muted); }
+
+/* ---- The "Design erstellen" dialog ---- */
+.dt-create .mat-dialog__body { display: grid; gap: var(--mat-space-4); }
+.dt-create .dt-formats { grid-template-columns: repeat(auto-fill, minmax(7.25rem, 1fr)); }
+.dt-create__custom { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; gap: var(--mat-space-3); align-items: end; }
+.dt-create__custom .mat-field { margin: 0; }
+@media (max-width: 559px) { .dt-create__custom { grid-template-columns: repeat(3, minmax(0, 1fr)); } .dt-create__custom .mat-btn { grid-column: 1 / -1; } }
+.dt-create__error { margin: 0; color: var(--mat-danger-text); font-size: var(--mat-fs-sm); }
+.dt-create__error[hidden] { display: none; }
+
+/* ---- Gallery of templates: a heading per category ---- */
+.dt-category { display: grid; gap: var(--mat-space-3); margin-top: var(--mat-space-6); }
+.dt-category__title { margin: 0; font-size: var(--mat-fs-lg); font-weight: 650; }
+.dt-category__count { color: var(--mat-text-muted); font-weight: 400; font-size: var(--mat-fs-sm); margin-left: var(--mat-space-2); }
+
+/* ---- On a phone the tiles are smaller (three rows fewer to scroll) ---- */
+@media (max-width: 559px) {
+  .dt-formats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--mat-space-2); }
+  .dt-formattile { padding-block: var(--mat-space-2); gap: var(--mat-space-1); }
+  .dt-formattile__stage { height: 3.2rem; }
+  .dt-formattile__shape { transform: scale(.72); }
+}
+
+/* ---- "Speichern in" of the dialog (a person who belongs to teams) ---- */
+.dt-create__where { max-width: 24rem; margin: 0; }
+
+/* ---- the chips of files chosen for a message to the design assistant (js/ai-attach.js: the editor panel, the start page, the create dialog) ---- */
+.dt-agfiles { display: flex; flex-wrap: wrap; gap: 4px; }
+.dt-agfiles[hidden] { display: none; }
+.dt-agfile { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 2px 4px 2px 6px; border: 1px solid var(--mat-border-strong); border-radius: var(--mat-radius-pill); background: var(--mat-surface-2); color: var(--mat-text); font-size: var(--mat-fs-xs); font-weight: 600; }
+.dt-agfile .mat-icon { width: 0.95rem; height: 0.95rem; flex: none; color: var(--mat-text-muted); }
+.dt-agfile.is-ref { border-color: var(--mat-accent); background: var(--mat-accent-soft); }
+.dt-agfile.is-ref .mat-icon { color: var(--mat-accent-text); }
+.dt-agfile__thumb { width: 1.35rem; height: 1.35rem; flex: none; border-radius: 4px; object-fit: cover; background: var(--mat-surface-3); }
+.dt-agfile__name { min-width: 0; max-width: 11rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-agfile__x { display: grid; place-items: center; width: 1.3rem; height: 1.3rem; flex: none; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--mat-text-muted); cursor: pointer; }
+.dt-agfile__x:hover { background: var(--mat-surface-3); color: var(--mat-text); }
+.dt-agfile__x:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-agfile__x .mat-icon { width: 0.8rem; height: 0.8rem; }
+
+/* ---- "Mit KI entwerfen": the prompt card of the start page and of the dialog "Design erstellen" (js/create-ai.js, docs/PLAN-AI-DESIGN.md section 1 item 5) ---- */
+.dt-aip { display: grid; gap: var(--mat-space-3); max-width: 44rem; min-width: 0; }
+.dt-aip__card { display: grid; gap: var(--mat-space-2); padding: var(--mat-space-3) var(--mat-space-4) var(--mat-space-3); border: 1px solid var(--mat-border-strong); border-radius: var(--mat-radius-xl); background: var(--mat-surface); transition: border-color var(--mat-dur) var(--mat-ease), box-shadow var(--mat-dur) var(--mat-ease); }
+.dt-aip__card:focus-within { border-color: var(--mat-accent); box-shadow: var(--mat-focus-ring); }
+.dt-aip__card.is-drop { border-color: var(--mat-accent); border-style: dashed; background: var(--mat-accent-soft); }
+.dt-aip__head { display: flex; align-items: center; gap: 8px; font-size: var(--mat-fs-sm); font-weight: 650; color: var(--mat-accent-text); }
+.dt-aip__head .mat-icon { width: 1.1rem; height: 1.1rem; }
+.dt-aip__text.mat-input { display: block; width: 100%; min-height: 3.6rem; max-height: 12rem; padding: 0; border-color: transparent; background: transparent; box-shadow: none; resize: none; font-size: var(--mat-fs-lg); line-height: 1.4; box-sizing: border-box; }
+.dt-aip__text.mat-input:focus { border-color: transparent; box-shadow: none; }
+.dt-aip__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mat-space-2); }
+.dt-aip__row .mat-btn .mat-icon { width: 1rem; height: 1rem; }
+.dt-aip__format { flex: 0 1 14rem; min-width: 0; width: auto; }
+.dt-aip__custom { display: inline-flex; align-items: center; gap: 6px; }
+.dt-aip__custom[hidden] { display: none; }
+.dt-aip__custom .mat-input { width: 5rem; }
+.dt-aip__custom .mat-select { width: 5.5rem; }
+.dt-aip__spacer { flex: 1 1 auto; }
+.dt-aip__submit { min-width: 8rem; }
+.dt-aip__submit[aria-busy="true"] { opacity: .7; pointer-events: none; }
+.dt-aip__error { margin: 0; padding: 8px 10px; border-radius: var(--mat-radius); background: var(--mat-danger-bg); color: var(--mat-danger-text); font-size: var(--mat-fs-sm); }
+.dt-aip__error[hidden] { display: none; }
+.dt-aip__examples { display: flex; flex-wrap: wrap; gap: var(--mat-space-2); }
+.dt-aip__example { padding: 5px 12px; border: 1px solid var(--mat-border); border-radius: var(--mat-radius-pill); background: var(--mat-surface); color: var(--mat-text-muted); font: inherit; font-size: var(--mat-fs-sm); cursor: pointer; }
+.dt-aip__example:hover { border-color: var(--mat-accent); color: var(--mat-accent-text); background: var(--mat-accent-soft); }
+.dt-aip__example:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-aip__file { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.dt-aip--hero .dt-aip__text.mat-input { font-size: var(--mat-fs-xl); min-height: 4.2rem; }
+.dt-aip--dialog .dt-aip__card { border-radius: var(--mat-radius-lg); }
+.dt-create__ai { display: grid; gap: var(--mat-space-3); margin-bottom: var(--mat-space-5); padding-bottom: var(--mat-space-5); border-bottom: 1px solid var(--mat-border); }
+.dt-create__ai-title { margin: 0; font-size: var(--mat-fs-md); font-weight: 650; }
+.dt-create__or { margin: 0 0 var(--mat-space-3); font-size: var(--mat-fs-sm); font-weight: 650; color: var(--mat-text-muted); }
+@media (max-width: 719px) {
+  .dt-aip--hero .dt-aip__text.mat-input { font-size: var(--mat-fs-lg); }
+  .dt-aip__format { flex: 1 1 10rem; }
+  .dt-aip__submit { margin-left: auto; }
+  .dt-aip__spacer { display: none; }
+}
+.dt-aip[hidden] { display: none; }
+
+/* ---- "Mehr Formate" of the dialog "Design erstellen": the sizes that are no tile, in groups (plan 6) ---- */
+.dt-moreformats { border: 1px solid var(--mat-border); border-radius: var(--mat-radius-lg); background: var(--mat-surface); }
+.dt-moreformats__summary { display: flex; align-items: center; gap: var(--mat-space-2); padding: var(--mat-space-3) var(--mat-space-4); cursor: pointer; font-weight: 650; list-style: none; border-radius: var(--mat-radius-lg); }
+.dt-moreformats__summary::-webkit-details-marker { display: none; }
+.dt-moreformats__summary:hover { background: var(--mat-surface-3); }
+.dt-moreformats__summary:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-moreformats__summary .mat-icon { width: 1rem; height: 1rem; transition: transform var(--mat-dur) var(--mat-ease); }
+.dt-moreformats[open] > .dt-moreformats__summary .mat-icon { transform: rotate(90deg); }
+.dt-moreformats__count { color: var(--mat-text-muted); font-weight: 500; font-size: var(--mat-fs-sm); }
+.dt-moreformats__groups { display: grid; gap: var(--mat-space-4); padding: 0 var(--mat-space-4) var(--mat-space-4); max-height: 22rem; overflow-y: auto; }
+.dt-moreformats__title { margin: 0 0 var(--mat-space-2); font-size: var(--mat-fs-xs); font-weight: 650; letter-spacing: .04em; text-transform: uppercase; color: var(--mat-text-muted); }
+.dt-moreformats__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--mat-space-2); list-style: none; margin: 0; padding: 0; }
+.dt-moreformats__item { display: flex; align-items: center; gap: var(--mat-space-3); padding: var(--mat-space-2) var(--mat-space-3); border: 1px solid var(--mat-border); border-radius: var(--mat-radius); color: var(--mat-text); text-decoration: none; min-width: 0; }
+.dt-moreformats__item:hover { border-color: var(--mat-accent); background: var(--mat-accent-soft); text-decoration: none; }
+.dt-moreformats__item:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); border-color: var(--mat-accent); }
+.dt-moreformats__item[aria-busy="true"] { opacity: .6; pointer-events: none; }
+.dt-moreformats__icon { display: grid; place-items: center; width: 2rem; height: 2rem; flex: none; border-radius: var(--mat-radius-xs); background: var(--mat-surface-3); color: var(--mat-text-muted); }
+.dt-moreformats__icon .mat-icon { width: 1rem; height: 1rem; }
+.dt-moreformats__text { display: grid; min-width: 0; }
+.dt-moreformats__name { font-weight: 600; font-size: var(--mat-fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-moreformats__size { color: var(--mat-text-muted); font-size: var(--mat-fs-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

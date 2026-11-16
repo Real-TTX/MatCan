@@ -15,7 +15,7 @@ const E = require('./editor-lib.js');
 const args = process.argv.slice(2);
 const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignore: /status of (403|409)|Failed to load resource: the server responded with a status of 4\d\d/ });
 const outIndex = args.indexOf('--out');
-const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(require('os').tmpdir(), 'designthix-content-check'));
+const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(require('os').tmpdir(), 'matcan-content-check'));
 const onlyIndex = args.indexOf('--only');
 const only = onlyIndex >= 0 ? args[onlyIndex + 1].split(',') : null;
 
@@ -989,9 +989,9 @@ sections.codes = async ({ page }) => {
   await settle(page);
   check('a QR code selects the code toolbar with Inhalt, Fehlerkorrektur, Farbe, Hintergrund', (await kind(page)) === 'qr' && await page.isVisible('#dt-ctx input[aria-label="Inhalt des QR-Codes"]') && await tb(page, 'Fehlerkorrektur').count() === 1 && await tb(page, 'Farbe').count() === 1);
   const input = page.locator('#dt-ctx input[aria-label="Inhalt des QR-Codes"]');
-  await input.fill('https://designthix.example/käse');
+  await input.fill('https://matcan.example/käse');
   await settle(page);
-  check('the Inhalt field writes the value', (await el(page, qr)).value === 'https://designthix.example/käse');
+  check('the Inhalt field writes the value', (await el(page, qr)).value === 'https://matcan.example/käse');
   await input.fill('');
   await settle(page);
   check('an empty QR code says so in the toolbar', (await page.textContent('#dt-ctx .dt-tb__status')).includes('braucht einen Inhalt'));

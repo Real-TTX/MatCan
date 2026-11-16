@@ -1,0 +1,16 @@
+@using MatCan.Logic
+@model (StorageUsage Usage, string Name)
+@*
+    The storage of an area: used and limit, with a bar (images and fonts count). Browser header and the page Uploads & Medien.
+*@
+@{
+    var usage = Model.Usage;
+    var tone = usage.Fraction >= 1 ? "error" : usage.Fraction >= .85 ? "warn" : null;
+}
+<div class="dt-storage" data-storage title="Speicherplatz von „@Model.Name“">
+    <div class="dt-storage__line">
+        @Ui.Icon("hard-drive")
+        <span class="dt-storage__text"><strong>@Fmt.FileSize(usage.UsedBytes)</strong> von @Fmt.FileSize(usage.QuotaBytes)</span>
+    </div>
+    <div class="mat-meter mat-meter--sm" role="img" aria-label="Speicherplatz zu @((int)Math.Round(usage.Fraction * 100)) Prozent belegt"><div class="mat-meter__fill" data-value="@((int)Math.Round(usage.Fraction * 100))" data-tone="@tone"></div></div>
+</div>

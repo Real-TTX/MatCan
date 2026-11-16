@@ -1,4 +1,4 @@
-// Checks the bundled fonts (src/DesignThix/wwwroot/fonts/fonts.json): file kind, weight against the font, glyph coverage of the cmap for the German
+// Checks the bundled fonts (src/MatCan/wwwroot/fonts/fonts.json): file kind, weight against the font, glyph coverage of the cmap for the German
 // letters and typographic marks (and some Latin Extended), name table, licence text. Optionally renders a specimen sheet and measures the vertical
 // metrics in the installed Edge.
 //
@@ -13,7 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 
-const root = path.join(__dirname, '..', 'src', 'DesignThix', 'wwwroot', 'fonts');
+const root = path.join(__dirname, '..', 'src', 'MatCan', 'wwwroot', 'fonts');
 const args = process.argv.slice(2);
 const opt = (name) => { const i = args.indexOf(name); return i < 0 ? null : (args[i + 1] || true); };
 const quiet = args.includes('--quiet');

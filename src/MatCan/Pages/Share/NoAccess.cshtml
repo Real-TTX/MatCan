@@ -1,0 +1,35 @@
+@page "/Zugriff/{kind}/{id:long}"
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model MatCan.Pages.Share.NoAccessModel
+@{
+    ViewData["Width"] = "narrow";
+    var options = new List<SelectListItem> { new("Ansehen", "view"), new("Bearbeiten", "edit") };
+}
+
+@* Where somebody lands who opened something they may not see. The page does not say what the thing is or whether it exists. *@
+<dt-card title="Du hast keinen Zugriff" icon="lock">
+    @if (Model.Sent is { } sent)
+    {
+        <div class="mat-alert mat-alert--success" role="status" data-share-sent>
+            @Ui.Icon("check-circle")
+            <div class="mat-alert__body"><strong>Anfrage gesendet.</strong> Die Person, der es gehört, kann dir jetzt Zugriff geben (@(sent == MatCan.Data.Entities.SharePermission.Edit ? "zum Bearbeiten" : "zum Ansehen")). Du siehst es hier und in der Liste „Freigegeben“, sobald sie zugestimmt hat.</div>
+        </div>
+        <p class="mat-muted dt-share-noaccess__hint">Du kannst die Anfrage ändern und noch einmal senden.</p>
+    }
+    else
+    {
+        <p>Dieses Element gibt es nicht mehr, oder es ist nicht für dich freigegeben. Du kannst die Person, der es gehört, um Zugriff bitten.</p>
+    }
+
+    <form class="mat-form" method="post" id="dt-share-request">
+        <dt-summary />
+        <div class="mat-form__grid">
+            <dt-radios for="Input.Permission" label="Was möchtest du tun?" items="options" />
+            <dt-textarea for="Input.Message" label="Nachricht (optional)" rows="3" full="true" hint="Zum Beispiel: Ich brauche das für den Flyer am Freitag." />
+        </div>
+        <div class="mat-btn-row mat-btn-row--plain">
+            <button type="submit" class="mat-btn mat-btn--primary">@Ui.Icon("mail")<span>@(Model.Sent is null ? "Zugriff anfordern" : "Erneut senden")</span></button>
+            <a class="mat-btn mat-btn--secondary" href="/">Zur Startseite</a>
+        </div>
+    </form>
+</dt-card>

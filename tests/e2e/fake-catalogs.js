@@ -1,6 +1,6 @@
 'use strict';
 // A fake stock-photo provider for the browser checks of the catalogues (docs/PLAN-CATALOGS.md). It speaks the small API of the reference catalogue
-// (src/DesignThix/Catalogs/Providers/ExampleCatalog.cs) and answers with pictures it draws itself, so nothing ever leaves the machine:
+// (src/MatCan/Catalogs/Providers/ExampleCatalog.cs) and answers with pictures it draws itself, so nothing ever leaves the machine:
 //
 //   GET /api/collections                       -> { collections: [{ id, name, count }] }
 //   GET /api/search?query&collection&page&per_page&orientation&safe -> { total, page, items: [{ id, title, width, height, thumb, author, authorUrl, url, licence: { code, name, url } }] }
@@ -12,7 +12,7 @@
 //
 // What it holds: 45 pictures (nature, food, city) with authors and licences (CC0-1.0 and CC-BY-4.0), and the ones that must never appear: a CC-BY-NC picture, a CC-BY-ND picture, one without a
 // licence, one whose thumbnail points to another host. Special words: "limit" answers 429 with Retry-After, "down" answers 500, "leer" finds nothing. The key of the search-only catalogue is "testkey-123"
-// (header Authorization); a request without it answers 401. Used by catalogs-check.js; the app reaches it through DESIGNTHIX__Catalogs__example-browse__BaseUrl (and example-search).
+// (header Authorization); a request without it answers 401. Used by catalogs-check.js; the app reaches it through MATCAN__Catalogs__example-browse__BaseUrl (and example-search).
 //
 //   node fake-catalogs.js [port, default 3073]     (standalone)      const { startFakeCatalogs } = require('./fake-catalogs.js')
 const http = require('http');

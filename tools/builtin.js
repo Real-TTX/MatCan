@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 'use strict';
-// Generator for the built-in content of DesignThix:
-//   src/DesignThix/wwwroot/builtin/flags/*.svg, builtin/icons/*.svg, builtin/builtin.json, fonts/fonts.json
+// Generator for the built-in content of MatCan:
+//   src/MatCan/wwwroot/builtin/flags/*.svg, builtin/icons/*.svg, builtin/builtin.json, fonts/fonts.json
 // Usage: node tools/builtin.js     (the fonts themselves are downloaded once, see wwwroot/fonts/README.md)
 // All drawings are our own work (country flags are public domain designs, the seals are generic and carry no trademark).
 const fs = require('fs');
 const path = require('path');
 
-const root = path.join(__dirname, '..', 'src', 'DesignThix', 'wwwroot');
+const root = path.join(__dirname, '..', 'src', 'MatCan', 'wwwroot');
 const flagDir = path.join(root, 'builtin', 'flags');
 const iconDir = path.join(root, 'builtin', 'icons');
 fs.mkdirSync(flagDir, { recursive: true });

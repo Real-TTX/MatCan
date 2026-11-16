@@ -1,0 +1,52 @@
+@using MatCan.Core.Documents
+@model (string Prefix, string Variant)
+@*
+    "Mit KI entwerfen" (docs/PLAN-AI-DESIGN.md section 1 item 5): a card with a field "Was möchtest du gestalten?", Anhängen (pictures, PDF, Word, Excel, texts), the format ("Automatisch": the AI chooses one)
+    and the button. create-ai.js sends it to POST /api/ai/designs/new and opens the editor, where the panel KI follows the run. Used on the start page (Variant "hero") and in the dialog "Design erstellen"
+    (Variant "dialog"); the ids come from the prefix, because both are on the start page. Without script the card does nothing: it is hidden until the script has started it.
+*@
+@{
+    var p = Model.Prefix;
+    var hero = Model.Variant == "hero";
+}
+<form class="dt-aip dt-aip--@Model.Variant" data-ai-create hidden novalidate aria-label="Mit KI entwerfen">
+    <div class="dt-aip__card">
+        <div class="dt-aip__head">@Ui.Icon("sparkles")<span>Mit KI entwerfen</span></div>
+        <label class="mat-sr-only" for="@p-text">Was möchtest du gestalten?</label>
+        <textarea class="mat-input dt-aip__text" id="@p-text" data-ai-text rows="@(hero ? 3 : 2)" maxlength="20000" placeholder="Was möchtest du gestalten? Zum Beispiel: Ein Plakat für unser Sommerfest am 12. Juli"></textarea>
+        <div class="dt-agfiles" data-ai-files hidden></div>
+        <div class="dt-aip__row">
+            <button type="button" class="mat-btn mat-btn--ghost mat-btn--sm" data-ai-attach title="Bilder, PDF, Word, Excel oder Texte anhängen (auch per Ziehen oder Einfügen)">@Ui.Icon("paperclip")<span>Anhängen</span></button>
+            <label class="mat-sr-only" for="@p-format">Format</label>
+            <select class="mat-select mat-select--sm dt-aip__format" id="@p-format" data-ai-format>
+                <option value="auto" selected>Format: Automatisch</option>
+                @foreach (var f in FormatPresets.Tiles)
+                {
+                    <option value="@f.Key">@f.ShortName · @Fmt.Number((decimal)f.Width, 0) × @Fmt.Number((decimal)f.Height, 0) @f.Unit</option>
+                }
+                <option value="custom">Eigene Größe …</option>
+            </select>
+            <span class="dt-aip__custom" data-ai-custom hidden>
+                <label class="mat-sr-only" for="@p-width">Breite</label>
+                <input class="mat-input mat-input--sm" type="number" id="@p-width" data-ai-width value="100" min="1" step="any" inputmode="decimal" aria-label="Breite" />
+                <span aria-hidden="true">×</span>
+                <label class="mat-sr-only" for="@p-height">Höhe</label>
+                <input class="mat-input mat-input--sm" type="number" id="@p-height" data-ai-height value="100" min="1" step="any" inputmode="decimal" aria-label="Höhe" />
+                <label class="mat-sr-only" for="@p-unit">Einheit</label>
+                <select class="mat-select mat-select--sm" id="@p-unit" data-ai-unit aria-label="Einheit"><option value="mm" selected>mm</option><option value="px">px</option></select>
+            </span>
+            <span class="dt-aip__spacer"></span>
+            <button type="submit" class="mat-btn mat-btn--primary dt-aip__submit" data-ai-submit>@Ui.Icon("sparkles")<span>Entwerfen</span></button>
+        </div>
+        <p class="dt-aip__error" data-ai-error role="alert" hidden></p>
+        <input type="file" class="dt-aip__file" data-ai-file multiple tabindex="-1" aria-hidden="true" />
+    </div>
+    @if (hero)
+    {
+        <div class="dt-aip__examples" aria-label="Beispiele">
+            <button type="button" class="dt-aip__example" data-ai-example>Ein Plakat für ein Sommerfest</button>
+            <button type="button" class="dt-aip__example" data-ai-example>Eine Einladungskarte zum Geburtstag</button>
+            <button type="button" class="dt-aip__example" data-ai-example>Ein Instagram-Post für unser neues Menü</button>
+        </div>
+    }
+</form>

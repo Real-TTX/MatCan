@@ -1,0 +1,43 @@
+/* MatCan: the brand kit page (/Brand). Tokens only; flat. */
+
+.dt-brand { display: grid; gap: var(--mat-space-4); }
+.dt-brand .mat-card + .mat-card { margin-top: 0; }
+
+/* Colours: swatches in a grid; the tools of a swatch show on hover and on focus (always on touch screens). */
+.dt-brand__swatches { list-style: none; margin: var(--mat-space-3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: var(--mat-space-3); }
+.dt-brand__swatch { display: grid; gap: var(--mat-space-1); justify-items: stretch; min-width: 0; }
+.dt-brand__chip { display: block; height: 56px; border-radius: var(--mat-radius-sm); background: var(--dt-swatch, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mat-text) 22%, transparent); }
+.dt-brand__hex { font-size: var(--mat-fs-sm); color: var(--mat-text-muted); text-align: center; }
+.dt-brand__tools { display: flex; justify-content: center; gap: 2px; }
+.dt-brand__tool { width: 30px; height: 30px; min-width: 0; padding: 0; }
+.dt-brand__add { display: flex; align-items: flex-end; gap: var(--mat-space-3); flex-wrap: wrap; margin-top: var(--mat-space-4); }
+.dt-brand__add .mat-field { flex: 1 1 14rem; max-width: 22rem; }
+
+/* Fonts: three rows with a select and a line in the chosen font. */
+.dt-brand__fonts { display: grid; gap: var(--mat-space-4); margin-top: var(--mat-space-3); }
+.dt-brand__font { display: grid; grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); gap: var(--mat-space-4); align-items: center; }
+.dt-brand__preview { margin: 0; padding: var(--mat-space-3) var(--mat-space-4); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-sm); background: var(--mat-surface-3); min-width: 0; overflow-wrap: anywhere; line-height: 1.25; }
+.dt-brand__preview--heading { font-size: 1.9rem; }
+.dt-brand__preview--subheading { font-size: 1.3rem; }
+.dt-brand__preview--body { font-size: 1rem; line-height: 1.5; }
+
+/* Logos: thumbnails (contain, on a checkerboard so that white and transparent logos can be seen). */
+.dt-brand__logos { list-style: none; margin: var(--mat-space-3) 0 var(--mat-space-3); padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: var(--mat-space-3); }
+.dt-brand__logo { position: relative; display: grid; gap: var(--mat-space-1); min-width: 0; padding: var(--mat-space-2); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-sm); background: var(--mat-surface); }
+.dt-brand__logoframe { display: grid; place-items: center; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--mat-radius-xs);
+  background-color: var(--mat-surface-3);
+  background-image: linear-gradient(45deg, color-mix(in srgb, var(--mat-text) 8%, transparent) 25%, transparent 25%, transparent 75%, color-mix(in srgb, var(--mat-text) 8%, transparent) 75%),
+    linear-gradient(45deg, color-mix(in srgb, var(--mat-text) 8%, transparent) 25%, transparent 25%, transparent 75%, color-mix(in srgb, var(--mat-text) 8%, transparent) 75%);
+  background-size: 16px 16px; background-position: 0 0, 8px 8px; }
+.dt-brand__logoframe img { display: block; width: 100%; height: 100%; max-width: none; object-fit: contain; }
+.dt-brand__logoname { font-weight: 600; font-size: var(--mat-fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-brand__logokey { font-size: var(--mat-fs-xs); color: var(--mat-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-brand__logo .dt-brand__tool { position: absolute; top: var(--mat-space-2); right: var(--mat-space-2); background: color-mix(in srgb, var(--mat-surface) 88%, transparent); }
+
+.dt-brand__state { margin-left: var(--mat-space-2); }
+
+@media (max-width: 720px) {
+  .dt-brand__font { grid-template-columns: minmax(0, 1fr); gap: var(--mat-space-2); }
+  .dt-brand__swatches { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); }
+  .dt-brand__add .mat-field { max-width: none; }
+}

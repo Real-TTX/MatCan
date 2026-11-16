@@ -1,0 +1,54 @@
+@page
+@model MatCan.Pages.Admin.Catalogs.IndexModel
+@using MatCan.Catalogs
+
+<div class="mat-alert mat-alert--info">
+    @Ui.Icon("info")
+    <div class="mat-alert__body">
+        Ein Katalog ist eine Quelle für Bilder. Was du benutzt, kopiert MatCan in die Bibliothek des Bereichs, mit Quelle, Urheber und Lizenz: Designs bleiben ohne Internet druckbar, und die Bildnachweise
+        stehen im Editor unter Datei → Bildnachweise. Die Anbieter im Internet sind ausgeschaltet, bis du sie einschaltest; der Server fragt sie an (nur die Vorschaubilder von Unsplash lädt der Browser selbst: das verlangt Unsplash, siehe die Seite des Katalogs).
+    </div>
+</div>
+
+<div class="mat-list">
+    <ul class="mat-itemlist" aria-label="Kataloge" data-catalog-list>
+        @foreach (var row in Model.Rows)
+        {
+            var c = row.Catalog;
+            var external = c.Caps.HasFlag(CatalogCaps.External);
+            <li class="mat-item" data-catalog="@c.Id">
+                <a class="mat-item__main" href="/Admin/Catalogs/Edit?id=@c.Id">
+                    <span class="mat-item__lead">@Ui.Icon(external ? "globe" : "dt:images")</span>
+                    <span class="mat-item__body">
+                        <span class="mat-item__title">@c.Name</span>
+                        <span class="mat-item__text">@c.Info.Description@(c.Caps.HasFlag(CatalogCaps.Browse) ? "" : " · nur Suche")</span>
+                    </span>
+                    <span class="mat-item__end dt-chips">
+                        @Ui.Pill(external ? "Internet" : "auf dem Server", external ? "info" : "", external ? "globe" : "hard-drive")
+                        @if (row.Enabled) { @Ui.Pill("an", "ok", "check") } else { @Ui.Pill("aus", "") }
+                        @if (c.Caps.HasFlag(CatalogCaps.NeedsKey) && !row.HasKey) { @Ui.Pill("Schlüssel fehlt", "warn", "alert") }
+                    </span>
+                </a>
+                <div class="mat-item__aside">
+                    <form method="post" asp-page-handler="Test" asp-route-id="@c.Id" class="dt-inline-form">
+                        <button type="submit" class="mat-btn mat-btn--ghost mat-btn--sm" aria-label="@(c.Name) testen" data-tip="Eine Suche zum Testen">@Ui.Icon("play")<span>Testen</span></button>
+                    </form>
+                </div>
+            </li>
+        }
+    </ul>
+    <div class="mat-actions">
+        <form method="post" asp-page-handler="ClearCache" class="dt-inline-form">
+            <button type="submit" class="mat-btn mat-btn--secondary">@Ui.Icon("trash")<span>Zwischenspeicher leeren</span></button>
+        </form>
+    </div>
+</div>
+
+<dt-card title="Gut zu wissen" icon="shield">
+    <ul class="dt-steps">
+        <li><strong>Mitgeliefert</strong> und <strong>Uploads</strong> sind immer da und brauchen nichts. <strong>Ordner</strong> liest Bilder aus Ordnern im Datenvolume unter <code>catalogs/</code>; du nennst die Ordner auf der Seite des Katalogs.</li>
+        <li>Anbieter im Internet brauchen meist einen Schlüssel. Er wird verschlüsselt im Datenvolume gespeichert, nie in der Datenbank und nie in einer Seite.</li>
+        <li>Bilder mit Lizenzen für nichtkommerzielle Nutzung (NC) oder ohne Bearbeitung (ND) bietet MatCan nie an: Designs ändern Bilder und dürfen kommerziell genutzt werden.</li>
+        <li>Suchergebnisse bleiben bis zu einem Tag im Zwischenspeicher (bei Unsplash eine Stunde). Vorschaubilder laufen über den Server; kein Browser verbindet sich mit einem Anbieter. Die eine Ausnahme ist Unsplash: Dessen Regeln verlangen, dass die Bilder von Unsplash selbst angezeigt werden, deshalb lädt der Browser sie direkt (Unsplash sieht dann die IP-Adresse), solange der Katalog eingeschaltet ist.</li>
+    </ul>
+</dt-card>

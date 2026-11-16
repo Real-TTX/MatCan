@@ -1,6 +1,6 @@
-# DesignThix – build plan
+# MatCan – build plan
 
-DesignThix is an **offline Canva**: designs (labels, cards, signs, posters) are drawn in a WYSIWYG designer and filled from **data lists** through
+MatCan is an **offline Canva**: designs (labels, cards, signs, posters) are drawn in a WYSIWYG designer and filled from **data lists** through
 **placeholders**, so one design prints many labels (mail merge). Reference result: `Image-2026-10-24-150234.png` (a cheese counter price label,
 moved to `docs/images/demo-label.png` in phase A).
 
@@ -10,7 +10,7 @@ This file is the contract between the phases. Every phase reads it first, follow
 
 ## Status: plan 2 is done (2026-10-25)
 
-DesignThix is now **first a design tool like Canva, second a tool for data**: see **[PLAN-CANVA.md](PLAN-CANVA.md)** (acceptance list, document schema 2, phases K1 to K6). It replaces §2 (document format) and §1.4 (menu) of this plan and changes the weight
+MatCan is now **first a design tool like Canva, second a tool for data**: see **[PLAN-CANVA.md](PLAN-CANVA.md)** (acceptance list, document schema 2, phases K1 to K6). It replaces §2 (document format) and §1.4 (menu) of this plan and changes the weight
 of the product: the start page asks "Was möchtest du heute gestalten?", templates and one-click formats come first, the batch features (data lists, **Serienausgaben** = the former Ausgaben, sheets, AI import) are the add-on in the menu group "Serien (Zusatz)".
 Everything else of this plan (ground rules §0, stack, roles, ports) stays valid. Plan 2 (K1 to K6) is done: see the "Status" section of **[PLAN-CANVA.md](PLAN-CANVA.md)** for what differs from it; the editor is described in `docs/EDITOR.md`.
 
@@ -32,10 +32,10 @@ Deviations and additions
   `Design` also keeps `Width`, `Height` and `Unit` for the lists. The CSV export has the extra columns `_Kopien` and `_Aktiv`.
 - **Media and fonts.** Asset keys are lower case (`^[a-z0-9][a-z0-9_-]{0,63}$`). A built-in medium, font or sheet layout is remembered by `BuiltInKey` (also when renamed or deleted), so a deleted
   one stays deleted. Two of the twelve bundled font families are **Apache 2.0** (Roboto Slab, Permanent Marker), the others SIL OFL 1.1. Icons: Lucide (ISC); flags and seals are our own drawings.
-- **Design files.** Export/import use `.dtx.json` (`format: "designthix-design"`, document + the media and own fonts it needs, up to 50 MB; a key with other content is renamed on import).
+- **Design files.** Export/import use `.dtx.json` (`format: "matcan-design"`, document + the media and own fonts it needs, up to 50 MB; a key with other content is renamed on import).
 - **AI.** Designers see and undo their own runs on the data list, administrators all of them; the full instruction is shown before it is sent (*Vollständige Anweisung anzeigen*); the **Test** action is for
   administrators only. Everything the model returns is checked by `Core/Ai/AiOutputs.cs` first; a proposal waits until a person applies it.
-- **Demo (phase I).** The template, the data list (six cheeses) and the output job (A4 landscape, 2 x 2 A6, fit) come from one embedded file, `src/DesignThix/Demo/kaesetheke.json`
+- **Demo (phase I).** The template, the data list (six cheeses) and the output job (A4 landscape, 2 x 2 A6, fit) come from one embedded file, `src/MatCan/Demo/kaesetheke.json`
   (`Services/DemoSeeder`). They are added **at start-up to a database that has no designs, data lists or output jobs**, once: the setting `Demo.Seeded` remembers it, so a deleted demo stays deleted.
   No thumbnail is stored; the gallery draws the design with the engine. The browser checks read the same file. Layout rules that came out of looking at six labels: the name is bottom aligned in a box
   that is 4 mm inside the border and at most 74 pt, the region sits below the deepest descender of the script font, the price box ends before the euro sign and the unit, the two words of the logo are
@@ -51,11 +51,11 @@ Deviations and additions
 - **Template repository: `../MatTicket`.** It is the newest app of the family with the same stack (ASP.NET Core 10 Razor Pages, EF Core 10, PostgreSQL 17,
   MatUi, PWA, AI layer, Docker, GitHub Actions). Port its infrastructure; never invent a second way of doing something it already does.
 - **Design: `../MatDesign`.** Read `../MatDesign/CLAUDE.md` and `../MatDesign/docs/ADOPTING.md` before building UI. MatUi is copied into
-  `src/DesignThix/wwwroot/ui` and never edited there. Check a pattern against the rulebook (MatDesign `RuleBook.cs`) before inventing one.
+  `src/MatCan/wwwroot/ui` and never edited there. Check a pattern against the rulebook (MatDesign `RuleBook.cs`) before inventing one.
   The designer itself is a special UI (allowed by the owner's guideline) but uses MatUi tokens, controls, icons and the flat look.
 - **Language:** UI text is **German**, the user is addressed with **"du"**. Code, identifiers, comments and docs except `README.md` are English.
 - **C# rules:** Razor Pages; Microsoft C# coding guidelines; human-readable names; no needless nesting (early returns); **business layer = static classes**
-  in `src/DesignThix/Logic` taking `Biz` as first argument; **no database queries in models (entities) or UI (pages)**; **every logic method checks the
+  in `src/MatCan/Logic` taking `Biz` as first argument; **no database queries in models (entities) or UI (pages)**; **every logic method checks the
   permission itself** (`biz.RequireDesigner()` etc.), even if the page already did.
 - **Database:** tables and columns PascalCase, no exceptions; `Id` bigint primary key; every table has `CreateDate`, `CreateUserId`, `UpdateDate`,
   `UpdateUserId` (filled by `DtDbContext`); soft delete with `UpdateState` (0 deleted, 1 created, 2 updated) where it makes sense; a key that acts
@@ -70,16 +70,16 @@ Deviations and additions
 - **Never use `innerHTML` with user data** (names, document JSON, data list values). Build DOM with `createElement`/`createElementNS`, `textContent`,
   `setAttribute`.
 - **Ports:** web **3043**, pgAdmin **3044**, Postgres (local stack only) **3045**. Local stack subnet `10.253.43.0/24`.
-- **Names:** solution `DesignThix.slnx`; projects `src/DesignThix` (web, namespace `DesignThix`), `src/DesignThix.Core` (no web types, namespace
-  `DesignThix.Core`), `tests/DesignThix.Tests`, browser checks `tests/e2e`. Db context `DtDbContext`. Env vars `DESIGNTHIX_PORT`, `DESIGNTHIX_DATA`,
-  `DESIGNTHIX_TEST_DB`. Image `ghcr.io/real-ttx/designthix`. `data-app="designthix"`.
+- **Names:** solution `MatCan.slnx`; projects `src/MatCan` (web, namespace `MatCan`), `src/MatCan.Core` (no web types, namespace
+  `MatCan.Core`), `tests/MatCan.Tests`, browser checks `tests/e2e`. Db context `DtDbContext`. Env vars `MATCAN_PORT`, `MATCAN_DATA`,
+  `MATCAN_TEST_DB`. Image `ghcr.io/real-ttx/matcan`. `data-app="matcan"`.
 - **Accent (light blue, slightly green):** in `wwwroot/css/app.css`:
-  `[data-app="designthix"] { --mat-app-accent: #1fb3d6; --mat-app-on-accent: #04212b; --mat-app-accent-text: #0a7590; }`
+  `[data-app="matcan"] { --mat-app-accent: #1fb3d6; --mat-app-on-accent: #04212b; --mat-app-accent-text: #0a7590; }`
   (dark text on the accent 6.7:1, links 5.3:1 on white – white on the accent would only be 2.5:1, so on-accent is dark).
 - **Logo:** gradient from turquoise (`#18d4c0`) to blue (`#2f86f6`). Logos are identity: the gradient is allowed there, nowhere else in the UI.
 - **Git:** do **not** commit in the phases; the planner commits after reviewing each phase, under the owner's name only (no co-author trailer, no
   "generated with" line, no other names in branches).
-- **Done means verified:** `dotnet build DesignThix.slnx` with 0 errors and no new warnings, `dotnet test` green, the local stack rebuilt with
+- **Done means verified:** `dotnet build MatCan.slnx` with 0 errors and no new warnings, `dotnet test` green, the local stack rebuilt with
   `./scripts/redeploy.ps1` and the changed pages opened in a real browser (Playwright with the installed Edge, see the `screenshots` skill; look at a
   screenshot, at 1280 px and at 390 px). Report what was verified and what was not.
 
@@ -135,7 +135,7 @@ User menu (foot): Profil, Sicherheit, Abmelden. Version at the bottom left → `
 
 ## 2. The design document (contract between server and engine)
 
-Stored in `Design.DocumentJson` (jsonb). The server parses it into C# records (`DesignThix.Core.Documents`), validates, **normalises (unknown
+Stored in `Design.DocumentJson` (jsonb). The server parses it into C# records (`MatCan.Core.Documents`), validates, **normalises (unknown
 properties dropped, values clamped) and re-serialises** before saving. The browser renders it with `wwwroot/js/dt-engine.js`.
 
 ```jsonc
@@ -181,14 +181,14 @@ Limits: ≤ 500 elements, ≤ 100 fields, JSON ≤ 2 MB. The C# side owns these 
 ## 3. Architecture
 
 ```
-src/DesignThix.Core          no web types, unit tested
+src/MatCan.Core          no web types, unit tested
   Documents/                 DesignDocument records, DocumentValidator (parse, normalise, limits), Placeholders (extract keys, render text), FormatPresets
   Data/                      Csv (read with delimiter detection ; , tab, quotes, BOM; write), ValueFormat (price/number parsing+formatting, same rules as the engine)
   Media/                     FileSniffer (PNG/JPEG/GIF/WebP/SVG/TTF/OTF/WOFF/WOFF2 by magic bytes, image dimensions from headers), SvgSafe (allowlist sanitiser, DTD prohibited)
   Ai/                        ChatCompletionsClient, ChatGptAccount, LenientJson, AiTypes, AiPresets (ported from MatTicket)
   Security/                  PasswordHasher, Totp (ported)
   Text/                      TextTools, Slug
-src/DesignThix
+src/MatCan
   Configuration/ Data/ (DtDbContext, entities, migrations) Logic/ (static business classes + Biz) Services/ UiKit/ Controls/ Pages/ wwwroot/
   wwwroot/js/app.js          shell glue, offline banner, small page behaviours
   wwwroot/js/dt-engine.js    THE renderer (document + values → SVG / PNG / ZIP); used by designer, previews, thumbnails, print and export
@@ -222,21 +222,21 @@ detects conflicts through `Design.Revision` (HTTP 409 → dialog: keep mine as c
 ### Round 1 (parallel)
 
 **A – Foundation** (owns everything except the files of B, C, D)
-- Scaffold from MatTicket: `Directory.Build.props` (DesignThixMajor 0, Minor 1; channels release/nightly/local), `global.json`, `dotnet-tools.json`,
-  `.editorconfig`, `.gitattributes`, `.gitignore`, `.dockerignore`, `DesignThix.slnx`, `Dockerfile` (ASP.NET Core base image, port 3043, `/data`
-  volume, healthcheck), `docker-compose.yml` (release, `:latest`, stack `designthix`), `docker-compose.dev.yml` (`:nightly`, stack `designthix-dev`,
-  pgAdmin 3044), `docker-compose.local.yml` (build, stack `designthix-local`, pgAdmin 3044, Postgres 3045, subnet 10.253.43.0/24); no `${…}`
+- Scaffold from MatTicket: `Directory.Build.props` (MatCanMajor 0, Minor 1; channels release/nightly/local), `global.json`, `dotnet-tools.json`,
+  `.editorconfig`, `.gitattributes`, `.gitignore`, `.dockerignore`, `MatCan.slnx`, `Dockerfile` (ASP.NET Core base image, port 3043, `/data`
+  volume, healthcheck), `docker-compose.yml` (release, `:latest`, stack `matcan`), `docker-compose.dev.yml` (`:nightly`, stack `matcan-dev`,
+  pgAdmin 3044), `docker-compose.local.yml` (build, stack `matcan-local`, pgAdmin 3044, Postgres 3045, subnet 10.253.43.0/24); no `${…}`
   variables, no `.env`; services `web`, `db`, `pgadmin`, volumes `web-data`, `db-data`, `pgadmin-data`. `.github/workflows/build.yml` (build, test
   against Postgres, multi-arch image, tags per channel). `scripts/redeploy.ps1|.sh`, `scripts/sync-matui.ps1`, `scripts/check-matui.ps1`.
 - MatUi: run `scripts/sync-matui.ps1` against `http://localhost:8060/ui/matui.zip` (MatDesign dev container) with the MatDesign HEAD commit; if that
   fails, copy `../MatTicket/src/MatTicket/wwwroot/ui` (without `mt-icons.svg`) and copy its `matui-synced.txt`.
-- Port from MatTicket and rename (`MatTicket`→`DesignThix`, `MtDbContext`→`DtDbContext`, `mt-`→`dt-`, `matticket`→`designthix`): configuration,
+- Port from MatTicket and rename (`MatTicket`→`MatCan`, `MtDbContext`→`DtDbContext`, `mt-`→`dt-`, `matticket`→`matcan`): configuration,
   data protection, `AuditedEntity`/`UpdateState`, users + sessions + setup assistant + login + logout + 2FA (TOTP) + profile + security, activity log,
   System settings page, UiKit (Shell, Nav, Lists, ListBuilder, Labels, Ui, IconSprite, Controls) and its partials, `_Layout`, `_Bare`, `_Head`,
-  `_Menu`, `_Toolbar`, `_Pager`, `_Table`, `_LinkTabs`, About, Offline, Error, robots.txt, llms.txt (describe DesignThix), health check, theme API,
+  `_Menu`, `_Toolbar`, `_Pager`, `_Table`, `_LinkTabs`, About, Offline, Error, robots.txt, llms.txt (describe MatCan), health check, theme API,
   PWA (manifest, `sw.js`, offline banner in `app.js`), CSP (add `font-src 'self' data:` and keep `img-src 'self' data: blob:`).
   **AI layer**: port it generically (Core/Ai, `AiSecretStore`, rate limiter, ChatGPT device-code login, `AiProfileLogic`, `AiInstructions`, runs + steps +
-  journal entities, Admin/Ai pages) with only the **Test** action; DesignThix actions come in phase G. Drop everything ticket-specific: tickets,
+  journal entities, Admin/Ai pages) with only the **Test** action; MatCan actions come in phase G. Drop everything ticket-specific: tickets,
   forms, portal, CRM, sync, Entra, mail, categories, departments, teams, questions, maps.
 - Roles `Admin`, `Designer`, `Viewer` (German labels Administrator, Gestalter, Betrachter); `Biz.RequireAdmin/RequireDesigner/RequireSignedIn`.
 - Logo files are made by B; reference them by these names: `wwwroot/logo.svg` (mark + word mark), `wwwroot/logo-mark.svg`, `wwwroot/favicon.svg`,
@@ -247,16 +247,16 @@ detects conflicts through `Design.Revision` (HTTP 409 → dialog: keep mine as c
 - `CLAUDE.md` for this repo (like MatTicket's: commands, layout, rules of the domain, gotchas, git) and a first German `README.md`.
 - Initial EF migration. Stack runs; setup assistant creates the admin; login, profile, 2FA, users admin, AI admin pages work.
 
-**B – Logo and icons** (owns only: `src/DesignThix/wwwroot/logo.svg`, `logo-mark.svg`, `logo-wordmark.svg`, `favicon.svg`, `img/*`, `tools/icons.js`,
+**B – Logo and icons** (owns only: `src/MatCan/wwwroot/logo.svg`, `logo-mark.svg`, `logo-wordmark.svg`, `favicon.svg`, `img/*`, `tools/icons.js`,
 `tests/e2e/package.json` + `package-lock.json`, `docs/LOGO.md`)
 - A mark that says "design + placeholders": e.g. a label/price tag with a punched hole whose face carries curly braces `{ }` or a layered sheet;
-  gradient turquoise `#18d4c0` → blue `#2f86f6`. Levels of detail: full logo (mark + word mark "DesignThix"), mark alone, favicon (16/32 px:
+  gradient turquoise `#18d4c0` → blue `#2f86f6`. Levels of detail: full logo (mark + word mark "MatCan"), mark alone, favicon (16/32 px:
   silhouette, no thin detail), maskable icon (mark on a full-bleed gradient or white background inside the safe zone 80 %), apple-touch-icon (no
   transparency), og-image 1200×630. Word mark as outlined paths or a system font stack that renders the same everywhere (prefer paths).
 - `tools/icons.js` renders the PNGs from the SVGs with Playwright (installed Edge, like `../MatTicket/tools/icons.js`).
 - Look at every result at its real size (screenshots) and at 16 px before keeping it. `docs/LOGO.md` explains the levels and colours.
 
-**C – Built-in content** (owns only `src/DesignThix/wwwroot/builtin/**`, `src/DesignThix/wwwroot/fonts/**`, `tools/builtin.js` if needed)
+**C – Built-in content** (owns only `src/MatCan/wwwroot/builtin/**`, `src/MatCan/wwwroot/fonts/**`, `tools/builtin.js` if needed)
 - Fonts (SIL OFL, from `github.com/google/fonts`, TTF; variable fonts allowed): Montserrat, Bebas Neue, Oswald, Kaushan Script, Caveat,
   Playfair Display, Lora, Open Sans, Roboto Slab, Pacifico, Permanent Marker, Source Sans 3 (latin + latin-ext glyphs must include äöüß€).
   Each family's `OFL.txt` in `fonts/LICENSES/<Family>.txt`. `fonts/fonts.json`: `[{ "family", "file", "weight": "400" | "100 900", "style":
@@ -270,7 +270,7 @@ detects conflicts through `Design.Revision` (HTTP 409 → dialog: keep mine as c
 - Every SVG must pass a strict allowlist (no script, no foreignObject, no `on*`, no external href, no `<style>` with `@import`) – the same rules
   as `SvgSafe` in phase E. Make a contact sheet (HTML in the scratchpad, screenshot) and look at all of them before keeping them.
 
-**D – Render engine** (owns only `src/DesignThix/wwwroot/js/dt-engine.js` and `tests/e2e/engine/**`)
+**D – Render engine** (owns only `src/MatCan/wwwroot/js/dt-engine.js` and `tests/e2e/engine/**`)
 - Plain JS, no dependency, no build step, `'use strict'`, exposes `window.DtEngine`:
   `normalize(doc)`, `fieldsUsed(doc)`, `formatValue(field, raw, locale)`, `resolveText(text, fields, values, locale)`,
   `render(doc, values, opts) → Promise<SVGSVGElement>`, `renderInto(container, doc, values, opts)`,
@@ -380,7 +380,7 @@ detects conflicts through `Design.Revision` (HTTP 409 → dialog: keep mine as c
 - Built-in template "Käsetheke – Preisschild" + data list "Käsetheke (Beispiel)" (6 cheeses incl. Holunderblüte from the reference) seeded on an
   empty database (only once; deleting them is respected). Compare a screenshot of the rendered demo with `docs/images/demo-label.png`.
 - Squash the migrations into one `Initial` (nothing is deployed yet).
-- Tests: Core unit tests complete; integration tests against Postgres (`DESIGNTHIX_TEST_DB`) for the logic incl. permission checks per role;
+- Tests: Core unit tests complete; integration tests against Postgres (`MATCAN_TEST_DB`) for the logic incl. permission checks per role;
   `tests/e2e`: `pwa-check.js`, `designer-check.js` (create design, add text with a placeholder, save, reload, preview with data), `output-check.js`
   (sheet print page renders N labels; PNG ZIP has N files), `engine-check.js`.
 - `README.md` (German, screenshots in `docs/images` via `tests/e2e/screens.js`), `CLAUDE.md` up to date, `docs/PLAN.md` marked done.

@@ -17,7 +17,7 @@ const { demoDocument, demoRows } = require('./demo-label.js');
 const args = process.argv.slice(2);
 const { base, problems, dialogs, watch, launch, newContext, login, ensureAccounts, postJson, shareWith, uploadImage, purgeImage } = lib(args, { ignore: /status of (403|409)|ERR_INTERNET_DISCONNECTED/ });
 const outIndex = args.indexOf('--out');
-const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(require('os').tmpdir(), 'designthix-designer-check'));
+const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(require('os').tmpdir(), 'matcan-designer-check'));
 
 const results = [];
 let current = '';

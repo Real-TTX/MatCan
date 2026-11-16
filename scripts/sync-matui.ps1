@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Copies the MatUi toolkit (CSS, scripts, icon sprite, changelog, manifest) from a MatDesign archive into src/DesignThix/wwwroot/ui.
+    Copies the MatUi toolkit (CSS, scripts, icon sprite, changelog, manifest) from a MatDesign archive into src/MatCan/wwwroot/ui.
 .DESCRIPTION
     Apps copy MatUi, they never load it from another site (rule CODE-03), and the toolkit has a version of its own (MatDesign docs/VERSIONING.md): the files of one
     version belong together, so all of them are copied, never a few. The archive is what MatDesign serves at /ui/matui.zip (the toolkit as it is now) or a release of the
@@ -20,7 +20,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
-$target = Join-Path $root 'src/DesignThix/wwwroot/ui'
+$target = Join-Path $root 'src/MatCan/wwwroot/ui'
 $work = Join-Path ([IO.Path]::GetTempPath()) ('matui-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Force $work | Out-Null
 

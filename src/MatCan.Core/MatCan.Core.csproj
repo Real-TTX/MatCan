@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>MatCan.Core</RootNamespace>
+    <AssemblyName>MatCan.Core</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="MatCan.Tests" />
+  </ItemGroup>
+
+</Project>

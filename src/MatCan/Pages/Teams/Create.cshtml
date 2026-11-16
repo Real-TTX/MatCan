@@ -1,0 +1,21 @@
+@page "/Teams/Create"
+@model MatCan.Pages.Teams.CreateModel
+
+<form class="mat-form" method="post" novalidate>
+    <dt-summary title="Bitte prüfe die Angaben." />
+    <dt-card title="Neues Team" icon="users" sub="Du wirst Inhaber">
+        <p class="mat-hint">Ein Team hat einen gemeinsamen Bereich für Designs, Bilder und Datenlisten, eine eigene Marke und eigene Vorlagen. Die Mitglieder lädst du danach ein.</p>
+        <div class="mat-form__grid">
+            <dt-input for="Input.Name" label="Name" required="true" autocomplete="off" maxlength="120" autofocus />
+            <div class="mat-field">
+                <label class="mat-label" for="Input_Color">Farbe</label>
+                <div class="mat-picker" data-picker="colour" data-placeholder="Farbe wählen">
+                    <input class="mat-picker__input" id="Input_Color" name="Input.Color" value="@Model.Input.Color" autocomplete="off" />
+                </div>
+                <span class="mat-hint">Die Farbe erscheint am Teamnamen, damit du deine Teams schnell erkennst.</span>
+            </div>
+            <dt-textarea for="Input.Description" label="Beschreibung" rows="3" maxlength="500" full="true" hint="Wofür ist das Team da? (optional)" />
+        </div>
+    </dt-card>
+    <dt-buttons save-text="Team erstellen" save-icon="plus" back-href="/Teams" />
+</form>

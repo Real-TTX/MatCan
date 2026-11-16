@@ -1,22 +1,22 @@
-# DesignThix – Local (baut das Image aus diesem Ordner) mit pgAdmin
+# MatCan – Local (baut das Image aus diesem Ordner) mit pgAdmin
 #   ./scripts/redeploy.ps1              (baut neu und startet den Stack: so wird jede Änderung getestet)
 #   docker compose -f docker-compose.local.yml up -d --build
 #   App:      http://localhost:3043
-#   pgAdmin:  http://localhost:3044   (ohne Anmeldung; Datenbank-Passwort: designthix)
+#   pgAdmin:  http://localhost:3044   (ohne Anmeldung; Datenbank-Passwort: matcan)
 #   Postgres: localhost:3045          (für Tests und Werkzeuge)
-name: designthix-local
+name: matcan-local
 
 services:
   web:
     build: .
-    image: designthix:local
+    image: matcan:local
     restart: unless-stopped
     ports:
       - "3043:3043"
     volumes:
       - web-data:/data
       # Ein Bildarchiv als Katalog "Ordner" (Verwaltung → Kataloge): einen Ordner des Servers nur lesend einhängen und seinen Namen
-      # (hier "Firmenbilder") auf der Seite des Katalogs eintragen. DesignThix liest nur, es verändert nichts darin.
+      # (hier "Firmenbilder") auf der Seite des Katalogs eintragen. MatCan liest nur, es verändert nichts darin.
       # - /srv/bilder:/data/catalogs/Firmenbilder:ro
     depends_on:
       db:
@@ -28,13 +28,13 @@ services:
     ports:
       - "3045:5432"
     environment:
-      POSTGRES_DB: designthix
-      POSTGRES_USER: designthix
-      POSTGRES_PASSWORD: designthix
+      POSTGRES_DB: matcan
+      POSTGRES_USER: matcan
+      POSTGRES_PASSWORD: matcan
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U designthix -d designthix"]
+      test: ["CMD-SHELL", "pg_isready -U matcan -d matcan"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -45,8 +45,8 @@ services:
     ports:
       - "3044:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@designthix.example.com
-      PGADMIN_DEFAULT_PASSWORD: designthix
+      PGADMIN_DEFAULT_EMAIL: admin@matcan.example.com
+      PGADMIN_DEFAULT_PASSWORD: matcan
       PGADMIN_CONFIG_SERVER_MODE: "False"
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
     configs:
@@ -60,7 +60,7 @@ services:
 configs:
   servers:
     content: |
-      {"Servers": {"1": {"Name": "DesignThix (local)", "Group": "Servers", "Host": "db", "Port": 5432, "MaintenanceDB": "designthix", "Username": "designthix", "SSLMode": "prefer"}}}
+      {"Servers": {"1": {"Name": "MatCan (local)", "Group": "Servers", "Host": "db", "Port": 5432, "MaintenanceDB": "matcan", "Username": "matcan", "SSLMode": "prefer"}}}
 
 volumes:
   web-data:

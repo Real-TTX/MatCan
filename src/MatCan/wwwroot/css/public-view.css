@@ -1,0 +1,135 @@
+/* ==========================================================================
+   MatCan: the public viewer (Pages/Share/View, js/public-view.js). The layout _Public sets the dark theme, so the tokens give a dark neutral surface; the design is the only colourful thing.
+   No inline styles: the width of the pages (--dt-pv-w) and their proportions (--dt-ar) are custom properties that the script sets through the CSSOM. The paper size of the print view is an
+   @page rule that the script inserts into THIS style sheet (the content security policy allows no <style> element).
+   ========================================================================== */
+
+html.dt-pv-page, .dt-pv-body { height: 100%; margin: 0; overflow: hidden; background: var(--mat-bg); color: var(--mat-text); }
+.dt-pv [hidden] { display: none !important; }
+
+.dt-pv { display: flex; flex-direction: column; height: 100vh; height: 100dvh; min-height: 0; background: var(--mat-bg); color: var(--mat-text); font-size: var(--mat-fs-md); }
+
+/* ---- the bar ---- */
+.dt-pv__bar { flex: none; display: flex; align-items: center; gap: var(--mat-space-3); height: 52px; padding: 0 max(var(--mat-space-3), var(--mat-safe-right)) 0 max(var(--mat-space-3), var(--mat-safe-left)); background: var(--mat-surface); border-bottom: 1px solid var(--mat-border); z-index: 10; }
+.dt-pv__brand { flex: none; display: inline-flex; align-items: center; gap: var(--mat-space-2); font-weight: 700; letter-spacing: -.01em; color: var(--mat-text); }
+.dt-pv__brand svg { width: 26px; height: 26px; max-width: none; }
+.dt-pv__brand::after { content: ""; width: 1px; height: 22px; margin-left: var(--mat-space-1); background: var(--mat-border-strong); }
+.dt-pv__pl-short { display: none; }
+.dt-pv__crumbs { flex: 1 1 0; min-width: 0; }
+.dt-pv__crumblist { display: flex; align-items: center; gap: var(--mat-space-2); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.dt-pv__crumblist > li { min-width: 0; display: flex; align-items: center; gap: var(--mat-space-2); flex: 0 1 auto; }
+.dt-pv__crumblist > li + li::before { content: "›"; color: var(--mat-text-faint); }
+.dt-pv__crumb { color: var(--mat-text-muted); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 14rem; }
+.dt-pv__crumb:hover { color: var(--mat-text); text-decoration: underline; }
+.dt-pv__title { margin: 0; font-size: var(--mat-fs-md); font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-pv__tools { flex: none; display: flex; align-items: center; gap: var(--mat-space-3); }
+.dt-pv__group { display: inline-flex; align-items: center; gap: 2px; }
+.dt-pv__pagelabel { min-width: 6.2rem; text-align: center; font-size: var(--mat-fs-sm); color: var(--mat-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dt-pv__zoomtext { min-width: 3.6rem; height: var(--mat-control-h-sm); padding: 0 var(--mat-space-2); border: 0; border-radius: var(--mat-radius); background: transparent; color: var(--mat-text-muted); font: inherit; font-size: var(--mat-fs-sm); font-variant-numeric: tabular-nums; cursor: pointer; }
+.dt-pv__zoomtext:hover { background: var(--mat-surface-3); color: var(--mat-text); }
+.dt-pv__zoomtext:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-pv__open { flex: none; }
+
+/* ---- the body: thumbnails | stage ---- */
+.dt-pv__body { flex: 1 1 0; min-height: 0; display: flex; }
+.dt-pv__thumbs { flex: none; width: 128px; display: flex; flex-direction: column; gap: var(--mat-space-2); padding: var(--mat-space-3) var(--mat-space-2); overflow-y: auto; background: var(--mat-surface); border-right: 1px solid var(--mat-border); }
+.dt-pv-thumb { display: grid; justify-items: center; gap: 4px; padding: 6px; border: 2px solid transparent; border-radius: var(--mat-radius); background: transparent; color: var(--mat-text-muted); font: inherit; font-size: var(--mat-fs-xs); cursor: pointer; }
+.dt-pv-thumb:hover { background: var(--mat-surface-3); }
+.dt-pv-thumb:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-pv-thumb[aria-current="true"] { border-color: var(--mat-accent); color: var(--mat-text); }
+.dt-pv-thumb__box { position: relative; display: block; width: 84px; aspect-ratio: var(--dt-ar); background: #fff; }
+.dt-pv-thumb__draw { position: absolute; inset: 0; display: block; }
+.dt-pv-thumb__draw svg, .dt-pv__draw svg, .dt-pv-tile__draw svg, .dt-pv-printpage svg { display: block; width: 100%; height: 100%; max-width: none; }
+
+.dt-pv__stage { flex: 1 1 0; min-width: 0; overflow: auto; padding: 28px max(20px, var(--mat-safe-right)) 36px max(20px, var(--mat-safe-left)); background: var(--mat-bg); outline: none; overscroll-behavior: contain; }
+.dt-pv__stage:focus-visible { box-shadow: inset 0 0 0 2px var(--mat-accent); }
+.dt-pv__loading { display: flex; align-items: center; justify-content: center; gap: var(--mat-space-3); min-height: 40vh; color: var(--mat-text-muted); }
+
+/* the pages: one below the other, centred; --dt-pv-w is the width of one page (fit x zoom) */
+.dt-pv__stage.is-pages { display: flex; }
+.dt-pv__pages { --dt-pv-w: 600px; display: flex; flex: none; flex-direction: column; align-items: center; gap: 22px; width: max-content; min-width: 100%; margin: auto; }
+.dt-pv__page { position: relative; flex: none; width: var(--dt-pv-w); aspect-ratio: var(--dt-ar); background: #fff; box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 10px 30px rgba(0, 0, 0, .4); scroll-margin: 24px; }
+.dt-pv__draw { position: absolute; inset: 0; }
+.dt-pv__page:not(.is-drawn) .dt-pv__draw::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(0, 0, 0, .05) 50%, transparent 70%); background-size: 200% 100%; animation: dt-pv-shimmer 1.4s linear infinite; }
+@keyframes dt-pv-shimmer { from { background-position: 150% 0; } to { background-position: -50% 0; } }
+@media (prefers-reduced-motion: reduce) { .dt-pv__page:not(.is-drawn) .dt-pv__draw::after { animation: none; } }
+
+/* ---- the gallery of a folder ---- */
+.dt-pv__stage.is-gallery { padding-top: 24px; }
+.dt-pv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr)); gap: var(--mat-space-4); margin: 0 auto; padding: 0; max-width: 78rem; list-style: none; }
+.dt-pv-tile { display: grid; gap: var(--mat-space-2); padding: var(--mat-space-2); height: 100%; background: var(--mat-surface); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-lg); color: var(--mat-text); text-decoration: none; align-content: start; transition: border-color var(--mat-dur) var(--mat-ease), background var(--mat-dur) var(--mat-ease); }
+.dt-pv-tile:hover { border-color: var(--mat-accent); background: var(--mat-surface-2); text-decoration: none; }
+.dt-pv-tile:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); border-color: var(--mat-accent); }
+.dt-pv-tile__thumb { position: relative; display: grid; place-items: center; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--mat-radius); background: var(--mat-surface-3); }
+.dt-pv-tile__thumb img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.dt-pv-tile__thumb.is-folder { color: var(--mat-text-muted); }
+.dt-pv-tile__foldericon { width: 3rem; height: 3rem; }
+.dt-pv-tile__draw { position: absolute; inset: 6px; }
+.dt-pv-tile__name { font-weight: 600; font-size: var(--mat-fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 var(--mat-space-1); }
+.dt-pv-tile__sub { font-size: var(--mat-fs-xs); color: var(--mat-text-muted); padding: 0 var(--mat-space-1); }
+.dt-pv-emptyfolder { display: grid; justify-items: center; gap: var(--mat-space-3); padding: var(--mat-space-10) var(--mat-space-4); color: var(--mat-text-muted); text-align: center; }
+.dt-pv-emptyfolder .mat-icon { width: 2.5rem; height: 2.5rem; }
+
+.dt-pv__foot { flex: none; padding: 6px var(--mat-space-3) calc(6px + var(--mat-safe-bottom)); text-align: center; font-size: var(--mat-fs-xs); color: var(--mat-text-faint); background: var(--mat-surface); border-top: 1px solid var(--mat-border); }
+
+.dt-pv__credits { display: inline-flex; align-items: center; gap: 4px; padding: 0; margin: 0; font: inherit; color: var(--mat-accent-text); background: none; border: 0; cursor: pointer; text-decoration: underline; }
+.dt-pv__credits .mat-icon { width: 1em; height: 1em; }
+.dt-pv__credits:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); border-radius: var(--mat-radius-sm); }
+
+/* ---- the dialog "Bildnachweise" ---- */
+.dt-pv-cr__list { list-style: none; margin: var(--mat-space-3) 0 0; padding: 0; display: grid; gap: var(--mat-space-3); }
+.dt-pv-cr__item { display: grid; gap: 2px; padding: var(--mat-space-3); border: 1px solid var(--mat-border); border-radius: var(--mat-radius); background: var(--mat-surface); }
+.dt-pv-cr__meta { font-size: var(--mat-fs-sm); color: var(--mat-text-muted); overflow-wrap: anywhere; }
+.dt-pv-cr__meta a { color: var(--mat-accent-text); text-decoration: underline; }
+
+/* ---- a dead link ---- */
+.dt-pv-dead { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; padding: var(--mat-space-5); background: var(--mat-bg); }
+.dt-pv-dead__card { display: grid; justify-items: center; gap: var(--mat-space-3); width: min(100%, 30rem); padding: var(--mat-space-8) var(--mat-space-6); text-align: center; background: var(--mat-surface); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-lg); }
+.dt-pv-dead__card h1, .dt-pv-dead__card h2 { margin: 0; font-size: var(--mat-fs-xl); }
+.dt-pv-dead__card p { margin: 0; }
+.dt-pv-dead__inline { margin: var(--mat-space-10) auto 0; }
+.dt-pv-dead__icon { width: 2.4rem; height: 2.4rem; color: var(--mat-text-muted); }
+.dt-pv-noscript { padding: var(--mat-space-4); text-align: center; color: var(--mat-text-muted); }
+
+/* ---- the download dialog ---- */
+.dt-pv-dl__list { display: grid; gap: var(--mat-space-2); }
+.dt-pv-opt { display: flex; align-items: center; gap: var(--mat-space-3); width: 100%; padding: var(--mat-space-3) var(--mat-space-4); text-align: left; background: var(--mat-surface); color: var(--mat-text); border: 1px solid var(--mat-border-strong); border-radius: var(--mat-radius); font: inherit; cursor: pointer; }
+.dt-pv-opt:hover:not(:disabled) { border-color: var(--mat-accent); background: var(--mat-accent-soft); }
+.dt-pv-opt:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-pv-opt:disabled { opacity: .6; cursor: default; }
+.dt-pv-opt .mat-icon { flex: none; width: 1.3rem; height: 1.3rem; color: var(--mat-accent-text); }
+.dt-pv-opt__text { display: grid; gap: 2px; }
+.dt-pv-opt__text span { font-size: var(--mat-fs-sm); color: var(--mat-text-muted); }
+.dt-pv-dl__status { margin: var(--mat-space-3) 0 0; }
+
+/* ---- the print view: only the pages, one per sheet ---- */
+.dt-pv__print { display: none; }
+@media print {
+  html.dt-pv-page, .dt-pv-body { height: auto; overflow: visible; background: #fff; }
+  .dt-pv { display: block; height: auto; background: #fff; }
+  .dt-pv__bar, .dt-pv__body, .dt-pv__foot, dialog, .mat-toasts { display: none !important; }
+  .dt-pv__print { display: block; --dt-pw: 210mm; --dt-ph: 297mm; }
+  .dt-pv-printpage { width: var(--dt-pw); height: var(--dt-ph); overflow: hidden; break-after: page; page-break-after: always; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; }
+  .dt-pv-printpage:last-child { break-after: auto; page-break-after: auto; }
+}
+
+/* ---- phones ---- */
+@media (max-width: 767px) {
+  .dt-pv__bar { gap: var(--mat-space-2); height: 48px; }
+  .dt-pv__brandname, .dt-pv__open span, .dt-pv__download span, .dt-pv__zoom { display: none; }
+  .dt-pv__pagelabel { min-width: 3.2rem; }
+  .dt-pv__pl-long { display: none; }
+  .dt-pv__pl-short { display: inline; }
+  .dt-pv__brand::after { display: none; }
+  .dt-pv__crumb { max-width: 6rem; }
+  .dt-pv__body { flex-direction: column; }
+  .dt-pv__thumbs { order: 2; width: auto; flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: var(--mat-space-2); border-right: 0; border-top: 1px solid var(--mat-border); }
+  .dt-pv-thumb { flex: none; padding: 4px; }
+  .dt-pv-thumb__box { width: 52px; }
+  .dt-pv__stage { padding: 14px 10px 20px; }
+  .dt-pv__pages { gap: 14px; }
+  .dt-pv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--mat-space-3); }
+}
+@media (pointer: coarse) {
+  .dt-pv__bar .mat-btn--icon { min-width: 44px; min-height: 44px; }
+}

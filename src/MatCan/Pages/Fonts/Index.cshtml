@@ -1,0 +1,16 @@
+@page
+@model MatCan.Pages.Fonts.IndexModel
+
+<link rel="stylesheet" href="~/css/dt-fonts-more.css" asp-append-version="true" />
+<div class="mat-list">
+    <partial name="_Toolbar" model="Model.Toolbar" />
+    <partial name="_Table" model="Model.Table" />
+    <partial name="_Pager" model="Model.Pager" />
+    <div class="mat-actions">
+        <a class="mat-btn mat-btn--primary" href="/Fonts/Upload">@Ui.Icon("upload")<span>Schrift hochladen</span></a>
+        <button type="button" class="mat-btn mat-btn--secondary" data-fonts-more hidden>@Ui.Icon("dt:plus")<span>Weitere Schriften</span></button>
+    </div>
+</div>
+
+<script src="~/js/library.js" asp-append-version="true"></script>
+<script src="~/js/dt-fonts-more.js" asp-append-version="true"></script>

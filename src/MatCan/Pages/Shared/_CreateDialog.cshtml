@@ -1,0 +1,65 @@
+@using MatCan.Core.Documents
+@model ShellModel
+@*
+    The dialog "Design erstellen": the same format tiles as the start page and fields for an own size. Every page of the shell carries it for designers and administrators
+    (the menu item "Design erstellen" and every link to /Designs/Create open it: create.js); without script those links lead to the page of the same name.
+    A person who belongs to teams also chooses where the design is saved ("Speichern in": Meine Projekte or a team where they may write); the default is the area they are in.
+*@
+<dialog class="mat-dialog mat-dialog--lg dt-create" id="dt-create" aria-labelledby="dt-create-title">
+    <div class="mat-dialog__form">
+        <div class="mat-dialog__head">
+            @Ui.Icon("plus")
+            <h2 class="mat-dialog__title" id="dt-create-title">Design erstellen</h2>
+            <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-dialog__close" data-dialog-close aria-label="Schließen">@Ui.Icon("x")</button>
+        </div>
+        <div class="mat-dialog__body">
+            @if (Model.WritableSpaces.Count > 1)
+            {
+                <div class="mat-field dt-create__where">
+                    <label class="mat-label" for="dt-create-space">Speichern in</label>
+                    <select class="mat-select" id="dt-create-space" name="spaceId">
+                        @foreach (var s in Model.WritableSpaces)
+                        {
+                            <option value="@s.Id">@(s.Kind == SpaceKind.Personal ? SpaceLogic.PersonalName : "Team " + s.Name)</option>
+                        }
+                    </select>
+                </div>
+            }
+            @if (Model.AiDesign)
+            {
+                <section class="dt-create__ai" aria-labelledby="dt-create-ai-title">
+                    <h3 class="dt-create__ai-title" id="dt-create-ai-title">Die KI entwirft es für dich</h3>
+                    <partial name="_AiPrompt" model='("dt-create-ai", "dialog")' />
+                </section>
+                <p class="dt-create__or">Oder wähle selbst ein Format</p>
+            }
+            else
+            {
+                <p class="mat-muted">Wähle ein Format: Das neue Design öffnet sich gleich im Designer.</p>
+            }
+            <partial name="_FormatTiles" model="(FormatPresets.Tiles, false)" />
+            <partial name="_FormatList" model="FormatPresets.All.Where(p => !FormatPresets.IsTile(p.Key)).OrderBy(p => FormatPresets.GroupOrder(p.Group)).ToList()" />
+            <h3 class="dt-subhead">Eigene Größe</h3>
+            <form class="dt-create__custom" id="dt-create-custom" novalidate>
+                <div class="mat-field">
+                    <label class="mat-label" for="dt-create-width">Breite</label>
+                    <input class="mat-input" type="number" id="dt-create-width" name="width" value="100" min="1" step="any" inputmode="decimal" />
+                </div>
+                <div class="mat-field">
+                    <label class="mat-label" for="dt-create-height">Höhe</label>
+                    <input class="mat-input" type="number" id="dt-create-height" name="height" value="100" min="1" step="any" inputmode="decimal" />
+                </div>
+                <div class="mat-field">
+                    <label class="mat-label" for="dt-create-unit">Einheit</label>
+                    <select class="mat-select" id="dt-create-unit" name="unit">
+                        <option value="mm" selected>Millimeter</option>
+                        <option value="px">Pixel</option>
+                    </select>
+                </div>
+                <button type="submit" class="mat-btn mat-btn--primary">@Ui.Icon("plus")<span>Anlegen</span></button>
+            </form>
+            <p class="dt-create__error" id="dt-create-error" role="alert" hidden></p>
+            <p class="mat-hint">Millimeter für Druck, Pixel für Bildschirm und soziale Medien. Du fängst lieber mit einem Entwurf an? Schau in die <a href="/Templates">Vorlagen</a>.</p>
+        </div>
+    </div>
+</dialog>

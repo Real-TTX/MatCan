@@ -1,10 +1,10 @@
-# DesignThix – plan 2: a real Canva
+# MatCan – plan 2: a real Canva
 
 The owner after the first version (2026-10-25): *"Das ist noch gar nicht so wie Canva. Was ist mit Elementen? Context-Menü mit Rechtsklick.
 Bei der Bildleiste habe ich keinen guten Image-Browser, nur ein Dropdown. Copy-Paste von Bildern, Drop von Bildern aus dem File-Explorer …
 Leg die Software mehr auf Design / Canva aus. Die Serienerstellung mit Daten ist eher ein ZUSATZ."*
 
-So DesignThix becomes **first a design tool like Canva** (open, design, download – fast, direct, playful) and **second** a tool that can fill a
+So MatCan becomes **first a design tool like Canva** (open, design, download – fast, direct, playful) and **second** a tool that can fill a
 design from data (placeholders, data lists, batch output). Everything of plan 1 (`docs/PLAN.md`) stays valid unless this file says otherwise:
 ground rules §0 (MatUi, German "du", static Biz logic with permission checks, no inline styles/scripts, no innerHTML with user data, CRUD rules,
 no commits by the phases, verification in a real browser), the stack, the ports.
@@ -66,7 +66,7 @@ The text below is the plan as it was written; where the result differs:
 10. *Uploads* panel: big "Dateien hochladen" button, drop zone, grid of the user's uploads (newest first); click inserts, drag inserts at the
     drop point, drag onto an image/frame replaces it.
 11. **Paste and drop everywhere**: Ctrl+V with an image in the clipboard (screenshot, image copied in a browser or Explorer) uploads it and inserts
-    it; plain text becomes a text element; copied DesignThix elements paste as elements (also into another design); files dropped from the file
+    it; plain text becomes a text element; copied MatCan elements paste as elements (also into another design); files dropped from the file
     explorer onto the canvas are uploaded and inserted at the drop point (several: cascaded), onto an image/frame/strip slot they replace its
     source; font files dropped are uploaded as fonts and applied to the selected text. Progress and errors as toasts (German).
 12. **One media browser** (`wwwroot/js/dt-media.js`, a MatUi dialog/panel): tabs Uploads / Flaggen / Siegel / Logos / Alle, search, category,
@@ -216,7 +216,7 @@ Contextual toolbar content:
 
 **K5 – Start, navigation, templates** (parallel to K4; owns `Pages/Index*`, `Pages/Templates/**`, `Pages/Brand/**` if K2 left it as a stub,
 `UiKit/Shell.cs`/menu, the template seeding, `README.md`, `CLAUDE.md`, `docs/PLAN.md` status, `tests/e2e/screens.js`, `tests/e2e/home-check.js`).
-§1 items 1–3; the **10 built-in templates** (§5) as JSON documents in `src/DesignThix/Demo/templates/*.json`, seeded once (same mechanism as
+§1 items 1–3; the **10 built-in templates** (§5) as JSON documents in `src/MatCan/Demo/templates/*.json`, seeded once (same mechanism as
 the demo, deleting respected), rendered and **looked at** one by one (screenshots) – they must look professional; only bundled fonts, our
 flags/seals, Lucide icons, shapes and gradients (no stock photos; frames stay empty "Bild hierher ziehen" where a photo belongs).
 Menu restructure, "Serien (Zusatz)" group, renamed pages/titles/breadcrumbs, Start page, Vorlagen page, "Design erstellen" dialog.

@@ -1,6 +1,6 @@
-// Checks the render engine (src/DesignThix/wwwroot/js/dt-engine.js) in a real browser (Edge via Playwright).
+// Checks the render engine (src/MatCan/wwwroot/js/dt-engine.js) in a real browser (Edge via Playwright).
 //   node tests/e2e/engine/engine-check.js
-// Playwright comes from tests/e2e/node_modules (npm install there). The test fonts are the bundled ones (src/DesignThix/wwwroot/fonts), so the check runs on any machine.
+// Playwright comes from tests/e2e/node_modules (npm install there). The test fonts are the bundled ones (src/MatCan/wwwroot/fonts), so the check runs on any machine.
 // Env: DT_BROWSER = firefox | webkit to run in another engine (default Edge); DT_SCREENSHOT_DIR = where the screenshots and the PNG go (default: the system temp directory).
 'use strict';
 
@@ -15,14 +15,14 @@ const playwright = require('playwright');
 const browserName = process.env.DT_BROWSER || 'chromium';
 
 const repoRoot = path.resolve(__dirname, '../../..');
-const outDir = process.env.DT_SCREENSHOT_DIR || path.join(os.tmpdir(), 'designthix-engine');
+const outDir = process.env.DT_SCREENSHOT_DIR || path.join(os.tmpdir(), 'matcan-engine');
 fs.mkdirSync(outDir, { recursive: true });
 
 // ---------------------------------------------------------------------------------------------------------------
 // Test assets served by the test server
 // ---------------------------------------------------------------------------------------------------------------
 
-const FONT_DIR = path.resolve(__dirname, '../../../src/DesignThix/wwwroot/fonts');
+const FONT_DIR = path.resolve(__dirname, '../../../src/MatCan/wwwroot/fonts');
 const FONT_FILES = { 'script.ttf': 'KaushanScript-Regular.ttf', 'script-bold.ttf': 'KaushanScript-Regular.ttf', 'sans.ttf': 'Montserrat-Variable.ttf', 'sans-bold.ttf': 'Montserrat-Variable.ttf', 'impact.ttf': 'BebasNeue-Regular.ttf' };
 
 const crcTable = (() => {
@@ -1353,7 +1353,7 @@ function code128Read(bars) {
   const rng = (() => { let s = 12345; return () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s; }; })();
   const noise = n => Array.from({ length: n }, () => String.fromCharCode(33 + (rng() % 90))).join('');
   const qrCases = [
-    { text: 'HELLO', ecc: 'M' }, { text: 'https://designthix.example/p/4711', ecc: 'Q' }, { text: 'Käse Größe 4,99 € – Ñandú ß', ecc: 'H' }, { text: 'Z'.repeat(120), ecc: 'L' },
+    { text: 'HELLO', ecc: 'M' }, { text: 'https://matcan.example/p/4711', ecc: 'Q' }, { text: 'Käse Größe 4,99 € – Ñandú ß', ecc: 'H' }, { text: 'Z'.repeat(120), ecc: 'L' },
     { text: '🧀 Käsetheke "Süd" & <Nord>', ecc: 'M' }, { text: longUrl, ecc: 'L' }, { text: longUrl, ecc: 'M' }, { text: longUrl, ecc: 'H' }, { text: noise(700), ecc: 'H' },
     { text: noise(1000), ecc: 'L' }, { text: 'a', ecc: 'L' }, { text: noise(1000), ecc: 'H' },
   ];

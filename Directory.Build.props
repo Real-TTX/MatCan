@@ -1,7 +1,7 @@
 <Project>
 
   <!-- ============================================================= -->
-  <!--  Shared MSBuild properties for all DesignThix projects     -->
+  <!--  Shared MSBuild properties for all MatCan projects     -->
   <!-- ============================================================= -->
 
   <PropertyGroup>
@@ -12,7 +12,7 @@
     <Deterministic>true</Deterministic>
     <InvariantGlobalization>false</InvariantGlobalization>
     <Company>Matthias Schmoldt</Company>
-    <Product>DesignThix</Product>
+    <Product>MatCan</Product>
     <Authors>Matthias Schmoldt</Authors>
   </PropertyGroup>
 
@@ -30,8 +30,8 @@
   <!-- ============================================================= -->
 
   <PropertyGroup>
-    <DesignThixMajor>0</DesignThixMajor>
-    <DesignThixMinor>1</DesignThixMinor>
+    <MatCanMajor>0</MatCanMajor>
+    <MatCanMinor>1</MatCanMinor>
 
     <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
     <Channel Condition="'$(Channel)' == ''">local</Channel>
@@ -40,16 +40,16 @@
     <!-- Numeric AssemblyVersion/FileVersion components are capped at 65534, so they are kept stable
          at <major>.<minor>.0.0 and the (potentially large) build number lives only in the string
          Version / InformationalVersion below. -->
-    <Version>$(DesignThixMajor).$(DesignThixMinor).$(BuildNumber)</Version>
-    <AssemblyVersion>$(DesignThixMajor).$(DesignThixMinor).0.0</AssemblyVersion>
-    <FileVersion>$(DesignThixMajor).$(DesignThixMinor).0.0</FileVersion>
+    <Version>$(MatCanMajor).$(MatCanMinor).$(BuildNumber)</Version>
+    <AssemblyVersion>$(MatCanMajor).$(MatCanMinor).0.0</AssemblyVersion>
+    <FileVersion>$(MatCanMajor).$(MatCanMinor).0.0</FileVersion>
 
     <!-- Keep the informational version clean (no +git-sha suffix). -->
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Channel)' == 'release'">
-    <InformationalVersion>$(DesignThixMajor).$(DesignThixMinor).$(BuildNumber)-$(BuildDate)</InformationalVersion>
+    <InformationalVersion>$(MatCanMajor).$(MatCanMinor).$(BuildNumber)-$(BuildDate)</InformationalVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Channel)' == 'nightly'">
     <InformationalVersion>nightly-$(BuildNumber)-$(BuildDate)</InformationalVersion>

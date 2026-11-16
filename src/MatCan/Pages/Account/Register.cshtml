@@ -1,0 +1,38 @@
+@page
+@model MatCan.Pages.Account.RegisterModel
+@{
+    Layout = "_Bare";
+    var preview = Model.Preview;
+}
+
+<div class="mat-auth__card">
+    <div class="mat-auth__brand">
+        @Ui.Logo("lg")
+        <h1>Konto erstellen</h1>
+        @if (preview is not null)
+        {
+            <p class="mat-muted">@(string.IsNullOrWhiteSpace(preview.InviterName) ? "Du" : preview.InviterName) hat dich @(preview.TeamName is null ? "zu MatCan" : "ins Team „" + preview.TeamName + "“") eingeladen.</p>
+        }
+        else
+        {
+            <p class="mat-muted">@(Model.Approval ? "Nach der Registrierung gibt die Administration dein Konto frei." : "Erstelle dein Konto und leg los.")</p>
+        }
+    </div>
+
+    <form class="mat-form" method="post" novalidate>
+        @if (Model.Invitation is { } token)
+        {
+            <input type="hidden" name="invitation" value="@token" />
+        }
+        <dt-summary title="Die Registrierung hat nicht geklappt." />
+        <dt-input for="Input.DisplayName" label="Dein Name" autocomplete="name" autofocus />
+        <dt-input for="Input.Email" label="E-Mail-Adresse" type="email" autocomplete="username" inputmode="email" readonly="@Model.EmailLocked"
+                  hint="@(Model.EmailLocked ? "Die Einladung gilt für diese Adresse." : Model.Domains.Count > 0 ? "Erlaubt sind Adressen von " + string.Join(", ", Model.Domains) + "." : "Damit meldest du dich an.")" />
+        <dt-input for="Input.Password" label="Passwort" type="password" autocomplete="new-password" hint="Mindestens 10 Zeichen." />
+        <dt-input for="Input.PasswordRepeat" label="Passwort wiederholen" type="password" autocomplete="new-password" />
+        <div class="mat-btn-row mat-btn-row--plain">
+            <button type="submit" class="mat-btn mat-btn--primary mat-btn--block">@Ui.Icon("check")<span>Konto erstellen</span></button>
+        </div>
+        <p class="mat-hint dt-auth__alt">Schon ein Konto? <a href="@(Model.Invitation is { } t ? $"/Account/Login?returnUrl=/Einladung/{t:D}" : "/Account/Login")">Anmelden</a></p>
+    </form>
+</div>

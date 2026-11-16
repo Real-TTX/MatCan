@@ -1,20 +1,20 @@
-# DesignThix – Release (Branch main, Image :latest)
+# MatCan – Release (Branch main, Image :latest)
 #   docker compose up -d        →  http://localhost:3043
 # Der erste Aufruf legt den Administrator an (es gibt kein Standardpasswort).
 # Update: docker compose pull && docker compose up -d (die Datenbank migriert sich beim Start selbst).
 # Für mehr als das lokale Netz einen Reverse-Proxy mit TLS davorsetzen.
-name: designthix
+name: matcan
 
 services:
   web:
-    image: ghcr.io/real-ttx/designthix:latest
+    image: ghcr.io/real-ttx/matcan:latest
     restart: unless-stopped
     ports:
       - "3043:3043"
     volumes:
       - web-data:/data
       # Ein Bildarchiv als Katalog "Ordner" (Verwaltung → Kataloge): einen Ordner des Servers nur lesend einhängen und seinen Namen
-      # (hier "Firmenbilder") auf der Seite des Katalogs eintragen. DesignThix liest nur, es verändert nichts darin.
+      # (hier "Firmenbilder") auf der Seite des Katalogs eintragen. MatCan liest nur, es verändert nichts darin.
       # - /srv/bilder:/data/catalogs/Firmenbilder:ro
     depends_on:
       db:
@@ -24,13 +24,13 @@ services:
     image: postgres:17
     restart: unless-stopped
     environment:
-      POSTGRES_DB: designthix
-      POSTGRES_USER: designthix
-      POSTGRES_PASSWORD: designthix
+      POSTGRES_DB: matcan
+      POSTGRES_USER: matcan
+      POSTGRES_PASSWORD: matcan
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U designthix -d designthix"]
+      test: ["CMD-SHELL", "pg_isready -U matcan -d matcan"]
       interval: 5s
       timeout: 5s
       retries: 20

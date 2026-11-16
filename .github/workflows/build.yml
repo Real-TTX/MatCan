@@ -24,8 +24,8 @@ jobs:
       postgres:
         image: postgres:17
         env:
-          POSTGRES_PASSWORD: designthix
-          POSTGRES_DB: designthix_test
+          POSTGRES_PASSWORD: matcan
+          POSTGRES_DB: matcan_test
         ports:
           - 5432:5432
         options: >-
@@ -59,26 +59,26 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Restore
-        run: dotnet restore DesignThix.slnx
+        run: dotnet restore MatCan.slnx
 
       - name: Build
         run: >
-          dotnet build DesignThix.slnx -c Release --no-restore
+          dotnet build MatCan.slnx -c Release --no-restore
           -p:Channel=${{ steps.ver.outputs.channel }}
           -p:BuildNumber=${{ steps.ver.outputs.build }}
           -p:BuildDate=${{ steps.ver.outputs.date }}
 
       - name: Test
         env:
-          DESIGNTHIX_TEST_DB: Host=localhost;Port=5432;Database=designthix_test;Username=postgres;Password=designthix
+          MATCAN_TEST_DB: Host=localhost;Port=5432;Database=matcan_test;Username=postgres;Password=matcan
         # The GitHubActions logger shows every failed test as an annotation of the run (and in the summary of a pull request).
-        run: dotnet test DesignThix.slnx -c Release --no-build --verbosity normal --logger GitHubActions
+        run: dotnet test MatCan.slnx -c Release --no-build --verbosity normal --logger GitHubActions
 
       - name: Resolve version string
         id: appver
         shell: bash
         run: |
-          v=$(dotnet msbuild src/DesignThix/DesignThix.csproj -getProperty:InformationalVersion \
+          v=$(dotnet msbuild src/MatCan/MatCan.csproj -getProperty:InformationalVersion \
                 -p:Channel=${{ steps.ver.outputs.channel }} \
                 -p:BuildNumber=${{ steps.ver.outputs.build }} \
                 -p:BuildDate=${{ steps.ver.outputs.date }})

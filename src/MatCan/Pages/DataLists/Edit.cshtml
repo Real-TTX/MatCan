@@ -1,0 +1,227 @@
+@page "{id:long?}"
+@model MatCan.Pages.DataLists.EditModel
+@using MatCan.Pages.DataLists
+@{
+    var blankRow = ("__i__", new ColumnInput(), false);
+    var ro = !Model.CanEdit;
+    var isNew = Model.List is null;
+    var columnCount = Model.CurrentColumns.Count;
+    var preview = Model.Preview;
+}
+
+@if (ro)
+{
+    <div class="mat-alert mat-alert--info" role="note">@Ui.Icon("info")<div class="mat-alert__body">Du darfst diese Datenliste nur ansehen. Zum Bearbeiten braucht dir die Person, der sie gehört, das Recht „Kann bearbeiten“ zu geben.</div></div>
+}
+
+@section TopbarActions {
+    @if (!isNew && !ro)
+    {
+        <button type="button" class="mat-btn mat-btn--secondary mat-btn--sm" data-share-open data-share-kind="datalist" data-share-id="@Model.Id" data-share-name="@Model.List?.Name">@Ui.Icon("dt:share-2")<span>Teilen</span></button>
+    }
+}
+
+@if (!isNew)
+{
+    <link rel="stylesheet" href="~/css/datalist.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dt-media.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ai.css" asp-append-version="true" />
+}
+
+<dt-tabs id="datalist-tabs" label="Bereiche der Datenliste" selected="@Model.Tab">
+    <dt-tab id="general" title="Allgemein" icon="settings">
+        <form class="mat-form" method="post" asp-page-handler="General" novalidate>
+            <dt-summary />
+            <dt-card title="Datenliste" icon="table">
+                <div class="mat-form__grid">
+                    <dt-input for="Input.Name" label="Name" required="true" readonly="@ro" autocomplete="off" full="true" />
+                    <dt-textarea for="Input.Description" label="Beschreibung" rows="3" readonly="@ro" full="true" hint="Wofür ist die Liste da? Zum Beispiel: Käsetheke Herbst, Wochenangebote." />
+                    <dt-switch for="Input.ContainsPersonalData" label="Enthält personenbezogene Daten" disabled="@ro" full="true" hint="Zum Beispiel Namen von Kunden. Die KI-Funktionen lesen solche Listen nur, wenn der Administrator das erlaubt hat." />
+                </div>
+            </dt-card>
+            @if (!ro)
+            {
+                <dt-buttons back-href="/DataLists" delete-url="@(isNew ? null : Url.Page("/DataLists/Edit", "Delete", new { id = Model.Id }))" delete-confirm="Diese Datenliste mit allen Zeilen löschen?" save-text="@(isNew ? "Anlegen" : "Speichern")">
+                    @if (!isNew)
+                    {
+                        <button type="submit" formnovalidate formaction="@Url.Page("/DataLists/Edit", "Duplicate", new { id = Model.Id })" class="mat-btn mat-btn--secondary">@Ui.Icon("copy")<span>Duplizieren</span></button>
+                    }
+                </dt-buttons>
+            }
+            else
+            {
+                <dt-buttons no-save="true" back-href="/DataLists" />
+            }
+        </form>
+    </dt-tab>
+
+    @if (!isNew)
+    {
+        <dt-tab id="columns" title="Spalten" icon="list" count="@columnCount">
+            @if (!ro)
+            {
+                <form class="mat-form" method="post" asp-page-handler="FromDesign" novalidate>
+                    <dt-card title="Spalten aus einem Design übernehmen" icon="layers">
+                        <div class="mat-form__grid">
+                            <dt-select name="DesignId" label="Design" items="Model.DesignItems" empty="Design wählen ..." hint="Die Felder des Designs werden als Spalten ergänzt. Vorhandene Spalten bleiben, wie sie sind." />
+                        </div>
+                        <div class="mat-btn-row mat-btn-row--plain">
+                            <button type="submit" class="mat-btn mat-btn--secondary">@Ui.Icon("plus")<span>Spalten übernehmen</span></button>
+                        </div>
+                    </dt-card>
+                </form>
+            }
+
+            <form class="mat-form" method="post" asp-page-handler="Columns" novalidate data-dt-columns>
+                <dt-summary />
+                <dt-card title="Spalten" icon="list" sub="@(columnCount == 1 ? "1 Spalte" : columnCount + " Spalten")">
+                    <p class="mat-hint" id="col-key-hint">Der Schlüssel (Buchstaben, Ziffern, Unterstrich; beginnt mit einem Buchstaben) ist der Name des Platzhalters: die Spalte <span class="mat-mono">Preis</span> füllt <span class="mat-mono">{{Preis}}</span>. Bei der Art „Bild“ steht in den Zeilen der Schlüssel eines Mediums.</p>
+                    <div class="dt-colrows" data-dt-colrows>
+                        @for (var i = 0; i < Model.Columns.Count; i++)
+                        {
+                            <partial name="_ColumnRow" model="(i.ToString(), Model.Columns[i], ro)" />
+                        }
+                    </div>
+                    <p class="mat-muted" data-dt-col-empty hidden="@(Model.Columns.Count > 0)">Noch keine Spalten. Füge eine hinzu oder übernimm die Felder eines Designs.</p>
+                    @if (!ro)
+                    {
+                        <div class="mat-btn-row mat-btn-row--plain">
+                            <button type="button" class="mat-btn mat-btn--secondary" data-dt-col-add>@Ui.Icon("plus")<span>Spalte hinzufügen</span></button>
+                        </div>
+                    }
+                </dt-card>
+                <datalist id="dt-asset-categories">
+                    @foreach (var c in Model.Categories)
+                    {
+                        <option value="@c"></option>
+                    }
+                </datalist>
+                @if (!ro)
+                {
+                    <template data-dt-col-template>
+                        <partial name="_ColumnRow" model="blankRow" />
+                    </template>
+                    <dt-buttons save-text="Spalten speichern" back-href="/DataLists" />
+                }
+                else
+                {
+                    <dt-buttons no-save="true" back-href="/DataLists" />
+                }
+            </form>
+        </dt-tab>
+
+        <dt-tab id="rows" title="Zeilen" icon="table" count="@Model.RowCount">
+            <div class="dt-grid" data-dt-grid data-url="/api/datalists/@Model.Id/rows" data-assets-url="/api/assets" data-media-url="/media/" data-list-id="@Model.Id"
+                 data-ai="@(Model.AiVisible ? "true" : "false")" data-ai-blocked="@Model.AiBlocked"></div>
+            <div class="mat-btn-row">
+                <a class="mat-btn mat-btn--secondary" href="/DataLists">@Ui.Icon("back")<span>Zurück</span></a>
+            </div>
+        </dt-tab>
+
+        <dt-tab id="import" title="Import/Export" icon="download">
+            @if (Model.AiVisible)
+            {
+                <div data-ai-import data-list-id="@Model.Id" data-ai-blocked="@Model.AiBlocked" data-open-run="@Model.AiRun" data-run-href="@(Model.IsAdmin ? "/Admin/Ai/Runs/Details?id={id}" : null)">
+                    <dt-card title="Mit KI übernehmen" icon="sparkles" sub="Aus freiem Text oder einer Tabelle neue Zeilen machen">
+                        <div data-ai-form></div>
+                    </dt-card>
+                    <dt-card title="Letzte KI-Läufe an dieser Liste" icon="clock" sub="@(Model.IsAdmin ? "Alle Läufe" : "Deine Läufe")">
+                        <div data-ai-runs></div>
+                    </dt-card>
+                </div>
+            }
+            <dt-card title="Export" icon="download">
+                <p>Alle Zeilen als CSV-Datei: Trennzeichen Semikolon, Zeichensatz UTF-8 mit BOM. So öffnet Excel die Datei richtig, und du kannst sie hier wieder einlesen. Die Kopfzeile enthält die Schlüssel der Spalten.</p>
+                <div class="mat-btn-row mat-btn-row--plain">
+                    <a class="mat-btn mat-btn--secondary" href="@Url.Page("/DataLists/Edit", "Export", new { id = Model.Id })">@Ui.Icon("download")<span>CSV herunterladen</span></a>
+                </div>
+            </dt-card>
+
+            @if (!ro)
+            {
+                <form class="mat-form" method="post" enctype="multipart/form-data" asp-page-handler="Preview" novalidate>
+                    <dt-summary />
+                    <dt-card title="Import" icon="upload">
+                        <div class="mat-form__grid">
+                            <div class="mat-field mat-field--full">
+                                <label class="mat-label" for="CsvFile">CSV-Datei</label>
+                                <div class="mat-upload mat-upload--compact" data-upload data-max-size="10MB">
+                                    <input class="mat-upload__input" type="file" id="CsvFile" name="CsvFile" accept=".csv,.tsv,.txt,text/csv,text/plain,text/tab-separated-values" />
+                                </div>
+                                <span class="mat-error" aria-live="polite">@Html.ValidationMessage("CsvFile")</span>
+                            </div>
+                            <dt-textarea name="PasteText" label="oder Text einfügen" rows="6" full="true" value="@Model.PasteText" hint="Kopiere Zellen aus Excel oder Google Tabellen und füge sie hier ein. Trennzeichen (Tabulator, Semikolon, Komma) und Anführungszeichen werden erkannt." />
+                            <dt-switch name="HasHeader" label="Die erste Zeile enthält die Spaltennamen" value="@(Model.HasHeader ? "true" : "false")" full="true" />
+                        </div>
+                        <div class="mat-btn-row mat-btn-row--plain">
+                            <button type="submit" class="mat-btn mat-btn--secondary">@Ui.Icon("eye")<span>Vorschau</span></button>
+                        </div>
+                    </dt-card>
+                </form>
+            }
+
+            @if (preview is not null)
+            {
+                <form class="mat-form" method="post" asp-page-handler="Import" novalidate>
+                    <input type="hidden" name="CsvText" value="@Model.CsvText" />
+                    <input type="hidden" name="HasHeader" value="@(Model.HasHeader ? "true" : "false")" />
+                    <dt-card title="Vorschau und Zuordnung" icon="eye" sub="@Fmt.Integer(preview.RowCount) Zeilen, Trennzeichen @(preview.Delimiter == '\t' ? "Tabulator" : preview.Delimiter.ToString())">
+                        <p class="mat-hint">Wähle für jede Spalte der Datei, wohin ihre Werte kommen. Die ersten Zeilen siehst du darunter.</p>
+                        <div class="mat-table-wrap" data-table-scroll>
+                            <table class="mat-table dt-maptable">
+                                <caption class="mat-sr-only">Vorschau des Imports</caption>
+                                <thead>
+                                    <tr>
+                                        @for (var i = 0; i < preview.Headers.Count; i++)
+                                        {
+                                            var current = i < Model.Mapping.Count ? Model.Mapping[i] : "";
+                                            <th scope="col">
+                                                <label class="mat-label" for="map-@i">@(string.IsNullOrWhiteSpace(preview.Headers[i]) ? $"Spalte {i + 1}" : preview.Headers[i])</label>
+                                                <select class="mat-select" id="map-@i" name="Mapping[@i]">
+                                                    <option value="" selected="@(current == "")">nicht importieren</option>
+                                                    <option value="@@new" selected="@(current == "@new")">neue Spalte anlegen</option>
+                                                    <option value="@@copies" selected="@(current == "@copies")">Kopien</option>
+                                                    <option value="@@active" selected="@(current == "@active")">Aktiv (ja/nein)</option>
+                                                    @foreach (var c in Model.CurrentColumns)
+                                                    {
+                                                        <option value="@c.Key" selected="@(current == c.Key)">@c.Label (@c.Key)</option>
+                                                    }
+                                                </select>
+                                            </th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var row in preview.SampleRows)
+                                    {
+                                        <tr>
+                                            @for (var i = 0; i < preview.Headers.Count; i++)
+                                            {
+                                                <td data-label="@preview.Headers[i]">@(i < row.Count ? row[i] : "")</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mat-form__grid">
+                            <dt-radios name="ImportMode" label="Was geschieht mit den vorhandenen Zeilen?" items="Model.ModeItems" value="@Model.ImportMode" full="true" />
+                        </div>
+                    </dt-card>
+                    <div class="mat-btn-row">
+                        <button type="submit" class="mat-btn mat-btn--primary">@Ui.Icon("upload")<span>Importieren</span></button>
+                        <a class="mat-btn mat-btn--secondary" href="@Url.Page("/DataLists/Edit", new { id = Model.Id, tab = "import" })">Abbrechen</a>
+                    </div>
+                </form>
+            }
+        </dt-tab>
+    }
+</dt-tabs>
+
+<script src="~/js/library.js" asp-append-version="true"></script>
+@if (!isNew)
+{
+    <script src="~/js/dt-media.js" asp-append-version="true"></script>
+    <script src="~/js/datalist.js" asp-append-version="true"></script>
+    <script src="~/js/ai.js" asp-append-version="true"></script>
+}

@@ -1,19 +1,19 @@
-# DesignThix – Development (Branch dev, Image :nightly) mit pgAdmin
+# MatCan – Development (Branch dev, Image :nightly) mit pgAdmin
 #   docker compose -f docker-compose.dev.yml up -d
 #   App:     http://localhost:3043
-#   pgAdmin: http://localhost:3044   (ohne Anmeldung; Datenbank-Passwort: designthix)
-name: designthix-dev
+#   pgAdmin: http://localhost:3044   (ohne Anmeldung; Datenbank-Passwort: matcan)
+name: matcan-dev
 
 services:
   web:
-    image: ghcr.io/real-ttx/designthix:nightly
+    image: ghcr.io/real-ttx/matcan:nightly
     restart: unless-stopped
     ports:
       - "3043:3043"
     volumes:
       - web-data:/data
       # Ein Bildarchiv als Katalog "Ordner" (Verwaltung → Kataloge): einen Ordner des Servers nur lesend einhängen und seinen Namen
-      # (hier "Firmenbilder") auf der Seite des Katalogs eintragen. DesignThix liest nur, es verändert nichts darin.
+      # (hier "Firmenbilder") auf der Seite des Katalogs eintragen. MatCan liest nur, es verändert nichts darin.
       # - /srv/bilder:/data/catalogs/Firmenbilder:ro
     depends_on:
       db:
@@ -23,13 +23,13 @@ services:
     image: postgres:17
     restart: unless-stopped
     environment:
-      POSTGRES_DB: designthix
-      POSTGRES_USER: designthix
-      POSTGRES_PASSWORD: designthix
+      POSTGRES_DB: matcan
+      POSTGRES_USER: matcan
+      POSTGRES_PASSWORD: matcan
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U designthix -d designthix"]
+      test: ["CMD-SHELL", "pg_isready -U matcan -d matcan"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -40,8 +40,8 @@ services:
     ports:
       - "3044:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@designthix.example.com
-      PGADMIN_DEFAULT_PASSWORD: designthix
+      PGADMIN_DEFAULT_EMAIL: admin@matcan.example.com
+      PGADMIN_DEFAULT_PASSWORD: matcan
       PGADMIN_CONFIG_SERVER_MODE: "False"
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
     configs:
@@ -55,7 +55,7 @@ services:
 configs:
   servers:
     content: |
-      {"Servers": {"1": {"Name": "DesignThix", "Group": "Servers", "Host": "db", "Port": 5432, "MaintenanceDB": "designthix", "Username": "designthix", "SSLMode": "prefer"}}}
+      {"Servers": {"1": {"Name": "MatCan", "Group": "Servers", "Host": "db", "Port": 5432, "MaintenanceDB": "matcan", "Username": "matcan", "SSLMode": "prefer"}}}
 
 volumes:
   web-data:

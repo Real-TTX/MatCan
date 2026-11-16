@@ -1,0 +1,187 @@
+@page "/Teams/{slug}/Mitglieder"
+@model MatCan.Pages.Teams.MembersModel
+
+<partial name="_TeamHeader" model="Model.Header" />
+
+@if (Model.NewLinks.Count > 0)
+{
+    <section class="mat-alert mat-alert--success dt-invite-links" role="status" data-invite-links aria-label="Neue Einladungen">
+        @Ui.Icon("check")
+        <div class="mat-alert__body">
+            <strong>@(Model.NewLinks.Count == 1 ? "Die Einladung ist bereit." : "Die Einladungen sind bereit.")</strong>
+            @if (!Model.MailReady)
+            {
+                <span> Der Mailversand ist nicht eingerichtet: kopiere den Link und schicke ihn selbst.</span>
+            }
+            <ul class="dt-invite-links__list">
+                @foreach (var link in Model.NewLinks)
+                {
+                    <li>
+                        <span class="dt-invite-links__label">@link.Label</span>
+                        <input class="mat-input mat-mono dt-invite-links__url" readonly value="@link.Url" aria-label="Link für @link.Label" />
+                        <button type="button" class="mat-btn mat-btn--secondary mat-btn--sm" data-copy="@link.Url">@Ui.Icon("copy")<span>Link kopieren</span></button>
+                    </li>
+                }
+            </ul>
+        </div>
+    </section>
+}
+
+<dt-card title="Mitglieder" icon="users" sub="@Model.Members.Count.ToString()">
+    <div class="mat-table-wrap">
+        <table class="mat-table dt-members" id="members-table">
+            <caption class="mat-sr-only">Mitglieder des Teams</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Rolle</th>
+                    <th scope="col" class="mat-hide-sm">Dabei seit</th>
+                    <th scope="col"><span class="mat-sr-only">Aktionen</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in Model.Members)
+                {
+                    <tr data-member="@m.UserId">
+                        <td data-label="Name"><div class="dt-membercell">@Ui.Avatar(m.DisplayName, "sm")<span class="dt-membercell__text"><span class="dt-membercell__name">@m.DisplayName@(m.UserId == Model.Me ? " (du)" : "")</span><small class="mat-muted">@m.Email</small></span></div></td>
+                        <td data-label="Rolle">
+                            @if (Model.CanChange(m))
+                            {
+                                <form method="post" asp-page-handler="Role" asp-route-slug="@Model.Team.Slug" class="dt-members__role">
+                                    <input type="hidden" name="userId" value="@m.UserId" />
+                                    <select class="mat-select" name="role" aria-label="Rolle von @m.DisplayName" data-autosubmit>
+                                        @foreach (var item in Model.RoleItems)
+                                        {
+                                            <option value="@item.Value" selected="@(item.Value == m.Role.ToString())">@item.Text</option>
+                                        }
+                                    </select>
+                                    <noscript><button type="submit" class="mat-btn mat-btn--secondary mat-btn--sm">Ändern</button></noscript>
+                                </form>
+                            }
+                            else
+                            {
+                                @Ui.Pill(Labels.Of(m.Role), m.Role == SpaceRole.Owner ? "accent" : "plain")
+                            }
+                        </td>
+                        <td data-label="Dabei seit" class="mat-hide-sm">@Fmt.Date(m.Since)</td>
+                        <td class="mat-table__cell-actions">
+                            @if (Model.CanChange(m))
+                            {
+                                <form method="post" asp-page-handler="Remove" asp-route-slug="@Model.Team.Slug" class="mat-table__actions">
+                                    <input type="hidden" name="userId" value="@m.UserId" />
+                                    <button type="submit" class="mat-btn mat-btn--ghost mat-btn--sm" data-confirm="@m.DisplayName aus dem Team entfernen? Die Person verliert den Zugriff auf alles, was nur über das Team freigegeben war." data-confirm-ok="Entfernen" data-confirm-danger aria-label="@m.DisplayName entfernen">@Ui.Icon("trash")<span>Entfernen</span></button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="mat-actions">
+        @if (Model.CanAdmin)
+        {
+            <button type="button" class="mat-btn mat-btn--primary" data-dialog-open="dt-invite">@Ui.Icon("dt:user-plus")<span>Einladen</span></button>
+        }
+        <form method="post" asp-page-handler="Leave" asp-route-slug="@Model.Team.Slug">
+            <button type="submit" class="mat-btn mat-btn--secondary" disabled="@Model.IsLastOwner"
+                    data-confirm="Das Team „@Model.Team.Name“ verlassen? Du verlierst den Zugriff auf alles, was nur über das Team freigegeben war." data-confirm-ok="Verlassen" data-confirm-danger>@Ui.Icon("logout")<span>Team verlassen</span></button>
+        </form>
+        @if (Model.IsLastOwner)
+        {
+            <span class="mat-hint">Du bist der einzige Inhaber. Übergib zuerst die Inhaberschaft (Einstellungen) oder lösche das Team.</span>
+        }
+    </div>
+    <details class="dt-roles-help">
+        <summary>Was dürfen die Rollen?</summary>
+        <dl class="mat-kv">
+            @foreach (var role in new[] { SpaceRole.Owner, SpaceRole.Admin, SpaceRole.Editor, SpaceRole.Viewer })
+            {
+                <dt>@Labels.Of(role)</dt><dd>@Labels.Describe(role)</dd>
+            }
+        </dl>
+    </details>
+</dt-card>
+
+@if (Model.CanAdmin)
+{
+    <dt-card title="Offene Einladungen" icon="mail" sub="@Model.Invitations.Count.ToString()">
+        @if (Model.Invitations.Count == 0)
+        {
+            <p class="mat-hint">Keine offenen Einladungen. Mit „Einladen“ lädst du Leute per E-Mail ein oder erzeugst einen Link.</p>
+        }
+        else
+        {
+            <div class="mat-table-wrap">
+                <table class="mat-table dt-invites" id="invitations-table">
+                    <caption class="mat-sr-only">Offene Einladungen</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Einladung</th>
+                            <th scope="col">Rolle</th>
+                            <th scope="col" class="mat-hide-sm">Gültig bis</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"><span class="mat-sr-only">Aktionen</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model.Invitations)
+                        {
+                            <tr data-invitation="@i.Id">
+                                <td data-label="Einladung"><span class="dt-invite__who">@(i.Email ?? "Einladungslink")</span><small class="mat-muted dt-sub">@(i.Email is null ? $"{i.Uses} von {i.MaxUses} benutzt" : $"von {i.InviterName}")</small></td>
+                                <td data-label="Rolle">@Labels.Of(i.Role)</td>
+                                <td data-label="Gültig bis" class="mat-hide-sm">@Fmt.Date(i.Expires)</td>
+                                <td data-label="Status">@(i.Status == InviteStatus.Valid ? Ui.Pill(InviteLogic.Words(i.Status), "ok") : Ui.Pill(InviteLogic.Words(i.Status), "warn"))</td>
+                                <td class="mat-table__cell-actions">
+                                    <div class="mat-table__actions dt-invite__actions">
+                                        <button type="button" class="mat-btn mat-btn--ghost mat-btn--sm" data-copy="@Model.LinkOf(i)" aria-label="Link kopieren">@Ui.Icon("copy")<span>Link kopieren</span></button>
+                                        @if (i.Email is not null)
+                                        {
+                                            <form method="post" asp-page-handler="Resend" asp-route-slug="@Model.Team.Slug">
+                                                <input type="hidden" name="id" value="@i.Id" />
+                                                <button type="submit" class="mat-btn mat-btn--ghost mat-btn--sm">@Ui.Icon("refresh")<span>Erneut senden</span></button>
+                                            </form>
+                                        }
+                                        <form method="post" asp-page-handler="Revoke" asp-route-slug="@Model.Team.Slug">
+                                            <input type="hidden" name="id" value="@i.Id" />
+                                            <button type="submit" class="mat-btn mat-btn--ghost mat-btn--sm" data-confirm="Diese Einladung zurückziehen? Der Link funktioniert dann nicht mehr." data-confirm-ok="Zurückziehen" data-confirm-danger>@Ui.Icon("x")<span>Zurückziehen</span></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </dt-card>
+
+    <dialog class="mat-dialog" id="dt-invite" aria-labelledby="dt-invite-title" @Html.Raw(Model.OpenInviteDialog ? "data-autoopen" : "")>
+        <form class="mat-dialog__form mat-form" method="post" asp-page-handler="Invite" asp-route-slug="@Model.Team.Slug" novalidate>
+            <div class="mat-dialog__head">
+                @Ui.ToolIcon("user-plus")
+                <h2 class="mat-dialog__title" id="dt-invite-title">In „@Model.Team.Name“ einladen</h2>
+                <button type="button" class="mat-btn mat-btn--ghost mat-btn--icon mat-dialog__close" data-dialog-close aria-label="Schließen">@Ui.Icon("x")</button>
+            </div>
+            <div class="mat-dialog__body">
+                <dt-summary title="Die Einladung hat nicht geklappt." />
+                <dt-radios for="Input.Mode" label="Wie möchtest du einladen?" items="Model.ModeItems" full="true" />
+                <dt-textarea for="Input.Addresses" label="E-Mail-Adressen" rows="3" full="true" show-if="Input.Mode" show-value="email"
+                             hint="Eine oder mehrere Adressen, getrennt durch Komma oder Zeilenumbruch. Wenn der Mailversand eingerichtet ist, bekommen die Leute eine E-Mail; sonst zeigen wir dir die Links zum Kopieren." />
+                <dt-select for="Input.Role" label="Rolle im Team" items="Model.RoleItems" hint="Bearbeiter arbeiten mit, Betrachter sehen nur an." />
+                <dt-select for="Input.Days" label="Gültig für" items="Model.DaysItems" />
+                <dt-input for="Input.MaxUses" label="Wie oft darf der Link benutzt werden?" type="number" min="1" max="100" inputmode="numeric" show-if="Input.Mode" show-value="link" hint="Jede Person, die den Link annimmt, zählt einmal." />
+            </div>
+            <div class="mat-dialog__foot">
+                <div class="mat-btn-row mat-btn-row--plain">
+                    <button type="submit" class="mat-btn mat-btn--primary">@Ui.Icon("check")<span>Einladen</span></button>
+                    <button type="button" class="mat-btn mat-btn--secondary" data-dialog-close>Abbrechen</button>
+                </div>
+            </div>
+        </form>
+    </dialog>
+}
+
+@section Scripts {
+    <script src="~/js/teams.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,128 @@
+/* ==========================================================================
+   MatCan: the "Teilen" dialog (js/share.js). Tokens only, flat (borders instead of shadows, only the result list of the search floats), no inline styles: the colour of an avatar
+   is a custom property (--dt-av) that share.js sets through the CSSOM. On a phone MatUi makes the dialog a full-screen sheet.
+   ========================================================================== */
+
+.dt-share { --dt-sh-gap: var(--mat-space-3); }
+.dt-share__body { display: grid; gap: var(--mat-space-5); align-content: start; }
+.dt-share [hidden] { display: none !important; }
+
+.dt-sh-loading { display: flex; align-items: center; gap: var(--mat-space-3); color: var(--mat-text-muted); padding-block: var(--mat-space-6); justify-content: center; }
+.dt-sh-hint { margin: 0; }
+
+/* ---- avatars ---- */
+.dt-sh-av { --dt-av: var(--mat-accent); flex: none; display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--dt-av); color: #fff; font-size: var(--mat-fs-sm); font-weight: 650; line-height: 1; }
+.dt-sh-av.mat-avatar--sm { width: 26px; height: 26px; font-size: var(--mat-fs-xs); }
+.dt-sh-av--team { border-radius: var(--mat-radius); color: #fff; }
+.dt-sh-av--team .mat-icon { width: 55%; height: 55%; }
+
+/* ---- sections ---- */
+.dt-sh-sec { display: grid; gap: var(--mat-space-3); min-width: 0; }
+.dt-sh-label { font-weight: 650; }
+.dt-sh-h { display: flex; align-items: center; gap: var(--mat-space-2); margin: 0; font-size: var(--mat-fs-md); font-weight: 650; }
+.dt-sh-h .mat-icon { width: 1.1rem; height: 1.1rem; color: var(--mat-text-muted); }
+.dt-sh-count { margin-left: var(--mat-space-1); }
+.dt-sh-none { margin: 0; font-size: var(--mat-fs-sm); }
+.dt-sh-error { margin: 0; }
+
+/* ---- add: chips, search, results ---- */
+.dt-sh-searchwrap { position: relative; }
+.dt-sh-field { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mat-space-1); min-height: var(--mat-control-h); padding: 3px var(--mat-space-2); background: var(--mat-surface); border: 1px solid var(--mat-border-strong); border-radius: var(--mat-radius); cursor: text; }
+.dt-sh-field:focus-within { border-color: var(--mat-accent); box-shadow: var(--mat-focus-ring); }
+.dt-sh-chips { display: contents; }
+.dt-sh-chip { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 2px 4px 2px 3px; border-radius: 999px; background: var(--mat-surface-3); color: var(--mat-text); font-size: var(--mat-fs-sm); }
+.dt-sh-chip__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 14rem; }
+.dt-sh-chip__x { display: inline-grid; place-items: center; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--mat-text-muted); cursor: pointer; }
+.dt-sh-chip__x:hover { background: var(--mat-surface-2); color: var(--mat-text); }
+.dt-sh-chip__x:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-sh-chip__x .mat-icon { width: 12px; height: 12px; }
+.dt-sh-search { flex: 1 1 10rem; min-width: 8rem; height: 28px; padding: 0 var(--mat-space-1); border: 0; outline: none; background: transparent; color: var(--mat-text); font: inherit; }
+.dt-sh-search::placeholder { color: var(--mat-text-faint); }
+
+.dt-sh-results { position: absolute; z-index: 5; left: 0; right: 0; top: calc(100% + 4px); margin: 0; padding: var(--mat-space-1); list-style: none; max-height: 19rem; overflow-y: auto; background: var(--mat-surface); border: 1px solid var(--mat-border-strong); border-radius: var(--mat-radius); box-shadow: var(--mat-shadow-2); }
+.dt-sh-option { display: flex; align-items: center; gap: var(--mat-space-3); padding: var(--mat-space-2) var(--mat-space-2); border-radius: var(--mat-radius-sm, var(--mat-radius)); cursor: pointer; }
+.dt-sh-option.is-active, .dt-sh-option:hover { background: var(--mat-accent-soft); }
+.dt-sh-option__text { display: grid; min-width: 0; flex: 1 1 auto; }
+.dt-sh-option__name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-sh-option__sub { font-size: var(--mat-fs-xs); color: var(--mat-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-sh-option__tag { flex: none; font-size: var(--mat-fs-xs); color: var(--mat-text-muted); }
+.dt-sh-results__empty { padding: var(--mat-space-3); color: var(--mat-text-muted); font-size: var(--mat-fs-sm); }
+
+.dt-sh-addrow { display: grid; grid-template-columns: minmax(9rem, 11rem) minmax(0, 1fr) auto; gap: var(--mat-space-2); align-items: center; }
+.dt-sh-go { white-space: nowrap; }
+
+/* ---- the rows of people ---- */
+.dt-sh-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.dt-sh-row { display: flex; align-items: center; gap: var(--mat-space-3); min-height: 2.9rem; padding: var(--mat-space-1) 0; }
+.dt-sh-row__text { display: grid; flex: 1 1 auto; min-width: 0; line-height: 1.3; }
+.dt-sh-row__name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-sh-row__sub { font-size: var(--mat-fs-xs); color: var(--mat-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dt-sh-row__sub--wrap { white-space: normal; overflow-wrap: anywhere; }
+.dt-sh-row__role { flex: none; color: var(--mat-text-muted); font-size: var(--mat-fs-sm); white-space: nowrap; }
+.dt-sh-row__perm { flex: none; width: auto; min-width: 9.5rem; }
+.dt-sh-row__x { flex: none; }
+.dt-sh-row.is-inherited .dt-sh-row__name { font-weight: 550; }
+.dt-sh-via { display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; color: var(--mat-link, var(--mat-accent-text)); font: inherit; font-size: var(--mat-fs-xs); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.dt-sh-via .mat-icon { width: .85rem; height: .85rem; }
+.dt-sh-via:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); border-radius: 2px; }
+.dt-sh-caption { margin-top: var(--mat-space-2); font-size: var(--mat-fs-xs); font-weight: 650; text-transform: uppercase; letter-spacing: .04em; color: var(--mat-text-muted); }
+.dt-sh-morerow { padding-left: calc(34px + var(--mat-space-3)); }
+.dt-sh-more { margin-left: calc(-1 * var(--mat-space-2)); }
+
+/* ---- the link ---- */
+.dt-sh-link { padding: var(--mat-space-4); background: var(--mat-surface-2); border: 1px solid var(--mat-border); border-radius: var(--mat-radius-lg); }
+.dt-sh-opt { display: flex; align-items: center; justify-content: space-between; gap: var(--mat-space-3); flex-wrap: wrap; }
+.dt-sh-opt__label { font-size: var(--mat-fs-sm); color: var(--mat-text-muted); }
+.dt-sh-opt .mat-select, .dt-sh-opt .dt-sh-date { width: auto; min-width: 11rem; }
+.dt-sh-urlrow { display: flex; gap: var(--mat-space-2); align-items: center; }
+.dt-sh-url { flex: 1 1 auto; min-width: 0; font-size: var(--mat-fs-sm); }
+.dt-sh-copy { flex: none; white-space: nowrap; }
+.dt-sh-linkmeta { display: flex; align-items: center; justify-content: space-between; gap: var(--mat-space-3); flex-wrap: wrap; }
+.dt-sh-grants { font-size: var(--mat-fs-sm); }
+.dt-sh-expired { margin: 0; }
+
+/* ---- requests ---- */
+.dt-sh-request { align-items: flex-start; }
+.dt-sh-request__msg { margin-top: 2px; font-size: var(--mat-fs-sm); color: var(--mat-text); overflow-wrap: anywhere; white-space: pre-wrap; }
+.dt-sh-request__btns { flex: none; display: flex; gap: var(--mat-space-2); }
+
+/* ---- the page "Zugriff anfordern" ---- */
+.dt-share-noaccess__hint { margin: var(--mat-space-2) 0 var(--mat-space-4); }
+
+/* ---- phones ---- */
+@media (max-width: 599px) {
+  .dt-sh-addrow { grid-template-columns: 1fr; }
+  .dt-sh-go { justify-content: center; }
+  .dt-sh-row__perm { min-width: 8.5rem; }
+  .dt-sh-urlrow { flex-direction: column; align-items: stretch; }
+  .dt-sh-request { flex-wrap: wrap; }
+  .dt-sh-request__btns { width: 100%; padding-left: calc(34px + var(--mat-space-3)); }
+  .dt-sh-opt .mat-select, .dt-sh-opt .dt-sh-date { flex: 1 1 auto; }
+}
+@media (pointer: coarse) {
+  .dt-share input, .dt-share select { font-size: 16px; }
+  .dt-sh-search { height: 36px; }
+  .dt-sh-chip__x { width: 28px; height: 28px; }
+  .dt-sh-option { min-height: 44px; }
+}
+
+/* ==========================================================================
+   The editor top bar: "Teilen" (primary), "Kopie erstellen" (somebody who may only look), the avatars of the people with access and of those who have the design open now.
+   ========================================================================== */
+.dt-top__people { display: inline-flex; align-items: center; flex: none; margin-left: var(--mat-space-2); }
+.dt-top__people[hidden] { display: none; }
+.dt-people__stack { display: inline-flex; align-items: center; padding: 3px 4px; border: 0; border-radius: 999px; background: transparent; color: inherit; cursor: pointer; }
+.dt-people__stack:hover { background: var(--mat-surface-3); }
+.dt-people__stack:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-person { position: relative; display: inline-flex; flex: none; }
+.dt-person + .dt-person, .dt-person + .dt-person__more { margin-left: -4px; }
+.dt-person .dt-sh-av, .dt-person__more { box-shadow: 0 0 0 2px var(--mat-surface); }
+.dt-person__dot { right: -3px; bottom: -3px; width: 10px; height: 10px; }
+.dt-person__more { --dt-av: var(--mat-surface-3); color: var(--mat-text); }
+.dt-top__share, .dt-top__copy { flex: none; margin-left: var(--mat-space-1); }
+.dt-top__share .mat-icon, .dt-top__copy .mat-icon { width: 1rem; height: 1rem; }
+@media (max-width: 899px) { .dt-top__people { display: none; } }
+@media (max-width: 767px) {
+  .dt-top__share span, .dt-top__copy span { display: none; }
+  .dt-top__share, .dt-top__copy { min-width: var(--mat-control-h); padding-inline: 0; justify-content: center; }
+}

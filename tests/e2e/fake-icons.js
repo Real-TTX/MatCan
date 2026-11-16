@@ -3,8 +3,8 @@
 // api.iconify.design and api.fontsource.org on 2026-10-26, see docs/PLAN-CATALOGS.md "C3 status"); the icon bodies in fixtures/iconify.json ARE real bodies of mdi (Apache-2.0), tabler (MIT),
 // ph (MIT) and fa7-solid (CC BY 4.0, Font Awesome Free), fetched once; the fonts are the bundled ones served under other names (the families have made-up names where a real one could be bundled too: a family that the app has already is not added again).
 //
-//   Iconify    GET /collections  /collection?prefix=  /search?query&limit&start&prefix|prefixes  /{prefix}.json?icons=a,b        set the base address to the fake: DESIGNTHIX__Catalogs__iconify__BaseUrl
-//   Fontsource GET /v1/fonts   and the files at /files/{id}@latest/latin-{weight}-{style}.woff2 (a TTF of the bundled fonts: the app goes by the bytes)       DESIGNTHIX__Catalogs__googlefonts__BaseUrl
+//   Iconify    GET /collections  /collection?prefix=  /search?query&limit&start&prefix|prefixes  /{prefix}.json?icons=a,b        set the base address to the fake: MATCAN__Catalogs__iconify__BaseUrl
+//   Fontsource GET /v1/fonts   and the files at /files/{id}@latest/latin-{weight}-{style}.woff2 (a TTF of the bundled fonts: the app goes by the bytes)       MATCAN__Catalogs__googlefonts__BaseUrl
 //
 // Special words in a search: "limit" (429 with Retry-After 120), "down" (500). Sets that must never be offered are in the list of /collections too: a set with colours (noto), a share-alike set,
 // a non-commercial one and a GPL one; a search that asks for the word "leck" is answered with their icons as well (the app must not show them). /__stats counts what was asked.
@@ -112,7 +112,7 @@ function handle(req, res, ctx) {
     const entry = FONTS.find(f => f[0] === file[1]);
     if (!entry) { res.writeHead(404); res.end(); return true; }
     count('fontsource:file');
-    const fontsDir = path.join(__dirname, '..', '..', 'src', 'DesignThix', 'wwwroot', 'fonts');
+    const fontsDir = path.join(__dirname, '..', '..', 'src', 'MatCan', 'wwwroot', 'fonts');
     const list = JSON.parse(fs.readFileSync(path.join(fontsDir, 'fonts.json'), 'utf8'));
     const bundled = list.find(f => f.family === entry[6] && f.style === 'normal') || list[0];
     const body = fs.readFileSync(path.join(fontsDir, bundled.file));

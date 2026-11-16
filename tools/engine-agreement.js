@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* Writes tests/DesignThix.Tests/Core/EngineAgreementDocuments.cs: documents (hostile, old, new element types) together with what DtEngine.normalize makes of them.
+/* Writes tests/MatCan.Tests/Core/EngineAgreementDocuments.cs: documents (hostile, old, new element types) together with what DtEngine.normalize makes of them.
    The unit tests (DocumentValidatorTests.Validator_agrees_with_the_engine) feed the same documents to the C# DocumentValidator and compare the two results property by property,
    so the engine (wwwroot/js/dt-engine.js, the reference) and the server cannot drift apart. Re-run it, and the tests, whenever the rules of normalize change.
    Run: node tools/engine-agreement.js            (needs no browser: the engine runs in a node context)
@@ -10,8 +10,8 @@ const path = require('path');
 const vm = require('vm');
 
 const root = path.join(__dirname, '..');
-const engineFile = path.join(root, 'src', 'DesignThix', 'wwwroot', 'js', 'dt-engine.js');
-const outFile = path.join(root, 'tests', 'DesignThix.Tests', 'Core', 'EngineAgreementDocuments.cs');
+const engineFile = path.join(root, 'src', 'MatCan', 'wwwroot', 'js', 'dt-engine.js');
+const outFile = path.join(root, 'tests', 'MatCan.Tests', 'Core', 'EngineAgreementDocuments.cs');
 
 const sandbox = { console };
 sandbox.globalThis = sandbox;
@@ -153,7 +153,7 @@ const lines = [
   '// Produced by tools/engine-agreement.js, which loads wwwroot/js/dt-engine.js and prints JSON.stringify(DtEngine.normalize(doc)) for each document.',
   '// Re-run it (node tools/engine-agreement.js) when the engine changes its rules, then run the tests.',
   '// </auto-generated>',
-  'namespace DesignThix.Tests.Core;',
+  'namespace MatCan.Tests.Core;',
   '',
   'internal static partial class EngineAgreementData',
   '{',

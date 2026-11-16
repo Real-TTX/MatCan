@@ -20,7 +20,7 @@ const base = (args.find(a => /^https?:/.test(a)) || 'http://localhost:3066').rep
 const email = argValue('--email', process.env.DT_EVAL_EMAIL || '');
 const password = argValue('--password', process.env.DT_EVAL_PASSWORD || '');
 const label = argValue('--label', 'run');
-const out = path.resolve(argValue('--out', path.join(os.tmpdir(), 'designthix-ai-eval')), label);
+const out = path.resolve(argValue('--out', path.join(os.tmpdir(), 'matcan-ai-eval')), label);
 const concurrency = Number(argValue('--concurrency', '3'));
 const timeoutMinutes = Number(argValue('--timeout', '25'));
 const only = argValue('--only', '') ? argValue('--only', '').split(',') : null;

@@ -1,6 +1,6 @@
 # The editor (Designs/Designer): architecture
 
-The editor is the Canva-style heart of DesignThix (`docs/PLAN-CANVA.md` §1 items 4 to 19). `Pages/Designs/Designer.cshtml` is only the frame (top bar, rail, panel,
+The editor is the Canva-style heart of MatCan (`docs/PLAN-CANVA.md` §1 items 4 to 19). `Pages/Designs/Designer.cshtml` is only the frame (top bar, rail, panel,
 toolbar, canvas, page strip, tab bar); the scripts in `wwwroot/js/designer*.js` build everything else with DOM APIs (no `innerHTML`, no inline style: data goes in through
 `textContent`, attributes and the CSSOM). The document is the normalised schema 2 document of `DtEngine` (pages, groups); the engine draws it, nothing else does.
 Styles: `wwwroot/css/designer.css` (+ `dt-media.css` for the media browser), MatUi tokens only, flat (borders; only menus, popovers and dialogs have the MatUi shadow).

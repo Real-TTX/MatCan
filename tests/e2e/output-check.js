@@ -18,8 +18,8 @@ const { demoDocument, demoRows } = require('./demo-label.js');
 const args = process.argv.slice(2);
 const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignoreUrl: /\/api\/outputs\/99999999\/payload|handler=Export/ });
 const outIndex = args.indexOf('--out');
-const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'designthix-output-check'));
-const fontFile = path.resolve(__dirname, '../../src/DesignThix/wwwroot/fonts/BebasNeue-Regular.ttf');
+const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'matcan-output-check'));
+const fontFile = path.resolve(__dirname, '../../src/MatCan/wwwroot/fonts/BebasNeue-Regular.ttf');
 
 const results = [];
 let current = '';
@@ -476,7 +476,7 @@ const runFacts = page => page.evaluate(() => {
   const [exp] = await Promise.all([page.waitForEvent('download'), page.click('a:has-text("Exportieren")')]);
   const exportBytes = fs.readFileSync(await exp.path());
   const exported = JSON.parse(exportBytes.toString('utf8'));
-  check('the export file has the frame of the format', exported.format === 'designthix-design' && exported.version === 2 && exported.document.schema === 2 && Array.isArray(exported.document.pages) && exported.name === 'Export-Quelle ' + stamp && exported.document && exported.document.width === 150, exp.suggestedFilename());
+  check('the export file has the frame of the format', exported.format === 'matcan-design' && exported.version === 2 && exported.document.schema === 2 && Array.isArray(exported.document.pages) && exported.name === 'Export-Quelle ' + stamp && exported.document && exported.document.width === 150, exp.suggestedFilename());
   check('the file is named *.dtx.json', /\.dtx\.json$/.test(exp.suggestedFilename()), exp.suggestedFilename());
   const keys = exported.assets.map(a => a.key).sort();
   check('assets: only what the document uses (flags, seals, our logo) with base64 and type', keys.includes(logoKey) && keys.includes('flag-de') && keys.includes('icon-bio') && !keys.includes('flag-fr') && exported.assets.every(a => a.base64 && a.contentType && a.name && a.category), keys.join(','));
@@ -518,11 +518,11 @@ const runFacts = page => page.evaluate(() => {
   const refused = async (label, bytes) => { const r = await importFile(Buffer.isBuffer(bytes) ? bytes : Buffer.from(bytes)); check('refused: ' + label, !r.ok && /mat-error|Datei|Medium|Schrift|Design|Version/.test(r.text), r.text.replace(/\s+/g, ' ').slice(-200)); };
   await refused('not JSON', 'das ist kein JSON');
   await refused('wrong format', JSON.stringify({ format: 'something', version: 1, document: {} }));
-  await refused('newer version', JSON.stringify({ format: 'designthix-design', version: 99, name: 'x', document: { width: 10, height: 10 } }));
-  await refused('an asset that is not an image', JSON.stringify({ format: 'designthix-design', version: 1, name: 'x', document: { width: 10, height: 10 }, assets: [{ key: 'evil', name: 'x', category: 'Icons', contentType: 'image/png', base64: Buffer.from('MZ not an image').toString('base64') }] }));
-  await refused('an SVG with a DTD', JSON.stringify({ format: 'designthix-design', version: 1, name: 'x', document: { width: 10, height: 10 }, assets: [{ key: 'bomb', name: 'x', category: 'Icons', contentType: 'image/svg+xml', base64: Buffer.from('<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY a "aaaa">]><svg xmlns="http://www.w3.org/2000/svg"><text>&a;</text></svg>').toString('base64') }] }));
-  await refused('a font that is no font', JSON.stringify({ format: 'designthix-design', version: 1, name: 'x', document: { width: 10, height: 10 }, fonts: [{ family: 'Evil', weight: '400', style: 'normal', format: 'ttf', base64: Buffer.from('not a font at all').toString('base64') }] }));
-  const hostile = await importFile(Buffer.from(JSON.stringify({ format: 'designthix-design', version: 1, name: 'Feind ' + stamp, document: { width: 20, height: 20, elements: [{ type: 'text', text: '<img src=x onerror=alert(1)>', fontFamily: 'a"};body{display:none}', fontSize: 12 }] }, assets: [{ key: 'svg-' + stamp, name: 'S', category: 'Icons', contentType: 'image/svg+xml', base64: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" onload="alert(1)"><script>alert(1)</script><rect width="10" height="10"/></svg>').toString('base64') }] })));
+  await refused('newer version', JSON.stringify({ format: 'matcan-design', version: 99, name: 'x', document: { width: 10, height: 10 } }));
+  await refused('an asset that is not an image', JSON.stringify({ format: 'matcan-design', version: 1, name: 'x', document: { width: 10, height: 10 }, assets: [{ key: 'evil', name: 'x', category: 'Icons', contentType: 'image/png', base64: Buffer.from('MZ not an image').toString('base64') }] }));
+  await refused('an SVG with a DTD', JSON.stringify({ format: 'matcan-design', version: 1, name: 'x', document: { width: 10, height: 10 }, assets: [{ key: 'bomb', name: 'x', category: 'Icons', contentType: 'image/svg+xml', base64: Buffer.from('<?xml version="1.0"?><!DOCTYPE svg [<!ENTITY a "aaaa">]><svg xmlns="http://www.w3.org/2000/svg"><text>&a;</text></svg>').toString('base64') }] }));
+  await refused('a font that is no font', JSON.stringify({ format: 'matcan-design', version: 1, name: 'x', document: { width: 10, height: 10 }, fonts: [{ family: 'Evil', weight: '400', style: 'normal', format: 'ttf', base64: Buffer.from('not a font at all').toString('base64') }] }));
+  const hostile = await importFile(Buffer.from(JSON.stringify({ format: 'matcan-design', version: 1, name: 'Feind ' + stamp, document: { width: 20, height: 20, elements: [{ type: 'text', text: '<img src=x onerror=alert(1)>', fontFamily: 'a"};body{display:none}', fontSize: 12 }] }, assets: [{ key: 'svg-' + stamp, name: 'S', category: 'Icons', contentType: 'image/svg+xml', base64: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" onload="alert(1)"><script>alert(1)</script><rect width="10" height="10"/></svg>').toString('base64') }] })));
   check('a hostile SVG in a file is cleaned like an upload', hostile.ok);
   const hostileSvg = await page.evaluate(async k => (await fetch('/media/' + k)).text(), 'svg-' + stamp);
   check('the stored SVG has no script and no handler', !/script|onload/i.test(hostileSvg) && /rect/.test(hostileSvg), hostileSvg.slice(0, 200));

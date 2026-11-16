@@ -11,7 +11,7 @@
 // the fake server of ai-check.js, makes a profile through the admin pages, shows the preview of an import (nothing is applied) and removes the profile again. The shots of the design assistant
 // (plan 4) use the same fake model: the prompt on the start page, the editor after a run (the panel KI with its log) and the sheet on a phone; the design they make is deleted again. With --no-ai all
 // of these are skipped; --ai-only makes just the three shots of the design assistant (for a stack that is clean otherwise; the other shots stay as they are). --catalogs-only makes just the four shots of the
-// catalogues (catalogs-admin, catalogs-icons, catalogs-fonts, catalogs-photos; plan 5): the app needs DESIGNTHIX__Catalogs__<pexels|iconify|googlefonts>__BaseUrl = the fake of fake-catalogs.js (port 3073).
+// catalogues (catalogs-admin, catalogs-icons, catalogs-fonts, catalogs-photos; plan 5): the app needs MATCAN__Catalogs__<pexels|iconify|googlefonts>__BaseUrl = the fake of fake-catalogs.js (port 3073).
 //
 // The platform shots (docs/PLAN-PLATFORM.md) need people: the administrator makes four members (Mia Hofmann, Jonas Weber, Lea Schneider, Tim Brandt), Mia makes the team "Team Marketing", folders and
 // designs from the templates, the others share, comment and ask for access. Everything the platform shots made is removed again at the end (the team by its owner, the accounts by the administrator
@@ -300,14 +300,14 @@ async function aiShots(page, admin, browser, listId, shot) {
 }
 
 // ---------------------------------------------------------------------------------------- the catalogues (plan 5)
-// Needs the app to know the fake catalogues: DESIGNTHIX__Catalogs__<pexels|iconify|googlefonts>__BaseUrl = http://127.0.0.1:<catalog port, 3073> (--catalog-port). Without them the shots are skipped.
+// Needs the app to know the fake catalogues: MATCAN__Catalogs__<pexels|iconify|googlefonts>__BaseUrl = http://127.0.0.1:<catalog port, 3073> (--catalog-port). Without them the shots are skipped.
 // The script starts fake-catalogs.js itself, switches the three catalogues on through the admin pages and off again, and removes the copy of the template it made.
 async function catalogShots(browser, page) {
   const catalogPort = Number(argValue('--catalog-port', '3073'));
   for (const id of ['pexels', 'iconify', 'googlefonts']) {
     await page.goto(base + '/Admin/Catalogs/Edit?id=' + id);
     if (!/in der Konfiguration festgelegt/.test(await page.textContent('body'))) {
-      console.log(`(the app does not know the fake catalogues: start it with DESIGNTHIX__Catalogs__<pexels|iconify|googlefonts>__BaseUrl=http://127.0.0.1:${catalogPort}; the shots of the catalogues are skipped)`);
+      console.log(`(the app does not know the fake catalogues: start it with MATCAN__Catalogs__<pexels|iconify|googlefonts>__BaseUrl=http://127.0.0.1:${catalogPort}; the shots of the catalogues are skipped)`);
       return;
     }
   }

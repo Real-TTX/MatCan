@@ -1,0 +1,22 @@
+@inject IconSprite Sprite
+@{
+    // The layout of the pages of a link (Share/View): no menu, no sign-in needed, always the dark neutral look (the design is the only colourful thing on the page), never indexed.
+    // The service worker is not registered here (no data-sw): a public page is not kept for offline use.
+    var shell = ShellFactory.Bare("dark");
+    var title = ViewData["Title"] as string ?? "MatCan";
+    ViewData["Robots"] = "noindex, nofollow";
+    ViewData["Styles"] = new[] { "/css/public-view.css" };
+}
+<!DOCTYPE html>
+<html lang="de" data-app="matcan" @Html.Raw(shell.RootAttributes) class="dt-pv-page"
+      data-dlg-ok="OK" data-dlg-cancel="Abbrechen" data-dlg-close="Schließen" data-dlg-confirm="Bitte bestätigen" data-dlg-notice="Hinweis" data-dlg-input="Eingabe">
+<partial name="_Head" model="(shell, title)" />
+<body class="dt-pv-body">
+    @Html.Raw(Sprite.Html)
+
+    @RenderBody()
+
+    <script src="~/ui/matui.js?v=@Sprite.Hash"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,35 @@
+@page
+@inject IconSprite Sprite
+@{
+    // Reached through the version number at the bottom of the menu.
+    ViewData["Title"] = "Über MatCan";
+    ViewData["PageSub"] = "Version, Bausteine und Lizenzen.";
+    ViewData["Crumbs"] = Crumbs.Of(("Über MatCan", null));
+    ViewData["Width"] = "narrow";
+    var version = AppVersion.Current;
+    var channel = version.StartsWith("nightly", StringComparison.Ordinal) ? "Entwicklung (Branch dev)" : version.StartsWith("local", StringComparison.Ordinal) ? "Lokaler Build" : "Release (Branch main)";
+}
+
+<dt-card title="MatCan" icon="palette">
+    <div class="mat-auth__brand">@Ui.Logo("lg")</div>
+    <p>Gestalte Etiketten, Karten, Flyer, Poster und Beiträge für soziale Medien im Designer, starte mit fertigen Vorlagen und lade oder drucke das Ergebnis. Bei Bedarf befüllst du ein Design über Platzhalter aus Datenlisten: ein Design, viele Etiketten. Läuft offline-fähig als installierbare App für Desktop und Handy.</p>
+    <dl class="mat-kv">
+        <dt>Version</dt><dd class="mat-mono">@version</dd>
+        <dt>Kanal</dt><dd>@channel</dd>
+        <dt>Laufzeit</dt><dd>@System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription</dd>
+        <dt>Design</dt><dd>MatUi @Sprite.MatUiVersion aus MatDesign</dd>
+        <dt>Autor</dt><dd>Matthias Schmoldt</dd>
+    </dl>
+</dt-card>
+
+<dt-card title="Bausteine und Lizenzen" icon="book">
+    <ul class="dt-steps">
+        <li>ASP.NET Core, Entity Framework Core (MIT) mit Npgsql und PostgreSQL</li>
+        <li>MatUi aus MatDesign; Symbole von Lucide (ISC)</li>
+        <li>Die Icon-Bibliothek des Designers (rund 1&nbsp;900 Icons) stammt von <a href="https://lucide.dev" rel="noopener noreferrer">Lucide</a> (ISC-Lizenz, zum Teil MIT von Feather); der Lizenztext liegt unter <a href="/lib/LICENSE-lucide.txt">/lib/LICENSE-lucide.txt</a></li>
+        <li>QRCoder (MIT)</li>
+        <li>Mitgelieferte Schriften unter der SIL Open Font License, Roboto Slab und Permanent Marker unter Apache 2.0 (die Lizenztexte liegen bei den Schriften)</li>
+        <li>Mitgelieferte Flaggen und Siegel: eigene Zeichnungen, ohne geschützte Zeichen</li>
+    </ul>
+    <p class="mat-muted"><a href="/llms.txt">llms.txt</a> · <a href="/robots.txt">robots.txt</a></p>
+</dt-card>

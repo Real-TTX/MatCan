@@ -1,0 +1,8 @@
+@page
+@model MatCan.Pages.Brand.IndexModel
+
+@if (Model.Switch is not null)
+{
+    <partial name="_LinkTabs" model="Model.Switch" />
+}
+<partial name="_BrandKit" model="Model.View" />

@@ -1,6 +1,6 @@
-# DesignThix – plan 3: a platform
+# MatCan – plan 3: a platform
 
-Plan 2 (`PLAN-CANVA.md`) made DesignThix a Canva-like design tool for one shared workspace. Plan 3 turns it into a **platform**: every person
+Plan 2 (`PLAN-CANVA.md`) made MatCan a Canva-like design tool for one shared workspace. Plan 3 turns it into a **platform**: every person
 has an own area, people work together in **teams**, and designs, folders and data lists are **shared** with people, teams or by link.
 Owner decisions (2026-10-25):
 
@@ -216,7 +216,7 @@ with toolbar/pager, `PermissionTests`.
 ## 5. Phases (Sonnet agents; the planner reviews, looks at screenshots and commits after each)
 
 **P1 – Foundation** (alone; owns `Data/**`, the migration, `Logic/Access.cs`, `Logic/Biz.cs`, every existing logic class, `Services/StartupFixes`,
-`Services/*Seeder`, endpoints' access checks, `/media` + `/fonts` + thumbnail serving, `tests/DesignThix.Tests/**`).
+`Services/*Seeder`, endpoints' access checks, `/media` + `/fonts` + thumbnail serving, `tests/MatCan.Tests/**`).
 Entities + migration `Platform` + the data migration of §6, `Access` with `Visible<T>` and levels, `NotFoundException` → 404, roles Admin/Member
 (policies: `Admin`, `SignedIn`; the `Designer` policy disappears; viewer-only UI switches now come from the item level, pass `CanEdit` etc. to the
 pages from the logic), personal space on user creation (setup, admin create), asset capability serving + key rule on save + `ItemAssetRef`,
@@ -237,7 +237,7 @@ search over visible items. The Teilen menu entries call `window.DtShare.open` (P
 **P3 – Sharing** (after P1, parallel to P2 with disjoint files; owns `js/share.js`, `Pages/Shared/**`, `Pages/Share/**` (public view + no access),
 `js/public-view.js`, `designer.share.js`, the editor top bar Teilen button and read-only "Kopie erstellen", presence, access requests UI,
 `tests/e2e/share-check.js`). §1 items 6–11. Public view must look as good as the editor preview (dark neutral background, centred pages, logo
-small, "Erstellt mit DesignThix").
+small, "Erstellt mit MatCan").
 
 **P4 – Teams, accounts, administration, mail, notifications** (after P2 and P3; owns `Pages/Teams/**`, `Pages/Account/Register|Invite|Pending|
 Notifications`, `Pages/Admin/**` changes, `js/notify.js`, `Services/Mail/**`, `tests/e2e/teams-check.js`). §1 items 12–17. Team page "Projekte"
@@ -326,7 +326,7 @@ per-item audit trail beyond the existing activity log and design history.
 
 ## P6 status (what the result does differently)
 
-- **Migration on a copy of the real database** (2026-10-26, local stack at the state of plan 2: one EF migration `Initial`, three users, no two-factor): `pg_dump -Fc` of `designthix` into a new database, the app started from source against the copy, the original untouched (the counts of the original were identical before and after). The start applied `Platform` and `Comments` and ran `PlatformMigration` without an error; a second start applied nothing.
+- **Migration on a copy of the real database** (2026-10-26, local stack at the state of plan 2: one EF migration `Initial`, three users, no two-factor): `pg_dump -Fc` of `matcan` into a new database, the app started from source against the copy, the original untouched (the counts of the original were identical before and after). The start applied `Platform` and `Comments` and ran `PlatformMigration` without an error; a second start applied nothing.
   Counts before and after, equal: users 3, designs 459 live (517 rows with the soft deleted; 10 templates and 449 of the people), data lists 79 (89 rows), data rows 3 001, output jobs 57, images 345 (36 built in, 309 uploads), fonts 21 (17 built in, 4 own), sheet layouts 6 (built in), history entries 859, log 2 067 (+3 for the sign-ins of the look), AI runs 126.
   Result: users Admin / Member / Member (all Approved), a personal area each (Owner), the team "Gemeinsamer Bereich" (`gemeinsamer-bereich`) with admin Owner, `k2designer` Editor, `k2viewer` Viewer; every design, list, job, upload and own font of the people in the team (449 + 79 + 57 + 309 + 4), the ten templates, the built-in images, fonts and sheets with `SpaceId` null (system), the `Brand` setting in the team, `ItemAssetRef` filled (212 designs with 579 keys, 69 lists with 492 keys), `Platform.Migrated` set. `admin@example.com` signs in (it has no second factor); the member `k2viewer` opens the team read-only and gets 403 on its settings; start page, Projekte, the team page and a design in the editor looked as they should (screenshots at 1440 looked at, no console error).
   The copy was dropped afterwards; nothing of the local stack was changed.

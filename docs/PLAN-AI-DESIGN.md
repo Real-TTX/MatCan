@@ -1,4 +1,4 @@
-# DesignThix plan 4: KI-Design (the AI designs and adapts, and you watch it work)
+# MatCan plan 4: KI-Design (the AI designs and adapts, and you watch it work)
 
 Plan 4 follows plan 3 (`docs/PLAN-PLATFORM.md`, P1 to P6) and comes before plan 5 (Kataloge). Where it differs from the earlier plans, this one wins.
 The owner's words: *"Ich möchte aktuelle Designs anpassen können"*, *"die Möglichkeit Bilder hochzuladen oder Anhänge zu machen (für Daten, Bilder, Referenzen usw.)"*,
@@ -6,7 +6,7 @@ The owner's words: *"Ich möchte aktuelle Designs anpassen können"*, *"die Mög
 
 The model is MatCMS's AI assistant (`../MatCMS`, `CLAUDE.md` section "The AI assistant", `Services/Assistant/*`, `wwwroot/js/ai-assistant.js`): a **server-side agent loop**
 whose model answers one JSON object per call (`{ message, actions: [{ tool, args }], done }`), tools that read and write, **every step written to a table as it happens and
-polled by the browser**, writes go live, **undo per run**. DesignThix takes that and adds what MatCMS lacks: the canvas IS the live preview, the text of the model appears
+polled by the browser**, writes go live, **undo per run**. MatCan takes that and adds what MatCMS lacks: the canvas IS the live preview, the text of the model appears
 while it is written, and the model can look at the page it drew.
 
 ## Status
@@ -215,7 +215,7 @@ Built as planned: entities + migration `AiDesign`, `AiAgentRunner`, the loop, `A
 - **Create flow**: `POST /api/ai/designs/new` (multipart) makes the design (preset key, `auto` = the model picks a format with `resize_design`, or `custom`) and the first run; the answer carries `url = /Designs/{id}/Designer?ai={conversationId}`.
 - **Steps API**: `Message` steps (the raw answer) are not returned by `GET .../steps`; kinds are `user|assistant|action|info|error|end`. `partial` is memory only (`AiPartialStore`).
 - **`look`**: only when the editor polled within 12 s (`AiRenderBroker.Touch`), else the tool answers that no editor is connected. The picture rides on the next call only.
-- **IconSearch**: `Logic/IconSearch.cs` reads `lib/icons.json` and the word list out of `designer.icons-de.js`; the fixture `tests/DesignThix.Tests/Fixtures/icon-search.json` (92 queries) is made by `tools/icon-search-fixture.js` and the test re-runs node when it is installed.
+- **IconSearch**: `Logic/IconSearch.cs` reads `lib/icons.json` and the word list out of `designer.icons-de.js`; the fixture `tests/MatCan.Tests/Fixtures/icon-search.json` (92 queries) is made by `tools/icon-search-fixture.js` and the test re-runs node when it is installed.
 - **Fake model**: `AiTestSeam.Script/Respond` for tests; `tests/e2e/fake-ai.js` "agent" mode for browser checks (scenarios in its header and in `tests/e2e/README.md`).
 
 ## A2 status (editor and create flow built; where the result differs from the plan)
@@ -303,13 +303,13 @@ Budgets: a run now costs about 100 000 tokens (was 30 000), so the defaults of s
 | r3 | all 33 | + partial-plate rule, English, vague, round label | 7.0 / 2.8 / 95k | 25 of 33 | 33 of 33 Done |
 | r4 (last) | all 33 | final code | 6.6 / 2.8 / 87k | 25 of 33 | 32 of 33 Done; one run stuck on a model answer with a missing brace (then `Diagnose` was added) |
 
-Contact sheets (`C:\Users\Matthias\AppData\Local\Temp\claude\C--Users-Matthias-Desktop-Development-DesignThix\6c3b35fe-705d-4371-aa40-9fefc374e299\scratchpad\aieval\out\`): **first round** `r0-baseline\contact-1.png`, `contact-2.png`; **last round** `r4\contact-1.png` to `contact-5.png`. In all about 130 real runs and 10.8 million tokens went through the copy (the baseline, the rounds, smoke tests and a few single runs while fixing).
+Contact sheets (`C:\Users\Matthias\AppData\Local\Temp\claude\C--Users-Matthias-Desktop-Development-MatCan\6c3b35fe-705d-4371-aa40-9fefc374e299\scratchpad\aieval\out\`): **first round** `r0-baseline\contact-1.png`, `contact-2.png`; **last round** `r4\contact-1.png` to `contact-5.png`. In all about 130 real runs and 10.8 million tokens went through the copy (the baseline, the rounds, smoke tests and a few single runs while fixing).
 
 What the pictures showed and what was done about it: the first template-first results kept the template's layout but left gaps where elements were deleted (rule: close gaps, enlarge boxes, move things up); the model left "Anna & Jonas", "12. Juni" and "Musterstadt" from the templates (the review names them, the rule says template times, places, contacts, programme points and prices are never the person's); a title lay half on a yellow disc (rule "partly on a plate"); text lay on a flourish (ornaments, dividers and corners carry no text); a "Logo-Feld" was an invisible empty frame (rule: a Logo-Feld is an image field bound with `source.field`); the review asked for things that were no problem (the thresholds were tuned against the 690 templates and the request text is taken into account).
 
 ### The ChatGPT sign-in of a copy (what was done and what to do next time)
 
-A ChatGPT refresh token **rotates and is valid once**: a refresh in a copy would kill the owner's sign-in. The copy was made like this: `pg_dump` of the database into a new database (`designthix_aieval`), `docker cp` of the data folder, then the stored sign-in in the copy was opened with the key ring of the copy (a throw-away `dotnet run tok.cs` file app that used `DataProtection` with `ApplicationName "DesignThix"` and the purpose `DesignThix.AiSecrets.v1`) and its **refresh token was blanked**; the access token (valid until 2026-11-04) stayed. With an empty refresh token `ChatGptAccount.GetAccessTokenAsync` can never call the token endpoint (it answers from the stored access token or marks the copy's sign-in dead without a request), so the copy cannot rotate anything. Checked afterwards: the file in the owner's container has the same SHA-256 and time stamp as before, and the log of the copy has no call of the token endpoint. A new admin of the copy was made with SQL (user and personal area); nothing of the owner's accounts was changed. At the end the database, the data folder (with the sign-in and the key ring) and the dump were deleted.
+A ChatGPT refresh token **rotates and is valid once**: a refresh in a copy would kill the owner's sign-in. The copy was made like this: `pg_dump` of the database into a new database (`matcan_aieval`), `docker cp` of the data folder, then the stored sign-in in the copy was opened with the key ring of the copy (a throw-away `dotnet run tok.cs` file app that used `DataProtection` with `ApplicationName "MatCan"` and the purpose `MatCan.AiSecrets.v1`) and its **refresh token was blanked**; the access token (valid until 2026-11-04) stayed. With an empty refresh token `ChatGptAccount.GetAccessTokenAsync` can never call the token endpoint (it answers from the stored access token or marks the copy's sign-in dead without a request), so the copy cannot rotate anything. Checked afterwards: the file in the owner's container has the same SHA-256 and time stamp as before, and the log of the copy has no call of the token endpoint. A new admin of the copy was made with SQL (user and personal area); nothing of the owner's accounts was changed. At the end the database, the data folder (with the sign-in and the key ring) and the dump were deleted.
 
 ### Decisions and deviations
 

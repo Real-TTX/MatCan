@@ -14,7 +14,7 @@ const path = require('path');
 const args = process.argv.slice(2);
 const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson } = lib(args, { ignoreUrl: /\/api\/designs\/\d+/ });
 const outIndex = args.indexOf('--out');
-const outDir = outIndex >= 0 ? path.resolve(args[outIndex + 1]) : path.join(os.tmpdir(), 'designthix-templates-check');
+const outDir = outIndex >= 0 ? path.resolve(args[outIndex + 1]) : path.join(os.tmpdir(), 'matcan-templates-check');
 fs.mkdirSync(outDir, { recursive: true });
 
 const results = [];

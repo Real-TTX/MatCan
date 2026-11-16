@@ -1,0 +1,32 @@
+@inject IconSprite Sprite
+@inject ShellFactory ShellFactory
+@{
+    // The layout of the designer: no menu, no breadcrumb, no footer and no page scroll. The page fills the window (top bar, panels, canvas);
+    // everything else of the app (theme, dialogs, toasts, offline banner) is the same as in _Layout.
+    var shell = await ShellFactory.BuildAsync();
+    var title = ViewData["Title"] as string ?? "MatCan";
+}
+<!DOCTYPE html>
+<html lang="de" data-app="matcan" data-sw="@(AppVersion.Current)-@(Sprite.Hash)" @Html.Raw(shell.RootAttributes) class="dt-designer-page"
+      data-dlg-ok="OK" data-dlg-cancel="Abbrechen" data-dlg-close="Schließen" data-dlg-confirm="Bitte bestätigen" data-dlg-notice="Hinweis" data-dlg-input="Eingabe"
+      data-msg-required="Bitte fülle dieses Feld aus." data-msg-type="Bitte gib einen gültigen Wert ein." data-msg-pattern="Das Format stimmt nicht." data-copied="Kopiert">
+<partial name="_Head" model="(shell, title)" />
+<body class="dt-designer-body">
+    @Html.Raw(Sprite.Html)
+
+    @RenderBody()
+
+    @if (TempData["Flash"] is string flash)
+    {
+        <div data-toast="@flash" data-tone="success" hidden></div>
+    }
+    @if (TempData["Error"] is string error)
+    {
+        <div data-toast="@error" data-tone="error" hidden></div>
+    }
+
+    <script src="~/ui/matui.js?v=@Sprite.Hash"></script>
+    <script src="~/js/app.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

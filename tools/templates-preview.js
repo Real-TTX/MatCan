@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-/* Renders every page of every built-in template (src/DesignThix/Demo/templates/*.json and the Käsetheke demo) to PNG with the render engine in a real browser
+/* Renders every page of every built-in template (src/MatCan/Demo/templates/*.json and the Käsetheke demo) to PNG with the render engine in a real browser
    (Playwright + the installed Edge), so the templates can be LOOKED at. It needs no running app: a tiny local server hands out the engine, the bundled fonts,
-   the built-in flags and seals and the icon library straight from src/DesignThix/wwwroot.
+   the built-in flags and seals and the icon library straight from src/MatCan/wwwroot.
 
    node tools/templates-preview.js [--out <folder>] [--only slug,slug] [--rows] [--editor] [--width 1100]
-     --out     where the PNG files go (default: <temp>/designthix-templates); file names  <slug>-p<page>[-r<row>].png
+     --out     where the PNG files go (default: <temp>/matcan-templates); file names  <slug>-p<page>[-r<row>].png
      --only    only these slugs (file names without .json; "kaesetheke" is the demo)
      --rows    also one image per sample row (the first page only), to see long names and empty values
      --editor  draw like the editor (dashed placeholders for empty image frames, unknown icons, invalid codes)
@@ -19,13 +19,13 @@ const os = require('os');
 const path = require('path');
 
 const root = path.join(__dirname, '..');
-const wwwroot = path.join(root, 'src', 'DesignThix', 'wwwroot');
-const demoDir = path.join(root, 'src', 'DesignThix', 'Demo');
+const wwwroot = path.join(root, 'src', 'MatCan', 'wwwroot');
+const demoDir = path.join(root, 'src', 'MatCan', 'Demo');
 const { chromium } = require(path.join(root, 'tests', 'e2e', 'node_modules', 'playwright'));
 
 const args = process.argv.slice(2);
 const argValue = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
-const out = path.resolve(argValue('--out', path.join(os.tmpdir(), 'designthix-templates')));
+const out = path.resolve(argValue('--out', path.join(os.tmpdir(), 'matcan-templates')));
 const only = argValue('--only', '') ? argValue('--only', '').split(',') : null;
 const withRows = args.includes('--rows');
 const editor = args.includes('--editor');

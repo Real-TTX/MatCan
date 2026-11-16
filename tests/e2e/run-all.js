@@ -4,7 +4,7 @@
 //   node run-all.js [base url, default http://localhost:3043] [--only engine,pwa,demo,home,projects,templates,lint,designer,canva,content,output,share,comments,teams,ai,aidesign,catalogs] [--quiet] [--fake-host h] [--fake-port p] [--data <data folder of the app>] [--catalog-port p]
 //   (--fake-host / --fake-port go to the AI checks: with the app started by dotnet run on 3053 the default 127.0.0.1 is right, with Docker host.docker.internal is chosen for port 3043;
 //   --data / --catalog-port go to the check of the catalogues: the data folder of the app (for the folder catalogue, else DT_DATA_DIR) and the port of its fake provider, 3073; the app must have been
-//   started with DESIGNTHIX__Catalogs__<example-browse|example-search|pexels|pixabay|openverse>__BaseUrl pointing at that port, see tests/e2e/README.md)
+//   started with MATCAN__Catalogs__<example-browse|example-search|pexels|pixabay|openverse>__BaseUrl pointing at that port, see tests/e2e/README.md)
 //
 // The checks make their own accounts (see lib.js): start from an empty database (./scripts/redeploy.ps1 -Clean) or put the accounts into tests/e2e/test-account.json.
 // They leave test designs, lists and jobs behind: for the screenshots of the README use screens.js on a clean stack, not after this.

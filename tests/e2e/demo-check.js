@@ -16,7 +16,7 @@ const { demoDocument, demoRowsAll, demoMeta } = require('./demo-label.js');
 const args = process.argv.slice(2);
 const { base, problems, watch, launch, newContext, login, ensureAccounts } = lib(args);
 const outIndex = args.indexOf('--out');
-const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'designthix-demo-check'));
+const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'matcan-demo-check'));
 
 const results = [];
 const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); };

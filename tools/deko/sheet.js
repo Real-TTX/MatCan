@@ -10,7 +10,7 @@ const os = require('os');
 const path = require('path');
 
 const root = path.join(__dirname, '..', '..');
-const wwwroot = path.join(root, 'src', 'DesignThix', 'wwwroot');
+const wwwroot = path.join(root, 'src', 'MatCan', 'wwwroot');
 const { chromium } = require(path.join(root, 'tests', 'e2e', 'node_modules', 'playwright'));
 const args = process.argv.slice(2);
 const val = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };

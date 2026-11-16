@@ -14,7 +14,7 @@ const E = require('./editor-lib.js');
 const args = process.argv.slice(2);
 const { base, problems, dialogs, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignore: /status of (403|409)|Failed to load resource: the server responded with a status of 4\d\d/ });
 const outIndex = args.indexOf('--out');
-const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(require('os').tmpdir(), 'designthix-canva-check'));
+const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(require('os').tmpdir(), 'matcan-canva-check'));
 
 const results = [];
 let current = '';
@@ -382,7 +382,7 @@ async function fresh(page, body) {
   const s2 = await state(page);
   const second = s2.elements.find(e => e.id === s2.sel[0]);
   check('a second paste moves further (10 mm)', near(second.x - rect0.x, 10, 0.01));
-  check('the copy is also in localStorage dt-clipboard', await page.evaluate(() => { try { return JSON.parse(localStorage.getItem('dt-clipboard')).designThix === 2; } catch (e) { return false; } }));
+  check('the copy is also in localStorage dt-clipboard', await page.evaluate(() => { try { return JSON.parse(localStorage.getItem('dt-clipboard')).matCan === 2; } catch (e) { return false; } }));
 
   // ---------------------------------------------------------------------------------------- 6. files dropped from the explorer
   current = 'drop: ';

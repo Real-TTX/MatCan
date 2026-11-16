@@ -1,0 +1,36 @@
+@page
+@model MatCan.Pages.Designs.IndexModel
+
+<link rel="stylesheet" href="~/css/designs.css" asp-append-version="true" />
+
+<div class="mat-list" data-view-scope>
+    <partial name="_Toolbar" model="Model.Toolbar" />
+    @if (Model.Items.Count > 0)
+    {
+        <div class="mat-gallery dt-gallery" data-view="gallery">
+            @foreach (var d in Model.Items)
+            {
+                <a class="mat-tile dt-designtile" href="/Designs/Edit/@d.Id">
+                    <span class="mat-tile__media dt-designtile__media">@LibraryUi.DesignThumb(d)</span>
+                    <span class="mat-tile__body">
+                        <span class="mat-tile__title">@d.Name</span>
+                        <span class="mat-tile__meta">@d.Size@(string.IsNullOrEmpty(d.Category) ? "" : " · " + d.Category) · @Fmt.Date(d.UpdateDate)</span>
+                        @if (d.IsTemplate)
+                        {
+                            <span class="dt-designtile__pill">@Ui.Pill("Vorlage", "accent")</span>
+                        }
+                    </span>
+                </a>
+            }
+        </div>
+    }
+    <partial name="_Table" model="Model.Table" />
+    <partial name="_Pager" model="Model.Pager" />
+    <div class="mat-actions">
+        <a class="mat-btn mat-btn--primary" href="/Designs/Create">@Ui.Icon("plus")<span>Design erstellen</span></a>
+        <a class="mat-btn mat-btn--secondary" href="/Designs/Import">@Ui.Icon("upload")<span>Design importieren</span></a>
+    </div>
+</div>
+
+<script src="~/js/dt-engine.js" asp-append-version="true"></script>
+<script src="~/js/designs.js" asp-append-version="true"></script>

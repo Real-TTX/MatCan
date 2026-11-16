@@ -1,0 +1,31 @@
+@using MatCan.Core.Documents
+@model IReadOnlyList<FormatPreset>
+@*
+    "Mehr Formate" of the dialog "Design erstellen" (plan 6): every size that is no tile of the start page, in groups, as a compact list. One click creates the design like a tile does (create.js reads data-format);
+    without script an entry is a link to the page "Design erstellen" with the format chosen. A folded card says so: its size is the open sheet.
+*@
+<details class="dt-moreformats" data-more-formats>
+    <summary class="dt-moreformats__summary">@Ui.Icon("chevron-right")<span>Mehr Formate</span><span class="dt-moreformats__count">@Model.Count</span></summary>
+    <div class="dt-moreformats__groups">
+        @foreach (var group in Model.GroupBy(p => p.Group))
+        {
+            <section class="dt-moreformats__group" aria-label="@group.Key">
+                <h3 class="dt-moreformats__title">@group.Key</h3>
+                <ul class="dt-moreformats__list">
+                    @foreach (var p in group)
+                    {
+                        <li>
+                            <a class="dt-moreformats__item" href="/Designs/Create?format=@p.Key" data-format="@p.Key">
+                                <span class="dt-moreformats__icon">@Ui.Icon(p.Icon)</span>
+                                <span class="dt-moreformats__text">
+                                    <span class="dt-moreformats__name">@p.ShortName</span>
+                                    <span class="dt-moreformats__size">@(string.IsNullOrEmpty(p.Note) ? Fmt.Number((decimal)p.Width, p.Width % 1 == 0 ? 0 : 1) + " × " + Fmt.Number((decimal)p.Height, p.Height % 1 == 0 ? 0 : 1) + " " + p.Unit : p.Note)</span>
+                                </span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </section>
+        }
+    </div>
+</details>

@@ -1,7 +1,7 @@
 {
-  "name": "designthix-e2e",
+  "name": "matcan-e2e",
   "private": true,
-  "description": "Node tooling for DesignThix: Playwright for the browser checks (run-all.js), the screenshots of the README (screens.js) and the icon renderer (tools/icons.js).",
+  "description": "Node tooling for MatCan: Playwright for the browser checks (run-all.js), the screenshots of the README (screens.js) and the icon renderer (tools/icons.js).",
   "scripts": {
     "check": "node run-all.js",
     "screens": "node screens.js"

@@ -5,7 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const wwwroot = path.join(__dirname, '..', '..', 'src', 'DesignThix', 'wwwroot');
+const wwwroot = path.join(__dirname, '..', '..', 'src', 'MatCan', 'wwwroot');
 const args = process.argv.slice(2);
 const only = args.includes('--group') ? args[args.indexOf('--group') + 1].toLowerCase() : null;
 const entries = JSON.parse(fs.readFileSync(path.join(wwwroot, 'builtin', 'builtin.json'), 'utf8')).filter((e) => e.category === 'Deko');

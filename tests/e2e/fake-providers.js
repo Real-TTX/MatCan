@@ -14,7 +14,7 @@
 //
 // Special words in a search: "limit" (429 with Retry-After 120; Pixabay: with the rate headers only), "down" (500), "leer" (nothing), and for Openverse "leck": the provider ignores its own
 // licence filter and sends the NC and ND pictures too (the app must not show them). The provider hosts are the fake's own address, which the operator names with
-// DESIGNTHIX__Catalogs__<pexels|pixabay|openverse>__BaseUrl.
+// MATCAN__Catalogs__<pexels|pixabay|openverse>__BaseUrl.
 const COLOURS = ['red', 'orange', 'yellow', 'green', 'turquoise', 'blue', 'violet', 'pink', 'brown', 'black', 'gray', 'white'];
 const KEYS = { pexels: 'testkey-pexels', pixabay: 'testkey-pixabay', unsplash: 'testkey-unsplash' };
 const CREDENTIALS = { id: 'cid', secret: 'sec', token: 'tok-abc' };

@@ -20,7 +20,7 @@ const { demoDocument } = require('./demo-label.js');
 const args = process.argv.slice(2);
 const argValue = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
 const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignoreUrl: /\/api\/ai\//, ignore: /status of (400|401|403|409|422)/ });
-const outDir = path.resolve(argValue('--out', path.join(os.tmpdir(), 'designthix-ai-check')));
+const outDir = path.resolve(argValue('--out', path.join(os.tmpdir(), 'matcan-ai-check')));
 const fakePort = Number(argValue('--fake-port', '3066'));
 const fakeHost = argValue('--fake-host', /localhost:3043|127\.0\.0\.1:3043/.test(base) ? 'host.docker.internal' : '127.0.0.1');
 

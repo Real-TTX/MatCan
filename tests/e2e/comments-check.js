@@ -17,7 +17,7 @@ const E = require('./editor-lib.js');
 const args = process.argv.slice(2);
 const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignore: /status of (400|403|404|409|429)/ });
 const outIndex = args.indexOf('--out');
-const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'designthix-comments-check'));
+const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'matcan-comments-check'));
 fs.mkdirSync(outDir, { recursive: true });
 
 const results = [];

@@ -1,0 +1,138 @@
+/* ==========================================================================
+   MatCan: the row grid of a data list (js/datalist.js) and its image picker.
+   Rules as in app.css: classes start with dt-, only MatUi tokens for colour, flat (borders instead of shadows), no inline styles.
+   The grid card scrolls sideways inside .dt-grid__scroll, so it works at 390 px; the checkbox column and the header stay in view.
+   ========================================================================== */
+
+.dt-grid { display: flex; flex-direction: column; gap: var(--mat-space-3); min-width: 0; }
+.dt-grid[aria-busy="true"] { cursor: progress; }
+
+/* ---- Bar above and the row tools ---- */
+.dt-grid__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mat-space-2) var(--mat-space-4); }
+.dt-grid__filter { flex: 1 1 14rem; max-width: 24rem; }
+.dt-grid__spacer { flex: 1 1 0; }
+.dt-grid__info { color: var(--mat-text-muted); font-size: var(--mat-fs-sm); font-variant-numeric: tabular-nums; }
+.dt-grid__state { font-size: var(--mat-fs-sm); }
+.dt-grid__state:empty { display: none; }
+.dt-grid__tools { display: flex; flex-wrap: wrap; gap: var(--mat-space-1) var(--mat-space-2); }
+.dt-grid__tools[hidden], .dt-grid__foot[hidden], .dt-grid__note[hidden] { display: none; }
+.dt-grid__alerts:empty { display: none; }
+.dt-grid__note { margin: 0; }
+
+/* ---- The scrolling frame and the table ---- */
+.dt-grid__scroll {
+  overflow: auto;
+  max-height: min(72vh, 48rem);
+  background: var(--mat-surface);
+  border: 1px solid var(--mat-border);
+  border-radius: var(--mat-radius);
+  scroll-padding: 3.5rem 0 0 3rem;
+  overscroll-behavior: contain;
+}
+.dt-grid__scroll:focus-visible { outline: none; box-shadow: var(--mat-focus-ring); }
+.dt-grid__table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: var(--mat-fs-sm); }
+
+.dt-grid__th {
+  position: sticky; top: 0; z-index: 3;
+  background: var(--mat-surface-2);
+  border-bottom: 1px solid var(--mat-border-strong);
+  border-right: 1px solid var(--mat-border);
+  padding: var(--mat-space-2) var(--mat-space-3);
+  text-align: left; font-weight: 600; white-space: nowrap; vertical-align: bottom;
+}
+.dt-grid__th:last-child { border-right: 0; }
+.dt-grid__label { display: inline-flex; align-items: center; gap: var(--mat-space-1); }
+.dt-grid__label .mat-icon { color: var(--mat-text-faint); }
+.dt-grid__key { display: block; font-family: var(--mat-mono); font-weight: 400; color: var(--mat-text-muted); font-size: var(--mat-fs-xs); }
+
+.dt-grid__td {
+  padding: 2px;
+  border-bottom: 1px solid var(--mat-border);
+  border-right: 1px solid var(--mat-border);
+  background: var(--mat-surface);
+  vertical-align: middle;
+}
+.dt-grid__td:last-child { border-right: 0; }
+.dt-grid__row:last-child > .dt-grid__td { border-bottom: 0; }
+
+/* Column widths: the table keeps every column and the frame scrolls (a text cell stays readable on a phone). */
+.dt-grid__th--select, .dt-grid__td--select { width: 2.75rem; min-width: 2.75rem; text-align: center; position: sticky; left: 0; z-index: 2; }
+.dt-grid__th--select { z-index: 4; }
+.dt-grid__th--num, .dt-grid__td--num { width: 2.5rem; min-width: 2.5rem; text-align: right; color: var(--mat-text-muted); font-variant-numeric: tabular-nums; padding-inline: var(--mat-space-2); }
+.dt-grid__th--text, .dt-grid__td--text { min-width: 12rem; }
+.dt-grid__th--multiline, .dt-grid__td--multiline { min-width: 15rem; }
+.dt-grid__th--number, .dt-grid__td--number, .dt-grid__th--price, .dt-grid__td--price { min-width: 7rem; }
+.dt-grid__th--image, .dt-grid__td--image { min-width: 11rem; }
+.dt-grid__th--copies, .dt-grid__td--copies { width: 5.5rem; min-width: 5.5rem; }
+.dt-grid__th--active, .dt-grid__td--active { width: 4rem; min-width: 4rem; text-align: center; }
+.dt-grid__th--tools, .dt-grid__td--tools { width: 1%; white-space: nowrap; }
+@media (min-width: 600px) {
+  .dt-grid__th--num, .dt-grid__td--num { position: sticky; left: 2.75rem; z-index: 2; }
+  .dt-grid.is-readonly .dt-grid__th--num, .dt-grid.is-readonly .dt-grid__td--num { left: 0; }
+  .dt-grid__th--num { z-index: 4; }
+}
+
+.dt-grid input[type="checkbox"] { width: 18px; height: 18px; margin: 0; accent-color: var(--mat-accent); cursor: pointer; vertical-align: middle; }
+.dt-grid input[type="checkbox"]:disabled { cursor: not-allowed; }
+.dt-grid__th--select input { margin: 0; }
+
+/* ---- Cells ---- */
+.dt-grid .dt-cell {
+  display: block; width: 100%; min-width: 0; box-sizing: border-box;
+  min-height: var(--mat-control-h-sm);
+  padding: 0 var(--mat-space-2);
+  background: transparent; border-color: transparent; border-radius: var(--mat-radius-xs); color: var(--mat-text);
+  font-size: var(--mat-fs-sm);
+}
+.dt-grid .dt-cell:hover { border-color: var(--mat-border-strong); }
+.dt-grid .dt-cell:focus, .dt-grid .dt-cell:focus-visible { background: var(--mat-surface); border-color: var(--mat-accent); }
+.dt-grid textarea.dt-cell { padding-block: 7px; line-height: 1.35; resize: none; overflow: auto; height: auto; }
+.dt-grid .dt-grid__num { text-align: right; font-variant-numeric: tabular-nums; }
+.dt-grid .dt-grid__copies { text-align: right; padding-right: var(--mat-space-1); }
+.dt-grid .dt-is-warn { border-color: var(--mat-warning); background: var(--mat-warning-bg); }
+.dt-grid input.dt-cell[readonly], .dt-grid textarea.dt-cell[readonly] { cursor: default; }
+
+.dt-grid .dt-grid__img {
+  display: flex; align-items: center; gap: var(--mat-space-2);
+  font: inherit; text-align: left; color: var(--mat-text); cursor: pointer;
+  padding-block: 2px;
+}
+.dt-grid__img[aria-disabled="true"] { cursor: default; }
+.dt-grid__img.is-empty { color: var(--mat-text-faint); }
+.dt-grid__img.is-unknown { color: var(--mat-warning-text); border-color: var(--mat-warning); background: var(--mat-warning-bg); }
+.dt-grid__imgframe {
+  flex: none; display: grid; place-items: center; width: 2.5rem; height: 1.75rem;
+  background: var(--mat-surface-3); border-radius: var(--mat-radius-xs); overflow: hidden;
+}
+.dt-grid__imgframe img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.dt-grid__imgname { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.dt-grid__rowtools { display: inline-flex; gap: 0; }
+
+/* ---- Row states ---- */
+.dt-grid__row.is-selected > .dt-grid__td { background: var(--mat-accent-soft); }
+.dt-grid__row.is-inactive > .dt-grid__td:not(.dt-grid__td--active):not(.dt-grid__td--select):not(.dt-grid__td--tools) { opacity: .55; }
+
+/* ---- Empty, loading, more ---- */
+.dt-grid__empty > td { padding: var(--mat-space-6) var(--mat-space-4); text-align: center; color: var(--mat-text-muted); }
+.dt-grid__emptybox { display: inline-flex; flex-direction: column; align-items: center; gap: var(--mat-space-2); position: sticky; left: 50%; }
+.dt-grid__loading { padding: var(--mat-space-6) var(--mat-space-4); color: var(--mat-text-muted); text-align: left; }
+.dt-grid__morerow > td { padding: var(--mat-space-2); }
+.dt-grid__morebtn { position: sticky; left: var(--mat-space-2); }
+
+.dt-grid__foot { margin-top: 0; }
+.dt-grid .is-busy { opacity: .7; cursor: progress; }
+
+/* ---- Touch screens and phones: targets of 44 px, inputs of 16 px (no zoom on iOS) ---- */
+@media (pointer: coarse) {
+  .dt-grid .dt-cell { min-height: 44px; }
+  .dt-grid__th--select, .dt-grid__td--select { width: 3rem; min-width: 3rem; }
+  .dt-grid input[type="checkbox"] { width: 22px; height: 22px; }
+  .dt-grid__td--active, .dt-grid__td--select { padding: 0; }
+  .dt-grid__rowtools .mat-btn { min-width: 44px; min-height: 44px; }
+}
+@media (max-width: 599px) {
+  .dt-grid .dt-cell { font-size: 16px; }
+  .dt-grid__filter { max-width: none; flex-basis: 100%; }
+  .dt-grid__scroll { max-height: 68vh; }
+}

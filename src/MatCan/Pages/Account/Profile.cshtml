@@ -1,0 +1,53 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model MatCan.Pages.Account.ProfileModel
+@{
+    ViewData["Width"] = "narrow";
+    var themes = new List<SelectListItem> { new("System", "system"), new("Hell", "light"), new("Dunkel", "dark") };
+}
+
+<form class="mat-form" method="post" asp-page-handler="Profile" novalidate>
+    <dt-card title="Profil" icon="user">
+        <dt-summary />
+        <div class="mat-form__grid">
+            <dt-input for="Profile.DisplayName" label="Name" autocomplete="name" />
+            <dt-input for="Profile.Phone" label="Telefon" type="tel" autocomplete="tel" />
+            <div class="mat-field">
+                <span class="mat-label">E-Mail-Adresse</span>
+                <input class="mat-input" value="@Model.Email" disabled />
+                <span class="mat-hint">Die Adresse ändert die Administration.</span>
+            </div>
+            <dt-select for="Profile.Theme" label="Darstellung" items="themes" hint="Der Knopf unten im Menü stellt das Gleiche ein." />
+            <div class="mat-field">
+                <span class="mat-label">Rolle</span>
+                <input class="mat-input" value="@Labels.Of(Model.Role)" disabled />
+                <span class="mat-hint">@Labels.Describe(Model.Role)</span>
+            </div>
+        </div>
+    </dt-card>
+    <dt-buttons back-href="/" />
+</form>
+
+<form class="mat-form" method="post" asp-page-handler="Mail" novalidate data-mail-settings>
+    <dt-card title="E-Mail-Benachrichtigungen" icon="mail" sub="@(Model.MailReady ? null : "Mailversand nicht eingerichtet")">
+        <p class="mat-hint">@(Model.MailReady ? "Wann möchtest du zusätzlich zur Glocke eine E-Mail?" : "Der Administrator hat den Mailversand noch nicht eingerichtet. Deine Auswahl wird gespeichert und gilt, sobald es soweit ist. Die Glocke und die Seite „Benachrichtigungen“ funktionieren schon jetzt.")</p>
+        <div class="mat-form__grid">
+            <dt-switch for="Notify.Shares" label="E-Mail bei Freigaben" full="true" hint="Jemand teilt ein Design, einen Ordner oder eine Liste mit dir, oder gibt dir Zugriff." />
+            <dt-switch for="Notify.Requests" label="E-Mail bei Zugriffsanfragen" full="true" hint="Jemand möchte etwas sehen oder bearbeiten, was du verwaltest." />
+            <dt-switch for="Notify.Mentions" label="E-Mail bei Erwähnungen" full="true" hint="Jemand erwähnt dich in einem Kommentar oder antwortet dir." />
+            <dt-switch for="Notify.Invitations" label="E-Mail bei Einladungen und neuen Teams" full="true" hint="Einladungen an deine Adresse, angenommene Einladungen und wenn dich jemand in ein Team holt." />
+        </div>
+    </dt-card>
+    <dt-buttons save-text="E-Mail-Einstellungen speichern" back-href="/" />
+</form>
+
+<form class="mat-form" method="post" asp-page-handler="Password" novalidate>
+    <dt-card title="Passwort ändern" icon="lock">
+        <div class="mat-form__grid">
+            <dt-input for="Password.Current" label="Aktuelles Passwort" type="password" autocomplete="current-password" full="true" required="true" />
+            <dt-input for="Password.New" label="Neues Passwort" type="password" autocomplete="new-password" hint="Mindestens 10 Zeichen." />
+            <dt-input for="Password.Repeat" label="Neues Passwort wiederholen" type="password" autocomplete="new-password" />
+        </div>
+    </dt-card>
+    <dt-buttons save-text="Passwort speichern" save-icon="key" back-href="/" />
+</form>

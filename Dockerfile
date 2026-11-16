@@ -12,14 +12,14 @@ WORKDIR /src
 
 # Restore first (better layer caching).
 COPY ["global.json", "Directory.Build.props", "./"]
-COPY ["src/DesignThix.Core/DesignThix.Core.csproj", "src/DesignThix.Core/"]
-COPY ["src/DesignThix/DesignThix.csproj", "src/DesignThix/"]
-RUN dotnet restore "src/DesignThix/DesignThix.csproj"
+COPY ["src/MatCan.Core/MatCan.Core.csproj", "src/MatCan.Core/"]
+COPY ["src/MatCan/MatCan.csproj", "src/MatCan/"]
+RUN dotnet restore "src/MatCan/MatCan.csproj"
 
 COPY src src
 # Fall back to today's date when BuildDate is not supplied, so the version never ends in "-".
 RUN BUILD_DATE="${BuildDate:-$(date -u +%Y%m%d)}" && \
-    dotnet publish "src/DesignThix/DesignThix.csproj" \
+    dotnet publish "src/MatCan/MatCan.csproj" \
     -c Release -o /app/publish --no-restore \
     -p:UseAppHost=false \
     -p:Channel=$Channel -p:BuildNumber=$BuildNumber -p:BuildDate=$BUILD_DATE
@@ -32,8 +32,8 @@ WORKDIR /app
 
 ENV ASPNETCORE_ENVIRONMENT=Production \
     ASPNETCORE_HTTP_PORTS="" \
-    DESIGNTHIX_PORT=3043 \
-    DESIGNTHIX_DATA=/data \
+    MATCAN_PORT=3043 \
+    MATCAN_DATA=/data \
     TZ=Europe/Berlin \
     DOTNET_gcServer=0 \
     DOTNET_TieredPGO=1
@@ -49,6 +49,6 @@ USER $APP_UID
 
 # The app checks itself, so the image needs no extra tools.
 HEALTHCHECK --interval=30s --timeout=8s --start-period=40s --retries=3 \
-    CMD ["dotnet", "DesignThix.dll", "--healthcheck"]
+    CMD ["dotnet", "MatCan.dll", "--healthcheck"]
 
-ENTRYPOINT ["dotnet", "DesignThix.dll"]
+ENTRYPOINT ["dotnet", "MatCan.dll"]

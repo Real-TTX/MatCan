@@ -1,0 +1,63 @@
+@page "/s/{token}"
+@model MatCan.Pages.Share.ViewModel
+@{
+    Layout = "_Public";
+}
+
+@* The page of a link. A live public link: the frame of the viewer; public-view.js loads /api/s/{token} and builds everything else with DOM APIs (pages drawn by the engine with the sample values of the
+   design, never the rows of a data list). A dead link: the friendly page. *@
+@if (Model.Dead)
+{
+    <main class="dt-pv-dead" id="main">
+        <div class="dt-pv-dead__card">
+            @Ui.Logo("lg")
+            <h1>Dieser Link ist nicht mehr gültig</h1>
+            <p class="mat-muted">Der Link wurde zurückgesetzt, ist abgelaufen oder wurde abgeschaltet, oder das Design gibt es nicht mehr. Frag die Person, die ihn dir geschickt hat, nach einem neuen Link.</p>
+            <div class="mat-btn-row mat-btn-row--plain">
+                @if (Model.SignedIn)
+                {
+                    <a class="mat-btn mat-btn--primary" href="/">@Ui.Icon("home")<span>Zur Startseite</span></a>
+                }
+                else
+                {
+                    <a class="mat-btn mat-btn--primary" href="/Account/Login">@Ui.Icon("login")<span>Anmelden</span></a>
+                }
+            </div>
+        </div>
+    </main>
+}
+else
+{
+    <div class="dt-pv" id="dt-pv" data-state="loading" data-token="@Model.Token" data-kind="@(Model.IsFolder ? "folder" : "design")" data-name="@Model.ItemName" data-download="@(Model.AllowDownload ? "true" : "false")">
+        <header class="dt-pv__bar" role="banner">
+            <span class="dt-pv__brand" title="MatCan">@Ui.Logo()<span class="dt-pv__brandname">MatCan</span></span>
+            <nav class="dt-pv__crumbs" id="dt-pv-crumbs" aria-label="Pfad"><h1 class="dt-pv__title">@Model.ItemName</h1></nav>
+            <div class="dt-pv__tools" id="dt-pv-tools"></div>
+            @if (Model.OpenUrl is not null)
+            {
+                <a class="mat-btn mat-btn--secondary mat-btn--sm dt-pv__open" href="@Model.OpenUrl">@Ui.Icon("external")<span>In MatCan öffnen</span></a>
+            }
+        </header>
+
+        <div class="dt-pv__body">
+            <nav class="dt-pv__thumbs" id="dt-pv-thumbs" aria-label="Seiten" hidden></nav>
+            <main class="dt-pv__stage" id="dt-pv-stage" tabindex="0" aria-label="@Model.ItemName">
+                <div class="dt-pv__loading" role="status"><span class="mat-spinner" aria-hidden="true"></span><span>Wird geladen …</span></div>
+            </main>
+        </div>
+
+        <footer class="dt-pv__foot"><span>Erstellt mit MatCan</span></footer>
+        <div class="dt-pv__print" id="dt-pv-print" aria-hidden="true"></div>
+    </div>
+
+    <noscript><p class="dt-pv-noscript">Für die Ansicht braucht diese Seite JavaScript.</p></noscript>
+
+}
+
+@section Scripts {
+    @if (!Model.Dead)
+    {
+        <script src="~/js/dt-engine.js" asp-append-version="true"></script>
+        <script src="~/js/public-view.js" asp-append-version="true"></script>
+    }
+}

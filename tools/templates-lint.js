@@ -23,8 +23,8 @@ const http = require('http');
 const path = require('path');
 
 const root = path.join(__dirname, '..');
-const wwwroot = path.join(root, 'src', 'DesignThix', 'wwwroot');
-const templatesDir = path.join(root, 'src', 'DesignThix', 'Demo', 'templates');
+const wwwroot = path.join(root, 'src', 'MatCan', 'wwwroot');
+const templatesDir = path.join(root, 'src', 'MatCan', 'Demo', 'templates');
 const { chromium } = require(path.join(root, 'tests', 'e2e', 'node_modules', 'playwright'));
 
 const args = process.argv.slice(2);

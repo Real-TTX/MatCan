@@ -35,7 +35,7 @@ const rgb = hex => {
   // ------------------------------------------------------------------------------------------------ manifest and icons
   const manifestLink = await page.getAttribute('link[rel=manifest]', 'href');
   const manifest = await page.evaluate(async url => (await fetch(url)).json(), manifestLink);
-  check('the manifest is linked and valid (name, start address, scope, standalone, language)', manifest.name === 'DesignThix' && manifest.short_name && manifest.start_url && manifest.scope === '/' && manifest.display === 'standalone' && manifest.lang === 'de' && manifest.id, JSON.stringify({ name: manifest.name, display: manifest.display, scope: manifest.scope }));
+  check('the manifest is linked and valid (name, start address, scope, standalone, language)', manifest.name === 'MatCan' && manifest.short_name && manifest.start_url && manifest.scope === '/' && manifest.display === 'standalone' && manifest.lang === 'de' && manifest.id, JSON.stringify({ name: manifest.name, display: manifest.display, scope: manifest.scope }));
   const purposes = manifest.icons.map(i => `${i.sizes}/${i.purpose || 'any'}`);
   check('the manifest has icons 192 and 512 for "any" and for "maskable"', ['192x192/any', '512x512/any', '192x192/maskable', '512x512/maskable'].every(p => purposes.includes(p)), purposes.join(' '));
   const iconStates = await page.evaluate(async icons => Promise.all(icons.map(async i => {

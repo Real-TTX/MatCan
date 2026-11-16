@@ -1,0 +1,11 @@
+@page "{id:long}"
+@model MatCan.Pages.Outputs.EditModel
+
+<partial name="_Form" model="Model" />
+
+@section TopbarActions {
+    @if (Model.CanEdit && Model.Job is { } job)
+    {
+        <button type="button" class="mat-btn mat-btn--secondary mat-btn--sm" data-share-open data-share-kind="outputjob" data-share-id="@job.Id" data-share-name="@job.Name">@Ui.Icon("dt:share-2")<span>Teilen</span></button>
+    }
+}

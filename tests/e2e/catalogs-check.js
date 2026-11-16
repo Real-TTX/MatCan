@@ -1,6 +1,6 @@
 // Checks the catalogues (docs/PLAN-CATALOGS.md, plan 5 phase C1) in a real browser (installed Edge, headless) against the LOCAL FAKE PROVIDER of fake-catalogs.js that this script starts.
 // Nothing leaves the machine. The app must know where the provider is: start it with
-//     DESIGNTHIX__Catalogs__example-browse__BaseUrl=http://127.0.0.1:3073   DESIGNTHIX__Catalogs__example-search__BaseUrl=http://127.0.0.1:3073
+//     MATCAN__Catalogs__example-browse__BaseUrl=http://127.0.0.1:3073   MATCAN__Catalogs__example-search__BaseUrl=http://127.0.0.1:3073
 // (a Docker app: http://host.docker.internal:3073; the compose files and the notes in tests/e2e/README.md say how). Without these two addresses the example catalogues do not exist
 // and the check says so and stops. What is checked, in the order of the sections:
 //  admin      /Admin/Catalogs: the list, Schlüssel fehlt, the edit page, the key is never shown again, Testen, Zwischenspeicher leeren, a member is refused
@@ -14,11 +14,11 @@
 //  roles      read-only editor (no Fotos, credits readable), the page of the asset shows its source
 //  phone      the media browser and the panel Fotos at 390 px
 //  providers  Pexels, Pixabay, Openverse (needs their base addresses, see below)
-//  unsplash   Unsplash (needs DESIGNTHIX__Catalogs__unsplash__BaseUrl too): the administration (what Unsplash requires, the privacy note), the Content-Security-Policy (the image host only while it is on,
+//  unsplash   Unsplash (needs MATCAN__Catalogs__unsplash__BaseUrl too): the administration (what Unsplash requires, the privacy note), the Content-Security-Policy (the image host only while it is on,
 //             only the editor pages of a signed-in person, never the public view), THUMBNAILS LOADED BY THE BROWSER from the provider itself (with the ixid, without a Referer, no policy violation),
 //             "Foto: Name / Unsplash" with utm links under every tile of the media browser and of Fotos, the download message (ixid, key from the server, again on a second use, never for a search),
 //             Unsplash+ photos and foreign hosts never offered, "403 Rate Limit Exceeded" as a pause, the credits of the editor and of the public view, a tablet and a phone
-//  icons      plan 5 / C3, Iconify and Google Fonts (needs DESIGNTHIX__Catalogs__<iconify|googlefonts>__BaseUrl too): the administration, the set switch of the panel Elemente and of the picker
+//  icons      plan 5 / C3, Iconify and Google Fonts (needs MATCAN__Catalogs__<iconify|googlefonts>__BaseUrl too): the administration, the set switch of the panel Elemente and of the picker
 //             "Icon ersetzen", paging, import on a click, the body stored on the server, stroked and wide icons, the credits of a CC BY set, the public view and the run page, "Weitere Schriften"
 //             in the panel Text, the font select and on /Fonts, the four faces of a family, a phone
 //
@@ -36,7 +36,7 @@ const { startFakeCatalogs, KEY, providers } = require('./fake-catalogs.js');
 const args = process.argv.slice(2);
 const argValue = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
 const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, shareWith, purgeImage } = lib(args, { ignore: /status of (400|403|404|409|429|503)/ });
-const outDir = path.resolve(argValue('--out', path.join(os.tmpdir(), 'designthix-catalogs-check')));
+const outDir = path.resolve(argValue('--out', path.join(os.tmpdir(), 'matcan-catalogs-check')));
 const fakePort = Number(argValue('--catalog-port', '3073'));
 const dataDir = argValue('--data', process.env.DT_DATA_DIR || '');
 fs.mkdirSync(outDir, { recursive: true });
@@ -145,7 +145,7 @@ async function purgeImported(page) {
   await admin.goto(base + '/Admin/Catalogs');
   const names = await admin.$$eval('[data-catalog] .mat-item__title', t => t.map(x => x.textContent.trim()));
   if (!names.includes('Beispiel-Katalog')) {
-    console.log('The example catalogues do not exist: start the app with DESIGNTHIX__Catalogs__example-browse__BaseUrl=http://127.0.0.1:' + fakePort + ' (and example-search). Stopping.');
+    console.log('The example catalogues do not exist: start the app with MATCAN__Catalogs__example-browse__BaseUrl=http://127.0.0.1:' + fakePort + ' (and example-search). Stopping.');
     await fake.close();
     await browser.close();
     process.exit(1);
@@ -583,7 +583,7 @@ async function purgeImported(page) {
   }
   if (!pointed) {
     // never switch a real provider on from a check: without the address of the fake there is nothing to test against
-    console.log(`(the app does not know the fake of the providers: start it with DESIGNTHIX__Catalogs__<pexels|pixabay|openverse>__BaseUrl=http://127.0.0.1:${fakePort}; the checks of the providers are skipped)`);
+    console.log(`(the app does not know the fake of the providers: start it with MATCAN__Catalogs__<pexels|pixabay|openverse>__BaseUrl=http://127.0.0.1:${fakePort}; the checks of the providers are skipped)`);
   } else {
     const lemon = fake.items.find(i => i.title === 'Zitronen');
     const lemonColour = providers.COLOURS[Math.floor(lemon.hue / 30) % 12];
@@ -723,7 +723,7 @@ async function purgeImported(page) {
     await openMedia(A, 'openverse');
     await A.waitForSelector('.dt-media__chip');
     check('Openverse: search only (suggestions, "Gib einen Suchbegriff ein."), no colour filter', /Gib einen Suchbegriff ein/.test(await A.textContent('.dt-media__status')) && (await A.$$('.dt-media__chip')).length === 6 && !(await A.isVisible('.dt-media__colour').catch(() => false)));
-    check('Openverse: the link and the notice (Openverse does not endorse DesignThix)', /Bilder über Openverse/.test(await A.textContent('.dt-media__provider')) && /empfiehlt oder prüft DesignThix nicht/.test(await A.textContent('.dt-media__notice')));
+    check('Openverse: the link and the notice (Openverse does not endorse MatCan)', /Bilder über Openverse/.test(await A.textContent('.dt-media__provider')) && /empfiehlt oder prüft MatCan nicht/.test(await A.textContent('.dt-media__notice')));
     await searchMedia(A, 'zitron', ['Zitronen']);
     const ovTile = await A.$eval('.dt-media__tile--item', t => t.querySelector('.dt-media__credit').textContent);
     check('Openverse: the tile names the author and the licence (CC0 1.0)', /CC0 1\.0/.test(ovTile), ovTile);
@@ -901,9 +901,9 @@ async function purgeImported(page) {
   current = 'unsplash: ';
   await admin.goto(base + '/Admin/Catalogs/Edit?id=unsplash');
   if (!/in der Konfiguration festgelegt/.test(await admin.textContent('body'))) {
-    console.log(`(the app does not know the fake of Unsplash: start it with DESIGNTHIX__Catalogs__unsplash__BaseUrl=http://127.0.0.1:${fakePort}; the checks of Unsplash are skipped)`);
+    console.log(`(the app does not know the fake of Unsplash: start it with MATCAN__Catalogs__unsplash__BaseUrl=http://127.0.0.1:${fakePort}; the checks of Unsplash are skipped)`);
   } else {
-    const UTM = 'utm_source=DesignThix&utm_medium=referral';
+    const UTM = 'utm_source=MatCan&utm_medium=referral';
     const stats = async () => (await (await fetch(`http://127.0.0.1:${fakePort}/__stats`)).json());
     const until = async (fn, what) => { const end = Date.now() + 10000; while (Date.now() < end) { if (await fn()) { return true; } await sleep(150); } throw new Error('timeout: ' + what); };
     const pill = id => admin.$eval(`[data-catalog="${id}"] .mat-item__end`, e => e.textContent.replace(/\s+/g, ' ').trim());
@@ -939,7 +939,7 @@ async function purgeImported(page) {
     check('the page says what the browser will do: it loads the thumbnails from Unsplash and Unsplash sees the IP address', /lädt dein Browser die Vorschaubilder direkt von Unsplash\. Unsplash sieht dabei deine IP-Adresse/.test(privacy), privacy);
     check('it names the exception to the policy (images.unsplash.com only, signed-in editor pages, nothing else)', /images\.unsplash\.com/.test(await admin.textContent('[data-catalog-csp]')) && /öffentliche Ansicht/.test(await admin.textContent('[data-catalog-csp]')));
     const rules = (await admin.$$eval('[data-catalog-rules] li', l => l.map(x => x.textContent.trim()))).join(' || ');
-    check('the rules say what Unsplash requires: hotlinking, the download message, the credit with utm links, the name, 50 and 1 000 requests an hour', /direkt von Unsplash/.test(rules) && /download_location/.test(rules) && /utm_source=DesignThix&utm_medium=referral/.test(rules) && /nicht „Unsplash“ enthalten/.test(rules) && /50 Anfragen pro Stunde/.test(rules) && /1 000 Anfragen pro Stunde/.test(rules), rules.slice(0, 200));
+    check('the rules say what Unsplash requires: hotlinking, the download message, the credit with utm links, the name, 50 and 1 000 requests an hour', /direkt von Unsplash/.test(rules) && /download_location/.test(rules) && /utm_source=MatCan&utm_medium=referral/.test(rules) && /nicht „Unsplash“ enthalten/.test(rules) && /50 Anfragen pro Stunde/.test(rules) && /1 000 Anfragen pro Stunde/.test(rules), rules.slice(0, 200));
     check('the key is called "Access Key", the page says where to get one, safe search can be switched, there is no list of licences', /Access Key/.test(await admin.textContent('body')) && (await admin.$$eval('main a[href^="https://unsplash.com/"]', a => a.length)) >= 1 && !!(await admin.$('input[type=checkbox][name="Input.SafeSearch"]')) && !(await admin.$('#Input_AllowedLicences')));
     await shot(admin, 'admin-unsplash');
     await admin.goto(base + '/Admin/Catalogs');
@@ -1010,7 +1010,7 @@ async function purgeImported(page) {
     // search and filters: what the app asks Unsplash
     await searchMedia(A, 'berg', ['Berglandschaft', 'Bergsee', 'Schneeberg']);
     let sent = (await stats()).__lastUnsplash;
-    check('a search asks in the documented form: query, at most 30 per page, relevance, safe search on (content_filter high), version v1, a User-Agent', sent.query === 'berg' && sent.per_page === '30' && sent.order_by === 'relevant' && sent.content_filter === 'high' && sent.version === 'v1' && /DesignThix/.test(sent.ua), JSON.stringify(sent));
+    check('a search asks in the documented form: query, at most 30 per page, relevance, safe search on (content_filter high), version v1, a User-Agent', sent.query === 'berg' && sent.per_page === '30' && sent.order_by === 'relevant' && sent.content_filter === 'high' && sent.version === 'v1' && /MatCan/.test(sent.ua), JSON.stringify(sent));
     await A.selectOption('.dt-media__orient', 'landscape');
     await until(async () => (await stats()).__lastUnsplash.orientation === 'landscape', 'landscape');
     await A.selectOption('.dt-media__orient', 'square');
@@ -1040,7 +1040,7 @@ async function purgeImported(page) {
     const unsplashAssets = await importedBy('Katalog: Unsplash');
     const lemon = unsplashAssets.find(a => /^zitronen/.test(a.key));
     check('a click copies the photo into the library (category "Katalog: Unsplash")', !!lemon, JSON.stringify(unsplashAssets.map(a => a.key)));
-    check('Unsplash was told about the download once, with the ixid of the photo and from the server (never from the browser)', (after['unsplash:download'] || 0) === (before['unsplash:download'] || 0) + 1 && /^M3wxfake/.test(after.__lastUnsplashDownload.ixid) && /DesignThix/.test(after.__lastUnsplashDownload.ua), JSON.stringify(after.__lastUnsplashDownload));
+    check('Unsplash was told about the download once, with the ixid of the photo and from the server (never from the browser)', (after['unsplash:download'] || 0) === (before['unsplash:download'] || 0) + 1 && /^M3wxfake/.test(after.__lastUnsplashDownload.ixid) && /MatCan/.test(after.__lastUnsplashDownload.ua), JSON.stringify(after.__lastUnsplashDownload));
     check('the file came from the image host with the ixid at 2400 px (a copy, once)', (after['unsplash-img:w2400'] || 0) === (before['unsplash-img:w2400'] || 0) + 1 && (after['unsplash-img:without-ixid'] || 0) === 0);
     const itemRow = ((await api(A, 'GET', '/api/items?kinds=asset&recursive=true&take=200')).body.items || []).find(i => lemon && i.key === lemon.key);
     await A.goto(`${base}/Assets/Edit/${itemRow.id}`);
@@ -1127,7 +1127,7 @@ async function purgeImported(page) {
     await A.click('dialog.dt-credits button:has-text("Text kopieren")');
     await A.waitForSelector('.mat-toast');
     const copied = await A.evaluate(() => navigator.clipboard.readText());
-    check('"Text kopieren" gives the line "Foto von Name auf Unsplash" with the links', /^Foto von .+ auf Unsplash – https:\/\/unsplash\.com\/photos\/.*utm_source=DesignThix/.test(copied), copied);
+    check('"Text kopieren" gives the line "Foto von Name auf Unsplash" with the links', /^Foto von .+ auf Unsplash – https:\/\/unsplash\.com\/photos\/.*utm_source=MatCan/.test(copied), copied);
     await shot(A, 'credits-unsplash');
     await A.click('dialog.dt-credits button:has-text("Schließen")');
     await A.waitForSelector('dialog.dt-credits', { state: 'detached' });
@@ -1147,7 +1147,7 @@ async function purgeImported(page) {
     await P.click('.dt-pv__credits');
     await P.waitForSelector('dialog.dt-pv-cr[open] .dt-pv-cr__item');
     const pcredits = await P.$$eval('.dt-pv-cr__item', c => c.map(x => Array.from(x.querySelectorAll('a')).map(a => a.textContent + '|' + a.getAttribute('href'))));
-    check('the public dialog names the photographer and Unsplash with utm links', pcredits.length === 1 && pcredits[0].some(l => l === `Unsplash|https://unsplash.com/?${UTM}`) && pcredits[0].some(l => /^.+\|https:\/\/unsplash\.com\/@.*utm_source=DesignThix/.test(l)), JSON.stringify(pcredits));
+    check('the public dialog names the photographer and Unsplash with utm links', pcredits.length === 1 && pcredits[0].some(l => l === `Unsplash|https://unsplash.com/?${UTM}`) && pcredits[0].some(l => /^.+\|https:\/\/unsplash\.com\/@.*utm_source=MatCan/.test(l)), JSON.stringify(pcredits));
     await shot(P, 'public-credits-unsplash');
     await publicContext.close();
 
@@ -1210,7 +1210,7 @@ async function purgeImported(page) {
     if (!/in der Konfiguration festgelegt/.test(await admin.textContent('body'))) { pointedNew = false; }
   }
   if (!pointedNew) {
-    console.log(`(the app does not know the fake of Iconify and Google Fonts: start it with DESIGNTHIX__Catalogs__<iconify|googlefonts>__BaseUrl=http://127.0.0.1:${fakePort}; the checks of icons and fonts are skipped)`);
+    console.log(`(the app does not know the fake of Iconify and Google Fonts: start it with MATCAN__Catalogs__<iconify|googlefonts>__BaseUrl=http://127.0.0.1:${fakePort}; the checks of icons and fonts are skipped)`);
   } else {
     const stats = async () => (await (await fetch(`http://127.0.0.1:${fakePort}/__stats`)).json());
     const until = async (fn, what) => { const end = Date.now() + 10000; while (Date.now() < end) { if (await fn()) { return true; } await sleep(150); } throw new Error('timeout: ' + what); };

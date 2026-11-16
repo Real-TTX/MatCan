@@ -102,7 +102,7 @@ const pngFile = (name, rgb, w, h) => ({ name, type: 'image/png', base64: png(w |
 
 /** A copy of a bundled font with a few extra bytes (another hash, so the server takes it as a new file). */
 function fontFile(name) {
-  const file = path.join(__dirname, '..', '..', 'src', 'DesignThix', 'wwwroot', 'fonts', 'Pacifico-Regular.ttf');
+  const file = path.join(__dirname, '..', '..', 'src', 'MatCan', 'wwwroot', 'fonts', 'Pacifico-Regular.ttf');
   const bytes = Buffer.concat([fs.readFileSync(file), Buffer.from(String(Date.now()) + Math.random())]);
   return { name: name || 'Pacifico-Check.ttf', type: 'font/ttf', base64: bytes.toString('base64') };
 }

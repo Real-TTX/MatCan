@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* Builds src/DesignThix/wwwroot/lib/icons.json, the icon library of the designer (about 1 900 Lucide icons, ISC licence), from the MatDesign icon library
+/* Builds src/MatCan/wwwroot/lib/icons.json, the icon library of the designer (about 1 900 Lucide icons, ISC licence), from the MatDesign icon library
    ../MatDesign/tools/iconlib/lucide.json:   { source, categories: { id: { title, description, icon } }, icons: { name: { body, tags, categories, aliases } } }
    Output (compact JSON):  { source: {...}, categories: { id: { title: "<German>" } }, icons: { name: { b: body, t: [tags + German synonyms], c: [categories] } } }
    Also copies the licence to wwwroot/lib/LICENSE-lucide.txt.
@@ -13,7 +13,7 @@ const path = require('path');
 const root = path.join(__dirname, '..');
 const source = process.argv[2] || path.join(root, '..', 'MatDesign', 'tools', 'iconlib', 'lucide.json');
 const licenceSource = path.join(path.dirname(source), 'LICENSE-lucide.txt');
-const outDir = path.join(root, 'src', 'DesignThix', 'wwwroot', 'lib');
+const outDir = path.join(root, 'src', 'MatCan', 'wwwroot', 'lib');
 
 // ---------------------------------------------------------------------------------------------------- German titles of the categories
 

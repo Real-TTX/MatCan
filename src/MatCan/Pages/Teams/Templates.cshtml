@@ -1,0 +1,68 @@
+@page "/Teams/{slug}/Vorlagen"
+@model MatCan.Pages.Teams.TemplatesModel
+
+<link rel="stylesheet" href="~/css/designs.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/templates.css" asp-append-version="true" />
+<partial name="_TeamHeader" model="Model.Header" />
+
+@if (Model.Items.Count == 0)
+{
+    <div class="mat-empty" data-team-templates-empty>
+        <span class="mat-empty__icon">@Ui.Icon("template")</span>
+        <div class="mat-empty__title">Noch keine Teamvorlagen</div>
+        <p>@(Model.CanEdit ? "Biete ein Design des Teams als Vorlage an: Alle im Team können dann eine Kopie davon als Ausgangspunkt benutzen." : "Das Team hat noch keine Vorlagen. Wer im Team bearbeiten darf, kann ein Design als Vorlage anbieten.")</p>
+    </div>
+}
+else
+{
+    <div class="dt-tplgrid" data-team-templates>
+        @foreach (var t in Model.Items)
+        {
+            <div class="dt-tplwrap">
+                <partial name="_TemplateTile" model="(t, true, Model.Manageable.Contains(t.Id))" />
+                @if (Model.Manageable.Contains(t.Id))
+                {
+                    <form method="post" asp-page-handler="Remove" asp-route-slug="@Model.Team.Slug" class="dt-tplwrap__remove">
+                        <input type="hidden" name="id" value="@t.Id" />
+                        <button type="submit" class="mat-btn mat-btn--ghost mat-btn--sm" data-confirm="„@t.Name“ nicht mehr als Vorlage anbieten? Das Design bleibt im Team." data-confirm-ok="Nicht mehr anbieten">@Ui.Icon("x")<span>Keine Vorlage mehr</span></button>
+                    </form>
+                }
+            </div>
+        }
+    </div>
+}
+
+@if (Model.CanEdit)
+{
+    <dt-card title="Als Teamvorlage anbieten" icon="template">
+        @if (Model.Candidates.Count == 0)
+        {
+            <p class="mat-hint">Es gibt keine Designs im Teambereich, die du als Vorlage anbieten könntest. Lege zuerst im Teambereich ein Design an.</p>
+        }
+        else
+        {
+            <form class="mat-form" method="post" asp-page-handler="Add" asp-route-slug="@Model.Team.Slug">
+                <div class="mat-form__grid">
+                    <div class="mat-field mat-field--full">
+                        <label class="mat-label" for="team-template-design">Design</label>
+                        <select class="mat-select" id="team-template-design" name="id" required>
+                            @foreach (var c in Model.Candidates)
+                            {
+                                <option value="@c.Value">@c.Text</option>
+                            }
+                        </select>
+                        <span class="mat-hint">Das Design bleibt, wo es ist. Zusätzlich erscheint es hier und in der Galerie „Vorlagen“ für alle im Team.</span>
+                    </div>
+                </div>
+                <div class="mat-actions"><button type="submit" class="mat-btn mat-btn--primary">@Ui.Icon("plus")<span>Als Teamvorlage anbieten</span></button></div>
+            </form>
+        }
+    </dt-card>
+}
+
+@section Scripts {
+    <script src="~/js/dt-ui.js" asp-append-version="true"></script>
+    <script src="~/js/dt-engine.js" asp-append-version="true"></script>
+    <script src="~/js/designs.js" asp-append-version="true"></script>
+    <script src="~/js/template-preview.js" asp-append-version="true"></script>
+}

@@ -1,12 +1,12 @@
 /* The metadata rules of the built-in templates (plan 6), read from the C# sources so the tools and the app cannot drift apart:
-     occasions  = TemplateMeta.Occasions   (src/DesignThix.Core/Documents/TemplateMeta.cs)
-     formats    = FormatPresets.All        (src/DesignThix.Core/Documents/FormatPresets.cs): key -> { width, height, unit, fold, name }
+     occasions  = TemplateMeta.Occasions   (src/MatCan.Core/Documents/TemplateMeta.cs)
+     formats    = FormatPresets.All        (src/MatCan.Core/Documents/FormatPresets.cs): key -> { width, height, unit, fold, name }
    checkMeta(t, file) returns a list of problems for a template module (an empty list = fine). templates-build.js refuses to write a template with a problem.        */
 'use strict';
 const fs = require('fs');
 const path = require('path');
 
-const core = path.join(__dirname, '..', '..', 'src', 'DesignThix.Core', 'Documents');
+const core = path.join(__dirname, '..', '..', 'src', 'MatCan.Core', 'Documents');
 
 function readOccasions() {
   const text = fs.readFileSync(path.join(core, 'TemplateMeta.cs'), 'utf8');

@@ -1,6 +1,6 @@
 'use strict';
 /* The demo of docs/PLAN.md section 1.2 ("Käsetheke – Preisschild", 150 x 100 mm) as a design document with its data rows. The single source is the file
-   src/DesignThix/Demo/kaesetheke.json, which the app embeds and seeds into an empty database (Services/DemoSeeder); the checks read the same file, so they
+   src/MatCan/Demo/kaesetheke.json, which the app embeds and seeds into an empty database (Services/DemoSeeder); the checks read the same file, so they
    work with exactly what a new installation shows.
    demoDocument()   the design document
    demoRows()       the first four cheeses (the checks count on four labels)
@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const demo = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'DesignThix', 'Demo', 'kaesetheke.json'), 'utf8'));
+const demo = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'MatCan', 'Demo', 'kaesetheke.json'), 'utf8'));
 
 const clone = value => JSON.parse(JSON.stringify(value));
 

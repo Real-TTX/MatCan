@@ -17,7 +17,7 @@ const ed = require('./editor-lib.js');
 const args = process.argv.slice(2);
 const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, PASSWORD } = lib(args, { ignore: /status of (403|404|409|429)/ });
 const outIndex = args.indexOf('--out');
-const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'designthix-share-check'));
+const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'matcan-share-check'));
 fs.mkdirSync(outDir, { recursive: true });
 
 const results = [];
@@ -395,7 +395,7 @@ const shot = async (page, name, width) => {
   const text0 = await X.$eval('.dt-pv__page[data-page="0"] svg', s => s.textContent);
   check('the page shows the title and the SAMPLE value of the field', /Öffentliches Plakat/.test(text0) && /Seite 1/.test(text0) && /Beispiel-Käse/.test(text0), text0);
   check('the page label says "Seite 1 von 3"', /Seite 1 von 3/.test(await X.textContent('.dt-pv__pagelabel')));
-  check('the title is the name of the design, the footer says "Erstellt mit DesignThix"', /Öffentliches Plakat/.test(await X.textContent('.dt-pv__title')) && /Erstellt mit DesignThix/.test(await X.textContent('.dt-pv__foot')));
+  check('the title is the name of the design, the footer says "Erstellt mit MatCan"', /Öffentliches Plakat/.test(await X.textContent('.dt-pv__title')) && /Erstellt mit MatCan/.test(await X.textContent('.dt-pv__foot')));
   check('thumbnails are shown for several pages', await X.isVisible('#dt-pv-thumbs') && (await X.$$('.dt-pv-thumb')).length === 3);
   await X.waitForTimeout(800);
   await shot(X, 'public-design-multipage');
@@ -472,7 +472,7 @@ const shot = async (page, name, width) => {
   // the owner who looks at the public page gets a way back into the app
   await A.goto(base + '/s/' + tokenSingle);
   await A.waitForSelector('.dt-pv__page.is-drawn', { timeout: 20000 });
-  check('a signed-in person with access gets "In DesignThix öffnen" on the public page', (await A.getAttribute('.dt-pv__open', 'href')) === '/Designs/' + single + '/Designer');
+  check('a signed-in person with access gets "In MatCan öffnen" on the public page', (await A.getAttribute('.dt-pv__open', 'href')) === '/Designs/' + single + '/Designer');
   await X.goto(base + '/s/' + tokenSingle);
   await X.waitForSelector('.dt-pv__page.is-drawn', { timeout: 20000 });
   check('and somebody who is not signed in does not', !(await X.$('.dt-pv__open')));

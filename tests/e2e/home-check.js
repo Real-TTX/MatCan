@@ -15,7 +15,7 @@ const lib = require('./lib.js');
 const args = process.argv.slice(2);
 const { base, problems, watch, launch, newContext, login, ensureAccounts, postJson, shareWith } = lib(args, { ignoreUrl: /\/api\/designs\/\d+/ });
 const outIndex = args.indexOf('--out');
-const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'designthix-home-check'));
+const outDir = path.resolve(outIndex >= 0 ? args[outIndex + 1] : path.join(os.tmpdir(), 'matcan-home-check'));
 fs.mkdirSync(outDir, { recursive: true });
 
 const results = [];
@@ -74,7 +74,7 @@ const stamp = String(Date.now()).slice(-6);
   for (const [url, group] of [['/Outputs', 'Serien (Zusatz)'], ['/DataLists', 'Serien (Zusatz)'], ['/Sheets', 'Serien (Zusatz)'], ['/Outputs/Create', 'Serien (Zusatz)']]) {
     await page.goto(base + url, { waitUntil: 'domcontentloaded' });
     const crumbs = (await page.$$eval('.mat-crumbs li', els => els.map(e => e.textContent.trim()))).join(' / ');
-    check(`${url}: the breadcrumb starts with "${group}"`, crumbs.startsWith('DesignThix / ' + group), crumbs);
+    check(`${url}: the breadcrumb starts with "${group}"`, crumbs.startsWith('MatCan / ' + group), crumbs);
   }
   await page.goto(base + '/Outputs', { waitUntil: 'domcontentloaded' });
   check('the list of outputs says Serienausgabe on its button', await page.isVisible('.mat-actions a:has-text("Neue Serienausgabe")'));

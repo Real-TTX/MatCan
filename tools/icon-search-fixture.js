@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* The fixture of tests/DesignThix.Tests/Fixtures/icon-search.json: what the icon search of the EDITOR (D.iconSearch in wwwroot/js/designer.icons-de.js, with wwwroot/lib/icons.json) answers for a list of
+/* The fixture of tests/MatCan.Tests/Fixtures/icon-search.json: what the icon search of the EDITOR (D.iconSearch in wwwroot/js/designer.icons-de.js, with wwwroot/lib/icons.json) answers for a list of
    queries. The C# twin (Logic/IconSearch.cs) must answer the same; IconSearchTests compares the two (and, where node is installed, runs this script again to prove the fixture is current).
    node tools/icon-search-fixture.js            writes the fixture
    node tools/icon-search-fixture.js --stdout   prints it (what the test compares with) */
@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
-const root = path.join(__dirname, '..', 'src', 'DesignThix', 'wwwroot');
+const root = path.join(__dirname, '..', 'src', 'MatCan', 'wwwroot');
 const lib = JSON.parse(fs.readFileSync(path.join(root, 'lib', 'icons.json'), 'utf8'));
 const sandbox = { window: { DtDesigner: {} } };
 vm.createContext(sandbox);
@@ -31,7 +31,7 @@ QUERIES.forEach(function (q) {
 
 const text = JSON.stringify(result, null, 1) + '\n';
 if (process.argv.includes('--stdout')) { process.stdout.write(text); } else {
-  const target = path.join(__dirname, '..', 'tests', 'DesignThix.Tests', 'Fixtures', 'icon-search.json');
+  const target = path.join(__dirname, '..', 'tests', 'MatCan.Tests', 'Fixtures', 'icon-search.json');
   fs.mkdirSync(path.dirname(target), { recursive: true });
   fs.writeFileSync(target, text);
   console.log('written ' + target + ' (' + QUERIES.length + ' queries)');

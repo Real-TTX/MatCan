@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /* Contact sheets of the built-in templates (plan 6): every page of every template of a range as a small picture with its name under it, on one PNG (or a few, when the range is large),
    so a batch of 20 to 60 templates can be judged at a glance. Needs no running app (like templates-preview.js: a local server hands out the engine, fonts, built-in media and icons).
-   The templates are read from src/DesignThix/Demo/templates/*.json: run  node tools/templates-build.js  first. The number is the NN of the module file tools/templates/NN-<slug>.js.
+   The templates are read from src/MatCan/Demo/templates/*.json: run  node tools/templates-build.js  first. The number is the NN of the module file tools/templates/NN-<slug>.js.
 
    node tools/templates-sheet.js [--from 100] [--to 199] [--only slug,slug] [--family slug] [--out <folder or file.png>] [--thumb 300] [--width 2400] [--per-sheet 40] [--rows]
      --from/--to  the range of numbers (default: all)
      --only       slugs (comma separated);  --family: every variant of one family
-     --out        a folder (default <temp>/designthix-sheets) or a .png file name (several sheets become name-1.png, name-2.png ...)
+     --out        a folder (default <temp>/matcan-sheets) or a .png file name (several sheets become name-1.png, name-2.png ...)
      --thumb      the longer side of a page picture in pixels (default 300);  --width: width of a sheet (default 2400);  --per-sheet: templates per PNG (default 40)
      --rows       also draw the sample rows of a template that has some (first page only), to see long names
    The label under a template: number, slug, "family / variant", size. A dashed line marks the fold of a folded card (this sheet only, never in the file). Warnings of the engine are printed
@@ -18,8 +18,8 @@ const os = require('os');
 const path = require('path');
 
 const root = path.join(__dirname, '..');
-const wwwroot = path.join(root, 'src', 'DesignThix', 'wwwroot');
-const templatesDir = path.join(root, 'src', 'DesignThix', 'Demo', 'templates');
+const wwwroot = path.join(root, 'src', 'MatCan', 'wwwroot');
+const templatesDir = path.join(root, 'src', 'MatCan', 'Demo', 'templates');
 const { chromium } = require(path.join(root, 'tests', 'e2e', 'node_modules', 'playwright'));
 
 const args = process.argv.slice(2);
@@ -32,7 +32,7 @@ const thumb = Number(argValue('--thumb', '300'));
 const sheetWidth = Number(argValue('--width', '2400'));
 const perSheet = Number(argValue('--per-sheet', '40'));
 const withRows = args.includes('--rows');
-const outArg = path.resolve(argValue('--out', path.join(os.tmpdir(), 'designthix-sheets')));
+const outArg = path.resolve(argValue('--out', path.join(os.tmpdir(), 'matcan-sheets')));
 const outIsFile = /\.png$/i.test(outArg);
 const outDir = outIsFile ? path.dirname(outArg) : outArg;
 const outBase = outIsFile ? path.basename(outArg, '.png') : 'sheet';

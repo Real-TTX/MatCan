@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Rebuilds the DesignThix container and starts the local stack (docker-compose.local.yml).
+    Rebuilds the MatCan container and starts the local stack (docker-compose.local.yml).
 .DESCRIPTION
     The data (database, keys, encrypted AI keys) stays in the volumes; -Clean removes them first (empty database: the first visit creates the administrator again).
 .EXAMPLE
@@ -28,7 +28,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'docker compose up ist fehlgeschlagen.' }
 
     Write-Host ''
-    Write-Host 'DesignThix laeuft auf http://localhost:3043 (pgAdmin: http://localhost:3044)' -ForegroundColor Green
+    Write-Host 'MatCan laeuft auf http://localhost:3043 (pgAdmin: http://localhost:3044)' -ForegroundColor Green
 }
 finally {
     Pop-Location

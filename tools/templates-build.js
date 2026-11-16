@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-/* Writes the built-in templates: src/DesignThix/Demo/templates/<slug>.json (embedded into the app, seeded by Services/TemplateSeeder) from the compact sources in
-   tools/templates/*.js (see tools/templates/dsl.js and the guide in docs/PLAN-TEMPLATES.md), and upgrades the demo file src/DesignThix/Demo/kaesetheke.json to document schema 2.
+/* Writes the built-in templates: src/MatCan/Demo/templates/<slug>.json (embedded into the app, seeded by Services/TemplateSeeder) from the compact sources in
+   tools/templates/*.js (see tools/templates/dsl.js and the guide in docs/PLAN-TEMPLATES.md), and upgrades the demo file src/MatCan/Demo/kaesetheke.json to document schema 2.
    Every document goes through the engine's normalize(), so the files are already normalised (the integration test checks that the server's validator
    changes nothing). The metadata of plan 6 (family, familyName, variant, occasion, tags, formatKey, number = the NN of the file name) is checked against the rules of the app
    (tools/templates/meta.js reads TemplateMeta.cs and FormatPresets.cs): a template with a problem is not written and the exit code is 1.
@@ -12,12 +12,12 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.join(__dirname, '..');
-const demoDir = path.join(root, 'src', 'DesignThix', 'Demo');
+const demoDir = path.join(root, 'src', 'MatCan', 'Demo');
 const outDir = path.join(demoDir, 'templates');
 const meta = require('./templates/meta');
 
 global.window = global;
-require(path.join(root, 'src', 'DesignThix', 'wwwroot', 'js', 'dt-engine.js'));
+require(path.join(root, 'src', 'MatCan', 'wwwroot', 'js', 'dt-engine.js'));
 const engine = global.DtEngine;
 
 const args = process.argv.slice(2);

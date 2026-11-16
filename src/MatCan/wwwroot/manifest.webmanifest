@@ -1,0 +1,67 @@
+{
+  "name": "MatCan",
+  "short_name": "MatCan",
+  "description": "Gestalte Etiketten, Karten, Flyer, Poster und Beiträge für soziale Medien, offline und im Browser. Bei Bedarf füllt MatCan ein Design aus Datenlisten.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "orientation": "any",
+  "lang": "de",
+  "dir": "ltr",
+  "background_color": "#f5f4f1",
+  "theme_color": "#f5f4f1",
+  "categories": [
+    "business",
+    "productivity",
+    "graphics"
+  ],
+  "icons": [
+    {
+      "src": "/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/img/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Design erstellen",
+      "url": "/Designs/Create",
+      "icons": [
+        {
+          "src": "/img/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

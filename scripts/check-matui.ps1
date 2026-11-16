@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Says whether MatDesign has something new for the toolkit copy in src/DesignThix/wwwroot/ui.
+    Says whether MatDesign has something new for the toolkit copy in src/MatCan/wwwroot/ui.
 .DESCRIPTION
     Asks the sibling repository MatDesign what is new (git fetch, then the commits that touched the toolkit or its changelog since the commit that scripts/sync-matui.ps1
     wrote down in scripts/matui-synced.txt) and lets tools/matui-check.js of MatDesign compare the copy with the changelog of origin/main (whether a file was changed by hand,
@@ -16,7 +16,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 if (-not (Test-Path (Join-Path $Source '.git'))) { throw "MatDesign not found at $Source" }
-$ui = Join-Path (Split-Path -Parent $PSScriptRoot) 'src/DesignThix/wwwroot'
+$ui = Join-Path (Split-Path -Parent $PSScriptRoot) 'src/MatCan/wwwroot'
 $synced = Join-Path $PSScriptRoot 'matui-synced.txt'
 
 git -C $Source fetch --quiet origin
