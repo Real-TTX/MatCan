@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using DesignThix.Catalogs;
 using DesignThix.Configuration;
 using DesignThix.Core.Ai;
 using DesignThix.Data;
@@ -209,9 +210,12 @@ app.Use(async (context, next) =>
     headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
     // Nothing is loaded from another site: no external fonts, images, frames or scripts. Images may also be data: and blob: URLs (the designer draws
     // with them), fonts data: URLs (the standalone SVG of a design carries its fonts).
-    headers["Content-Security-Policy"] =
+    var policy =
         "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; " +
         "frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'";
+    headers["Content-Security-Policy"] = policy;
+    // The one exception (Unsplash must be hotlinked): while such a catalogue is on, the editor pages of a signed-in person may load images from its image host, see CatalogCsp.
+    CatalogCsp.WhenStarting(context, policy);
     await next();
 });
 

@@ -21,16 +21,16 @@ public sealed class AiSettings
     public Dictionary<string, string> ActionInstructions { get; set; } = [];
 
     /// <summary>
-    /// How many tokens one person may use per day (0 = no limit). A run of the design assistant makes one call per step and every call carries the whole conversation, so a run costs about 60 000 tokens:
-    /// the default fits a working day with about 25 runs. (These are the defaults of settings that were never saved; what an administrator saved stays.)
+    /// How many tokens one person may use per day (0 = no limit). A run of the design assistant makes one call per step and every call carries the whole conversation, so a run costs about 100 000 tokens
+    /// (a new design: the search of templates, the adaptation, two or three looks and the review; a small change about 40 000): the default fits a working day with about 30 runs. (These are the defaults of settings that were never saved; what an administrator saved stays.)
     /// </summary>
-    public int UserDailyTokens { get; set; } = 1_500_000;
+    public int UserDailyTokens { get; set; } = 3_000_000;
 
     /// <summary>How many tokens one person may use per month (0 = no limit): about 13 full working days.</summary>
-    public int UserMonthlyTokens { get; set; } = 20_000_000;
+    public int UserMonthlyTokens { get; set; } = 40_000_000;
 
     /// <summary>How many tokens all people together may use per month (0 = no limit).</summary>
-    public int MonthlyTokens { get; set; } = 100_000_000;
+    public int MonthlyTokens { get; set; } = 200_000_000;
 
     /// <summary>How many runs one address (by the daily hash of the address) may start per day. An office behind one address shares it.</summary>
     public int AddressDailyRuns { get; set; } = 200;
@@ -54,10 +54,16 @@ public sealed class AiSettings
     public int AgentMaxConcurrent { get; set; } = 3;
 
     /// <summary>How many times one run may look at a page (<c>look</c>).</summary>
-    public int AgentMaxLooks { get; set; } = 6;
+    public int AgentMaxLooks { get; set; } = 8;
 
     /// <summary>How many files one message may bring.</summary>
     public int AgentMaxFilesPerMessage { get; set; } = 6;
+
+    /// <summary>
+    /// The review before a run ends (docs/PLAN-AI-DESIGN.md "Quality pass"): when the model says it is done after changing the design, the application sends it back once or twice if it has not looked at the
+    /// result yet, or if the checks of the lint still find real problems (text over text, leftover sample texts, big empty areas ...). Costs a few more calls per run; off = the model decides alone.
+    /// </summary>
+    public bool AgentReview { get; set; } = true;
 }
 
 /// <summary>

@@ -14,6 +14,10 @@
 //  roles      read-only editor (no Fotos, credits readable), the page of the asset shows its source
 //  phone      the media browser and the panel Fotos at 390 px
 //  providers  Pexels, Pixabay, Openverse (needs their base addresses, see below)
+//  unsplash   Unsplash (needs DESIGNTHIX__Catalogs__unsplash__BaseUrl too): the administration (what Unsplash requires, the privacy note), the Content-Security-Policy (the image host only while it is on,
+//             only the editor pages of a signed-in person, never the public view), THUMBNAILS LOADED BY THE BROWSER from the provider itself (with the ixid, without a Referer, no policy violation),
+//             "Foto: Name / Unsplash" with utm links under every tile of the media browser and of Fotos, the download message (ixid, key from the server, again on a second use, never for a search),
+//             Unsplash+ photos and foreign hosts never offered, "403 Rate Limit Exceeded" as a pause, the credits of the editor and of the public view, a tablet and a phone
 //  icons      plan 5 / C3, Iconify and Google Fonts (needs DESIGNTHIX__Catalogs__<iconify|googlefonts>__BaseUrl too): the administration, the set switch of the panel Elemente and of the picker
 //             "Icon ersetzen", paging, import on a click, the body stored on the server, stroked and wide icons, the credits of a CC BY set, the public view and the run page, "Weitere Schriften"
 //             in the panel Text, the font select and on /Fonts, the four faces of a family, a phone
@@ -76,7 +80,7 @@ const api = (page, method, url, body) => page.evaluate(async ({ method: m, url: 
 /** Removes every image that came from a catalogue of this check (what an earlier run left behind, and what this run made): trash, then purge. */
 async function purgeImported(page) {
   const keys = new Set();
-  for (const category of ['Katalog: Beispiel-Katalog', 'Katalog: Beispiel-Suche', 'Katalog: Ordner', 'Katalog: Pexels', 'Katalog: Pixabay', 'Katalog: Openverse']) {
+  for (const category of ['Katalog: Beispiel-Katalog', 'Katalog: Beispiel-Suche', 'Katalog: Ordner', 'Katalog: Pexels', 'Katalog: Pixabay', 'Katalog: Openverse', 'Katalog: Unsplash']) {
     const list = await api(page, 'GET', '/api/assets?category=' + encodeURIComponent(category) + '&take=100');
     (list.body || []).forEach(a => keys.add(a.key));
   }
@@ -109,8 +113,16 @@ async function purgeImported(page) {
 
   // the browsers of the people must never talk to the provider (or to anybody but the app): every request that leaves the origin is a problem
   const outside = [];
+  // the one exception: a catalogue whose rules demand hotlinking (Unsplash) is shown from the provider's own address, so while it is on the browser loads ITS pictures (and only those) from the fake
+  const hotlinked = [];
+  let unsplashOn = false;
+  const noteOutside = u => {
+    if (u.startsWith(base) || /^(data|blob):/.test(u)) { return; }
+    if (unsplashOn && u.startsWith(`http://127.0.0.1:${fakePort}/unsplash-img/`)) { hotlinked.push(u); return; }
+    outside.push(u);
+  };
   for (const p of [admin, A, B]) {
-    p.on('request', r => { const u = r.url(); if (!u.startsWith(base) && !/^(data|blob):/.test(u)) { outside.push(u); } });
+    p.on('request', r => { noteOutside(r.url()); });
   }
 
   const cleanup = { designs: [], assets: [] };
@@ -511,7 +523,7 @@ async function purgeImported(page) {
   const tabletContext = await newContext(browser, { viewport: { width: 900, height: 800 } });
   const tablet = await tabletContext.newPage();
   watch(tablet, 'tablet');
-  tablet.on('request', r => { const u = r.url(); if (!u.startsWith(base) && !/^(data|blob):/.test(u)) { outside.push(u); } });
+  tablet.on('request', r => { noteOutside(r.url()); });
   await login(tablet, accounts.designer);
   await openDesigner(tablet, base, made.id);
   const tabletBefore = (await state(tablet)).elements.length;
@@ -537,7 +549,7 @@ async function purgeImported(page) {
   const phoneContext = await newContext(browser, { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
   const phone = await phoneContext.newPage();
   watch(phone, 'phone');
-  phone.on('request', r => { const u = r.url(); if (!u.startsWith(base) && !/^(data|blob):/.test(u)) { outside.push(u); } });
+  phone.on('request', r => { noteOutside(r.url()); });
   await login(phone, accounts.designer);
   await openDesigner(phone, base, made.id);
   await phone.tap('#dt-tabbar-more');
@@ -812,7 +824,7 @@ async function purgeImported(page) {
     await publicContext.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: base });
     const P = await publicContext.newPage();
     watch(P, 'public');
-    P.on('request', r => { const u = r.url(); if (!u.startsWith(base) && !/^(data|blob):/.test(u)) { outside.push(u); } });
+    P.on('request', r => { noteOutside(r.url()); });
     await P.goto(`${base}/s/${token}`);
     await P.waitForSelector('#dt-pv[data-state="ready"]', { timeout: 15000 });
     check('the public view has a link "Bildnachweise" in its footer (three pictures from catalogues)', await P.isVisible('.dt-pv__credits') && (await P.getAttribute('#dt-pv', 'data-credits')) === '3');
@@ -849,7 +861,7 @@ async function purgeImported(page) {
       const ctx = await newContext(browser, touch ? { viewport: { width, height }, hasTouch: true, isMobile: true } : { viewport: { width, height } });
       const R = await ctx.newPage();
       watch(R, 'provider-' + width);
-      R.on('request', r => { const u = r.url(); if (!u.startsWith(base) && !/^(data|blob):/.test(u)) { outside.push(u); } });
+      R.on('request', r => { noteOutside(r.url()); });
       await login(R, accounts.designer);
       await openDesigner(R, base, pdesign.id);
       for (const id of PROVIDERS) {
@@ -883,6 +895,310 @@ async function purgeImported(page) {
     await configure('openverse', { enabled: false });
     await admin.goto(base + '/Admin/Catalogs');
     check('all three are off again', /aus/.test(await pill('pexels')) && /aus/.test(await pill('pixabay')) && /aus/.test(await pill('openverse')));
+  }
+
+  // ---------------------------------------------------------------------------------------- Unsplash (hotlinked pictures, download message, linked credits)
+  current = 'unsplash: ';
+  await admin.goto(base + '/Admin/Catalogs/Edit?id=unsplash');
+  if (!/in der Konfiguration festgelegt/.test(await admin.textContent('body'))) {
+    console.log(`(the app does not know the fake of Unsplash: start it with DESIGNTHIX__Catalogs__unsplash__BaseUrl=http://127.0.0.1:${fakePort}; the checks of Unsplash are skipped)`);
+  } else {
+    const UTM = 'utm_source=DesignThix&utm_medium=referral';
+    const stats = async () => (await (await fetch(`http://127.0.0.1:${fakePort}/__stats`)).json());
+    const until = async (fn, what) => { const end = Date.now() + 10000; while (Date.now() < end) { if (await fn()) { return true; } await sleep(150); } throw new Error('timeout: ' + what); };
+    const pill = id => admin.$eval(`[data-catalog="${id}"] .mat-item__end`, e => e.textContent.replace(/\s+/g, ' ').trim());
+    const origin = `http://127.0.0.1:${fakePort}`;
+    /** The Content-Security-Policy the app sends with a page, as the browser of a person gets it. */
+    const cspOf = (page, url) => page.evaluate(async u => (await fetch(u, { credentials: 'same-origin' })).headers.get('content-security-policy'), url);
+    const imgSrc = csp => ((csp || '').match(/img-src ([^;]*)/) || [])[1] || '';
+    const openMedia = async (page, id) => {
+      await page.evaluate(i => { window.DtMedia.pick({ title: 'Bild wählen', tab: 'cat-' + i }, function () {}); }, id);
+      await page.waitForSelector('dialog.dt-media[open]');
+      await page.waitForSelector(`.dt-media__tab[data-tab="cat-${id}"]`);
+      if ((await page.getAttribute(`.dt-media__tab[data-tab="cat-${id}"]`, 'aria-selected')) !== 'true') { await page.click(`.dt-media__tab[data-tab="cat-${id}"]`); }
+    };
+    const closeMedia = async page => { await page.click('dialog.dt-media button:has-text("Abbrechen")'); await page.waitForSelector('dialog.dt-media', { state: 'detached' }); };
+    const tileCount = page => page.$$eval('.dt-media__tile--item', t => t.length);
+    const titlesOf = page => page.$$eval('.dt-media__tile--item .dt-media__name', t => t.map(x => x.textContent));
+    const importedBy = async category => ((await api(A, 'GET', '/api/assets?category=' + encodeURIComponent(category) + '&take=50')).body || []);
+    const thumbsLoaded = (page, selector, n) => page.waitForFunction(([s, count]) => Array.from(document.querySelectorAll(s)).slice(0, count).every(i => i.complete && i.naturalWidth > 0), [selector, n], { timeout: 15000 });
+    const setSafe = async on => {
+      await admin.goto(base + '/Admin/Catalogs/Edit?id=unsplash');
+      if ((await admin.locator('input[type=checkbox][name="Input.SafeSearch"]').isChecked()) !== on) { await admin.click('label.mat-switch:has(input[name="Input.SafeSearch"])'); }
+      await Promise.all([admin.waitForNavigation(), admin.click('button[type=submit].mat-btn--primary')]);
+    };
+    const THUMB = `${origin}/unsplash-img/`;
+
+    // ---- the administration
+    await configure('unsplash', { enabled: false, removeKey: true });
+    unsplashOn = false;
+    await admin.goto(base + '/Admin/Catalogs');
+    check('the list names Unsplash: off, and it needs a key', /Unsplash/.test(await admin.textContent('[data-catalog="unsplash"]')) && /aus/.test(await pill('unsplash')) && /Schlüssel fehlt/.test(await pill('unsplash')), await pill('unsplash'));
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=unsplash');
+    const privacy = (await admin.textContent('[data-catalog-privacy]')).replace(/\s+/g, ' ');
+    check('the page says what the browser will do: it loads the thumbnails from Unsplash and Unsplash sees the IP address', /lädt dein Browser die Vorschaubilder direkt von Unsplash\. Unsplash sieht dabei deine IP-Adresse/.test(privacy), privacy);
+    check('it names the exception to the policy (images.unsplash.com only, signed-in editor pages, nothing else)', /images\.unsplash\.com/.test(await admin.textContent('[data-catalog-csp]')) && /öffentliche Ansicht/.test(await admin.textContent('[data-catalog-csp]')));
+    const rules = (await admin.$$eval('[data-catalog-rules] li', l => l.map(x => x.textContent.trim()))).join(' || ');
+    check('the rules say what Unsplash requires: hotlinking, the download message, the credit with utm links, the name, 50 and 1 000 requests an hour', /direkt von Unsplash/.test(rules) && /download_location/.test(rules) && /utm_source=DesignThix&utm_medium=referral/.test(rules) && /nicht „Unsplash“ enthalten/.test(rules) && /50 Anfragen pro Stunde/.test(rules) && /1 000 Anfragen pro Stunde/.test(rules), rules.slice(0, 200));
+    check('the key is called "Access Key", the page says where to get one, safe search can be switched, there is no list of licences', /Access Key/.test(await admin.textContent('body')) && (await admin.$$eval('main a[href^="https://unsplash.com/"]', a => a.length)) >= 1 && !!(await admin.$('input[type=checkbox][name="Input.SafeSearch"]')) && !(await admin.$('#Input_AllowedLicences')));
+    await shot(admin, 'admin-unsplash');
+    await admin.goto(base + '/Admin/Catalogs');
+    check('the overview names the one exception to "no browser talks to a provider"', /lädt der Browser sie direkt/.test(await admin.textContent('body')));
+    // the examples of the earlier sections stay out of the way: Unsplash is the only catalogue with pictures that is on
+    await configure('example-browse', { enabled: false });
+    await configure('example-search', { enabled: false });
+
+    // ---- the policy while it is off (a design is open: the editor, the single print, the brand kit)
+    const ud = await createDesign(A, postJson, { preset: 'price-tag' });
+    cleanup.designs.push(ud.id);
+    await openDesigner(A, base, ud.id);
+    const offEditor = imgSrc(await cspOf(A, `/Designs/${ud.id}/Designer`));
+    check('while Unsplash is off the policy is the old one: img-src \'self\' data: blob:', offEditor === "'self' data: blob:", offEditor);
+
+    await configure('unsplash', { enabled: true, key: providers.KEYS.unsplash, fields: { PerUserPerMinute: 500, PerHour: 1000 } });
+    unsplashOn = true;
+    check('the key is not in the page after saving', !(await admin.content()).includes(providers.KEYS.unsplash));
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=unsplash');
+    await admin.click('[data-catalog-test]');
+    await admin.waitForLoadState();
+    await admin.waitForSelector('.mat-toast');
+    check('"Testen" finds photos', /Verbindung steht/.test(await admin.textContent('.mat-toast')), await admin.textContent('.mat-toast'));
+    check('the page shows what Unsplash reported about its limit', /noch \d+ von 50/.test((await admin.textContent('[data-catalog-rate]')).replace(/\s/g, ' ')), await admin.textContent('[data-catalog-rate]').catch(() => '-'));
+
+    // ---- the policy while it is on: the editor pages of a signed-in person get the image host, nothing else does
+    const onEditor = imgSrc(await cspOf(A, `/Designs/${ud.id}/Designer`));
+    check('while Unsplash is on the editor page may load images from its image host (and from the host of the address the operator named, here the fake): only those two are added', onEditor === `'self' data: blob: https://images.unsplash.com ${origin}`, onEditor);
+    const others = {};
+    for (const url of ['/', '/Designs', '/Projekte', '/Templates', '/Assets', '/api/catalogs']) { others[url] = imgSrc(await cspOf(A, url)); }
+    check('every other page keeps the old policy', Object.values(others).every(v => v === "'self' data: blob:"), JSON.stringify(others));
+    check('the print page and the brand kit (they show the media browser too) get it', imgSrc(await cspOf(A, `/Designs/${ud.id}/Print`)).includes(origin) && imgSrc(await cspOf(A, '/Brand')).includes(origin));
+    const signedOutContext = await newContext(browser, wide);
+    const signedOut = await signedOutContext.newPage();
+    const loginResponse = await signedOut.goto(base + '/Account/Login');
+    check('a signed-out visitor never gets it', !imgSrc(loginResponse.headers()['content-security-policy']).includes(origin));
+    await signedOutContext.close();
+
+    // ---- the media browser
+    await openDesigner(A, base, ud.id);
+    const s0 = await stats();
+    await openMedia(A, 'unsplash');
+    await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile--item').length >= 30, null, { timeout: 15000 });
+    const tabsU = await A.$$eval('.dt-media__tab', t => t.map(x => x.textContent));
+    check('Unsplash is a tab behind the six of the library', tabsU.slice(0, 6).join('|') === 'Uploads|Flaggen|Siegel|Logos|Deko|Alle' && tabsU.includes('Unsplash'), tabsU.join('|'));
+    check('the first page is the editorial feed (30 tiles, more to come)', (await tileCount(A)) === 30 && await A.isVisible('.dt-media__more'));
+    const uchips = await A.$$eval('.dt-media__chip', c => c.map(x => x.textContent.trim()));
+    check('the collections are the open topics of Unsplash (the closed one is not offered)', uchips.join('|') === 'Alle|Nature (15)|Food & Drink (15)|Street Photography (15)', uchips.join('|'));
+    check('the link "Fotos von Unsplash" (with utm) and the notice about the direct loading are visible', /Fotos von Unsplash/.test(await A.textContent('.dt-media__provider')) && (await A.getAttribute('.dt-media__provider', 'href')) === `https://unsplash.com/?${UTM}` && /Unsplash sieht dabei deine IP-Adresse/.test(await A.textContent('.dt-media__notice')));
+    check('it has the format filter, the colour filter and no list of licences', await A.isVisible('.dt-media__orient') && await A.isVisible('.dt-media__colour'));
+    const utile = await A.$eval('.dt-media__cell', c => ({ src: c.querySelector('img').getAttribute('src'), policy: c.querySelector('img').getAttribute('referrerpolicy'), attr: c.querySelector('.dt-media__attr').textContent, links: Array.from(c.querySelectorAll('.dt-media__attr a')).map(a => ({ href: a.getAttribute('href'), rel: a.getAttribute('rel'), target: a.getAttribute('target'), text: a.textContent })), inButton: !!c.querySelector('button a'), badge: !!c.querySelector('.dt-media__badge') }));
+    check('the thumbnail is the address of the provider itself, with its ixid, not a token of the proxy', utile.src.startsWith(THUMB) && /[?&]ixid=M3wxfake/.test(utile.src) && !/\/api\/catalogs\/thumb\//.test(utile.src), utile.src);
+    check('and it is loaded without a Referer (the page keeps its address to itself)', utile.policy === 'no-referrer');
+    check('under every tile: "Foto: Name / Unsplash", both linked, with the utm parameters, opened safely, outside the button', /^Foto: .+ \/ Unsplash$/.test(utile.attr) && utile.links.length === 2 && utile.links[0].href.startsWith('https://unsplash.com/@') && utile.links[0].href.endsWith('?' + UTM) && utile.links[1].href === `https://unsplash.com/?${UTM}` && utile.links.every(l => l.rel === 'noopener noreferrer' && l.target === '_blank') && !utile.inButton, JSON.stringify(utile));
+    await thumbsLoaded(A, '.dt-media__tile--item img', 12);
+    check('the thumbnails load from Unsplash itself without a policy violation (the check reports every violation at the end)', true);
+    const sU = await stats();
+    check('the page loaded them: the image host of the fake was asked by the browser', (sU['unsplash-img:w400'] || 0) - (s0['unsplash-img:w400'] || 0) >= 12 && hotlinked.length >= 12, String((sU['unsplash-img:w400'] || 0) - (s0['unsplash-img:w400'] || 0)));
+    check('a search or a page of results tells Unsplash about no download', (sU['unsplash:download'] || 0) === (s0['unsplash:download'] || 0));
+    check('the browser never sent a Referer to the image host', Object.keys(sU.__unsplashImgReferers || {}).join() === '(none)', JSON.stringify(sU.__unsplashImgReferers));
+    await shot(A, 'media-unsplash');
+    await A.evaluate(() => document.querySelector('.dt-media__more').scrollIntoView());
+    await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile--item').length > 30, null, { timeout: 10000 });
+    const allTitles = await titlesOf(A);
+    check('the next page comes by scrolling and has 15 more photos (Unsplash+, the one on another host and the one with a plain address are not among them)', allTitles.length === 45 && !allTitles.some(t => /Nur privat|Unveränderbar|Fremdes/.test(t)), String(allTitles.length));
+    check('the title is the short generated description, capitalised', allTitles.includes('Berglandschaft'));
+
+    // search and filters: what the app asks Unsplash
+    await searchMedia(A, 'berg', ['Berglandschaft', 'Bergsee', 'Schneeberg']);
+    let sent = (await stats()).__lastUnsplash;
+    check('a search asks in the documented form: query, at most 30 per page, relevance, safe search on (content_filter high), version v1, a User-Agent', sent.query === 'berg' && sent.per_page === '30' && sent.order_by === 'relevant' && sent.content_filter === 'high' && sent.version === 'v1' && /DesignThix/.test(sent.ua), JSON.stringify(sent));
+    await A.selectOption('.dt-media__orient', 'landscape');
+    await until(async () => (await stats()).__lastUnsplash.orientation === 'landscape', 'landscape');
+    await A.selectOption('.dt-media__orient', 'square');
+    await until(async () => (await stats()).__lastUnsplash.orientation === 'squarish', 'squarish');
+    check('"Quadrat" is asked for as "squarish"', true);
+    await A.selectOption('.dt-media__orient', 'any');
+    for (const [ours, theirs] of [['violet', 'purple'], ['turquoise', 'teal'], ['pink', 'magenta']]) {
+      await A.selectOption('.dt-media__colour', ours);
+      await until(async () => (await stats()).__lastUnsplash.color === theirs, theirs);
+    }
+    check('"Violett", "Türkis" and "Rosa" are asked for as purple, teal and magenta', true);
+    await A.selectOption('.dt-media__colour', 'any');
+    await A.fill('.dt-media__search', '');
+    await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile--item').length === 30, null, { timeout: 10000 });
+    await A.click('.dt-media__chip:has-text("Nature")');
+    await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile--item').length === 15, null, { timeout: 10000 });
+    check('a topic lists its photos (Nature: 15, newest of the topics by popularity)', (await stats()).__lastUnsplashTopic.slug === 'nature' && (await stats()).__lastUnsplashTopic.order_by === 'popular');
+    await A.click('.dt-media__chip:has-text("Alle")');
+    await A.waitForFunction(() => document.querySelectorAll('.dt-media__tile--item').length === 30, null, { timeout: 10000 });
+
+    // the import: the message to Unsplash with the ixid and the key, the file with the ixid, the copy in the library
+    await searchMedia(A, 'zitron', ['Zitronen']);
+    const before = await stats();
+    await A.click('.dt-media__tile--item');
+    await A.waitForSelector('dialog.dt-media', { state: 'detached', timeout: 20000 });
+    const after = await stats();
+    const unsplashAssets = await importedBy('Katalog: Unsplash');
+    const lemon = unsplashAssets.find(a => /^zitronen/.test(a.key));
+    check('a click copies the photo into the library (category "Katalog: Unsplash")', !!lemon, JSON.stringify(unsplashAssets.map(a => a.key)));
+    check('Unsplash was told about the download once, with the ixid of the photo and from the server (never from the browser)', (after['unsplash:download'] || 0) === (before['unsplash:download'] || 0) + 1 && /^M3wxfake/.test(after.__lastUnsplashDownload.ixid) && /DesignThix/.test(after.__lastUnsplashDownload.ua), JSON.stringify(after.__lastUnsplashDownload));
+    check('the file came from the image host with the ixid at 2400 px (a copy, once)', (after['unsplash-img:w2400'] || 0) === (before['unsplash-img:w2400'] || 0) + 1 && (after['unsplash-img:without-ixid'] || 0) === 0);
+    const itemRow = ((await api(A, 'GET', '/api/items?kinds=asset&recursive=true&take=200')).body.items || []).find(i => lemon && i.key === lemon.key);
+    await A.goto(`${base}/Assets/Edit/${itemRow.id}`);
+    await A.click('#asset-tabs-tab-file').catch(() => {});
+    const sourceText = (await A.textContent('[data-asset-source]')).replace(/\s+/g, ' ');
+    const sourceLinks = await A.$$eval('[data-asset-source] a', a => a.map(x => x.getAttribute('href')));
+    check('the page of the imported photo shows who made it, the catalogue, the licence and the page at Unsplash, with the utm links', /Urheber/.test(sourceText) && /Katalog\s*Unsplash/.test(sourceText) && /Unsplash-Lizenz/.test(sourceText) && /Foto von .+ auf Unsplash/.test(sourceText) && sourceLinks.filter(h => h.includes(UTM)).length === 3, JSON.stringify({ sourceText, sourceLinks }));
+    await openDesigner(A, base, ud.id);
+
+    // the same photo again: told again, not downloaded again
+    await openMedia(A, 'unsplash');
+    await searchMedia(A, 'zitron', ['Zitronen']);
+    const b2 = await stats();
+    await A.click('.dt-media__tile--item');
+    await A.waitForSelector('dialog.dt-media', { state: 'detached', timeout: 20000 });
+    const a2 = await stats();
+    check('using the same photo again is told to Unsplash again and downloads nothing a second time', (a2['unsplash:download'] || 0) === (b2['unsplash:download'] || 0) + 1 && (a2['unsplash-img:w2400'] || 0) === (b2['unsplash-img:w2400'] || 0), String((a2['unsplash:download'] || 0) - (b2['unsplash:download'] || 0)));
+
+    // what must never be offered, crafted ids, limits, a provider that is down
+    const page1 = await api(A, 'GET', '/api/catalogs/unsplash/search?page=1&perPage=30');
+    const page2 = await api(A, 'GET', '/api/catalogs/unsplash/search?page=2&perPage=30');
+    const listed = [...page1.body.items, ...page2.body.items];
+    check('no Unsplash+ photo, no photo on another host and none with a plain http address is offered, and no address of the provider but its image host is in an answer', listed.length === 45 && !listed.some(i => /Nur privat|Unveränderbar|Fremdes/.test(i.title)) && listed.every(i => i.thumb.startsWith(THUMB)) && !JSON.stringify(listed).includes(providers.KEYS.unsplash), String(listed.length));
+    const dlBefore = (await stats())['unsplash:download'] || 0;
+    const imgBefore = (await stats())['unsplash-img:w2400'] || 0;
+    const plusId = 'Unsnc1xYz';
+    const paid = await api(A, 'POST', '/api/catalogs/unsplash/import', { itemId: plusId });
+    check('an Unsplash+ photo cannot be imported by its id: nobody is told, nothing is downloaded', paid.status === 503 && ((await stats())['unsplash:download'] || 0) === dlBefore && ((await stats())['unsplash-img:w2400'] || 0) === imgBefore, paid.status + ' ' + JSON.stringify(paid.body));
+    const crafted = await api(A, 'POST', '/api/catalogs/unsplash/import', { itemId: '../photos' });
+    check('an id that is an address is refused before anybody is asked', crafted.status === 400 && ((await stats())['unsplash:download'] || 0) === dlBefore, String(crafted.status));
+    await openMedia(A, 'unsplash');
+    await A.fill('.dt-media__search', 'down');
+    await A.waitForFunction(() => /nicht erreichbar/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 10000 });
+    check('a provider that is down is "nicht erreichbar" and the other tabs stay', (await A.$$('.dt-media__tab')).length >= 7);
+    await A.fill('.dt-media__search', 'limit');
+    await A.waitForFunction(() => /bremst gerade/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 10000 });
+    const searchesAfterLimit = (await stats())['/search/photos'];
+    await A.fill('.dt-media__search', 'wiese');
+    await A.waitForFunction(() => /bremst gerade/.test(document.querySelector('.dt-media__status').textContent) && /Minute|Stunde/.test(document.querySelector('.dt-media__status').textContent), null, { timeout: 10000 });
+    await A.waitForTimeout(400);
+    check('"403 Rate Limit Exceeded" is a pause ("bremst gerade"), not a refused key, and Unsplash is not asked again meanwhile', (await stats())['/search/photos'] === searchesAfterLimit);
+    await shot(A, 'media-unsplash-limit');
+    await closeMedia(A);
+    await admin.goto(base + '/Admin/Catalogs/Edit?id=unsplash');
+    await admin.click('[data-catalog-test]');
+    await admin.waitForLoadState();
+    await admin.waitForSelector('.mat-toast');
+    check('"Testen" of the administrator asks once more, whatever was said before', /Verbindung steht/.test(await admin.textContent('.mat-toast')));
+
+    // safe search off: the filter changes
+    await setSafe(false);
+    await openMedia(A, 'unsplash');
+    await searchMedia(A, 'berg', ['Berglandschaft', 'Bergsee', 'Schneeberg']);
+    check('with safe search off the search asks with content_filter low', (await stats()).__lastUnsplash.content_filter === 'low');
+    await closeMedia(A);
+    await setSafe(true);
+
+    // ---- the panel Fotos
+    await openDesigner(A, base, ud.id);
+    await openPanel(A, 'photos');
+    await A.waitForFunction(() => document.querySelectorAll('.dt-photo').length === 30, null, { timeout: 15000 });
+    check('Fotos: Unsplash is the only catalogue, so there is no row of catalogues; the link, the notice and both filters are in the panel', (await A.$$('.dt-photos__cat')).length === 0 && /Fotos von Unsplash/.test(await A.textContent('.dt-photos__providerlink')) && (await A.getAttribute('.dt-photos__providerlink', 'href')) === `https://unsplash.com/?${UTM}` && /Unsplash sieht dabei deine IP-Adresse/.test(await A.textContent('.dt-photos__notice')) && await A.isVisible('.dt-photos__colour'));
+    const ptile = await A.$eval('.dt-photocell', c => ({ src: c.querySelector('img').getAttribute('src'), policy: c.querySelector('img').getAttribute('referrerpolicy'), attr: c.querySelector('.dt-photo__attr').textContent, hrefs: Array.from(c.querySelectorAll('.dt-photo__attr a')).map(a => a.getAttribute('href')), inButton: !!c.querySelector('button a') }));
+    check('Fotos: the tiles carry the same line of links and the hotlinked thumbnail without a Referer', ptile.src.startsWith(THUMB) && ptile.policy === 'no-referrer' && /^Foto: .+ \/ Unsplash$/.test(ptile.attr) && ptile.hrefs.length === 2 && ptile.hrefs.every(h => h.includes(UTM)) && !ptile.inButton, JSON.stringify(ptile));
+    await thumbsLoaded(A, '.dt-photo img', 10);
+    await shot(A, 'fotos-unsplash');
+    await searchPhotos(A, 'Käseplatte', ['Käseplatte']);
+    const placed = (await state(A)).elements.length;
+    const b3 = await stats();
+    await A.click('.dt-photo');
+    await A.waitForFunction(n => window.DtDesigner.app.elements().length === n + 1, placed, { timeout: 20000 });
+    check('Fotos: a click imports the photo (and tells Unsplash) and puts it on the page', ((await stats())['unsplash:download'] || 0) === (b3['unsplash:download'] || 0) + 1);
+    await idle(A);
+    await A.waitForFunction(() => window.DtDesigner.app.saveState === 'saved', null, { timeout: 15000 });
+
+    // ---- the credits: the editor, the public view
+    current = 'unsplash/credits: ';
+    await A.click('#dt-file');
+    await A.waitForSelector('.dt-menu');
+    await A.click('.dt-menu__item:has(.dt-menu__label:text-is("Bildnachweise …"))');
+    await A.waitForSelector('dialog.dt-credits[open] .dt-credits__item', { timeout: 10000 });
+    const credits = await A.$$eval('.dt-credits__item', c => c.map(x => ({ text: x.textContent.replace(/\s+/g, ' ').trim(), links: Array.from(x.querySelectorAll('a')).map(a => ({ text: a.textContent, href: a.getAttribute('href'), rel: a.getAttribute('rel') })) })));
+    check('the editor lists the photo with the photographer, "Unsplash", the licence and the source, all linked with utm and opened safely', credits.length === 1 && credits[0].links.length === 4 && credits[0].links.some(l => l.text === 'Unsplash' && l.href === `https://unsplash.com/?${UTM}`) && credits[0].links.some(l => l.href.startsWith('https://unsplash.com/@') && l.href.endsWith(UTM)) && credits[0].links.some(l => l.text === 'Unsplash-Lizenz' && l.href === 'https://unsplash.com/license') && credits[0].links.some(l => l.text === 'Quelle' && /^https:\/\/unsplash\.com\/photos\//.test(l.href) && l.href.endsWith(UTM)) && credits[0].links.every(l => l.rel === 'noopener noreferrer'), JSON.stringify(credits));
+    await A.click('dialog.dt-credits button:has-text("Text kopieren")');
+    await A.waitForSelector('.mat-toast');
+    const copied = await A.evaluate(() => navigator.clipboard.readText());
+    check('"Text kopieren" gives the line "Foto von Name auf Unsplash" with the links', /^Foto von .+ auf Unsplash – https:\/\/unsplash\.com\/photos\/.*utm_source=DesignThix/.test(copied), copied);
+    await shot(A, 'credits-unsplash');
+    await A.click('dialog.dt-credits button:has-text("Schließen")');
+    await A.waitForSelector('dialog.dt-credits', { state: 'detached' });
+
+    await api(A, 'POST', `/api/share/design/${ud.id}/link`, { audience: 'Public', permission: 'View', allowDownload: false });
+    const utoken = ((await api(A, 'GET', `/api/share/design/${ud.id}`)).body.link || {}).token;
+    const publicContext = await newContext(browser, { viewport: { width: 1440, height: 900 } });
+    const P = await publicContext.newPage();
+    watch(P, 'public-unsplash');
+    P.on('request', r => { noteOutside(r.url()); });
+    const hotBefore = hotlinked.length;
+    await P.goto(`${base}/s/${utoken}`);
+    await P.waitForSelector('#dt-pv[data-state="ready"]', { timeout: 15000 });
+    check('the public view has the link "Bildnachweise"', await P.isVisible('.dt-pv__credits'));
+    const publicCsp = await cspOf(P, `/s/${utoken}`);
+    check('the public view never gets the image host in its policy, and loads nothing from Unsplash (the photo is the copy in the library)', !imgSrc(publicCsp).includes(origin) && imgSrc(publicCsp) === "'self' data: blob:" && hotlinked.length === hotBefore, imgSrc(publicCsp));
+    await P.click('.dt-pv__credits');
+    await P.waitForSelector('dialog.dt-pv-cr[open] .dt-pv-cr__item');
+    const pcredits = await P.$$eval('.dt-pv-cr__item', c => c.map(x => Array.from(x.querySelectorAll('a')).map(a => a.textContent + '|' + a.getAttribute('href'))));
+    check('the public dialog names the photographer and Unsplash with utm links', pcredits.length === 1 && pcredits[0].some(l => l === `Unsplash|https://unsplash.com/?${UTM}`) && pcredits[0].some(l => /^.+\|https:\/\/unsplash\.com\/@.*utm_source=DesignThix/.test(l)), JSON.stringify(pcredits));
+    await shot(P, 'public-credits-unsplash');
+    await publicContext.close();
+
+    // ---- tablet and phone
+    current = 'unsplash/responsive: ';
+    for (const [width, height, touch] of [[900, 800, false], [390, 844, true]]) {
+      const ctx = await newContext(browser, touch ? { viewport: { width, height }, hasTouch: true, isMobile: true } : { viewport: { width, height } });
+      const R = await ctx.newPage();
+      watch(R, 'unsplash-' + width);
+      R.on('request', r => { noteOutside(r.url()); });
+      await login(R, accounts.designer);
+      await openDesigner(R, base, ud.id);
+      await openMedia(R, 'unsplash');
+      await R.waitForSelector('.dt-media__cell', { timeout: 15000 });
+      await thumbsLoaded(R, '.dt-media__tile--item img', 6);
+      check(`Unsplash at ${width} px: the media browser fits, the link, the notice and the line of links are visible, nothing scrolls sideways`, await R.evaluate(w => { const d = document.querySelector('dialog.dt-media').getBoundingClientRect(); const link = document.querySelector('.dt-media__provider'); const note = document.querySelector('.dt-media__notice'); const attr = document.querySelector('.dt-media__attr'); return d.width <= w + 2 && document.documentElement.scrollWidth <= w + 2 && link && link.offsetParent !== null && note && note.offsetParent !== null && attr && attr.offsetParent !== null; }, width));
+      await shot(R, 'media-unsplash');
+      await closeMedia(R);
+      if (!touch) {
+        await R.click('.dt-rail__btn[data-panel="photos"]');
+        await R.waitForSelector('.dt-photocell', { timeout: 15000 });
+        await thumbsLoaded(R, '.dt-photo img', 6);
+        check('the panel Fotos with Unsplash is a drawer on a tablet and does not scroll sideways', await R.evaluate(() => { const p = document.getElementById('dt-panel').getBoundingClientRect(); return p.width > 200 && p.width < 460 && document.documentElement.scrollWidth <= 902; }));
+        await shot(R, 'fotos-unsplash');
+      } else {
+        await R.tap('#dt-tabbar-more');
+        await R.waitForSelector('.dt-menu');
+        await R.tap('.dt-menu__item:has(.dt-menu__label:text-is("Fotos"))');
+        await R.waitForSelector('.dt-photocell', { timeout: 15000 });
+        await thumbsLoaded(R, '.dt-photo img', 6);
+        check('the panel Fotos with Unsplash is a sheet on a phone and does not scroll sideways, the line of links is visible', await R.evaluate(() => document.documentElement.scrollWidth <= 392 && !!document.querySelector('.dt-photo__attr') && document.querySelector('.dt-photo__attr').offsetParent !== null));
+        await shot(R, 'fotos-unsplash');
+      }
+      await ctx.close();
+    }
+
+    // ---- put it back: off, no key, and the policy is the old one again
+    current = 'unsplash/cleanup: ';
+    await configure('unsplash', { enabled: false, removeKey: true });
+    await openDesigner(A, base, ud.id);
+    check('with Unsplash off again the editor page has the old policy', imgSrc(await cspOf(A, `/Designs/${ud.id}/Designer`)) === "'self' data: blob:");
+    await A.evaluate(() => { window.DtMedia.pick({ title: 'Bild wählen' }, function () {}); });
+    await A.waitForSelector('dialog.dt-media[open]');
+    await sleep(800);
+    const tabsOff = await A.$$eval('.dt-media__tab', x => x.map(y => y.textContent));
+    await A.click('dialog.dt-media button:has-text("Abbrechen")');
+    await A.waitForSelector('dialog.dt-media', { state: 'detached' });
+    check('and the media browser has no tab for it', !tabsOff.includes('Unsplash'), tabsOff.join('|'));
+    unsplashOn = false;
+    await admin.goto(base + '/Admin/Catalogs');
+    check('Unsplash is off again', /aus/.test(await pill('unsplash')));
   }
 
   // ---------------------------------------------------------------------------------------- icons and fonts (plan 5 / C3)
@@ -1056,7 +1372,7 @@ async function purgeImported(page) {
     const P2 = await ictx.newPage();
     watch(P2, 'public-icons');
     const publicIconRequests = [];
-    P2.on('request', r => { if (r.url().includes('/api/icons')) { publicIconRequests.push(r.url()); } const u = r.url(); if (!u.startsWith(base) && !/^(data|blob):/.test(u)) { outside.push(u); } });
+    P2.on('request', r => { if (r.url().includes('/api/icons')) { publicIconRequests.push(r.url()); } noteOutside(r.url()); });
     await P2.goto(`${base}/s/${itoken}`);
     await P2.waitForSelector('#dt-pv[data-state="ready"]', { timeout: 15000 });
     await P2.waitForFunction(() => document.querySelectorAll('#dt-pv svg [data-el-type="icon"] path, #dt-pv svg [data-el-type="icon"] circle').length >= 4, null, { timeout: 15000 });
@@ -1151,7 +1467,7 @@ async function purgeImported(page) {
     const pctx = await newContext(browser, { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
     const Q = await pctx.newPage();
     watch(Q, 'phone-icons');
-    Q.on('request', r => { const u = r.url(); if (!u.startsWith(base) && !/^(data|blob):/.test(u)) { outside.push(u); } });
+    Q.on('request', r => { noteOutside(r.url()); });
     await login(Q, accounts.designer);
     await openDesigner(Q, base, idesign.id);
     await Q.tap('.dt-tabbar__btn[data-panel="elements"]');

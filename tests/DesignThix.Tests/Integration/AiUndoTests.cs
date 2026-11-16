@@ -35,7 +35,7 @@ public sealed class AiUndoTests(AppTests.AppFactory factory) : AiAgentTestBase(f
             return;
         }
 
-        await ResetAsync();
+        await ResetAsync(s => s.AgentMaxLooks = 0);   // the test polls like an editor but draws nothing
         var design = await DesignAsync(Role.Designer, DocumentOf(210, 297, "mm", Text("e1", 10, 10, 100, 10, "Vorher")));
         var sent = await RunAsync(Role.Designer, design, "Zwei Änderungen", null, Call("update_elements", """{"id": "e1", "set": {"text": "Nachher"}}"""), Write("a", "Neu", 40));
         Assert.Equal("Nachher|Neu", await TextsAsync(design));

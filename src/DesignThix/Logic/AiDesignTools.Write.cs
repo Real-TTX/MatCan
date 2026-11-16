@@ -1296,10 +1296,15 @@ public static partial class AiDesignTools
 
     private static async Task<ToolOutcome> ApplyTemplateAsync(Biz biz, AiToolSession s, JsonObject args)
     {
-        var templateId = ArgInt(args, "templateId", "template", "id") ?? throw new ToolError("templateId fehlt", "Gib templateId an (aus list_templates).");
+        var templateId = ArgInt(args, "templateId", "template", "id") ?? throw new ToolError("templateId fehlt", "Gib templateId an (aus search_templates oder list_templates).");
         var template = await DesignLogic.Templates(biz).AsNoTracking().Where(d => d.Id == templateId).Select(d => new { d.Name, d.DocumentJson }).FirstOrDefaultAsync()
-            ?? throw new ToolError("Vorlage gibt es nicht", $"Die Vorlage {templateId} gibt es nicht oder sie ist für dich nicht nutzbar. Suche mit list_templates.");
+            ?? throw new ToolError("Vorlage gibt es nicht", $"Die Vorlage {templateId} gibt es nicht oder sie ist für dich nicht nutzbar. Suche mit search_templates.");
         var source = DocumentValidator.Parse(template.DocumentJson) ?? throw new ToolError("Vorlage beschädigt", "Die Vorlage lässt sich nicht lesen.");
+        if (ArgBool(args, "whole") == true)
+        {
+            return await ApplyWholeTemplateAsync(biz, s, template.Name, source);
+        }
+
         var number = ArgInt(args, "templatePage", "templateSeite") ?? 1;
         if (number < 1 || number > source.Pages.Count)
         {
@@ -1382,10 +1387,184 @@ public static partial class AiDesignTools
                 pages.Add(copy);
             }
 
+            RememberTemplateTexts(s, copy);
             var label = $"Seite aus Vorlage „{Clip(template.Name, 40)}“ {(replace is null ? "hinzugefügt" : "eingesetzt")}";
-            var result = new JsonObject { ["page"] = pageId, ["fieldsAdded"] = new JsonArray(addedFields.Select(a => (JsonNode)JsonValue.Create(a)!).ToArray()), ["elements"] = AiDocOps.CountNodes(AiDocOps.Elements(copy)) };
+            var result = new JsonObject { ["page"] = pageId, ["fieldsAdded"] = new JsonArray(addedFields.Select(a => (JsonNode)JsonValue.Create(a)!).ToArray()), ["elements"] = AiDocOps.CountNodes(AiDocOps.Elements(copy)), ["aufbau"] = TemplateListing(copy), ["weiter"] = TemplateNext };
             return Task.FromResult(new PatchResult(label, result, warnings, [pageId], [.. created.Take(60)], pageId, created));
         });
+    }
+
+    private const string TemplateNext = "Das ist der Aufbau mit den ids. Ersetze jetzt jeden Beispieltext durch den Inhalt der Person (update_elements; Länge und Schrift passen), lösche, was nicht gebraucht wird (delete_elements), ergänze fehlende Angaben (add_elements) und tausche Motive gegen passende (search_deko). Das Layout und die Dekoration der Vorlage bleiben.";
+
+    /// <summary>
+    /// The design becomes the template: its size, unit, fold, ALL pages and its fields replace what the design had (the right start for a new design: the template's format is the format of the design).
+    /// Refused when the person locked something. The elements get new ids and are unlocked; the sample texts are remembered so the final check can say which ones were never replaced.
+    /// </summary>
+    private static async Task<ToolOutcome> ApplyWholeTemplateAsync(Biz biz, AiToolSession s, string templateName, DesignDocument source)
+    {
+        return await WriteAsync(biz, s, doc =>
+        {
+            RequireDesignLevel(s, "Das ganze Design durch eine Vorlage zu ersetzen");
+            if (AiDocOps.AllElements(doc).Any(e => AiDocOps.Flag(e["locked"])))
+            {
+                throw new ToolError("Gesperrte Elemente im Design", "Die Person hat Elemente gesperrt (locked): das Design wird nicht ersetzt. Übernimm stattdessen eine Seite der Vorlage (ohne whole).");
+            }
+
+            var had = AiDocOps.AllElements(doc).Count();
+            var templateDoc = AiDocOps.Parse(DocumentValidator.ToJson(DocumentValidator.Normalize(source)));
+            doc["width"] = templateDoc["width"]!.DeepClone();
+            doc["height"] = templateDoc["height"]!.DeepClone();
+            doc["unit"] = templateDoc["unit"]!.DeepClone();
+            if (templateDoc["dpi"] is { } dpi)
+            {
+                doc["dpi"] = dpi.DeepClone();
+            }
+
+            if (templateDoc["fold"] is { } fold)
+            {
+                doc["fold"] = fold.DeepClone();
+            }
+            else
+            {
+                doc.Remove("fold");
+            }
+
+            doc["fields"] = templateDoc["fields"]?.DeepClone() ?? new JsonArray();
+            var pages = new JsonArray();
+            var created = new List<string>();
+            var n = 0;
+            foreach (var page in AiDocOps.Pages(templateDoc).OfType<JsonObject>())
+            {
+                var copy = (JsonObject)page.DeepClone();
+                n++;
+                copy["id"] = "p" + n;
+                pages.Add(copy);
+            }
+
+            // new ids that are unique over all pages
+            var nextId = AiDocOps.IdMaker(new JsonObject { ["pages"] = pages.DeepClone() });
+            foreach (var page in pages.OfType<JsonObject>())
+            {
+                foreach (var e in AiDocOps.Walk(AiDocOps.Elements(page)))
+                {
+                    var fresh = nextId();
+                    e["id"] = fresh;
+                    e["locked"] = false;
+                    created.Add(fresh);
+                }
+
+                RememberTemplateTexts(s, page);
+            }
+
+            doc["pages"] = pages;
+            var warnings = new List<string>();
+            if (had > 0)
+            {
+                warnings.Add($"Das bisherige Design ({had} Elemente) wurde durch die Vorlage ersetzt; „Rückgängig“ bringt es zurück.");
+            }
+
+            var listing = new JsonArray();
+            var number = 0;
+            foreach (var page in pages.OfType<JsonObject>())
+            {
+                number++;
+                var entry = TemplateListing(page);
+                entry["id"] = AiDocOps.Id(page);
+                entry["number"] = number;
+                entry["name"] = AiDocOps.Str(page["name"]);
+                listing.Add(entry);
+            }
+
+            var result = new JsonObject
+            {
+                ["format"] = new JsonObject { ["width"] = AiDocOps.Num(doc["width"]), ["height"] = AiDocOps.Num(doc["height"]), ["unit"] = AiDocOps.Unit(doc), ["fold"] = AiDocOps.Str(doc["fold"]) is { Length: > 0 } f ? f : "none" },
+                ["fields"] = new JsonArray(AiDocOps.Fields(doc).OfType<JsonObject>().Select(f => (JsonNode)new JsonObject { ["key"] = AiDocOps.Str(f["key"]), ["label"] = AiDocOps.Str(f["label"]), ["sample"] = AiDocOps.Str(f["sample"]) }).ToArray()),
+                ["pages"] = listing,
+                ["weiter"] = TemplateNext,
+            };
+            var firstPage = AiDocOps.Id((JsonObject)pages[0]!);
+            return Task.FromResult(new PatchResult($"Vorlage „{Clip(templateName, 40)}“ übernommen ({pages.Count} Seite{(pages.Count == 1 ? "" : "n")})", result, warnings, [.. pages.OfType<JsonObject>().Select(AiDocOps.Id)], [.. created.Take(60)], firstPage, created));
+        });
+    }
+
+    private static readonly string[] SlotWords = ["name", "namen", "datum", "uhrzeit", "zeit", "ort", "adresse", "strasse", "telefon", "tel", "preis", "kontakt", "mail", "email", "alter", "veranstalter", "absender", "web", "betrag", "termin", "treffpunkt", "eintritt", "ansprechpartner"];
+
+    /// <summary>
+    /// The sample texts of a page that came from a template and are the personal part of it (element id to text): a text with a digit or an address, or in an element named like a slot for personal data
+    /// (Name, Datum, Ort, Adresse, Uhrzeit ...). The final check says which of them are still unchanged when the model is done. A general label like "Einladung" is not remembered: it may stay.
+    /// </summary>
+    private static void RememberTemplateTexts(AiToolSession s, JsonObject page)
+    {
+        foreach (var e in AiDocOps.Walk(AiDocOps.Elements(page)).Where(e => AiDocOps.Type(e) == "text"))
+        {
+            var text = AiDocOps.Str(e["text"]).Trim();
+            if (text.Length == 0 || text.Contains("{{", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            // a number alone ("80") may be the very number of the person; a label in capitals ("WANN") is no data
+            if (text.All(c => char.IsDigit(c) || char.IsWhiteSpace(c) || c is '.' or ',' or '%' or '€') || (text.Length <= 24 && text == text.ToUpperInvariant() && !text.Any(char.IsDigit)))
+            {
+                continue;
+            }
+
+            var nameWords = AiSearchText.Words(AiDocOps.Str(e["name"]));
+            if (text.Any(char.IsDigit) || text.Contains('@') || nameWords.Any(w => SlotWords.Contains(w)))
+            {
+                s.TemplateTexts[AiDocOps.Id(e)] = text;
+            }
+        }
+    }
+
+    /// <summary>What a page of a template consists of, for the model: every element with its id, in drawing order, as short as it can be (texts with font and size, pictures with their key, the rest by type and colour).</summary>
+    private static JsonObject TemplateListing(JsonObject page)
+    {
+        var items = new JsonArray();
+        foreach (var e in AiDocOps.Walk(AiDocOps.Elements(page)))
+        {
+            var type = AiDocOps.Type(e);
+            if (type == "group")
+            {
+                continue;
+            }
+
+            var line = new JsonObject { ["id"] = AiDocOps.Id(e), ["type"] = type };
+            if (AiDocOps.Str(e["name"]) is { Length: > 0 } name)
+            {
+                line["name"] = name;
+            }
+
+            line["box"] = $"{R1(AiDocOps.Num(e["x"]))},{R1(AiDocOps.Num(e["y"]))},{R1(AiDocOps.Num(e["w"]))},{R1(AiDocOps.Num(e["h"]))}";
+            switch (type)
+            {
+                case "text":
+                    line["text"] = Clip(AiDocOps.Str(e["text"]), 120);
+                    line["font"] = $"{AiDocOps.Str(e["fontFamily"])} {AiDocOps.Num(e["fontSize"]).ToString("0.#", CultureInfo.InvariantCulture)} pt{(AiDocOps.Num(e["fontWeight"]) >= 600 ? " fett" : "")}";
+                    line["color"] = AiDocOps.Str(e["color"]);
+                    break;
+                case "image":
+                    line["source"] = e["source"] is JsonObject src ? (AiDocOps.Str(src["asset"]) is { Length: > 0 } asset ? asset : "{{" + AiDocOps.Str(src["field"]) + "}}") : "(leerer Rahmen)";
+                    break;
+                case "icon":
+                    line["icon"] = AiDocOps.Str(e["icon"]);
+                    line["color"] = AiDocOps.Str(e["color"]);
+                    break;
+                case "shape":
+                    line["shape"] = AiDocOps.Str(e["shape"]);
+                    line["fill"] = e["fill"] is JsonObject fill ? (fill["gradient"] is not null ? "Verlauf" : AiDocOps.Str(fill["color"])) : null;
+                    if (AiDocOps.Str(e["stroke"]) is { Length: > 0 } stroke)
+                    {
+                        line["stroke"] = stroke;
+                    }
+
+                    break;
+            }
+
+            items.Add(line);
+        }
+
+        return new JsonObject { ["background"] = page["background"]?.DeepClone(), ["elements"] = items };
     }
 
     // ------------------------------------------------------------------------------------------------ create_svg, rename_design
@@ -1461,7 +1640,7 @@ public static partial class AiDesignTools
 
         s.Looks++;
         var request = new AiRenderBroker.Request(s.RunId, s.ConversationId, s.UserId, pageId, AiDocOps.PageNumber(doc, page), head.Revision, AiRenderBroker.NewToken());
-        var bytes = await broker.RequestAsync(request, TimeSpan.FromSeconds(30), ct);
+        var bytes = await broker.RequestAsync(request, s.LookTimeout, ct);
         if (bytes is null || bytes.Length == 0)
         {
             return new ToolOutcome(true, "Kein Bild verfügbar", new JsonObject { ["available"] = false, ["reason"] = "Kein Bild verfügbar: der Editor hat keins geliefert. Arbeite ohne Bild weiter." }, [], pageId);
@@ -1481,7 +1660,8 @@ public static partial class AiDesignTools
             await File.WriteAllBytesAsync(Path.Combine(folder, file), bytes, ct);
         }
 
-        s.PicturesForNextCall.Add(new Core.Ai.AiAttachment { Kind = "image", MediaType = sniffed.ContentType, Name = $"{label} (Revision {head.Revision})", Data = Convert.ToBase64String(bytes) });
+        s.PicturesForNextCall.Add(new Core.Ai.AiAttachment { Kind = "image", MediaType = sniffed.ContentType, Name = s.PictureName is { } named ? $"{named}: {label}" : $"{label} (Revision {head.Revision})", Data = Convert.ToBase64String(bytes) });
+        s.PictureName = null;
         return new ToolOutcome(true, $"{label} angesehen", new JsonObject { ["available"] = true, ["note"] = $"Das Bild von {label} bekommst du mit der nächsten Nachricht." }, [], pageId, null, false, head.Revision, file);
     }
 }

@@ -33,7 +33,7 @@ public sealed record CatalogInput(bool Enabled, int Order, int PerUserPerMinute,
 public sealed record CatalogImportResult(AssetRow Asset, bool Reused);
 
 /// <summary>One line of the "Bildnachweise" of a design.</summary>
-public sealed record CreditRow(string Key, string Name, string Catalog, string CatalogName, string Title, string Author, string AuthorUrl, string SourceUrl, string LicenceCode, string LicenceName, string LicenceUrl, string Attribution);
+public sealed record CreditRow(string Key, string Name, string Catalog, string CatalogName, string Title, string Author, string AuthorUrl, string SourceUrl, string LicenceCode, string LicenceName, string LicenceUrl, string Attribution, string CatalogUrl = "");
 
 /// <summary>
 /// The catalogues (docs/PLAN-CATALOGS.md): what a person may use, the search, the import into the library of an area and the credits of a design; for administrators the settings, the keys, the test and
@@ -186,6 +186,7 @@ public static class CatalogLogic
         var svc = Svc(biz);
         if (await FindImportedAsync(biz, space, catalog.Id, item) is { } known)
         {
+            await UsedAgainAsync(catalog, ctx, item, ct);
             return await ReuseAsync(biz, known, folder);
         }
 
@@ -263,6 +264,7 @@ public static class CatalogLogic
                 biz.Db.Entry(asset).State = EntityState.Detached;
                 if (await FindImportedAsync(biz, space, catalog.Id, item) is { } raced)
                 {
+                    await UsedAgainAsync(catalog, ctx, item, ct);
                     return await ReuseAsync(biz, raced, folder);
                 }
             }
@@ -270,6 +272,19 @@ public static class CatalogLogic
 
         await biz.Log.LogAsync("Katalogbild übernommen", nameof(Asset), asset.Id, $"{asset.Key} ({catalog.Name})");
         return new CatalogImportResult((await AssetLogic.GetAsync(biz, asset.Id))!, false);
+    }
+
+    /// <summary>An image that is in the library already is chosen again: a provider that wants to hear about every use (Unsplash) is told. Best effort, the import never fails because of it.</summary>
+    private static async Task UsedAgainAsync(ICatalog catalog, CatalogContext ctx, string item, CancellationToken ct)
+    {
+        try
+        {
+            await catalog.UsedAgainAsync(ctx, item, ct);
+        }
+        catch (CatalogException)
+        {
+            // a pause, a limit or a provider that is down: the image is in the library, the person goes on
+        }
     }
 
     private static async Task<CatalogImportResult> ReuseAsync(Biz biz, Existing known, long? folder)
@@ -632,7 +647,7 @@ public static class CatalogLogic
             var catalogId = Str(e, "catalog");
             var licence = e.TryGetProperty("licence", out var l) && l.ValueKind == JsonValueKind.Object ? l : default;
             return new CreditRow(key, name, catalogId, registry.Find(catalogId)?.Name ?? catalogId, Str(e, "title"), Str(e, "author"), CatalogLicences.SafeUrl(Str(e, "authorUrl")), CatalogLicences.SafeUrl(Str(e, "sourceUrl")),
-                Str(licence, "code"), Str(licence, "name"), CatalogLicences.SafeUrl(Str(licence, "url")), Str(e, "attribution"));
+                Str(licence, "code"), Str(licence, "name"), CatalogLicences.SafeUrl(Str(licence, "url")), Str(e, "attribution"), CatalogLicences.SafeUrl(registry.Find(catalogId)?.Info.ProviderLink?.Url));
         }
         catch (JsonException)
         {

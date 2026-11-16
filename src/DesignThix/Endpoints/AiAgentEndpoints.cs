@@ -104,7 +104,7 @@ public static class AiAgentEndpoints
                 undoRun = page.UndoRun,
                 undoOther = page.UndoOther,
                 partial = page.Partial,
-                renderRequest = page.RenderRequest is { } r ? new { runId = r.RunId, token = r.Token, page = r.PageId, pageNumber = r.PageNumber, revision = r.Revision, maxWidth = r.MaxWidth } : null,
+                renderRequest = page.RenderRequest is { } r ? new { runId = r.RunId, token = r.Token, page = r.PageId, pageNumber = r.PageNumber, revision = r.Revision, maxWidth = r.MaxWidth, templates = r.Templates } : null,
                 steps = page.Steps.Select(s => new { id = s.Id, run = s.Run, kind = s.Kind, text = s.Text, at = s.At, data = s.Data }),
             }, Web);
         }).RequireAuthorization("SignedIn");

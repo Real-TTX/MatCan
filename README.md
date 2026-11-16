@@ -34,7 +34,7 @@ DesignThix ist ein Docker-Container mit einer PostgreSQL-Datenbank. Es läuft au
 - **Teilen:** mit Personen und Teams (*Kann ansehen* / *Kann bearbeiten*), per Link für Angemeldete oder als **öffentlicher Link** ohne Konto; wer keinen Zugriff hat, kann ihn anfordern.
 - **Zusammenarbeit:** Kommentare mit Pins direkt auf der Fläche, `@`-Erwähnungen, Benachrichtigungen (Glocke, auf Wunsch per Mail) und die Anzeige, wer ein Design gerade geöffnet hat.
 - **KI-Design (optional):** Beschreibe, was du brauchst („ein Plakat für unser Sommerfest“), und ein Assistent entwirft das Design oder passt ein vorhandenes an, **während du zusiehst**: jeder Schritt steht im Protokoll, die Fläche verändert sich live, ein Strg+Z nimmt alles zurück. Siehe *KI-Design* unten.
-- **Kataloge (optional):** Fotos von Pexels, Pixabay und Openverse, über 200 offene Icon-Sätze (Material Design, Tabler, Phosphor, Font Awesome Free …) und freie Schriften aus Google Fonts, direkt im Designer durchsuchen. Was du benutzt, wird **mit Urheber und Lizenz auf den Server kopiert**: Designs drucken auch ohne Internet, und die Bildnachweise stehen unter *Datei*. Siehe *Kataloge* unten.
+- **Kataloge (optional):** Fotos von Pexels, Pixabay, Openverse und Unsplash, über 200 offene Icon-Sätze (Material Design, Tabler, Phosphor, Font Awesome Free …) und freie Schriften aus Google Fonts, direkt im Designer durchsuchen. Was du benutzt, wird **mit Urheber und Lizenz auf den Server kopiert**: Designs drucken auch ohne Internet, und die Bildnachweise stehen unter *Datei*. Siehe *Kataloge* unten.
 - **Konten:** Administrator und Mitglied; Registrierung aus, offen oder mit Freigabe, Einladungen per Link oder Mail. Oberfläche auf Deutsch, hell und dunkel.
 - **Installierbare App (PWA)** mit Offline-Anzeige zuletzt geöffneter Seiten; der Designer behält ungespeicherte Änderungen und speichert, sobald die Verbindung zurück ist.
 
@@ -236,13 +236,14 @@ baut Platzhalter für Serien ein und sieht sich das Ergebnis selbst an. **Jeden 
 und die Fläche zeigt jede Änderung sofort (die betroffenen Elemente blitzen kurz auf). Solange er arbeitet, ist der Designer gesperrt; *Stopp* hält ihn an.
 
 **Einschalten (Administrator):** *Verwaltung > KI > Profile*: ein Profil mit einem OpenAI-kompatiblen Anbieter (oder einem ChatGPT-Konto) anlegen, mit *Testen* prüfen und aktiv setzen; unter *Allgemein* muss *KI eingeschaltet*
-stehen. Unter *Grenzen* stehen die Kosten-Grenzen: voreingestellt 1,5 Mio. Tokens je Person und Tag (rund 25 Aufträge), 20 Mio. je Person und Monat, 100 Mio. für alle zusammen im Monat, 200 Aufträge je Adresse und Tag und
-60 Anfragen je Adresse und Minute (0 heißt: keine Grenze); dazu die Grenzen des Assistenten (Aufrufe je Auftrag, gleichzeitige Aufträge, Seitenansichten, Dateien je Nachricht). Wird eine Grenze erreicht, steht im Fenster
-*welche* (zum Beispiel „Dein Tagesbudget der KI (1.500.000 Tokens pro Tag) ist aufgebraucht“), und der Administrator bekommt dort den Knopf *Limits anpassen*. Was du schon gespeichert hast, ändert sich bei einem Update nicht.
+stehen. Unter *Grenzen* stehen die Kosten-Grenzen: voreingestellt 3 Mio. Tokens je Person und Tag (rund 30 Aufträge), 40 Mio. je Person und Monat, 200 Mio. für alle zusammen im Monat, 200 Aufträge je Adresse und Tag und
+60 Anfragen je Adresse und Minute (0 heißt: keine Grenze); dazu die Grenzen des Assistenten (Aufrufe je Auftrag, gleichzeitige Aufträge, Seitenansichten, Dateien je Nachricht) und der Schalter *Ergebnis vor dem Abschluss prüfen lassen* (siehe unten). Wird eine Grenze erreicht, steht im Fenster
+*welche* (zum Beispiel „Dein Tagesbudget der KI (3.000.000 Tokens pro Tag) ist aufgebraucht“), und der Administrator bekommt dort den Knopf *Limits anpassen*. Was du schon gespeichert hast, ändert sich bei einem Update nicht.
 Ohne Profil fehlt der Assistent: Mitglieder sehen dann keinen Eintrag, der Administrator eine Erklärung mit Link.
 
 **Benutzen:**
 
+- **Wie ein neues Design entsteht:** Die KI sucht zuerst in den über 600 Vorlagen (und zeigt sich die Treffer nebeneinander), nimmt die passendste, ersetzt jeden Beispieltext durch deine Angaben, tauscht Motive gegen passende (es gibt gezeichnete Dinosaurier, Rennwagen, Kronen, Trampoline, Schlösser, Ballons und hunderte mehr) und sieht sich das Ergebnis an. Fehlt eine Angabe (Datum, Ort), steht ein Platzhalter wie „[Datum]“ da und sie sagt dir, was du noch ergänzen musst. Ein Design, das schon Inhalt hat, sieht sie sich zuerst an, bevor sie etwas ändert.
 - **Neues Design:** Auf der Startseite (und im Dialog *Design erstellen*) beschreibst du das Design unter *Mit KI entwerfen*, wählst ein Format oder lässt es bei *Automatisch* (die KI wählt eines, das passt) und klickst *Entwerfen*:
   der Designer öffnet sich und du siehst zu. Das Design bekommt einen passenden Namen.
 - **Vorhandenes Design anpassen:** Im Designer der Reiter *KI*. Beispiele: „Mach daraus ein Plakat“, „Übersetze alle Texte ins Englische“, „Nutze unsere Markenfarben und Schriften“, „Erzeuge drei Varianten auf neuen Seiten“, „Ersetze die Texte durch Platzhalter für eine Serie“.
@@ -254,6 +255,8 @@ Ohne Profil fehlt der Assistent: Mitglieder sehen dann keinen Eintrag, der Admin
 - **Rückgängig:** Ein ganzer Auftrag ist **ein** Schritt: Strg+Z im Designer nimmt ihn zurück, oder *Rückgängig* im Protokoll (auch nach dem Neuladen und für den neuesten Auftrag zuerst). Hast du das Design seitdem geändert, fragt es vorher.
 - **Weitermachen** setzt einen angehaltenen Auftrag fort; *Neu* beginnt ein neues Gespräch, *Verlauf* listet frühere; *Anweisung an die KI anzeigen* zeigt genau, was an die KI geht.
 
+**Die Prüfung vor dem Abschluss:** Sagt die KI „fertig“, nachdem sie das Design geändert hat, schickt die Anwendung sie höchstens zweimal zurück, wenn sie sich das Ergebnis noch nicht angesehen hat oder wenn die Prüfung etwas Echtes findet: Text, der über anderem Text oder einem Bild liegt, ein Text, der aus seinem Kasten läuft, zu nah am Rand oder über dem Falz einer Klappkarte, zu klein für das Format, schlecht lesbar, eine große leere Fläche, Beispieltexte einer Vorlage („Musterstadt“), die nicht ersetzt wurden. Das kostet ein paar Aufrufe mehr (ein Auftrag braucht rund 100.000 Tokens) und macht die Ergebnisse deutlich besser; abschalten kann es der Administrator unter *Grenzen*.
+
 **Was die KI sieht und kann:** Sie sieht das Design, an dem sie arbeitet (Format, Seiten, Elemente, Felder), die Marke des Bereichs, die Vorlagen und Schriften, die du auch siehst, und das, was du anhängst oder als Referenz wählst.
 Sie kann **nur dieses Design** ändern (und Bilder in deine Bibliothek zeichnen): nichts teilen, verschieben, löschen oder versenden, und kein anderes Design anfassen. Jede Änderung geht durch dieselben Prüfungen und Rechte wie deine eigene;
 wer nur ansehen darf, sieht den Assistenten nicht. Fotos kann sie nicht erzeugen (nur Formen, Symbole, Farbflächen, gezeichnete Grafik und Bildrahmen für deine Fotos). Jeder Auftrag mit allen Schritten steht unter *Verwaltung > KI > Läufe*.
@@ -261,7 +264,7 @@ wer nur ansehen darf, sieht den Assistenten nicht. Fotos kann sie nicht erzeugen
 ## Kataloge
 
 Bilder, Symbole und Schriften kommen nicht nur aus deiner Bibliothek: **Kataloge** sind Quellen, die der Administrator unter *Verwaltung > Kataloge* einschaltet. Alles, was jemand benutzt, wird **auf den Server kopiert** und behält Quelle, Urheber und Lizenz. So bleiben Designs ohne Internet druckbar,
-die öffentliche Ansicht und die Serienausgaben fragen nie bei einem Anbieter nach, und nichts bricht, wenn ein Anbieter verschwindet. **Der Browser spricht nie mit einem Anbieter:** Suche, Vorschaubilder und Downloads laufen über den Server, die Schlüssel stehen nur dort.
+die öffentliche Ansicht und die Serienausgaben fragen nie bei einem Anbieter nach, und nichts bricht, wenn ein Anbieter verschwindet. **Der Browser spricht mit keinem Anbieter, mit einer Ausnahme (Unsplash, siehe unten):** Suche, Vorschaubilder und Downloads laufen über den Server, die Schlüssel stehen nur dort.
 
 | Katalog | Inhalt | Schlüssel |
 |---|---|---|
@@ -269,11 +272,17 @@ die öffentliche Ansicht und die Serienausgaben fragen nie bei einem Anbieter na
 | **Pexels** | Fotos, mit „Kuratiert“ und den Sammlungen von Pexels | ja (Pexels vergibt im Moment keine neuen Schlüssel) |
 | **Pixabay** | Fotos, Illustrationen, Vektoren, mit Kategorien | ja |
 | **Openverse** | Fotos aus vielen Quellen, nur CC0, gemeinfrei, CC BY und CC BY-SA | nein (optional Zugangsdaten für höhere Grenzen) |
+| **Unsplash** | Fotos, mit „Alle“ (die Redaktion von Unsplash) und den Themen von Unsplash; Format- und Farbfilter | ja („Access Key“; neue Anwendungen: 50 Anfragen pro Stunde, mehr nur nach Freigabe durch Unsplash) |
 | **Icons (Iconify)** | über 200 offene Icon-Sätze, ausgewählt vom Administrator: Material Design, Tabler, Phosphor, Font Awesome Free, Bootstrap, Carbon … | nein |
 | **Google Fonts** | freie Schriften (SIL OFL, Apache, Ubuntu-Lizenz), über Fontsource | nein |
 
-**Einschalten (Administrator):** *Verwaltung > Kataloge*, den Katalog öffnen, einschalten, bei Pexels und Pixabay den Schlüssel eintragen (er wird verschlüsselt im Datenvolume gespeichert und nie wieder angezeigt), mit *Testen* prüfen. Jede Seite nennt die Regeln des Anbieters und wie sein Schlüssel zu bekommen ist. Die Adresse eines Anbieters
+**Einschalten (Administrator):** *Verwaltung > Kataloge*, den Katalog öffnen, einschalten, bei Pexels, Pixabay und Unsplash den Schlüssel eintragen (er wird verschlüsselt im Datenvolume gespeichert und nie wieder angezeigt), mit *Testen* prüfen. Jede Seite nennt die Regeln des Anbieters und wie sein Schlüssel zu bekommen ist. Die Adresse eines Anbieters
 stellt nur der Betreiber ein (`DESIGNTHIX__Catalogs__<id>__BaseUrl`, zum Beispiel für einen eigenen Iconify-Server), nie eine Seite. Ohne Schlüssel erscheint ein Katalog, der einen braucht, nirgends.
+
+**Unsplash (Datenschutz und Regeln):** Unsplash verlangt, dass seine Fotos von seinen eigenen Adressen angezeigt werden. **Wenn Unsplash eingeschaltet ist, lädt dein Browser die Vorschaubilder direkt von Unsplash (`images.unsplash.com`). Unsplash sieht dabei deine IP-Adresse** und welche Fotos du dir ansiehst; nenne das in deiner Datenschutzerklärung. DesignThix erlaubt diese eine Adresse nur, solange der Katalog eingeschaltet ist und einen Schlüssel hat,
+und nur auf den Seiten für angemeldete Personen, die die Bildauswahl oder den Designer zeigen (Content-Security-Policy); die öffentliche Ansicht, der Druck und alle anderen Seiten laden nie etwas von Unsplash, und ist Unsplash aus, ist die Richtlinie so streng wie bei allen anderen. Wählt jemand ein Foto, **meldet der Server den Download bei Unsplash** (mit dem Schlüssel, der nie in den Browser kommt) und kopiert das Foto in die Bibliothek.
+Unter jedem Treffer steht „Foto: Name / Unsplash“ mit Links auf die Fotografin oder den Fotografen und auf Unsplash (`utm_source=DesignThix&utm_medium=referral`), und die Bildnachweise nennen beide. Lege die Anwendung bei Unsplash unter dem Namen „DesignThix“ an (der Name darf nicht „Unsplash“ enthalten); die Seite des Katalogs unter *Verwaltung > Kataloge* nennt alle Regeln, auch dass die Schnittstelle nicht für Datensammeln oder KI-Training gedacht ist.
+Für mehr als 50 Anfragen pro Stunde muss Unsplash die Anwendung freigeben (Antrag mit Bildschirmfotos); trage das Limit dann bei „Anfragen pro Stunde“ ein.
 
 **Benutzen:**
 
@@ -283,12 +292,12 @@ stellt nur der Betreiber ein (`DESIGNTHIX__Catalogs__<id>__BaseUrl`, zum Beispie
   Strichstärke des Elements wie jedes andere Symbol.
 - **Schriften:** *Weitere Schriften …* im Panel *Text* und in der Schriftauswahl der Werkzeugleiste (auch unter *Schriften*): suchen, nach Art filtern, einen eigenen Text ausprobieren, *Hinzufügen*. Die Schrift kommt mit normal, fett und (wenn es sie gibt) kursiv in deinen Bereich und steht sofort in der Schriftauswahl.
 - **Bildnachweise:** *Datei > Bildnachweise …* listet jede Quelle des Designs mit Urheber, Lizenz und Link und kopiert den Text; die öffentliche Ansicht hat dasselbe als Link im Fuß. Bei Icons erscheint nur ein Satz, dessen Lizenz die Nennung verlangt (CC BY, zum Beispiel Font Awesome Free), **einmal je Satz**.
-- **KI-Design:** Der Assistent kann in den eingeschalteten Katalogen suchen und **ein** gewähltes Foto, Icon oder eine Schrift übernehmen (höchstens zwölf Suchen und acht Übernahmen je Auftrag), danach damit gestalten; die Nachweise stehen wie immer unter *Datei*.
+- **KI-Design:** Der Assistent kann in den eingeschalteten Katalogen suchen und **ein** gewähltes Foto, Icon oder eine Schrift übernehmen (höchstens zwölf Suchen und acht Übernahmen je Auftrag), danach damit gestalten; die Nachweise stehen wie immer unter *Datei*. Unsplash nutzt der Assistent nie (Unsplash verlangt, dass ein Mensch die Fotos auswählt); ein Unsplash-Foto, das du selbst gewählt hast, liegt in der Bibliothek und darf er von dort verwenden.
 
 **Lizenzen:** Designs dürfen gedruckt, verändert und kommerziell genutzt werden, deshalb bietet DesignThix **nie** Bilder, Icons oder Schriften mit **NC** (nicht kommerziell) oder **ND** (keine Bearbeitung) an, und nichts ohne erkennbare Lizenz. Bei Icons nur einfarbige Sätze unter MIT, Apache 2.0, ISC, CC0, CC BY 4.0 und OFL;
 Sätze unter CC BY-SA, GPL oder MPL erscheinen nur, wenn der Administrator sie ausdrücklich erlaubt. Der Administrator kann die Lizenzen und die Sätze enger fassen. Die Lizenz eines Anbieters ist dessen Aussage: wer Gewissheit braucht, betreibt einen eigenen Iconify-Server mit geprüften Sätzen.
 
-**Grenzen:** Jede Person darf je Minute nur eine begrenzte Zahl von Suchen machen (einstellbar), der Schlüssel eines Anbieters hat ein Stundenbudget, Antworten werden einen Tag zwischengespeichert (Pixabay verlangt das), und sagt ein Anbieter „zu viele Anfragen“, wird er in Ruhe gelassen, bis seine Wartezeit um ist; du liest dann in Worten, wie lange.
+**Grenzen:** Jede Person darf je Minute nur eine begrenzte Zahl von Suchen machen (einstellbar), der Schlüssel eines Anbieters hat ein Stundenbudget, Antworten werden einen Tag zwischengespeichert (Pixabay verlangt das; bei Unsplash eine Stunde), und sagt ein Anbieter „zu viele Anfragen“, wird er in Ruhe gelassen, bis seine Wartezeit um ist; du liest dann in Worten, wie lange.
 Übernommene Bilder und Schriften zählen zum Speicherplatz deines Bereichs; ein übernommenes Icon (ein paar Hundert Byte) gehört der ganzen Installation. Der Export einer Design-Datei (`.dtx.json`) trägt Bilder und Schriften mit, **nicht** die Icons der Kataloge: auf einer anderen Installation muss dasselbe Icon dort einmal übernommen werden.
 
 ## KI-Aktionen

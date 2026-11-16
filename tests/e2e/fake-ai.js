@@ -20,6 +20,8 @@
 //   serie         ("platzhalter", "serie"): makes the field Name and turns the first text into {{Name}}
 //   varianten     ("variante"): two copies of page 1 with other background colours
 //   weiter        ("mach weiter"): says it is done
+//   vorlagen-test (quality pass) searches the templates ("Einladung Kindergeburtstag Dinosaurier": the open editor draws the numbered sheet, the fake records whether it SAW it), takes the first one whole (apply_template whole), replaces the sample texts with digits, looks, says it is done
+//   pruefung-test (quality pass) writes a title and says it is done WITHOUT looking: the review of the loop sends it back (message "Prüfung vor dem Abschluss ..."), then it looks and is done; the call record has gate: true for the call that got the review message
 //   plakat        everything else ("gestalte", "plakat", "entwirf", ... or anything): in seven steps (read, background and title, subtitle and icon, details and QR, a change of the title, look, done)
 //                 that make the canvas change one step after the other; with an automatic format (the situation says "kein Format gewählt") it chooses the poster A3 first; a design that is still called "Unbenannt …" (the situation says so) gets a name with rename_design in the second step (not when the message says "ohne-name": then the server names it after the message).
 // Every answer is streamed in small pieces (about 12 characters, 20 ms apart) when the request says "stream": true; mode 'nostream' answers such a request with a 400 so the fall back can be tested.
@@ -86,7 +88,8 @@ function batches(msgs, start) {
   for (let i = start + 1; i < msgs.length; i++) {
     const m = msgs[i];
     if (m.role === 'user' && m.text.startsWith('Ergebnisse der Aktionen:')) {
-      try { out.push(JSON.parse(m.text.slice('Ergebnisse der Aktionen:'.length).trim())); } catch (e) { out.push([]); }
+      // a picture that rides on the message has a note behind the JSON ("[Das Bild zeigt ...]")
+      try { out.push(JSON.parse(m.text.slice('Ergebnisse der Aktionen:'.length).split('\n\n[Das Bild')[0].trim())); } catch (e) { out.push([]); }
     }
   }
   return out;
@@ -110,6 +113,8 @@ function scenarioOf(text) {
   if (t.includes('foto-test')) { return 'foto-test'; }
   if (t.includes('anhang-test') || t.includes('[anhang:')) { return 'anhang-test'; }
   if (t.includes('referenz-test') || t.includes('[referenz:')) { return 'referenz-test'; }
+  if (t.includes('vorlagen-test')) { return 'vorlagen-test'; }
+  if (t.includes('pruefung-test')) { return 'pruefung-test'; }
   if (t.includes('mach weiter')) { return 'weiter'; }
   if (t.includes('übersetze') || t.includes('uebersetze') || t.includes('englisch')) { return 'uebersetze'; }
   if (t.includes('platzhalter') || t.includes('serie')) { return 'serie'; }
@@ -125,7 +130,7 @@ function agentAnswer(system, msgs) {
   let start = -1;
   for (let i = msgs.length - 1; i >= 0; i--) {
     const m = msgs[i];
-    if (m.role === 'user' && !m.text.startsWith('Ergebnisse der Aktionen:') && !m.text.startsWith('Deine letzte Antwort war nicht') && !m.text.startsWith('Du hast "done": false gesetzt') && !m.text.startsWith('Die Änderungen von Lauf')) { start = i; break; }
+    if (m.role === 'user' && !m.text.startsWith('Ergebnisse der Aktionen:') && !m.text.startsWith('Deine letzte Antwort war nicht') && !m.text.startsWith('Du hast "done": false gesetzt') && !m.text.startsWith('Die Änderungen von Lauf') && !m.text.startsWith('Prüfung vor dem Abschluss')) { start = i; break; }
   }
   const person = start >= 0 ? msgs[start] : { text: '', images: 0 };
   const scenario = scenarioOf(person.text);
@@ -148,6 +153,27 @@ function agentAnswer(system, msgs) {
     case 'format-test': return { raw: 'Ich schaue mir das gleich an, einen Moment.' };
     case 'limit-test': return { body: say('Ich lese noch einmal.', false, ['read_design']) };
     case 'weiter': return { body: say('Alles klar, ich bin fertig. Die Arbeit ist abgeschlossen.', true) };
+    case 'vorlagen-test': {
+      const found = resultOf(list, 'search_templates');
+      const applied = resultOf(list, 'apply_template');
+      const firstId = found && found.result && found.result.templates && found.result.templates[0] ? found.result.templates[0].id : null;
+      if (step === 0) { return { body: say('Ich suche eine passende Vorlage.', false, ['search_templates', { query: 'Einladung Kindergeburtstag Dinosaurier' }]) }; }
+      if (step === 1 && firstId) { return { body: say('Ich nehme die erste Vorlage ganz.', false, ['apply_template', { templateId: firstId, whole: true }]) }; }
+      if (step === 2 && applied && applied.result) {
+        const changes = [];
+        for (const page of applied.result.pages || []) { for (const e of page.elements || []) { if (e.type === 'text' && /\d/.test(e.text || '')) { changes.push({ id: e.id, set: { text: 'Sonntag, 14. März · 15 Uhr' } }); } } }
+        return { body: say('Ich ersetze die Beispieltexte.', false, changes.length ? ['update_elements', { changes: changes.slice(0, 6) }] : ['read_design']) };
+      }
+      if (step === 3) { return { body: say('Ich sehe mir das Ergebnis an.', false, ['look']) }; }
+      return { body: say('Fertig: die Vorlage ist angepasst.', true) };
+    }
+    case 'pruefung-test': {
+      const gate = msgs.length > 0 && msgs[msgs.length - 1].text.startsWith('Prüfung vor dem Abschluss');
+      record.gate = gate;
+      if (step === 0) { return { body: say('Ich lege einen Titel an.', false, ['add_elements', { elements: [{ type: 'text', name: 'Titel', x: W * 0.1, y: H * 0.05, w: W * 0.8, h: H * 0.08, text: 'Geprüfter Titel', fontFamily: 'Montserrat', fontSize: 40, fontWeight: 700, color: '#0b3d5c' }] }]) }; }
+      if (!resultOf(list, 'look')) { return { body: gate ? say('Ich sehe mir das Ergebnis an.', false, ['look']) : say('Fertig.', true) }; }
+      return { body: say('Fertig: es ist geprüft.', true) };
+    }
     case 'fehler-test':
       if (step === 0) { return { body: say('Ich setze ein Symbol.', false, ['add_elements', { page: 'p1', elements: [{ type: 'icon', icon: 'gibt-es-nicht-xyz', x: 10, y: 10, w: 20, h: 20 }] }]) }; }
       if (step === 1) { return { body: say('Das Symbol gibt es nicht, ich nehme einen Stern.', false, ['add_elements', { page: 'p1', elements: [{ type: 'icon', icon: 'star', x: 10, y: 10, w: 20, h: 20, color: '#ff8800' }] }]) }; }

@@ -1110,6 +1110,13 @@ public sealed class CatalogIconFontTests(AppTests.AppFactory factory) : AiAgentT
         var local = await ToolAsync(Role.Designer, s, "search_catalog", """{"catalog": "builtin", "q": "de"}""");
         Assert.False(local.Ok);
         Assert.False((await ToolAsync(Role.Designer, s, "search_catalog", """{"catalog": "pexels", "q": "x"}""")).Ok);   // off (and without a key)
+
+        // Unsplash is on and has its key, but its guidelines ask for photos a person chooses: the tools never see it
+        await EnableAsync("unsplash", "unsplash-test-key");
+        var again = await ToolAsync(Role.Designer, s, "search_catalog");
+        Assert.Equal(["iconify"], again.Result!["catalogs"]!.AsArray().Select(c => (string)c!["catalog"]!));
+        Assert.False((await ToolAsync(Role.Designer, s, "search_catalog", """{"catalog": "unsplash", "q": "cheese"}""")).Ok);
+        Assert.False((await ToolAsync(Role.Designer, s, "import_from_catalog", """{"catalog": "unsplash", "itemId": "abc123"}""")).Ok);
     }
 
     [Fact]

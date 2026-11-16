@@ -13,8 +13,10 @@ namespace DesignThix.Services.Ai;
 /// </summary>
 public sealed class AiRenderBroker(TimeProvider clock)
 {
-    /// <summary>What the editor is asked to draw.</summary>
-    public sealed record Request(long RunId, long ConversationId, long UserId, string PageId, int PageNumber, int Revision, string Token);
+    /// <summary>
+    /// What the editor is asked to draw: a page of the design (<c>PageId</c>), or - with <c>TemplateIds</c> - ONE numbered picture of the first pages of these templates (the answer of <c>search_templates</c>).
+    /// </summary>
+    public sealed record Request(long RunId, long ConversationId, long UserId, string PageId, int PageNumber, int Revision, string Token, IReadOnlyList<long>? TemplateIds = null);
 
     private sealed class Entry(Request request)
     {
@@ -46,6 +48,23 @@ public sealed class AiRenderBroker(TimeProvider clock)
 
     /// <summary>Whether the editor of the conversation polled within this time (an editor that is closed cannot draw anything).</summary>
     public bool EditorConnected(long conversationId, TimeSpan within) => _seen.TryGetValue(conversationId, out var at) && clock.GetUtcNow().UtcDateTime - at <= within;
+
+    /// <summary>Waits until the editor of the conversation has polled (it starts polling a moment after the message was sent); false when it did not within the time.</summary>
+    public async Task<bool> WaitForEditorAsync(long conversationId, TimeSpan timeout, CancellationToken ct)
+    {
+        var until = DateTime.UtcNow + timeout;
+        while (!EditorConnected(conversationId, TimeSpan.FromSeconds(12)))
+        {
+            if (DateTime.UtcNow >= until)
+            {
+                return false;
+            }
+
+            await Task.Delay(100, ct);
+        }
+
+        return true;
+    }
 
     public static string NewToken() => Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(16));
 

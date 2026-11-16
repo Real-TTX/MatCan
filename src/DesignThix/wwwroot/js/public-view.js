@@ -604,7 +604,7 @@
       var meta = el('span', { class: 'dt-pv-cr__meta' });
       var parts = [];
       if (c.author) { parts.push(httpLink(c.authorUrl, c.author) || el('span', { text: c.author })); }
-      parts.push(el('span', { text: c.catalogName }));
+      parts.push(httpLink(c.catalogUrl, c.catalogName) || el('span', { text: c.catalogName }));
       if (c.licence && c.licence.name) { parts.push(httpLink(c.licence.url, c.licence.name) || el('span', { text: c.licence.name })); }
       var source = httpLink(c.sourceUrl, 'Quelle');
       if (source) { parts.push(source); }

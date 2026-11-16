@@ -464,7 +464,7 @@ public static partial class AiAgentLogic
 
     public sealed record StepRow(long Id, int Run, string Kind, string Text, DateTime At, JsonNode? Data);
 
-    public sealed record RenderRequestInfo(long RunId, string Token, string PageId, int PageNumber, int Revision, int MaxWidth);
+    public sealed record RenderRequestInfo(long RunId, string Token, string PageId, int PageNumber, int Revision, int MaxWidth, IReadOnlyList<long>? Templates = null);
 
     public sealed record StepsPage(long DesignId, string Status, int Run, long? RunId, int Tokens, int? UndoRun, bool UndoOther, string? Partial, RenderRequestInfo? RenderRequest, IReadOnlyList<StepRow> Steps);
 
@@ -492,7 +492,7 @@ public static partial class AiAgentLogic
         var running = conv.Status == AiConversationStatus.Running;
         var partial = running && newest is not null ? biz.Service<AiPartialStore>().Get(newest.Id) : null;
         var request = owner && broker.PendingFor(conv.Id) is { } pending
-            ? new RenderRequestInfo(pending.RunId, pending.Token, pending.PageId, pending.PageNumber, pending.Revision, 1024)
+            ? new RenderRequestInfo(pending.RunId, pending.Token, pending.PageId, pending.PageNumber, pending.Revision, 1024, pending.TemplateIds)
             : null;
         var undo = await UndoInfoAsync(biz, conv.Id, conv.SubjectId);
         return new StepsPage(conv.SubjectId, conv.Status.ToString(), conv.Runs, newest?.Id, conv.Tokens, undo?.Run, undo is { Other: true }, partial, request, steps);
@@ -747,6 +747,12 @@ public static partial class AiAgentLogic
         var sb = new StringBuilder();
         sb.AppendLine($"Heute ist {Services.Fmt.Date(biz.Now)}.");
         sb.AppendLine($"Design: „{AiDesignTools.Clip(design.Name, 80)}“ (Revision {design.Revision}). Format: {Num(AiDocOps.Num(doc["width"]))} × {Num(AiDocOps.Num(doc["height"]))} {unit} bei {AiDocOps.Num(doc["dpi"]):0} dpi. Alle Längen sind in {unit}, Schriftgrößen in pt.");
+        var fold = AiDocOps.Str(doc["fold"]) is { Length: > 0 } f ? f : "none";
+        sb.AppendLine(AiDesignGuide.FormatText(AiDocOps.Num(doc["width"]), AiDocOps.Num(doc["height"]), unit, fold));
+        var elementCount = AiDocOps.AllElements(doc).Count();
+        sb.AppendLine(elementCount == 0
+            ? "Das Design ist LEER: ein NEUES DESIGN, also ARBEITSWEISE A (zuerst search_templates)."
+            : $"Das Design hat {elementCount} Elemente: eine Änderung (ARBEITSWEISE B oder C). Will die Person etwas ganz Neues, gilt ARBEITSWEISE A.");
         if (IsPlaceholderName(design.Name))
         {
             sb.AppendLine("Das Design heißt noch wie ein neues („Unbenannt …“). Gestaltest du es im Wesentlichen neu (ein neues Plakat, eine neue Karte), gib ihm gleich mit rename_design einen kurzen, passenden Namen (höchstens 60 Zeichen, ohne „Unbenannt“), zum Beispiel in deinem ersten Schritt.");
@@ -754,7 +760,7 @@ public static partial class AiAgentLogic
 
         if (autoFormat)
         {
-            sb.AppendLine("Die Person hat kein Format gewählt: das Design ist leer und steht auf A4 hoch. Wähle als Erstes mit resize_design (preset aus list_formats, oder Maße) ein Format, das zum Auftrag passt, und gestalte dann.");
+            sb.AppendLine("Die Person hat kein Format gewählt: das Design ist leer und steht auf A4 hoch. Das Format ergibt sich aus der Vorlage (apply_template mit whole: true übernimmt ihr Format); gestaltest du ohne Vorlage, wähle zuerst mit resize_design (preset aus list_formats, oder Maße) ein Format, das zum Auftrag passt.");
         }
 
         var pages = AiDocOps.Pages(doc).OfType<JsonObject>().ToList();

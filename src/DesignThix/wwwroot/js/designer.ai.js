@@ -202,7 +202,7 @@
   function openPicture(name) {
     D.dialog.show({
       title: 'Das hat die KI gesehen', icon: 'eye', size: 'lg',
-      body: function (body) { body.appendChild(D.el('img', { class: 'dt-ag-bigpic', src: pictureUrl(name), alt: 'Die Seite, wie die KI sie gesehen hat' })); },
+      body: function (body) { body.appendChild(D.el('img', { class: 'dt-ag-bigpic', src: pictureUrl(name), alt: 'Das Bild, das die KI gesehen hat' })); },
       buttons: [{ label: 'Schließen', kind: 'primary', value: 'ok' }],
     });
   }
@@ -677,15 +677,62 @@
 
   // ---- "look": the model asked for a picture of a page
 
+  /**
+   * The picture for search_templates: the first pages of up to eight templates on ONE sheet, each with a number (the "nr" of the search result), so the model can compare them by their looks.
+   * Templates the person may not read are left out (an empty cell); fonts and images are those of the editor.
+   */
+  function templateSheet(ids) {
+    var list = ids.slice(0, 8);
+    var cellW = 320, cellH = 372, gap = 12, columns = Math.min(4, list.length), rows = Math.ceil(list.length / 4);
+    var assetUrl = function (key) { return app.assetUrl(key) || '/media/' + encodeURIComponent(String(key).toLowerCase()); };
+    return Promise.all(list.map(function (id) {
+      return request('GET', '/api/designs/' + id).then(function (res) {
+        if (!res.ok || !res.data || !res.data.document) { return null; }
+        var doc = window.DtEngine.normalize(res.data.document);
+        return window.DtEngine.rasterize(doc, window.DtEngine.sampleValues(doc), { page: 0, maxWidth: 520, format: 'png', assetUrl: assetUrl, fonts: app.fonts, icon: D.icons.body })
+          .then(function (blob) { return createImageBitmap(blob); });
+      }).catch(function () { return null; });
+    })).then(function (bitmaps) {
+      var canvas = document.createElement('canvas');
+      canvas.width = columns * (cellW + gap) + gap;
+      canvas.height = rows * (cellH + gap) + gap;
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#e4e8ec';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      bitmaps.forEach(function (bitmap, i) {
+        var x = gap + (i % 4) * (cellW + gap);
+        var y = gap + Math.floor(i / 4) * (cellH + gap);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x, y, cellW, cellH);
+        if (bitmap) {
+          var scale = Math.min((cellW - 16) / bitmap.width, (cellH - 16) / bitmap.height);
+          var w = bitmap.width * scale, h = bitmap.height * scale;
+          ctx.drawImage(bitmap, x + (cellW - w) / 2, y + (cellH - h) / 2, w, h);
+        }
+        ctx.fillStyle = '#16212b';
+        ctx.beginPath();
+        ctx.arc(x + 22, y + 22, 16, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 18px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(String(i + 1), x + 22, y + 23);
+      });
+      return new Promise(function (resolve, reject) { canvas.toBlob(function (blob) { if (blob) { resolve(blob); } else { reject(new Error('no picture')); } }, 'image/jpeg', 0.85); });
+    });
+  }
+
   function answerLook(req) {
     if (!req || !req.token || renderSeen[req.token]) { return; }
     renderSeen[req.token] = true;
     var base = '/api/ai/runs/' + req.runId + '/render/' + encodeURIComponent(req.token);
-    refreshDoc(false).then(function () {
+    var made = req.templates && req.templates.length ? templateSheet(req.templates) : refreshDoc(false).then(function () {
       var index = app.doc.pages.findIndex(function (p) { return p.id === req.page; });
       if (index < 0) { index = Math.max(0, Math.min(app.doc.pages.length - 1, (req.pageNumber || 1) - 1)); }
       return window.DtEngine.rasterize(app.doc, app.computeValues(), { page: index, maxWidth: req.maxWidth || 1024, format: 'jpeg', quality: 0.85, assetUrl: app.assetUrl, fonts: app.fonts, icon: D.icons.body });
-    }).then(function (blob) {
+    });
+    made.then(function (blob) {
       return request('POST', base, blob, { raw: true, contentType: blob.type || 'image/jpeg' });
     }).catch(function () { return request('POST', base + '/failed', {}); }).then(function (res) {
       if (res && !res.ok && res.status !== 404) { return request('POST', base + '/failed', {}); }

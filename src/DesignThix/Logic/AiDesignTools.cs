@@ -91,6 +91,27 @@ public sealed class AiToolSession
 
     public int Looks { get; set; }
 
+    /// <summary>The design was changed (in a way that shows) since the model last looked at it: the review sends it back to look before it may end.</summary>
+    public bool UnseenChanges { get; set; }
+
+    /// <summary>What the person wrote in this run (and attached as text): a sample text of a template that the person's own words contain is no leftover.</summary>
+    public string RequestText { get; set; } = "";
+
+    /// <summary>How often the review sent the model back in this run.</summary>
+    public int ReviewRounds { get; set; }
+
+    /// <summary>How long <c>look</c> waits for the picture of the editor (the picture of the start of a run waits less: nobody should wait long before the work begins).</summary>
+    public TimeSpan LookTimeout { get; set; } = TimeSpan.FromSeconds(30);
+
+    /// <summary>The name of the next picture of <c>look</c> (the start of a run names it "Aktueller Stand …" so the model knows what it is); used once.</summary>
+    public string? PictureName { get; set; }
+
+    /// <summary>How many contact sheets of templates (<c>search_templates</c>) this run asked the editor for.</summary>
+    public int TemplateSheets { get; set; }
+
+    /// <summary>The sample texts that came with a template (element id to text): what the final check compares with, to say which ones were never replaced.</summary>
+    public Dictionary<string, string> TemplateTexts { get; } = new(StringComparer.Ordinal);
+
     /// <summary>Elements this run made: they may be changed again even when the scope is a selection.</summary>
     public HashSet<string> CreatedIds { get; } = new(StringComparer.Ordinal);
 
@@ -149,6 +170,8 @@ public static partial class AiDesignTools
         ("search_catalog", "{\"catalog\"?: \"pexels\", \"q\"?: \"cheese\", \"collection\"?, \"orientation\"?: \"landscape\", \"limit\"?: 10}", "Sucht in den Katalogen, die die Administration eingeschaltet hat: Fotos (Pexels, Pixabay, Openverse), Symbolsätze (iconify) und Schriften (googlefonts). Ohne catalog: welche Kataloge es gibt. Treffer mit itemId, Titel, Größe, Urheber, Lizenz. Fotos am besten mit englischen Wörtern suchen. Höchstens 12 Suchen je Auftrag.", false),
         ("import_from_catalog", "{\"catalog\": \"pexels\", \"itemId\": \"1001\"}", "Übernimmt EINEN gewählten Treffer in die Bibliothek: ein Foto (gibt den Schlüssel für image.source.asset), ein Symbol (gibt den Namen prefix:name für icon) oder eine Schrift (gibt die Familie für fontFamily). Die Urheberangabe steht danach in den Bildnachweisen. Höchstens 8 je Auftrag; nur Treffer, die du wirklich einsetzt.", true),
         ("read_brand", "{}", "Die Marke des Bereichs: Farben, Schriften für Überschrift, Zwischenüberschrift und Fließtext, Logos.", false),
+        ("search_templates", "{\"query\"?: \"Einladung Dinosaurier Kindergeburtstag\", \"occasion\"?: \"Kinder & Familie\", \"format\"?: \"card-a6-portrait\", \"ids\"?: [123, 456], \"limit\"?: 8}", "Sucht in den Ã¼ber 600 Vorlagen (Familien mit Varianten, AnlÃ¤sse, Formate) die passenden: nr, id, Name, Anlass, Format, Beschreibung und der Aufbau in Worten (Texte mit Schrift und GrÃ¶Ãe, Bilder, Deko). Bei geÃ¶ffnetem Editor bekommst du mit der nÃ¤chsten Nachricht EIN Bild mit den ersten Seiten der Treffer, nummeriert wie nr. Mit ids zeigst du bestimmte Vorlagen noch einmal. FÃ¼r ein neues Design oder eine groÃe Umgestaltung IMMER als Erstes benutzen.", false),
+        ("search_deko", "{\"q\": \"Dinosaurier\", \"group\"?: \"Motive\", \"colour\"?: \"gold\", \"limit\"?: 10}", "Sucht in den Deko-Bildern der Bibliothek (hunderte gezeichnete Illustrationen: Motive wie Rennwagen, Krone, Schloss, Eule, Pferd, Gitarre, Ballons, Torte, Zelt ..., dazu Rahmen, Ornamente, Trenner, Muster, Ecken, BlÃ¤tter, Konfetti): key, Gruppe, Name, verhaeltnis (Breite Ã· HÃ¶he), Farbvarianten. FÃ¼r jede Illustration ZUERST hier suchen; Formen sind nur fÃ¼r FlÃ¤chen und Linien.", false),
         ("list_templates", "{\"q\"?: \"text\", \"category\"?: \"Etiketten\"}", "Vorlagen, die die Person nutzen darf: id, Name, Kategorie, Beschreibung, Größe (höchstens 30).", false),
         ("list_formats", "{}", "Die Formate (preset) für resize_design: Schlüssel, Name, Größe.", false),
         ("read_datalist", "{\"id\"?: Nummer}", "Spalten und die ersten 20 Zeilen der Datenliste, die die Person als Referenz angehängt hat.", false),
@@ -166,7 +189,7 @@ public static partial class AiDesignTools
         ("rename_page", "{\"page\", \"name\": \"…\"}", "Benennt eine Seite.", true),
         ("resize_design", "{\"preset\"?: \"business-card\" | \"width\"?, \"height\"?, \"unit\"?: \"mm\"|\"px\", \"scale\"?: true}", "Ändert das Format aller Seiten (Schlüssel aus list_formats oder Maße); scale: der Inhalt wächst oder schrumpft mit (Standard true).", true),
         ("set_fields", "{\"fields\": [{\"key\": \"Name\", \"label\"?, \"type\"?: \"text\", \"sample\"?: \"…\", \"decimals\"?}], \"remove\"?: [\"Key\"]}", "Legt Felder für Platzhalter {{Key}} an oder ändert sie (mit Beispielwert). Ein Feld, das noch verwendet wird, lässt sich nicht entfernen.", true),
-        ("apply_template", "{\"templateId\": Nummer, \"templatePage\"?: 1, \"page\"?: page}", "Kopiert eine Seite einer Vorlage (aus list_templates) ins Design, auf das Format skaliert, mit neuen ids und ihren Feldern. Ohne page als neue Seite am Ende; mit page ersetzt sie den Inhalt dieser Seite.", true),
+        ("apply_template", "{\"templateId\": Nummer, \"whole\"?: true, \"templatePage\"?: 1, \"page\"?: page}", "Übernimmt eine Vorlage (id aus search_templates). Mit whole: true wird das ganze Design zur Vorlage: Format, alle Seiten und Felder (für ein neues oder leeres Design; ein vorhandenes Design wird ersetzt). Ohne whole kopiert es EINE Seite der Vorlage (templatePage) ins Design, auf das Format skaliert: ohne page als neue Seite am Ende, mit page ersetzt sie den Inhalt dieser Seite. Die Elemente bekommen neue ids; das Ergebnis nennt den Aufbau mit allen ids, damit du die Texte gleich ersetzen kannst.", true),
         ("create_svg", "{\"name\": \"logo\", \"svg\": \"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 200 60\\\">…</svg>\"}", "Zeichnet eine Grafik als SVG (höchstens 200 KB, nur Zeichenelemente; Skripte und fremde Verweise werden entfernt) und legt sie in die Bibliothek; gibt den Schlüssel für image.source.", true),
         ("rename_design", "{\"name\": \"…\"}", "Gibt dem Design einen Namen.", true),
     ];
@@ -209,6 +232,8 @@ public static partial class AiDesignTools
                 "search_catalog" => await SearchCatalogAsync(inner, session, args, ct),
                 "import_from_catalog" => await ImportFromCatalogAsync(inner, session, args, ct),
                 "read_brand" => await ReadBrandAsync(inner, session),
+                "search_templates" => await SearchTemplatesAsync(inner, session, args, ct),
+                "search_deko" => await SearchDekoAsync(inner, args, ct),
                 "list_templates" => await ListTemplatesAsync(inner, args),
                 "list_formats" => ListFormats(),
                 "read_datalist" => await ReadDataListAsync(inner, session, args),
@@ -593,6 +618,7 @@ public static partial class AiDesignTools
             ["weights"] = new JsonArray(g.Where(f => f.Style == "normal").Select(f => f.Weight).Distinct().Select(w => (JsonNode)JsonValue.Create(w)!).ToArray()),
             ["italic"] = g.Any(f => f.Style == "italic"),
             ["builtIn"] = g.All(f => f.IsBuiltIn),
+            ["stimmung"] = AiDesignGuide.Moods.TryGetValue(g.Key, out var mood) ? $"{mood.Kind}: {mood.Use}" : null,
         }).ToArray();
         return Ok($"{families.Length} Schriftfamilien", new JsonObject { ["families"] = new JsonArray(families), ["generic"] = new JsonArray("sans-serif", "serif", "monospace") });
     }

@@ -24,7 +24,8 @@ public abstract class AiAgentTestBase(AppTests.AppFactory factory) : PlatformTes
     {
         Seam.Reset();
         AiAgentLoop.RetryPause = TimeSpan.FromMilliseconds(5);
-        var settings = new AiSettings { PerMinutePerAddress = 0, UserDailyTokens = 0, UserMonthlyTokens = 0, MonthlyTokens = 0, AddressDailyRuns = 0 };
+        // the review before a run ends is off unless a test is about it (the designs of most tests are a title on an empty page, which the checks rightly find thin)
+        var settings = new AiSettings { PerMinutePerAddress = 0, UserDailyTokens = 0, UserMonthlyTokens = 0, MonthlyTokens = 0, AddressDailyRuns = 0, AgentReview = false };
         change?.Invoke(settings);
         await As(Role.Admin, biz => SettingLogic.SaveAsync(biz, SettingStore.Ai, settings, "Test"));
     }

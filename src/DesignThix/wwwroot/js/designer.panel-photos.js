@@ -127,17 +127,28 @@
         var c = current();
         state.items.forEach(function (item) {
           var credit = [item.author, item.licence && item.licence.name].filter(Boolean).join(' · ');
-          var tile = D.el('button', { type: 'button', class: 'dt-asset dt-photo', title: (item.title || 'Foto') + (credit ? ' – ' + credit : ''), 'aria-label': (item.title || 'Foto') + (credit ? ' – ' + credit : ''), 'data-item': item.id, 'data-catalog': c.id, disabled: !canUse, role: 'listitem' }, [
-            D.el('span', { class: 'dt-asset__thumb' }, D.el('img', { src: item.thumb, alt: '', loading: 'lazy', decoding: 'async', draggable: 'false' })),
+          // a catalogue whose rules ask for links under every result (Unsplash): "Foto: Name / Unsplash", linked, under the tile (a link inside a button is no link)
+          var linked = !!c.linkedCredit && !!item.author;
+          var img = D.el('img', { src: item.thumb, alt: '', loading: 'lazy', decoding: 'async', draggable: 'false' });
+          // shown from the provider's own address: no Referer, so the provider learns nothing of this installation
+          if (/^https?:\/\//i.test(String(item.thumb || ''))) { img.referrerPolicy = 'no-referrer'; }
+          var tile = D.el('button', { type: 'button', class: 'dt-asset dt-photo', title: (item.title || 'Foto') + (credit ? ' – ' + credit : ''), 'aria-label': (item.title || 'Foto') + (credit ? ' – ' + credit : ''), 'data-item': item.id, 'data-catalog': c.id, disabled: !canUse, role: linked ? null : 'listitem' }, [
+            D.el('span', { class: 'dt-asset__thumb' }, img),
             D.el('span', { class: 'dt-asset__name', text: item.title || 'Foto' }),
-            credit ? D.el('span', { class: 'dt-photo__credit', text: credit }) : null,
+            credit && !linked ? D.el('span', { class: 'dt-photo__credit', text: credit }) : null,
           ]);
           D.dnd.attach(tile, {
-            ghost: function () { return D.el('img', { src: item.thumb, alt: '' }); },
+            ghost: function () { var g = D.el('img', { src: item.thumb, alt: '' }); g.referrerPolicy = 'no-referrer'; return g; },
             onClick: function () { use(item, c, tile, null, null); },
             onDrop: function (x, y) { use(item, c, tile, x, y); },
           });
-          grid.appendChild(tile);
+          if (!linked) { grid.appendChild(tile); return; }
+          var line = D.el('p', { class: 'dt-photo__attr' });
+          line.appendChild(document.createTextNode('Foto: '));
+          line.appendChild(link(item.authorUrl, item.author));
+          line.appendChild(document.createTextNode(' / '));
+          line.appendChild(c.provider ? link(c.provider.url, c.name) : document.createTextNode(c.name));
+          grid.appendChild(D.el('div', { class: 'dt-photocell', role: 'listitem' }, [tile, line]));
         });
       }
 
@@ -282,7 +293,7 @@
           items.forEach(function (c) {
             var meta = [];
             if (c.author) { meta.push(c.authorUrl ? link(c.authorUrl, c.author) : D.el('span', { text: c.author })); }
-            meta.push(D.el('span', { text: c.catalogName }));
+            meta.push(c.catalogUrl ? link(c.catalogUrl, c.catalogName) : D.el('span', { text: c.catalogName }));
             if (c.licence && c.licence.name) { meta.push(c.licence.url ? link(c.licence.url, c.licence.name) : D.el('span', { text: c.licence.name })); }
             if (c.sourceUrl) { meta.push(link(c.sourceUrl, 'Quelle')); }
             var metaRow = D.el('span', { class: 'dt-credits__meta' });

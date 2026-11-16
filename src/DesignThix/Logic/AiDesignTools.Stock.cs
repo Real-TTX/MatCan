@@ -17,11 +17,15 @@ public static partial class AiDesignTools
 
     public const int MaxCatalogImports = 8;
 
-    private static readonly string[] LocalCatalogs = ["builtin", "uploads"];
+    /// <summary>
+    /// The catalogues the tools never reach: the two local ones (the library is <c>list_media</c>) and Unsplash, whose API guidelines ask for photos a person chooses ("non-automated" use);
+    /// a person still takes Unsplash photos through the media browser and the panel Fotos, and the model may use them once they are in the library.
+    /// </summary>
+    private static readonly string[] NotForTools = ["builtin", "uploads", "unsplash"];
 
     private static async Task<ToolOutcome> SearchCatalogAsync(Biz biz, AiToolSession s, JsonObject args, CancellationToken ct)
     {
-        var usable = (await CatalogLogic.ListAsync(biz)).Where(r => !LocalCatalogs.Contains(r.Id)).ToList();
+        var usable = (await CatalogLogic.ListAsync(biz)).Where(r => !NotForTools.Contains(r.Id)).ToList();
         if (usable.Count == 0)
         {
             throw new ToolError("Kein Katalog eingeschaltet", "Es ist kein Katalog für Fotos, Symbole oder Schriften eingeschaltet. Nimm Bilder aus list_media, Symbole aus search_icons oder zeichne mit create_svg.");
@@ -154,8 +158,8 @@ public static partial class AiDesignTools
             throw new ToolError("Genug übernommen", $"In einem Auftrag sind höchstens {MaxCatalogImports} Katalog-Übernahmen möglich. Benutze, was schon in der Bibliothek ist.");
         }
 
-        // the catalogue must be one the person may use (a catalogue that is off, or a local one, does not exist here)
-        var usable = (await CatalogLogic.ListAsync(biz)).Where(r => !LocalCatalogs.Contains(r.Id)).FirstOrDefault(r => r.Id == id)
+        // the catalogue must be one the person may use (a catalogue that is off, a local one or Unsplash does not exist here)
+        var usable = (await CatalogLogic.ListAsync(biz)).Where(r => !NotForTools.Contains(r.Id)).FirstOrDefault(r => r.Id == id)
             ?? throw new ToolError($"Katalog „{Clip(id, 20)}“ gibt es nicht", $"Den Katalog \"{Clip(id, 20)}\" gibt es nicht oder er ist aus. Frage ihn mit search_catalog ohne Angaben ab.");
         RequireDesignLevel(s, "Ein Katalogeintrag");
         var (space, folder) = await AiAttachmentLogic.PlacementAsync(biz, s.DesignId);

@@ -241,6 +241,12 @@ public sealed class CatalogHttp : IDisposable
                     throw new CatalogException($"{provider} bremst gerade: Der Anbieter lässt im Moment keine weiteren Anfragen zu. Versuch es in {WaitText(wait)} wieder.", CatalogFailure.Limit, wait);
                 }
 
+                if (status == 403 && await RateLimitedAsync(response, limit.Token) is { } limitedFor)
+                {
+                    // Unsplash answers "403 Rate Limit Exceeded" (with X-Ratelimit-Remaining: 0) instead of 429: it is a pause, not a refused key
+                    throw new CatalogException($"{provider} bremst gerade: Der Anbieter lässt im Moment keine weiteren Anfragen zu. Versuch es in {WaitText(limitedFor)} wieder.", CatalogFailure.Limit, limitedFor);
+                }
+
                 if (status is 401 or 403)
                 {
                     throw new CatalogException($"{provider} nimmt den Schlüssel nicht an. Bitte frag eine Administratorin oder einen Administrator.", CatalogFailure.Key);
@@ -284,6 +290,39 @@ public sealed class CatalogHttp : IDisposable
                 return new CatalogHttpResult(status, response.Content.Headers.ContentType?.MediaType ?? "", bytes, ReadRate(response));
             }
         }
+    }
+
+    /// <summary>
+    /// Whether a 403 is really "no requests left" (the rate headers say nothing remains, or the few first bytes of the answer say "rate limit"): then the seconds to wait (the reset the provider named, else
+    /// the time until the next full hour, as Unsplash counts per hour), else null (a refused key). Reads at most 512 bytes.
+    /// </summary>
+    private static async Task<int?> RateLimitedAsync(HttpResponseMessage response, CancellationToken ct)
+    {
+        var rate = ReadRate(response);
+        var said = rate?.Remaining == 0;
+        if (!said)
+        {
+            try
+            {
+                await using var stream = await response.Content.ReadAsStreamAsync(ct);
+                var buffer = new byte[512];
+                var read = await stream.ReadAtLeastAsync(buffer, buffer.Length, throwOnEndOfStream: false, ct);
+                said = System.Text.Encoding.UTF8.GetString(buffer, 0, read).Contains("rate limit", StringComparison.OrdinalIgnoreCase);
+            }
+            catch (Exception ex) when (ex is HttpRequestException or IOException or OperationCanceledException)
+            {
+                said = false;
+            }
+        }
+
+        if (!said)
+        {
+            return null;
+        }
+
+        var now = DateTimeOffset.UtcNow;
+        var toNextHour = (int)Math.Ceiling((now.Date.AddHours(now.Hour + 1) - now.UtcDateTime).TotalSeconds);
+        return Math.Clamp(rate?.ResetSeconds is > 0 ? rate.ResetSeconds.Value : toNextHour, 60, 3600);
     }
 
     /// <summary>"in einer Minute", "in 5 Minuten", "in 2 Stunden": how long to wait, for a message (the verb of the sentence is "versuch es in ... wieder").</summary>

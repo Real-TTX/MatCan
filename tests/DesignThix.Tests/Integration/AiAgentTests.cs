@@ -949,7 +949,7 @@ public sealed class AiAgentTests(AppTests.AppFactory factory) : AiAgentTestBase(
         Assert.True(ok.CanEdit);
         Assert.Equal(6, ok.MaxFiles);
         Assert.Equal(25L * 1024 * 1024, ok.MaxFileBytes);
-        Assert.Equal(6, ok.MaxLooks);
+        Assert.Equal(8, ok.MaxLooks);
         // a person who may only view gets no entry
         await ShareAsync(Role.Designer, ItemKind.Design, design, Role.Viewer, SharePermission.View);
         var viewer = await As(Role.Viewer, biz => AiAgentLogic.AvailabilityAsync(biz, design));

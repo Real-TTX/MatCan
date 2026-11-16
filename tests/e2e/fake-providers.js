@@ -1,11 +1,14 @@
 'use strict';
-// The three real stock-photo providers of plan 5 / C2, played by fake-catalogs.js (so no check ever talks to the internet). Each speaks the shape of the provider's documentation
+// The real stock-photo providers of plan 5 (Pexels, Pixabay, Openverse in C2, Unsplash added later), played by fake-catalogs.js (so no check ever talks to the internet). Each speaks the shape of the provider's documentation
 // (verified 2026-10-26, see docs/PLAN-CATALOGS.md "C2 status") and answers with the 45 pictures of the fake library:
 //
 //   Pexels    https://www.pexels.com/api/documentation/   key in the header "Authorization: testkey-pexels"
 //             /v1/curated  /v1/search?query&orientation&color&locale&page&per_page  /v1/collections/featured  /v1/collections/{id}  /v1/photos/{id}   pictures /pexels-img/{id}/{size}.jpg
 //   Pixabay   https://pixabay.com/api/docs/                key in the query "key=testkey-pixabay" (400 for another one, as Pixabay does)
 //             /api/?q&lang&image_type&orientation&category&editors_choice&colors&safesearch&page&per_page&id   pictures /get/g{id}_{size}.jpg (a redirect to /cdn/...)
+//   Unsplash  https://unsplash.com/documentation       key in the header "Authorization: Client-ID testkey-unsplash" (401 for another one)
+//             /photos  /photos/{id}  /photos/{id}/download (the ping, counted)  /search/photos?query&page&per_page(<=30)&orientation&color&content_filter  /topics  /topics/{slug}/photos
+//             pictures /unsplash-img/{id}?ixid=...&w=  (the search word "limit" answers 403 "Rate Limit Exceeded", as Unsplash does)
 //   Openverse https://api.openverse.org/v1/                 anonymous or "Authorization: Bearer tok-abc" after POST /v1/auth_tokens/token/ with client_id=cid and client_secret=sec
 //             /v1/images/?q&license_type&license&aspect_ratio&category&mature&page&page_size (at most 20, depth 240, as for anonymous requests)  /v1/images/{id}/  /v1/images/{id}/thumb/[?full_size=true]
 //
@@ -13,7 +16,7 @@
 // licence filter and sends the NC and ND pictures too (the app must not show them). The provider hosts are the fake's own address, which the operator names with
 // DESIGNTHIX__Catalogs__<pexels|pixabay|openverse>__BaseUrl.
 const COLOURS = ['red', 'orange', 'yellow', 'green', 'turquoise', 'blue', 'violet', 'pink', 'brown', 'black', 'gray', 'white'];
-const KEYS = { pexels: 'testkey-pexels', pixabay: 'testkey-pixabay' };
+const KEYS = { pexels: 'testkey-pexels', pixabay: 'testkey-pixabay', unsplash: 'testkey-unsplash' };
 const CREDENTIALS = { id: 'cid', secret: 'sec', token: 'tok-abc' };
 
 const colourOf = item => COLOURS[Math.floor(item.hue / 30) % 12];
@@ -44,6 +47,103 @@ function handle(req, res, ctx) {
     const per = Math.min(80, Math.max(1, Number(q('per_page') || q('page_size')) || 15));
     return { page, per, slice: list.slice((page - 1) * per, page * per) };
   };
+
+  // ------------------------------------------------------------------------------------------ Unsplash
+  // https://unsplash.com/documentation (verified 2026-11-01): "Authorization: Client-ID <key>", at most 30 per page, the pictures at images.unsplash.com with the ixid in every address
+  // (here: the fake's own /unsplash-img/{id}), links.download_location for the download ping, "403 Rate Limit Exceeded" instead of 429, Unsplash+ photos marked "premium"
+  if (path === '/photos' || path === '/search/photos' || path === '/topics' || /^\/(photos\/[A-Za-z0-9_-]+(\/download)?|topics\/[a-z0-9-]+\/photos)$/.test(path)) {
+    const usId = item => 'Uns' + item.id + 'xYz';
+    const ixid = item => 'M3wxfake' + item.id;
+    const unsplashRate = () => ({ 'X-Ratelimit-Limit': '50', 'X-Ratelimit-Remaining': String(Math.max(1, 50 - (stats.__unsplashCalls || 0) % 49)) });
+    if (req.headers.authorization !== 'Client-ID ' + KEYS.unsplash) { return json(401, { errors: ['OAuth error: The access token is invalid'] }); }
+    stats.__unsplashCalls = (stats.__unsplashCalls || 0) + 1;
+    const img = (item, params) => `${base}/unsplash-img/${usId(item)}?ixid=${ixid(item)}&ixlib=rb-4.1.0${params || ''}`;
+    const userName = item => slug(item.author);
+    const photo = item => ({
+      id: usId(item), slug: slug(item.title) + '-' + usId(item), created_at: '2024-05-14T08:21:11Z', updated_at: '2026-10-30T04:10:42Z', width: item.width * 4, height: item.height * 4, color: '#8c7a66', blur_hash: 'LGF5]+Yk^6#M@-5c,1J5@[or[Q6.',
+      description: item.id === 'f03' ? 'A very long description written by the photographer that goes on and on about the light of the evening in the mountains' : null,
+      alt_description: item.title.toLowerCase(), premium: item.id === 'nc1' || item.id === 'nd1', plus: false,
+      urls: item.foreignThumb
+        ? { raw: 'http://evil.invalid/raw.jpg', full: 'http://evil.invalid/full.jpg', regular: 'http://evil.invalid/regular.jpg', small: 'http://evil.invalid/small.jpg', thumb: 'http://evil.invalid/thumb.jpg' }
+        : { raw: img(item), full: img(item, '&q=85&fm=jpg&crop=entropy&cs=srgb'), regular: img(item, '&q=80&fm=jpg&w=1080&fit=max'), small: img(item, '&q=80&fm=jpg&w=400&fit=max'), thumb: img(item, '&q=80&fm=jpg&w=200&fit=max') },
+      links: { self: `${base}/photos/${usId(item)}`, html: `https://unsplash.com/photos/${usId(item)}`, download: `https://unsplash.com/photos/${usId(item)}/download?ixid=${ixid(item)}`, download_location: `${base}/photos/${usId(item)}/download?ixid=${ixid(item)}` },
+      likes: 12, liked_by_user: false, current_user_collections: [], sponsorship: null,
+      user: {
+        id: 'u' + userName(item), updated_at: '2026-10-30T04:10:42Z', username: userName(item), name: item.author, portfolio_url: null, bio: null, location: null,
+        links: { self: `${base}/users/${userName(item)}`, html: `https://unsplash.com/@${userName(item)}`, photos: `${base}/users/${userName(item)}/photos`, likes: `${base}/users/${userName(item)}/likes` },
+        profile_image: { small: `${base}/unsplash-img/avatar`, medium: `${base}/unsplash-img/avatar`, large: `${base}/unsplash-img/avatar` },
+      },
+    });
+    const orient = item => item.width > item.height ? 'landscape' : item.height > item.width ? 'portrait' : 'squarish';
+    const unsplashColour = item => ({ turquoise: 'teal', violet: 'purple', pink: 'magenta', brown: 'black', gray: 'black_and_white' })[colourOf(item)] || colourOf(item);
+    const perPage = () => Math.min(30, Math.max(1, Number(q('per_page')) || 10));
+    const pageSlice = list => { const page = Math.max(1, Number(q('page')) || 1); const per = perPage(); return { page, per, slice: list.slice((page - 1) * per, page * per) }; };
+    // the Unsplash+ photos and the one whose addresses are on another host are in the answers: the app has to leave them out
+    const all = items.filter(i => i.id !== 'unk');
+    const shown = x => x.id !== 'nc1' && x.id !== 'nd1' && !x.foreignThumb;   // what an app may show: the others are Unsplash+ or have addresses on another host
+    const topics = [{ slug: 'nature', title: 'Nature', collection: 'nature' }, { slug: 'food-drink', title: 'Food & Drink', collection: 'food' }, { slug: 'street-photography', title: 'Street Photography', collection: 'city' }];
+    let um = path.match(/^\/photos\/([A-Za-z0-9_-]+)\/download$/);
+    if (um) {
+      const item = all.find(i => usId(i) === um[1]);
+      if (!item) { return json(404, { errors: ["Couldn't find Photo"] }); }
+      count('unsplash:download');
+      stats.__lastUnsplashDownload = { id: um[1], ixid: url.searchParams.get('ixid') || '', ua: req.headers['user-agent'] || '' };
+      (stats.__unsplashDownloads = stats.__unsplashDownloads || []).push(um[1]);
+      return json(200, { url: img(item, '&dl=' + um[1]) }, unsplashRate());
+    }
+    um = path.match(/^\/photos\/([A-Za-z0-9_-]+)$/);
+    if (um) {
+      const item = all.find(i => usId(i) === um[1]);
+      if (!item) { return json(404, { errors: ["Couldn't find Photo"] }); }
+      count('unsplash:photo');
+      return json(200, photo(item), unsplashRate());
+    }
+    if (path === '/photos') {
+      count('unsplash:list');
+      const { slice } = pageSlice(all);
+      return json(200, slice.map(photo), unsplashRate());
+    }
+    if (path === '/topics') {
+      count('unsplash:topics');
+      const list = topics.map((t, i) => ({ id: 'tp' + i, slug: t.slug, title: t.title, description: 'x', total_photos: all.filter(x => x.collection === t.collection && shown(x)).length, status: 'open', featured: true, links: {} }));
+      list.push({ id: 'tpx', slug: 'closed-topic', title: 'Beendet', total_photos: 4, status: 'closed' });
+      return json(200, list, unsplashRate());
+    }
+    um = path.match(/^\/topics\/([a-z0-9-]+)\/photos$/);
+    if (um) {
+      const t = topics.find(x => x.slug === um[1]);
+      if (!t) { return json(404, { errors: ["Couldn't find Topic"] }); }
+      count('unsplash:topic');
+      stats.__lastUnsplashTopic = { slug: um[1], orientation: q('orientation'), order_by: q('order_by') };
+      const { slice } = pageSlice(all.filter(i => i.collection === t.collection && (!q('orientation') || orient(i) === q('orientation'))));
+      return json(200, slice.map(photo), unsplashRate());
+    }
+    if (path === '/search/photos') {
+      const query = q('query').toLowerCase();
+      if (query === 'limit') { res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8', 'X-Ratelimit-Limit': '50', 'X-Ratelimit-Remaining': '0' }); res.end('Rate Limit Exceeded'); return true; }
+      if (query === 'down') { return json(500, { errors: ['down'] }); }
+      count('unsplash:search');
+      stats.__lastUnsplash = { query: q('query'), orientation: q('orientation'), color: q('color'), content_filter: q('content_filter'), order_by: q('order_by'), per_page: q('per_page'), page: q('page'), ua: req.headers['user-agent'] || '', version: req.headers['accept-version'] || '' };
+      const found = query === 'leer' ? [] : all.filter(i => (!query || words(i).includes(query)) && (!q('orientation') || orient(i) === q('orientation')) && (!q('color') || q('color') === unsplashColour(i)));
+      const per = perPage();
+      const { slice } = pageSlice(found);
+      return json(200, { total: found.length, total_pages: Math.ceil(found.length / per), results: slice.map(photo) }, unsplashRate());
+    }
+  }
+  const imgMatch = path.match(/^\/unsplash-img\/([A-Za-z0-9_-]+)$/);
+  if (imgMatch) {
+    if (imgMatch[1] === 'avatar') { return image({ width: 64, height: 64, hue: 200 }, 1); }
+    const item = items.find(i => 'Uns' + i.id + 'xYz' === imgMatch[1]);
+    if (!item) { res.writeHead(404); res.end(); return true; }
+    const w = Number(q('w')) || 0;
+    count('unsplash-img:' + (w ? 'w' + w : 'raw'));
+    if (!q('ixid')) { count('unsplash-img:without-ixid'); }
+    // what the browser sent: the thumbnails are loaded by the page itself, so this shows whether it kept its address to itself (no Referer)
+    const seen = stats.__unsplashImgReferers = stats.__unsplashImgReferers || {};
+    const ref = req.headers.referer || '(none)';
+    seen[ref] = (seen[ref] || 0) + 1;
+    return image(item, w >= 1000 ? 0.45 : 0.2);
+  }
 
   // ------------------------------------------------------------------------------------------ Pexels
   if (path.startsWith('/v1/') && !path.startsWith('/v1/images') && !path.startsWith('/v1/auth_tokens')) {

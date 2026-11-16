@@ -52,8 +52,10 @@ public sealed record CatalogLink(string Text, string Url);
 /// <param name="KeyPerMinute">The requests per minute the provider allows the key (0 = no such limit); the brake of the catalogue stays below it.</param>
 /// <param name="SetChoiceLabel">The catalogue is made of sets the administrator may narrow (Iconify: icon sets); the name of the list on the administration page (null = no such list).</param>
 /// <param name="SetChoiceHint">What to write into that list, German.</param>
+/// <param name="LinkedCredit">The provider's rules ask that every result names the author and the provider WITH links wherever it is shown (Unsplash: "Foto: Name / Unsplash"): the tiles of the media browser and of the panel Fotos then carry a line of links under the thumbnail.</param>
 public sealed record CatalogInfo(string Homepage, string? KeyHelpUrl, CatalogLink? ProviderLink, string LicenceSummary, string Description, int DefaultPerUserPerMinute = 30, int DefaultPerHour = 0,
-    string? Notice = null, IReadOnlyList<string>? Rules = null, string? KeyLabel = null, string? KeyHint = null, bool HasSafeSearch = false, bool HasLicenceChoice = false, int KeyPerMinute = 0, string? SetChoiceLabel = null, string? SetChoiceHint = null);
+    string? Notice = null, IReadOnlyList<string>? Rules = null, string? KeyLabel = null, string? KeyHint = null, bool HasSafeSearch = false, bool HasLicenceChoice = false, int KeyPerMinute = 0, string? SetChoiceLabel = null, string? SetChoiceHint = null,
+    bool LinkedCredit = false);
 
 /// <summary>A collection (a category, an area, a folder) a browsable catalogue lists.</summary>
 public sealed record CatalogCollection(string Id, string Name, int? Count = null);
@@ -90,7 +92,11 @@ public sealed record CatalogQuery
     public const int MaxPage = 50;
 }
 
-/// <summary>One result. <see cref="Thumb"/> is an address of this app (a direct address for a local catalogue, a signed proxy address for an external one), never an address of the provider.</summary>
+/// <summary>
+/// One result. <see cref="Thumb"/> is an address of this app (a direct address for a local catalogue, a signed proxy address for an external one), never an address of the provider - with ONE
+/// exception: a catalogue that lists <see cref="ICatalog.HotlinkHosts"/> (Unsplash demands that its pictures are shown from its own addresses) gives the address at the provider's image host, which the
+/// browser loads itself (the content security policy allows exactly those hosts while the catalogue is on, see <see cref="CatalogCsp"/>).
+/// </summary>
 public sealed record CatalogItem
 {
     public string Id { get; init; } = "";
@@ -203,6 +209,42 @@ public sealed class CatalogContext
     /// <summary>The address of a thumbnail of a picture the catalogue itself can read (a file of the server folder).</summary>
     public string ThumbOfItem(string itemId) => Services.Proxy.AddressFor(Catalog.Id, itemId: itemId);
 
+    /// <summary>
+    /// The address of a picture for a catalogue whose rules demand that it is shown from the provider's own address (<see cref="ICatalog.HotlinkHosts"/>): the address itself when it is https (http only for
+    /// an address the operator typed), has no credentials and its host is one of the image hosts of the catalogue; anything else is empty (the item is not offered). The browser loads it directly.
+    /// </summary>
+    public string Hotlink(string? providerUrl)
+    {
+        if (!Uri.TryCreate(providerUrl, UriKind.Absolute, out var uri) || providerUrl!.Length > 600 || providerUrl.Any(char.IsControl))
+        {
+            return "";
+        }
+
+        try
+        {
+            CatalogHttp.Check(uri, Services.HotlinkHosts(Catalog), Services.AllowsHttp(Catalog), Catalog.Name);
+        }
+        catch (CatalogException)
+        {
+            return "";
+        }
+
+        // plain http only for the host of the address the operator typed (the fake provider of a test installation), never for the provider's own hosts
+        if (uri.Scheme == Uri.UriSchemeHttp && !(Services.OperatorBaseUrl(Catalog) is { } own && Uri.TryCreate(own, UriKind.Absolute, out var ownUri) && ownUri.Host.Equals(uri.Host, StringComparison.OrdinalIgnoreCase)))
+        {
+            return "";
+        }
+
+        return uri.AbsoluteUri;
+    }
+
+    /// <summary>
+    /// A GET to the provider that is neither a search nor a download: an event the provider wants to be told about (Unsplash: the download of a photo). Counts for the budget of the key, goes through the pause
+    /// and the limit headers like every request, is not cached; the answer is small (16 KB at most).
+    /// </summary>
+    public Task<CatalogHttpResult> GetAsync(Uri url, IReadOnlyDictionary<string, string>? headers, CancellationToken ct)
+        => Services.GetEventAsync(this, url, headers, ct);
+
     /// <summary>The provider's answer to <paramref name="url"/> as text: from the cache while it is fresh, else asked (the budget of the key counts) and cached for <paramref name="ttl"/>.</summary>
     public Task<string> GetTextAsync(Uri url, IReadOnlyDictionary<string, string>? headers, TimeSpan ttl, CancellationToken ct)
         => Services.GetTextAsync(this, url, headers, ttl, ct);
@@ -256,6 +298,19 @@ public interface ICatalog
 
     /// <summary>The bytes (or font files) and the metadata of one item, for the import. The id is one this catalogue made; it is never trusted as an address.</summary>
     Task<CatalogFetch> FetchAsync(CatalogContext ctx, string itemId, CancellationToken ct);
+
+    /// <summary>
+    /// The hosts whose pictures the BROWSER loads itself because the provider's rules demand that its pictures are shown from its own addresses (Unsplash: <c>images.unsplash.com</c>). Empty for every other
+    /// catalogue (thumbnails go through the proxy and the content security policy stays <c>img-src 'self' data: blob:</c>). While such a catalogue is on and usable, <see cref="CatalogCsp"/> adds these hosts
+    /// (and the host of the operator's address, for a test installation) to <c>img-src</c> of the signed-in pages that show the media browser and the editor, and of nothing else.
+    /// </summary>
+    IReadOnlyList<string> HotlinkHosts => [];
+
+    /// <summary>
+    /// An item that is already in the library of the area is used again (the reuse of an import): a provider that wants to be told about every use (Unsplash: the download ping) does it here. Best effort: the
+    /// import never fails because of it. Default: nothing.
+    /// </summary>
+    Task UsedAgainAsync(CatalogContext ctx, string itemId, CancellationToken ct) => Task.CompletedTask;
 
     /// <summary>True when the thumbnails of the catalogue are asked for with the headers of <see cref="ThumbHeadersAsync"/> (Openverse: a token for the higher limits).</summary>
     bool ThumbsNeedAuth => false;

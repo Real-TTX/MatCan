@@ -6,7 +6,7 @@
     @Ui.Icon("info")
     <div class="mat-alert__body">
         Ein Katalog ist eine Quelle für Bilder. Was du benutzt, kopiert DesignThix in die Bibliothek des Bereichs, mit Quelle, Urheber und Lizenz: Designs bleiben ohne Internet druckbar, und die Bildnachweise
-        stehen im Editor unter Datei → Bildnachweise. Die Anbieter im Internet sind ausgeschaltet, bis du sie einschaltest; der Server fragt sie an, nie der Browser.
+        stehen im Editor unter Datei → Bildnachweise. Die Anbieter im Internet sind ausgeschaltet, bis du sie einschaltest; der Server fragt sie an (nur die Vorschaubilder von Unsplash lädt der Browser selbst: das verlangt Unsplash, siehe die Seite des Katalogs).
     </div>
 </div>
 
@@ -49,6 +49,6 @@
         <li><strong>Mitgeliefert</strong> und <strong>Uploads</strong> sind immer da und brauchen nichts. <strong>Ordner</strong> liest Bilder aus Ordnern im Datenvolume unter <code>catalogs/</code>; du nennst die Ordner auf der Seite des Katalogs.</li>
         <li>Anbieter im Internet brauchen meist einen Schlüssel. Er wird verschlüsselt im Datenvolume gespeichert, nie in der Datenbank und nie in einer Seite.</li>
         <li>Bilder mit Lizenzen für nichtkommerzielle Nutzung (NC) oder ohne Bearbeitung (ND) bietet DesignThix nie an: Designs ändern Bilder und dürfen kommerziell genutzt werden.</li>
-        <li>Suchergebnisse bleiben einen Tag im Zwischenspeicher. Vorschaubilder laufen über den Server; kein Browser verbindet sich mit einem Anbieter.</li>
+        <li>Suchergebnisse bleiben bis zu einem Tag im Zwischenspeicher (bei Unsplash eine Stunde). Vorschaubilder laufen über den Server; kein Browser verbindet sich mit einem Anbieter. Die eine Ausnahme ist Unsplash: Dessen Regeln verlangen, dass die Bilder von Unsplash selbst angezeigt werden, deshalb lädt der Browser sie direkt (Unsplash sieht dann die IP-Adresse), solange der Katalog eingeschaltet ist.</li>
     </ul>
 </dt-card>

@@ -129,7 +129,7 @@ public sealed class AiSecurityTests(AppTests.AppFactory factory) : AiAgentTestBa
             return;
         }
 
-        await ResetAsync();
+        await ResetAsync(s => s.AgentMaxLooks = 0);   // the test polls like an editor but draws nothing
         var start = DocumentOf(210, 297, "mm", Text("e1", 10, 10, 100, 10, "Vorher"));
         var design = await DesignAsync(Role.Designer, start);
         Seam.Script(AiScripted.Say("Ich ändere.", false, Call("update_elements", """{"id": "e1", "set": {"text": "KI-Text"}}""")), AiScripted.Say("Fertig.", true));
@@ -181,13 +181,13 @@ public sealed class AiSecurityTests(AppTests.AppFactory factory) : AiAgentTestBa
     public void The_defaults_of_the_limits_fit_a_working_day_with_the_assistant()
     {
         var s = new AiSettings();
-        Assert.Equal(1_500_000, s.UserDailyTokens);        // about 25 runs of 60 000 tokens
-        Assert.Equal(20_000_000, s.UserMonthlyTokens);
-        Assert.Equal(100_000_000, s.MonthlyTokens);
+        Assert.Equal(3_000_000, s.UserDailyTokens);        // about 30 runs of 100 000 tokens (a new design with the search of templates, looks and the review)
+        Assert.Equal(40_000_000, s.UserMonthlyTokens);
+        Assert.Equal(200_000_000, s.MonthlyTokens);
         Assert.True(s.MonthlyTokens > s.UserMonthlyTokens);   // the cap of all people is not lower than what one person may use
         Assert.Equal(200, s.AddressDailyRuns);
         Assert.Equal(60, s.PerMinutePerAddress);
-        Assert.True(s.UserDailyTokens >= 20 * 60_000);
+        Assert.True(s.UserDailyTokens >= 20 * 100_000);
     }
 
     [Fact]

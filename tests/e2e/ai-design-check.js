@@ -10,6 +10,8 @@
 //  start      the prompt in the dialog "Design erstellen" (own size), hidden when the AI is off
 //  roles      a person with View only sees no entry; an administrator with the AI off sees the explanation and the link
 //  responsive tablet and phone (390 px): the sheet, the busy bar above the tab bar
+//  qualitaet  the quality pass (docs/PLAN-AI-DESIGN.md): the review before a run ends (a model that is done without looking is sent back once and then looks), templates first (the editor draws the
+//             numbered sheet of the templates, the model takes one whole and replaces its sample texts)
 //  foto       plan 5 / C3: the assistant searches the catalogues (a photo of Pexels, an icon of Iconify), imports ONE of each, places them; the credit, the undo step, a catalogue that is off
 //             (needs DESIGNTHIX__Catalogs__<pexels|iconify>__BaseUrl = the fake catalogues, --catalog-port 3073; skipped without)
 //
@@ -101,6 +103,7 @@ let restored = false;
   const cleanup = { designs: [], lists: [] };
   const profileName = 'Fake KI Design ' + stamp;
   let originalLimits = null;
+  let originalReview = null;
 
   // ---------------------------------------------------------------------------------------- admin helpers
   async function limits(values) {
@@ -123,6 +126,17 @@ let restored = false;
     await Promise.all([admin.waitForNavigation(), admin.click('button[type=submit].mat-btn--primary')]);
   }
 
+  /** The review before a run ends (switch on the page of the limits): returns what it was. */
+  async function review(on) {
+    await admin.goto(base + '/Admin/Ai');
+    await admin.click('#ai-tabs-tab-limits');
+    const box = admin.locator('input[type=checkbox][name="Input.AgentReview"]');
+    const was = await box.isChecked();
+    if (was !== on) { await admin.click('label.mat-switch:has(input[name="Input.AgentReview"])'); }
+    await Promise.all([admin.waitForNavigation(), admin.click('button[type=submit].mat-btn--primary')]);
+    return was;
+  }
+
   /** Puts the settings back and deletes the profile of the check (also called when the check breaks). */
   restoreAdmin = async () => {
     if (restored) { return; }
@@ -130,6 +144,7 @@ let restored = false;
     try {
       await aiSwitch(true);
       if (originalLimits) { await limits(originalLimits); }
+      if (originalReview !== null) { await review(originalReview); }
       await admin.goto(base + '/Admin/Ai/Profiles');
       const mine = admin.locator('.mat-item', { hasText: profileName });
       if (await mine.count()) {
@@ -156,6 +171,7 @@ let restored = false;
   check('the fake profile is active', await admin.locator('.mat-item', { hasText: profileName }).locator('text=aktiv').count() > 0);
   originalLimits = await limits({ UserDailyTokens: 50000000, UserMonthlyTokens: 500000000, MonthlyTokens: 500000000, AddressDailyRuns: 5000, PerMinutePerAddress: 5000 });
   check('the limits are raised for the check', Object.keys(originalLimits).length === 5, JSON.stringify(originalLimits));
+  originalReview = await review(false);   // the review before a run ends has its own section; the other runs of the fake model end as they always did
   await aiSwitch(true);
 
   // ---------------------------------------------------------------------------------------- helpers of the editor
@@ -713,6 +729,42 @@ let restored = false;
     check('the start page prompt fits a phone', await P.evaluate(() => { const r = document.querySelector('form.dt-aip--hero').getBoundingClientRect(); return r.left >= 0 && r.right <= window.innerWidth && document.documentElement.scrollWidth <= window.innerWidth + 1; }));
     await shot(P, 'start-prompt');
     await phoneContext.close();
+  }
+
+  // ---------------------------------------------------------------------------------------- 3b. the quality pass: the review before a run ends, templates first
+  if (wanted('qualitaet')) {
+    current = 'qualitaet: ';
+    await review(true);
+    // a model that is done without having looked at its result is sent back once; then it looks, and the run ends
+    const reviewId = await makeDesign(A, 'Prüfung ' + stamp, 'poster-a3-portrait', 1);
+    await A.goto(`${base}/Designs/${reviewId}/Designer`);
+    await A.waitForSelector('#dt-ds:not(.is-loading)', { timeout: 20000 });
+    await E.idle(A);
+    const c0 = fake.agent.calls.length;
+    await run(A, 'pruefung-test: ein Titel');
+    const rc = fake.agent.calls.slice(c0).filter(c => c.scenario === 'pruefung-test');
+    check('the review sent the model back exactly once, and the next answer was a look', rc.filter(c => c.gate).length === 1, JSON.stringify(rc.map(c => [c.step, c.gate, c.sawImage])));
+    check('the picture of the look reached the model after the review', rc.some(c => c.step === 2 && c.sawImage), JSON.stringify(rc.map(c => [c.step, c.gate, c.sawImage])));
+    check('the log shows the review as a line and the look as a card, and the run ended done', (await A.locator('.dt-ag-line[data-kind="info"]').allTextContents()).some(t => /Prüfung vor dem Abschluss/.test(t)) && (await A.locator('.dt-ag-act').allTextContents()).some(t => /angesehen/.test(t)) && (await endState(A)) === 'done', (await A.locator('.dt-ag-line').allTextContents()).join(' | '));
+    await shot(A, 'review');
+
+    // templates first: the model searches (the editor draws the numbered sheet), takes the first one WHOLE and replaces its sample texts
+    const made = await postJson(A, '/api/designs', { preset: 'a4-portrait' });
+    await postJson(A, `/api/designs/${made.body.id}/rename`, { name: 'Vorlage zuerst ' + stamp });
+    await A.goto(`${base}/Designs/${made.body.id}/Designer`);
+    await A.waitForSelector('#dt-ds:not(.is-loading)', { timeout: 20000 });
+    await E.idle(A);
+    const c1 = fake.agent.calls.length;
+    await run(A, 'vorlagen-test: Einladung für Alex');
+    const tc = fake.agent.calls.slice(c1).filter(c => c.scenario === 'vorlagen-test');
+    check('the editor drew the numbered sheet of the templates and the model saw it', tc.some(c => c.step === 1 && c.sawImage), JSON.stringify(tc.map(c => [c.step, c.sawImage])));
+    await E.idle(A);
+    const d = await doc(A);
+    check('the design became the template: A6 landscape, the fields of the template, no leftover of the empty A4 page', d.width === 148 && d.height === 105 && d.unit === 'mm' && d.pages.length === 1 && d.fields.length >= 1, JSON.stringify([d.width, d.height, d.pages.length, d.fields.length]));
+    check('the sample texts with digits were replaced', allElements(d).some(e => e.type === 'text' && /Sonntag, 14. März/.test(e.text)), allElements(d).filter(e => e.type === 'text').map(e => e.text).join(' | '));
+    check('the log shows the search and the template as cards', (await A.locator('.dt-ag-act').allTextContents()).some(t => /Vorlagen für/.test(t)) && (await A.locator('.dt-ag-act').allTextContents()).some(t => /Vorlage .* übernommen/.test(t)), (await A.locator('.dt-ag-act').allTextContents()).join(' | '));
+    await shot(A, 'template-first');
+    await review(false);
   }
 
   // ---------------------------------------------------------------------------------------- 4. photos and icons from the catalogues (plan 5 / C3)

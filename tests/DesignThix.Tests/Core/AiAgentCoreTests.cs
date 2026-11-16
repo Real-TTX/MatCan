@@ -135,6 +135,27 @@ public sealed class AgentProtocolTests
     [InlineData("Erledigt.", false)]
     [InlineData("", false)]
     public void A_message_that_ends_in_a_question_waits_for_the_person(string message, bool asks) => Assert.Equal(asks, AgentProtocol.AsksUser(message));
+
+    [Fact]
+    public void The_diagnosis_says_why_an_answer_is_not_the_protocol()
+    {
+        // a closing brace is missing in a long list of changes: the model is told where and how many
+        var broken = """{"message": "Ich ändere.", "actions": [{"tool": "update_elements", "args": {"changes": [{"id": "e1", "set": {"text": "A"}, {"id": "e2", "set": {"text": "B"}}]}}], "done": false}""";
+        Assert.Null(AgentProtocol.Parse(broken));
+        var why = AgentProtocol.Diagnose(broken);
+        Assert.Contains("ungültig", why);
+        Assert.Contains("Zeichen", why);
+        // text only, valid JSON of another shape, nothing at all, hostile input
+        Assert.Contains("gar kein JSON", AgentProtocol.Diagnose("Ich schaue mir das gleich an."));
+        Assert.Contains("keines der Felder", AgentProtocol.Diagnose("""{"foo": 1}"""));
+        Assert.Contains("gar kein JSON", AgentProtocol.Diagnose(null));
+        Assert.Contains("ungültig", AgentProtocol.Diagnose("{\"message\": \"abgeschnitten"));
+        foreach (var hostile in new[] { new string('{', 5000), "{" + new string('"', 3001), "{\"a\": \"\\", "\u0000{\u0000", string.Concat(Enumerable.Repeat("{\"a\":", 400)) })
+        {
+            Assert.False(string.IsNullOrWhiteSpace(AgentProtocol.Diagnose(hostile)));
+            Assert.True(AgentProtocol.Diagnose(hostile).Length < 600);
+        }
+    }
 }
 
 /// <summary>The stream of a provider (server-sent events) and the fall back when it cannot stream.</summary>

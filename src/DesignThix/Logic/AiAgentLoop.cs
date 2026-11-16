@@ -36,6 +36,9 @@ public static class AiAgentLoop
 
     public const int KeepWholeResults = 4;
 
+    /// <summary>How often the application sends the model back before it may end a run (it had not looked at its result, or the checks still found real problems).</summary>
+    public const int MaxReviewRounds = 2;
+
     /// <summary>The request never gets longer than this (characters of all messages); the oldest messages go first.</summary>
     public const int MaxHistoryChars = 400_000;
 
@@ -115,9 +118,26 @@ public static class AiAgentLoop
             // the picture belongs to the results message that ends the history; on a model that reads no pictures it falls away with a note
             var last = list[^1];
             last.Attachments = [.. last.Attachments, .. extraPictures];
+            last.Content = (last.Content ?? "") + "\n\n" + PictureNote(extraPictures);
         }
 
         return list;
+    }
+
+    /// <summary>What the model is told about a picture that rides on its next message: what it shows and what to do with it (judge a result against the checklist, choose a template, know the starting point).</summary>
+    public static string PictureNote(IReadOnlyList<Core.Ai.AiAttachment> pictures)
+    {
+        if (pictures.Any(p => p.Name.StartsWith("Übersicht der Vorlagen", StringComparison.Ordinal)))
+        {
+            return "[Das Bild zeigt die Treffer von search_templates nebeneinander, nummeriert wie „nr“ im Ergebnis. Wähle nach dem AUSSEHEN: passt Art und Format, ist das Thema erkennbar, ist es klar gegliedert und hochwertig? Nimm die beste mit apply_template (whole: true) und passe sie an; passt keine, suche mit anderen Wörtern.]";
+        }
+
+        if (pictures.Any(p => p.Name.StartsWith("Aktueller Stand", StringComparison.Ordinal)))
+        {
+            return "[Das Bild zeigt die Seite, wie sie jetzt aussieht, bevor du etwas änderst. Schau genau hin: was ist da, was soll bleiben, was stört? Ändere gezielt, was die Person verlangt.]";
+        }
+
+        return "[Das Bild zeigt die Seite, wie sie jetzt aussieht. Urteile streng nach der PRÜFLISTE (Inhalt vollständig, Thema erkennbar, keine Überlappungen, keine große leere Fläche, lesbar, klare Rangfolge, professionell). Schreibe in message knapp, was gut ist und was nicht. Findest du einen Mangel, korrigiere ihn mit Aktionen (done: false); sind alle Punkte erfüllt, setze done: true.]";
     }
 
     private static string Trim(string? s, int max) => (s ?? "").Length > max ? s![..max] : s ?? "";
@@ -168,6 +188,7 @@ public static class AiAgentLoop
             Scope = AiScope.Parse(conv.ScopeJson),
             Note = "KI: " + Trim(conv.Title, 80),
             MaxLooks = Math.Max(0, settings.AgentMaxLooks),
+            RequestText = history.LastOrDefault(m => m.Run == run.Number && m.Role == "user" && !m.Tool)?.Content ?? "",
             PictureFolder = Path.Combine(AiAttachmentLogic.Root(biz), conv.Id.ToString(CultureInfo.InvariantCulture)),
         };
 
@@ -183,6 +204,46 @@ public static class AiAgentLoop
                 DataJson = data?.ToJsonString(new JsonSerializerOptions { Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping }) ?? "{}",
             });
             await db.SaveChangesAsync(CancellationToken.None);
+        }
+
+        // The review before a run ends: when the model says it is done after changing the design, it is sent back (at most MaxReviewRounds times) if it has not looked at the result yet, if a picture it asked
+        // for has not been read, or if the checks of the lint still find real problems. Not when the budget of calls is nearly used up.
+        async Task<(string Prompt, string Info)?> ReviewAsync(int call, int maxCalls)
+        {
+            if (!settings.AgentReview || session.ReviewRounds >= MaxReviewRounds || !session.Wrote || call >= maxCalls - 4)
+            {
+                return null;
+            }
+
+            var parts = new List<string>();
+            var infos = new List<string>();
+            if (session.PicturesForNextCall.Count > 0)
+            {
+                parts.Add("Das Bild, das du angefordert hast, liegt jetzt bei: beurteile es nach der PRÜFLISTE.");
+                infos.Add("Die KI soll sich das Bild noch ansehen");
+            }
+            else if (session.UnseenChanges && session.Looks < session.MaxLooks && broker.EditorConnected(conv.Id, TimeSpan.FromSeconds(20)))
+            {
+                parts.Add("Du hast dir das Ergebnis noch nicht angesehen. Rufe look für jede Seite auf, die du gestaltet oder geändert hast, urteile streng nach der PRÜFLISTE und korrigiere, was nicht stimmt.");
+                infos.Add("Die KI soll ihr Ergebnis erst ansehen");
+            }
+
+            var findings = await AiAgentLogic.ReviewFindingsAsync(biz, session);
+            if (findings.Count > 0)
+            {
+                parts.Add("Die automatische Prüfung der Anwendung findet noch:\n" + string.Join("\n", findings.Select(f => "- " + f))
+                    + "\nIst eine Meldung berechtigt, korrigiere sie (die Elemente findest du mit read_design). Ist sie ein Fehlalarm (Absicht), nenne den Grund kurz in message.");
+                infos.Add($"Die Prüfung findet noch {findings.Count} Punkt{(findings.Count == 1 ? "" : "e")}");
+            }
+
+            if (parts.Count == 0)
+            {
+                return null;
+            }
+
+            session.ReviewRounds++;
+            var prompt = $"Prüfung vor dem Abschluss ({session.ReviewRounds}/{MaxReviewRounds}):\n" + string.Join("\n", parts) + "\nSchicke jetzt die nächsten Aktionen (done: false) oder, wenn alles in Ordnung ist, done: true mit der Zusammenfassung.";
+            return (prompt, "Prüfung vor dem Abschluss: " + string.Join("; ", infos) + ".");
         }
 
         try
@@ -223,6 +284,35 @@ public static class AiAgentLoop
             var retries = 0;
             var recorded = false;
             var maxCalls = Math.Clamp(settings.AgentMaxCallsPerRun, 1, 200);
+
+            // a design that already has content: the model starts with the picture of the page as the person sees it (it is not counted as one of its looks)
+            if (session.MaxLooks > 0 && !AutoFormat(conv))
+            {
+                var start = await AiAgentLogic.LoadDesignAsync(biz, conv.SubjectId);
+                var startDoc = AiDocOps.Parse(start.DocumentJson);
+                if (AiDocOps.AllElements(startDoc).Any() && await broker.WaitForEditorAsync(conv.Id, TimeSpan.FromSeconds(4), ct))
+                {
+                    var args = new JsonObject();
+                    var scoped = session.Scope.PageId is { } scopePage && AiDocOps.FindPage(startDoc, scopePage) is { } sp ? sp : (JsonObject?)AiDocOps.Pages(startDoc).FirstOrDefault();
+                    if (scoped is not null)
+                    {
+                        args["page"] = AiDocOps.Id(scoped);
+                    }
+
+                    session.PictureName = "Aktueller Stand";
+                    session.LookTimeout = TimeSpan.FromSeconds(8);
+                    var seen = await AiDesignTools.RunAsync(biz, session, "look", args, ct);
+                    session.PictureName = null;
+                    session.LookTimeout = TimeSpan.FromSeconds(30);
+                    if (seen.Ok && session.Looks > 0)
+                    {
+                        session.Looks--;
+                    }
+
+                    await Step(AiStepKind.Action, seen.Summary, ActionData(new AgentAction("look", args), seen));
+                }
+            }
+
             for (var call = 0; call < maxCalls; call++)
             {
                 ct.ThrowIfCancellationRequested();
@@ -329,7 +419,8 @@ public static class AiAgentLoop
                     history.Add(new HistoryMessage("assistant", Trim(answer.Text, 4000), false, run.Number));
                     if (badAnswers++ < MaxNudges)
                     {
-                        history.Add(new HistoryMessage("user", "Deine letzte Antwort war nicht das verlangte JSON-Objekt {\"message\", \"actions\", \"done\"}. Antworte jetzt NUR mit diesem JSON-Objekt.", false, run.Number));
+                        history.Add(new HistoryMessage("user", "Deine letzte Antwort war nicht das verlangte JSON-Objekt {\"message\", \"actions\", \"done\"}. " + AgentProtocol.Diagnose(answer.Text)
+                            + " Antworte jetzt NUR mit diesem JSON-Objekt, vollständig und mit allen schließenden Klammern; schicke im Zweifel weniger Aktionen auf einmal.", false, run.Number));
                         await Step(AiStepKind.Info, "Die Antwort hatte nicht das verlangte Format – die KI wird noch einmal gefragt.", meta);
                         continue;
                     }
@@ -352,6 +443,14 @@ public static class AiAgentLoop
                 {
                     if (parsed.Done || AgentProtocol.AsksUser(parsed.Message))
                     {
+                        if (!AgentProtocol.AsksUser(parsed.Message) && await ReviewAsync(call, maxCalls) is { } nextStep)
+                        {
+                            history.Add(new HistoryMessage("user", nextStep.Prompt, true, run.Number));
+                            await SaveHistoryAsync(db, conv, history);
+                            await Step(AiStepKind.Info, nextStep.Info);
+                            continue;
+                        }
+
                         end = AgentProtocol.AsksUser(parsed.Message) ? ("waiting", "Die KI wartet auf deine Antwort.") : ("done", "Fertig.");
                         break;
                     }
@@ -389,6 +488,15 @@ public static class AiAgentLoop
                     }
 
                     problems |= !outcome.Ok || outcome.Warnings.Count > 0;
+                    if (outcome.Changed && action.Tool is not ("rename_design" or "set_fields" or "rename_page" or "move_page"))
+                    {
+                        session.UnseenChanges = true;
+                    }
+                    else if (action.Tool == "look" && outcome.Ok && outcome.Result is JsonObject lookResult && AiDocOps.Flag(lookResult["available"]))
+                    {
+                        session.UnseenChanges = false;
+                    }
+
                     await Step(AiStepKind.Action, outcome.Summary, ActionData(action, outcome));
                     results.Add(new JsonObject
                     {
@@ -415,6 +523,14 @@ public static class AiAgentLoop
                 // "done" with actions that all went through ends the run; a refusal or a warning gives the model one more look
                 if (parsed.Done && !problems)
                 {
+                    if (await ReviewAsync(call, maxCalls) is { } review)
+                    {
+                        history.Add(new HistoryMessage("user", review.Prompt, true, run.Number));
+                        await SaveHistoryAsync(db, conv, history);
+                        await Step(AiStepKind.Info, review.Info);
+                        continue;
+                    }
+
                     end = ("done", "Fertig.");
                     break;
                 }

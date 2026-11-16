@@ -100,7 +100,7 @@ public sealed class AiAgentEndpointTests(AppTests.AppFactory factory) : AiAgentT
         }
 
         await using var admins = await RealAdminsAsync();
-        await ResetAsync();
+        await ResetAsync(s => s.AgentMaxLooks = 0);   // the test polls like an editor but draws nothing
         var design = await DesignAsync(Role.Designer, DocumentOf(210, 297, "mm", Text("e1", 10, 10, 100, 10, "Vorher")));
         var client = await SignInAsync(await UserAsync(Role.Designer));
 

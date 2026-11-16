@@ -40,6 +40,14 @@
         </dt-card>
     }
 
+    @if (c.HotlinkHosts.Count > 0)
+    {
+        <dt-card title="Datenschutz: Vorschaubilder direkt vom Anbieter" icon="shield">
+            <p data-catalog-privacy>Wenn @c.Name eingeschaltet ist, lädt dein Browser die Vorschaubilder direkt von @c.Name. @c.Name sieht dabei deine IP-Adresse und welche Fotos du dir ansiehst.</p>
+            <p class="mat-hint" data-catalog-csp>Dafür erlaubt DesignThix in der Content-Security-Policy der Seiten für angemeldete Personen, die den Medienbrowser oder den Editor zeigen (Designer, Einzeldruck, Marke, Datenliste), Bilder von @string.Join(", ", c.HotlinkHosts) und von nichts sonst. Die öffentliche Ansicht, die Anmeldung und alle anderen Seiten bleiben unverändert, und ist der Katalog ausgeschaltet oder ohne Schlüssel, ist die Richtlinie so streng wie vorher. Ein Foto, das jemand benutzt, liegt danach auf diesem Server: Drucken, Herunterladen und die öffentliche Ansicht laden nie etwas von @c.Name. Erwähne die Vorschaubilder in deiner Datenschutzerklärung.</p>
+        </dt-card>
+    }
+
     @if (needsKey || (external && c.Info.KeyLabel != ""))
     {
         <dt-card title="Schlüssel" icon="key">

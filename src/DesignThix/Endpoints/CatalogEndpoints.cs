@@ -172,7 +172,7 @@ public static class CatalogEndpoints
             {
                 items = (await CatalogLogic.CreditsAsync(biz, id)).Select(c => new
                 {
-                    key = c.Key, name = c.Name, catalog = c.Catalog, catalogName = c.CatalogName, title = c.Title, author = c.Author, authorUrl = c.AuthorUrl, sourceUrl = c.SourceUrl,
+                    key = c.Key, name = c.Name, catalog = c.Catalog, catalogName = c.CatalogName, catalogUrl = c.CatalogUrl, title = c.Title, author = c.Author, authorUrl = c.AuthorUrl, sourceUrl = c.SourceUrl,
                     licence = new { code = c.LicenceCode, name = c.LicenceName, url = c.LicenceUrl }, attribution = c.Attribution,
                 }),
             }, Web))
@@ -200,6 +200,10 @@ public static class CatalogEndpoints
         licence = r.Catalog.Info.LicenceSummary,
         notice = r.Catalog.Info.Notice,
         description = r.Catalog.Info.Description,
+        // the provider's rules ask for a line of links (author / provider) under every result
+        linkedCredit = r.Catalog.Info.LinkedCredit,
+        // the thumbnails come straight from the provider's image host (the browser loads them itself)
+        hotlinked = r.Catalog.HotlinkHosts.Count > 0,
     };
 
     private static string[] KindNames(CatalogKinds kinds)

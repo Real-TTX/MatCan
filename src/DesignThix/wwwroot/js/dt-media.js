@@ -207,19 +207,38 @@
       return parts.join(' · ');
     }
 
+    function httpLink(url, text, className) {
+      return /^https?:\/\//i.test(String(url || '')) ? el('a', { href: url, target: '_blank', rel: 'noopener noreferrer', class: className || null, text: text }) : null;
+    }
+
+    /** The line of links a provider's rules ask for under a result ("Foto: Name / Unsplash"): the author's profile and the provider, both linked (outside the button: a link in a button is no link). */
+    function creditLine(item, catalog) {
+      var line = el('p', { class: 'dt-media__attr' });
+      line.appendChild(document.createTextNode('Foto: '));
+      line.appendChild(httpLink(item.authorUrl, item.author) || document.createTextNode(item.author));
+      line.appendChild(document.createTextNode(' / '));
+      line.appendChild((catalog.provider && httpLink(catalog.provider.url, catalog.name)) || document.createTextNode(catalog.name));
+      return line;
+    }
+
     /** The tile of one result of a catalogue; a click imports it. */
     function catalogTile(item, catalog, first) {
+      var linked = !!catalog.linkedCredit && !!item.author;
       var credit = creditOf(item);
       var label = (item.title || 'Bild') + (credit ? ' – ' + credit : '');
+      // a catalogue that is shown from the provider's own address (Unsplash): the browser loads the picture itself and sends no Referer, so the provider learns nothing of this installation
+      var img = el('img', { src: item.thumb, alt: '', loading: 'lazy', decoding: 'async', draggable: 'false' });
+      if (/^https?:\/\//i.test(String(item.thumb || ''))) { img.referrerPolicy = 'no-referrer'; }
       var kids = [
-        el('span', { class: 'dt-media__thumb' }, el('img', { src: item.thumb, alt: '', loading: 'lazy', decoding: 'async', draggable: 'false' })),
+        el('span', { class: 'dt-media__thumb' }, img),
         el('span', { class: 'dt-media__name', text: item.title || 'Bild' }),
       ];
-      if (credit) { kids.push(el('span', { class: 'dt-media__credit', text: credit })); }
+      if (credit && !linked) { kids.push(el('span', { class: 'dt-media__credit', text: credit })); }
       if (catalog.external) { kids.push(el('span', { class: 'dt-media__badge', text: catalog.name })); }
       var tile = el('button', { type: 'button', class: 'dt-media__tile dt-media__tile--item', role: 'option', 'data-item': item.id, 'data-catalog': catalog.id, 'data-key': item.assetKey || null, title: label, 'aria-label': label, 'aria-selected': 'false', tabindex: first ? '0' : '-1' }, kids);
       tile.addEventListener('click', function () { importItem(item, catalog, tile); });
-      return tile;
+      if (!linked) { return tile; }
+      return el('div', { class: 'dt-media__cell', role: 'presentation' }, [tile, creditLine(item, catalog)]);
     }
 
     function statusText(t) {
