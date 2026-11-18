@@ -1228,7 +1228,9 @@ public sealed class CatalogProviderTests(AppTests.AppFactory factory) : Platform
         }
 
         await ResetAsync();
-        await EnableAsync("openverse", key: "cid:sec");
+        // credentials of its own: the provider keeps a token per credentials for the whole run, and another test that used
+        // "cid:sec" before this one would leave its token behind, so no token request would be seen here
+        await EnableAsync("openverse", key: "cid-once:sec");
         // a page of results asks for twenty thumbnails at once, and every one of them needs the token: it is made once
         var openverse = Svc.Registry.Find("openverse")!;
         await Task.WhenAll(Enumerable.Range(0, 12).Select(_ => As(Role.Designer, biz => CatalogLogic.ThumbHeadersAsync(biz, openverse, default))));
